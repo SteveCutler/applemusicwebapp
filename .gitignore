@@ -1,0 +1,5 @@
+.env
+JWT.txt
+KID.rtf
+createJWT.js
+AuthKey.p8
