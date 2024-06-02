@@ -1,5 +1,8 @@
 import express from 'express';
-import { login, logout, signup } from '../controllers/auth.controller.js';
+import { login, logout, signup, getMe } from '../controllers/auth.controller.js';
+import protectRoute from '../middleware/protectRoute.js';
+const app = express();
+app.use(express.json());
 const router = express.Router();
 // http://localhost:5000/api/auth/login
 router.post('/login', login);
@@ -7,4 +10,6 @@ router.post('/login', login);
 router.post('/logout', logout);
 // http://localhost:5000/api/auth/signup
 router.post('/signup', signup);
+// http://localhost:5000/api/auth/signup
+router.get('/me', protectRoute, getMe);
 export default router;

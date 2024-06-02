@@ -12,3 +12,54 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+
+model User {
+  id        String       @id @default(cuid())
+  email     String    @unique
+  password  String
+  fullName  String
+  username  String @unique
+  playlists Playlist[]
+}
+
+model Track {
+  id         String             @id @default(cuid())
+  title      String
+  artist     String
+  album      String
+  duration   Int
+  playlists  PlaylistTrack[]
+}
+
+model Playlist {
+  id      String             @id @default(cuid())
+  name    String
+  userId  String
+  user    User            @relation(fields: [userId], references: [id])
+  tracks  PlaylistTrack[]
+}
+
+model PlaylistTrack {
+  playlistId String
+  trackId    String
+  playlist   Playlist  @relation(fields: [playlistId], references: [id])
+  track      Track     @relation(fields: [trackId], references: [id])
+
+  @@id([playlistId, trackId])
+}
+
+model Podcast {
+  id        String       @id @default(cuid())
+  title     String
+  episodes  PodcastEpisode[]
+}
+
+model PodcastEpisode {
+  id         String        @id @default(cuid())
+  title      String
+  description String
+  duration   Int
+  podcastId  String
+  podcast    Podcast    @relation(fields: [podcastId], references: [id])
+}
