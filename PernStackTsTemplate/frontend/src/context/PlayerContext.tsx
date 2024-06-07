@@ -7,6 +7,7 @@ import {
     play,
     pause,
     setCurrentSong,
+    setCurrentTitle,
     setSongs,
     ActionTypes,
 } from '../reducers/Actions'
@@ -34,9 +35,9 @@ interface PlayerContextProps {
     state: typeof initialState
     dispatch: React.Dispatch<Action>
     // authorizeUser: () => Promise<void>;
-    playSong: (songId: string) => Promise<void>
+    playSong: (songId: string, songTitle: string) => Promise<void>
     pauseSong: () => void
-    togglePlayPause: (songId: string | null) => void
+    togglePlayPause: (songId: string | null, songTitle: string) => void
     nextSong: () => void
     previousSong: () => void
     loadPlaylist: (playlist: Song[]) => void
@@ -65,11 +66,15 @@ export const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
     //     }
     //   };
 
-    const playSong = async (songId: string) => {
+    const playSong = async (songId: string, songTitle: string) => {
         // const music = musicInstance.getInstance()
+
         await musicInstance.setQueue({ song: songId })
         musicInstance.play()
+        console.log('now playing ', songTitle)
+
         dispatch(play(songId))
+        dispatch(setCurrentTitle(songTitle))
     }
 
     const pauseSong = () => {
@@ -78,7 +83,10 @@ export const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
         dispatch(pause())
     }
 
-    const togglePlayPause = (songId: string | null) => {
+    const togglePlayPause = (
+        songId: string | null,
+        songTitle: string | null
+    ) => {
         if (state.isPlaying) {
             musicInstance.pause()
             dispatch(pause())
@@ -87,8 +95,10 @@ export const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
                 musicInstance.play()
                 dispatch(play(state.currentSong))
                 console.log('playtest')
+            } else if (songId && songTitle) {
+                playSong(songId, songTitle)
             } else if (songId) {
-                playSong(songId)
+                console.log('toggle play pause error')
             }
         }
     }
@@ -98,14 +108,19 @@ export const PlayerContextProvider: React.FC<PlayerContextProviderProps> = ({
 
         dispatch(setSongs(playlist)) // Dispatch setSongs with the playlist
         await musicInstance.setQueue({ songs: trackIds }) // Set the queue with the track ids
-        musicInstance.play() // Start playing the playlist
+        // musicInstance.play() // Start playing the playlist
     }
     const nextSong = () => {
         //const music = MusicKit.getInstance();
+        console.log('Next song')
         musicInstance.skipToNextItem()
+        dispatch(setCurrentSong(musicInstance.nowPlayingItem.id))
+
+        dispatch(setCurrentTitle(musicInstance.nowPlayingItem.attributes.name))
     }
 
     const previousSong = () => {
+        console.log('prev song')
         //  const music = MusicKit.getInstance();
         musicInstance.skipToPreviousItem()
     }

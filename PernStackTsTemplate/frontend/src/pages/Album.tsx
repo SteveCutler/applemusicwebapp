@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom'
 import FetchAlbumData from '../components/Apple/FetchAlbumData'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
+import { MdArrowBackIosNew } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 
 const Album = () => {
     //IMPORT musicUserToken from State
@@ -13,10 +15,17 @@ const Album = () => {
             .replace('{w}', size.toString())
             .replace('{h}', size.toString())
     }
+    const style = { fontSize: '1.5em' }
 
     if (albumData) {
         return (
             <div className="flex-col w-4/5 justify-between ">
+                <Link to="/">
+                    <div className="sticky mb-10 mt-5 top-1 left-1">
+                        {' '}
+                        <MdArrowBackIosNew style={style} />
+                    </div>
+                </Link>
                 <div className="h-3/4  flex-col ">
                     <h1 className="text-3xl font-bold">
                         {albumData.attributes.name}

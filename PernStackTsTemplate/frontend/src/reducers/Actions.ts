@@ -8,6 +8,8 @@ export enum ActionTypes {
     NEXT = 'NEXT',
     PREVIOUS = 'PREVIOUS',
     SET_CURRENT_SONG = 'SET_CURRENT_SONG',
+    SET_TITLE = 'SET_TITLE',
+    UPDATE_PLAYBACK = 'UPDATE_PLAYBACK',
 }
 
 export type Song = {
@@ -29,6 +31,10 @@ interface SearchAction {
     type: ActionTypes.SEARCH
     payload: string
 }
+interface SetTitleAction {
+    type: ActionTypes.SET_TITLE
+    payload: string
+}
 
 interface SetSongsAction {
     type: ActionTypes.SET_SONGS
@@ -37,6 +43,10 @@ interface SetSongsAction {
 interface PlayAction {
     type: ActionTypes.PLAY
     payload: string
+}
+interface UpdatePlaybackAction {
+    type: ActionTypes.UPDATE_PLAYBACK
+    payload: number
 }
 
 interface PauseAction {
@@ -63,6 +73,8 @@ export type Action =
     | PlayAction
     | PauseAction
     | SetCurrentSongAction
+    | UpdatePlaybackAction
+    | SetTitleAction
     | NextAction
     | PreviousAction
 
@@ -77,9 +89,20 @@ export const setSongs = (songs: Song[]): SetSongsAction => ({
     type: ActionTypes.SET_SONGS,
     payload: songs,
 })
+export const setCurrentTitle = (songTitle: string): SetTitleAction => ({
+    type: ActionTypes.SET_TITLE,
+    payload: songTitle,
+})
+
 export const play = (songId: string): PlayAction => ({
     type: ActionTypes.PLAY,
     payload: songId,
+})
+export const UpdatePlayback = (
+    currentSongIndex: number
+): UpdatePlaybackAction => ({
+    type: ActionTypes.UPDATE_PLAYBACK,
+    payload: currentSongIndex,
 })
 export const pause = (): PauseAction => ({ type: ActionTypes.PAUSE })
 export const setCurrentSong = (songId: string): SetCurrentSongAction => ({

@@ -18,6 +18,7 @@ type TrackAttributeObject = {
     trackCount: Number
     playParams: PlayParameterObject
     durationInMillis: Number
+    trackNumber: Number
 }
 
 type PlayParameterObject = {
@@ -55,6 +56,7 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
                         )}
                         songId={track.id}
                         albumTracks={albumTracks}
+                        trackNumber={track.attributes.trackNumber}
                     />
                     <p>
                         {/* {convertToDuration(track.attributes.durationInMillis)} */}

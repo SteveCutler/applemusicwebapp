@@ -1,15 +1,16 @@
 import React from 'react'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
-
+import { MdArrowBackIosNew } from 'react-icons/md'
 import PlaySong from '../Apple/PlaySong'
 import { usePlayerContext } from '../../context/PlayerContext'
 import { useState } from 'react'
 
 type TrackPropTypes = {
-    trackName: String
-    trackDuration: String
+    trackName: string
+    trackDuration: string
     songId: string
     albumTracks: Array<Song>
+    trackNumber: number
 }
 
 type Song = {
@@ -35,16 +36,22 @@ const Track: React.FC<TrackPropTypes> = ({
     trackDuration,
     songId,
     albumTracks,
+    trackNumber,
 }) => {
-    const { state, playSong, togglePlayPause, loadPlaylist } =
-        usePlayerContext()
+    const {
+        state,
+        playSong,
+
+        togglePlayPause,
+        loadPlaylist,
+    } = usePlayerContext()
     const [isPlaying, setIsPlaying] = useState(false)
 
     //console.log('album tracks :', albumTracks)
 
     return (
         <div
-            className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-${isPlaying ? '300' : '500'}`}
+            className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-${songId === state.currentSong ? '300' : '500'}`}
         >
             <div className="">{trackDuration}</div>
             <div className="">{trackName}</div>
@@ -52,18 +59,16 @@ const Track: React.FC<TrackPropTypes> = ({
                 onClick={() => {
                     if (state.playlist !== albumTracks) {
                         loadPlaylist(albumTracks)
-                        console.log('playlist test')
-                        console.log(state.playlist)
                     }
                     if (isPlaying && songId === state.currentSong) {
                         setIsPlaying(false)
-                        togglePlayPause(songId)
+                        togglePlayPause(songId, trackName)
                     } else if (!isPlaying && songId === state.currentSong) {
                         setIsPlaying(true)
-                        togglePlayPause(songId)
+                        togglePlayPause(songId, trackName)
                     } else {
                         setIsPlaying(true)
-                        playSong(songId)
+                        playSong(songId, trackName)
                     }
                 }}
             >

@@ -13,6 +13,7 @@ Keep on with context API but later migrate it over the Zustand
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
 
+when you switch albums you can have different songs playing at the same time - maybe something to do with the musicInstance? maybe I need a reset function that sets state to null that I call in the play function if anything different is already playing
 musicplayer state management - 
 -now playing
 -up next

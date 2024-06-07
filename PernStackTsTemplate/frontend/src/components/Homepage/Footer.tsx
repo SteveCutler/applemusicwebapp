@@ -5,6 +5,7 @@ import { IoPlayBackCircleSharp } from 'react-icons/io5'
 import { IoPlayForwardCircleSharp } from 'react-icons/io5'
 import { useState } from 'react'
 import { usePlayerContext } from '../../context/PlayerContext'
+import { next } from '../../reducers/Actions'
 
 function Footer() {
     const { musicInstance } = useMusickitContext()
@@ -21,10 +22,21 @@ function Footer() {
     if (musicInstance) {
         console.log('music state ' + musicInstance.playbackMode)
     }
+    console.log(state.currentSongTitle)
 
     const changeState = (e: any) => {
         e.preventDefault()
-        togglePlayPause(null)
+        if (state.currentSongTitle) {
+            togglePlayPause(null, state.currentSongTitle)
+        }
+    }
+    const playPrev = (e: any) => {
+        e.preventDefault()
+        previousSong()
+    }
+    const playNext = (e: any) => {
+        e.preventDefault()
+        nextSong()
     }
 
     const style = { fontSize: '1.5em' }
@@ -35,7 +47,7 @@ function Footer() {
             <div className="flex gap-1">
                 <button
                     className="btn flex rounded-full items-center justify-center btn-primary"
-                    onClick={() => previousSong}
+                    onClick={e => playPrev(e)}
                 >
                     <IoPlayBackCircleSharp style={style} />
                 </button>
@@ -51,12 +63,12 @@ function Footer() {
                 </button>
                 <button
                     className="btn flex rounded-full items-center justify-center btn-primary"
-                    onClick={() => nextSong}
+                    onClick={e => playNext(e)}
                 >
                     <IoPlayForwardCircleSharp style={style} />
                 </button>
             </div>
-            <p>{state.currentSong && state.currentSong}</p>
+            <p>{state.currentSongTitle}</p>
         </div>
     )
 }
