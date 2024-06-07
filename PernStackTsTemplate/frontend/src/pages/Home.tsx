@@ -1,11 +1,17 @@
-import MessageContainer from '../components/messages/MessageContainer'
-import Sidebar from '../components/sidebar/Sidebar'
+import { useAuthContext } from '../context/AuthContext'
+
+import AppleMusicLogin from '../components/Apple/AppleMusicLogin'
 
 const Home = () => {
+    const { authUser } = useAuthContext()
+
+    if (!authUser) {
+        return <div>Loading...</div>
+    }
+
     return (
-        <div className="flex h-[80vh] w-full md:max-w-screen-md md:h-[550px] rounded-lg overflow-hidden bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0">
-            <Sidebar />
-            <MessageContainer />
+        <div className="flex-col h-screen w-full md:max-w-screen-lg mb-40 rounded-lg ">
+            <AppleMusicLogin />
         </div>
     )
 }

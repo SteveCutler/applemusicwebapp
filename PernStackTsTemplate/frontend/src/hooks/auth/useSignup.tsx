@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import { useAuthContext } from '../context/AuthContext'
+import { useAuthContext } from '../../context/AuthContext'
+import toast from 'react-hot-toast'
 
 type SignupInputs = {
     fullName: string
     username: string
     password: string
     confirmPassword: string
-    gender: string
+    email: string
 }
 
 const useSignup = () => {
@@ -26,9 +27,11 @@ const useSignup = () => {
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.error)
+            toast.success('New account created!')
             setAuthUser(data)
         } catch (error: any) {
             console.error(error.message)
+            toast.error('Please fill in all fields')
             // .error(error.message)
         } finally {
             setLoading(false)

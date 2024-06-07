@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import GenderCheckbox from '../components/GenderCheckbox'
+
 import { useState } from 'react'
-import useSignup from '../hooks/useSignup'
+import useSignup from '../hooks/auth/useSignup'
 
 const SignUp = () => {
     const [inputs, setInputs] = useState({
@@ -9,14 +9,10 @@ const SignUp = () => {
         username: '',
         password: '',
         confirmPassword: '',
-        gender: '',
+        email: '',
     })
 
     const { loading, signup } = useSignup()
-
-    const handleCheckboxChange = (gender: string) => {
-        setInputs({ ...inputs, gender })
-    }
 
     const handleSubmitForm = (e: React.FormEvent) => {
         e.preventDefault()
@@ -38,7 +34,7 @@ const SignUp = () => {
                         </label>
                         <input
                             type="text"
-                            placeholder="John Doe"
+                            placeholder="Enter full name"
                             className="w-full input input-bordered  h-10"
                             value={inputs.fullName}
                             onChange={e =>
@@ -58,13 +54,32 @@ const SignUp = () => {
                         </label>
                         <input
                             type="text"
-                            placeholder="johndoe"
+                            placeholder="Enter username"
                             className="w-full input input-bordered h-10"
                             value={inputs.username}
                             onChange={e =>
                                 setInputs({
                                     ...inputs,
                                     username: e.target.value,
+                                })
+                            }
+                        />
+                    </div>
+                    <div>
+                        <label className="label p-2 ">
+                            <span className="text-base label-text text-white">
+                                Email
+                            </span>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="Enter email"
+                            className="w-full input input-bordered h-10"
+                            value={inputs.email}
+                            onChange={e =>
+                                setInputs({
+                                    ...inputs,
+                                    email: e.target.value,
                                 })
                             }
                         />
@@ -109,11 +124,6 @@ const SignUp = () => {
                             }
                         />
                     </div>
-
-                    <GenderCheckbox
-                        selectedGender={inputs.gender}
-                        onCheckboxChange={handleCheckboxChange}
-                    />
 
                     <Link
                         to={'/login'}

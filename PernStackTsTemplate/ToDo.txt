@@ -1,0 +1,21 @@
+inspired by Spotify layout?
+
+Create a now playing context, click on a play button on the track to update the global now playing state, 
+Create a playbar footer with playback controls, next song, previous song, volume, 
+Create a sidebar with playlists, recently played, or whatever
+Make each AlbumItem/Music item a button that takes you to the album or playlists
+Create Album page with tracks, play buttons on each track etc.
+Settings menu
+
+Design a layout and create the tailwind
+Keep on with context API but later migrate it over the Zustand
+
+
+WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
+
+musicplayer state management - 
+-now playing
+-up next
+-current playlist
+-timeline
+-volume

@@ -7,7 +7,6 @@ import generateToken from '../utils/generateToken.js'
 
 export const signup = async (req: Request, res: Response) => {
     try {
-        console.log(req.body)
         const { fullName, username, password, confirmPassword, email } =
             req.body
 
@@ -19,7 +18,7 @@ export const signup = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "Passwords don't match" })
         }
 
-        const user = await prisma.user.findUnique({ where: { username } })
+        const user = await prisma.user.findUnique({ where: { email } })
 
         if (user) {
             return res.status(400).json({ error: 'Username already exists' })
@@ -29,10 +28,6 @@ export const signup = async (req: Request, res: Response) => {
 
         const salt = await bcryptjs.genSalt(10)
         const hashedPassword = await bcryptjs.hash(password, salt)
-
-        // PLACEHOLDER AVATAR GENERATOR https://avatar-placeholder.iran.liara.run/
-        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${username}`
-        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${username}`
 
         const newUser = await prisma.user.create({
             data: {
@@ -64,8 +59,8 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { username, password } = req.body
-        const user = await prisma.user.findUnique({ where: { username } })
+        const { email, password } = req.body
+        const user = await prisma.user.findUnique({ where: { email } })
 
         if (!user) {
             return res.status(400).json({ error: 'Invalid credentials' })
