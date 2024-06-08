@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import useMusicKit from './LoadMusickit'
-import { useMusickitContext } from '../../context/MusickitContext'
+// import { useMusickitContext } from '../../context/MusickitContext'
+import { useStore } from '../../store/store'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -59,17 +60,14 @@ const FetchAlbumData = (albumId: String | undefined) => {
     const [error, setError] = useState<string | null>(null)
 
     const musicKitLoaded = useMusicKit()
-    const { musicInstance: music } = useMusickitContext()
+    const musicKitInstance = useStore(state => state.musicKitInstance)
 
     useEffect(() => {
-        console.log('MusicKit Loaded:', musicKitLoaded)
-        console.log('Music Instance:', music)
-
         const fetchAlbumData = async () => {
-            if (music && musicKitLoaded) {
+            if (musicKitInstance) {
                 if (albumId?.startsWith('l')) {
                     try {
-                        const res = await music.api.music(
+                        const res = await musicKitInstance.api.music(
                             `/v1/me/library/albums/${albumId}`
                         )
 
@@ -89,7 +87,7 @@ const FetchAlbumData = (albumId: String | undefined) => {
                 } else {
                     try {
                         const queryParameters = { l: 'en-us' }
-                        const res = await music.api.music(
+                        const res = await musicKitInstance.api.music(
                             `/v1/catalog/{{storefrontId}}/albums/${albumId}`,
                             queryParameters
                         )
@@ -111,10 +109,10 @@ const FetchAlbumData = (albumId: String | undefined) => {
             }
         }
 
-        if (musicKitLoaded && music) {
+        if (musicKitInstance) {
             fetchAlbumData()
         }
-    }, [musicKitLoaded, music, albumId])
+    }, [musicKitInstance, albumId])
 
     return { albumData, loading, error }
 }

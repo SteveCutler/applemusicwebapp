@@ -1,59 +1,63 @@
 import { useEffect } from 'react'
 import useMusicKit from './LoadMusickit'
-import saveToken from '../../hooks/apple/saveToken'
-import fetchToken from '../../hooks/apple/fetchToken'
-import { useAuthContext } from '../../context/AuthContext'
+// import saveToken from './saveToken'
+// import fetchToken from './fetchToken'
+// import { useAuthContext } from '../../context/AuthContext'
 import AppleDashboard from './AppleDashboard'
-import { useMusicTokenContext } from '../../context/MusicTokenContext'
-
+// import { useMusicTokenContext } from '../../context/MusicTokenContext'
+import { useStore } from '../../store/store'
 const AppleMusicLogin = () => {
-    const { musicUserToken, setMusicUserToken } = useMusicTokenContext()
+    const {
+        fetchAppleToken,
+        generateAppleToken,
+        backendToken,
+        appleMusicToken,
+    } = useStore(state => ({
+        fetchAppleToken: state.fetchAppleToken,
+        generateAppleToken: state.generateAppleToken,
+        backendToken: state.backendToken,
+        appleMusicToken: state.appleMusicToken,
+    }))
+    // const { musicUserToken, setMusicUserToken } = useMusicTokenContext()
     const musicKitLoaded = useMusicKit()
     //const [musicUserToken, setMusicUserToken] = useState<string | null>(null)
-    const { authUser } = useAuthContext()
+    // const { authUser } = useAuthContext()
 
-    if (!authUser) {
+    if (!backendToken) {
         return
     }
-    const userId = authUser.id
+    const userId = backendToken
     useEffect(() => {
         const initialize = async () => {
             if (musicKitLoaded && userId) {
-                const token = await fetchToken(userId)
-                if (!token) {
-                    await createToken()
-                } else {
-                    setMusicUserToken(token)
+                fetchAppleToken()
+                if (!appleMusicToken) {
+                    await generateAppleToken()
                 }
             }
         }
-
-        initialize()
-    }, [musicKitLoaded, userId])
-
-    const createToken = async () => {
-        if (!musicKitLoaded) {
-            return
+        if (!appleMusicToken) {
+            initialize()
         }
-        try {
-            const music = (window as any).MusicKit.getInstance()
+    }, [musicKitLoaded, userId, fetchAppleToken, generateAppleToken])
 
-            const token = await music.authorize()
+    // const createToken = async () => {
+    //     if (!musicKitLoaded) {
+    //         return
+    //     }
+    //     try {
+    //         const music = (window as any).MusicKit.getInstance()
 
-            saveToken(token, userId)
-            setMusicUserToken(token)
-        } catch (error) {
-            console.error('Authorization failed:', error)
-        }
-    }
+    //         const token = await music.authorize()
 
-    return (
-        <div>
-            {musicUserToken && (
-                <AppleDashboard musicUserToken={musicUserToken} />
-            )}
-        </div>
-    )
+    //         saveToken(token, userId)
+    //         setMusicUserToken(token)
+    //     } catch (error) {
+    //         console.error('Authorization failed:', error)
+    //     }
+    // }
+
+    return <div></div>
 }
 
 export default AppleMusicLogin

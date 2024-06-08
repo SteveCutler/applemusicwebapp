@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import useMusicKit from './LoadMusickit'
-import { useMusickitContext } from '../../context/MusickitContext'
+// import { useMusickitContext } from '../../context/MusickitContext'
 import AlbumItem from '../Homepage/AlbumItem'
 import DisplayRow from '../Homepage/DisplayRow'
 import fetchHeavyRotation from './FetchHeavyRotation'
@@ -31,39 +31,14 @@ type ArtworkObject = {
     url: String
 }
 
-const AppleDashboard: React.FC<appleDashboardProps> = ({ musicUserToken }) => {
+const AppleDashboard: React.FC<appleDashboardProps> = () => {
     const musicKitLoaded = useMusicKit()
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
     // )
-    const { heavyRotation } = fetchHeavyRotation(musicUserToken)
-    const { recentlyPlayed } = FetchRecentlyPlayed(musicUserToken)
-    const { recommendations } = FetchRecommendations(musicUserToken)
-
-    // if (loading) {
-    //     return (
-    //         <>
-    //             <div className="flex justify-center items-center mx-auto">
-    //                 <h1 className="text-3xl text-center text-slate-300">
-    //                     Loading...
-    //                 </h1>
-    //             </div>
-    //         </>
-    //     )
-    // }
-
-    // useEffect(() => {
-    //     if (musicKitLoaded) {
-    //         const { heavyRotation, loading, error } =
-    //             fetchHeavyRotation(musicUserToken)
-    //         if (!loading && heavyRotation) {
-    //             setHeavyRotation(heavyRotation)
-    //         }
-    //         if (error) {
-    //             console.log(error)
-    //         }
-    //     }
-    // }, [musicUserToken, musicKitLoaded, heavyRotation])
+    const { heavyRotation } = fetchHeavyRotation()
+    const { recentlyPlayed } = FetchRecentlyPlayed()
+    // const { recommendations } = FetchRecommendations()
 
     return (
         <div className="h-screen ">

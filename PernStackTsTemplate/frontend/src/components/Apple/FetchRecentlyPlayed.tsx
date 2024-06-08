@@ -1,22 +1,20 @@
 import { useState, useEffect } from 'react'
 import useMusicKit from './LoadMusickit'
-import { useMusickitContext } from '../../context/MusickitContext'
+// import { useMusickitContext } from '../../context/MusickitContext'
+import { useStore } from '../../store/store'
 
-const FetchRecentlyPlayed = (musicUserToken: String) => {
+const FetchRecentlyPlayed = () => {
+    const musicKitInstance = useStore(state => state.musicKitInstance)
     const [recentlyPlayed, setRecentlyPlayed] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
-    const musicKitLoaded = useMusicKit()
-    const { musicInstance: music } = useMusickitContext()
-
     useEffect(() => {
         const fetchRecentlyPlayed = async () => {
-            if (music) {
+            if (musicKitInstance) {
                 try {
-                    console.log(music)
                     const queryParameters = { l: 'en-us', limit: 5 }
-                    const res = await music.api.music(
+                    const res = await musicKitInstance.api.music(
                         '/v1/me/recent/played',
                         queryParameters
                     )
@@ -37,10 +35,10 @@ const FetchRecentlyPlayed = (musicUserToken: String) => {
             }
         }
 
-        if (musicKitLoaded) {
+        if (musicKitInstance) {
             fetchRecentlyPlayed()
         }
-    }, [musicUserToken, musicKitLoaded, music])
+    }, [musicKitInstance])
 
     return { recentlyPlayed, loading, error }
 }

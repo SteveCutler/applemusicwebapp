@@ -7,15 +7,6 @@ export const saveToken = async (userToken: string, userId: String | null) => {
         const now = new Date()
         const tokenExpiryDate = new Date(now.setDate(now.getDate() + 15))
 
-        console.log(
-            'user token:',
-            userToken,
-            'userID:',
-            userId,
-            'expiry date:',
-            tokenExpiryDate
-        )
-
         const res = await fetch('/api/apple/' + 'save-token', {
             method: 'POST',
             headers: {

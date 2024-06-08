@@ -1,11 +1,19 @@
-import { useAuthContext } from '../../context/AuthContext'
+// import { useAuthContext } from '../../context/AuthContext'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
+import { useStore } from '../../store/store'
 
 const useLogin = () => {
     const [loading, setLoading] = useState(false)
-    const { setAuthUser } = useAuthContext()
+    const { isAuthorized, backendToken, setAuthorized, setBackendToken } =
+        useStore(state => ({
+            isAuthorized: state.isAuthorized,
+            backendToken: state.backendToken,
+            setAuthorized: state.setAuthorized,
+            setBackendToken: state.setBackendToken,
+        }))
+    // const { setAuthUser } = useAuthContext()
     const Navigate = useNavigate()
 
     const login = async (email: String, password: String) => {
@@ -26,7 +34,8 @@ const useLogin = () => {
                 return
             }
             toast.success('Logged in succesfully')
-            setAuthUser(data)
+            setBackendToken(data.id)
+            setAuthorized(true)
         } catch (error: any) {
             toast.error('Failed to log in')
             Navigate('/login')

@@ -1,27 +1,24 @@
 import { useState, useEffect } from 'react'
-import useMusicKit from './LoadMusickit'
-import { useMusickitContext } from '../../context/MusickitContext'
-
-const FetchHeavyRotation = (musicUserToken: String) => {
+import { useStore } from '../../store/store'
+const FetchHeavyRotation = () => {
+    const { appleMusicToken, musicKitInstance } = useStore(state => ({
+        appleMusicToken: state.appleMusicToken,
+        musicKitInstance: state.musicKitInstance,
+    }))
     const [heavyRotation, setHeavyRotation] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
-    const musicKitLoaded = useMusicKit()
-    const { musicInstance: music } = useMusickitContext()
-
     useEffect(() => {
         const fetchHeavyRotation = async () => {
-            if (music) {
+            if (musicKitInstance) {
                 try {
-                    console.log(music)
-
-                    const res = await music.api.music(
+                    const res = await musicKitInstance.api.music(
                         '/v1/me/history/heavy-rotation',
                         {
                             headers: {
                                 Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
-                                'music-user-token': musicUserToken,
+                                'music-user-token': appleMusicToken,
                             },
                         }
                     )
@@ -42,10 +39,10 @@ const FetchHeavyRotation = (musicUserToken: String) => {
             }
         }
 
-        if (musicKitLoaded) {
+        if (musicKitInstance) {
             fetchHeavyRotation()
         }
-    }, [musicUserToken, musicKitLoaded, music])
+    }, [appleMusicToken, musicKitInstance])
 
     return { heavyRotation, loading, error }
 }
