@@ -6,16 +6,16 @@ import { useStore } from '../../store/store'
 type AlbumType = {
     attributes: AttributeObject
     relationships: RelationshipObject
-    id: String
+    id: string
 }
 
 type AttributeObject = {
-    artistName: String
+    artistName: string
     artwork: ArtworkObject
-    dateAdded: String
-    genreNames: Array<String>
-    name: String
-    releasedDate: String
+    dateAdded: string
+    genreNames: Array<string>
+    name: string
+    releasedDate: string
     trackCount: Number
 }
 type RelationshipObject = {
@@ -30,50 +30,60 @@ type Track = {
 }
 
 type TrackAttributeObject = {
-    artistName: String
+    artistName: string
     artwork: ArtworkObject
-    dateAdded: String
-    genreNames: Array<String>
+    dateAdded: string
+    genreNames: Array<string>
     durationInMillis: Number
-    name: String
-    releasedDate: String
+    name: string
+    releasedDate: string
     trackCount: Number
     playParams: PlayParameterObject
 }
 
 type PlayParameterObject = {
-    catalogId: String
-    id: String
+    catalogId: string
+    id: string
     isLibrary: Boolean
-    kind: String
+    kind: string
 }
 
 type ArtworkObject = {
     height: Number
     width: Number
-    url: String
+    url: string
 }
 
-const FetchAlbumData = (albumId: String | undefined) => {
+const FetchAlbumData = (albumId: string | undefined) => {
     const [albumData, setAlbumData] = useState<AlbumType | null>(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
-    const musicKitLoaded = useMusicKit()
+    // const musicKitLoaded = useMusicKit()
     const musicKitInstance = useStore(state => state.musicKitInstance)
+    const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
     useEffect(() => {
         const fetchAlbumData = async () => {
-            if (musicKitInstance) {
-                if (albumId?.startsWith('l')) {
+            if (!musicKitInstance) {
+                await authorizeMusicKit()
+                return
+            }
+            if (!musicKitInstance || !albumId) {
+                return
+            }
+
+            try {
+                console.log('music kit instance and album id')
+                console.log('music kit instance: ', musicKitInstance)
+                console.log('albumId: ', albumId)
+
+                if (albumId.startsWith('l')) {
                     try {
                         const res = await musicKitInstance.api.music(
                             `/v1/me/library/albums/${albumId}`
                         )
 
-                        if (!res.ok) {
-                            console.log('error: ', res.body)
-                        }
                         console.log(res)
 
                         const data = await res.data.data
@@ -89,15 +99,14 @@ const FetchAlbumData = (albumId: String | undefined) => {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
                             `/v1/catalog/{{storefrontId}}/albums/${albumId}`,
+
                             queryParameters
                         )
 
-                        if (!res.ok) {
-                            console.log('error: ', res.body)
-                        }
                         console.log(res)
 
                         const data = await res.data.data
+
                         setAlbumData(data[0])
                     } catch (error: any) {
                         console.error(error)
@@ -106,13 +115,15 @@ const FetchAlbumData = (albumId: String | undefined) => {
                         setLoading(false)
                     }
                 }
+            } catch (error: any) {
+                console.error(error)
+            } finally {
+                setLoading(false)
             }
         }
 
-        if (musicKitInstance) {
-            fetchAlbumData()
-        }
-    }, [musicKitInstance, albumId])
+        fetchAlbumData()
+    }, [musicKitInstance, albumId, authorizeMusicKit])
 
     return { albumData, loading, error }
 }

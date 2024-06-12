@@ -9,8 +9,6 @@ const PlaySong = () => {
     // const { state, dispatch } = usePlayerContext()
 
     const playSong = async (songId: string) => {
-        // const music = MusicKit.getInstance()
-
         console.log(songId)
         await music.setQueue({ song: songId })
         music.play()

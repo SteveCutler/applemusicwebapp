@@ -3,45 +3,64 @@ import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import { useStore } from './store/store'
-// import { useAuthContext } from './context/AuthContext'
+import { useEffect } from 'react'
 
 import { Toaster } from 'react-hot-toast'
 import Album from './pages/Album'
-// import Footer from './components/Homepage/Footer'
+import Footer from './components/Homepage/Footer'
 
 function App() {
-    const backendToken = useStore(state => state.backendToken)
-    // const { authUser, isLoading } = useAuthContext()
-    // deconstruct setAuthUser
-    // if (isLoading) {
-    //     return null
-    // }
+    const { backendToken, authorizeBackend } = useStore(state => ({
+        backendToken: state.backendToken,
+        authorizeBackend: state.authorizeBackend,
+    }))
+    useEffect(() => {
+        const authBackend = async () => {
+            console.log('authorizing backend')
+            authorizeBackend()
+        }
+        if (!backendToken) {
+            authBackend()
+        }
+        console.log('backend previously authorized')
+    }, [authorizeBackend])
     return (
-        <div className="flex-col justify-between  h-screen">
-            <div className=" flex items-center justify-center">
-                <Routes>
-                    <Route
-                        path="/"
-                        element={
-                            backendToken ? <Home /> : <Navigate to="/login" />
-                        }
-                    />
-                    <Route
-                        path="/signup"
-                        element={
-                            !backendToken ? <SignUp /> : <Navigate to="/" />
-                        }
-                    />
-                    <Route
-                        path="/login"
-                        element={
-                            !backendToken ? <Login /> : <Navigate to="/" />
-                        }
-                    />
-                    <Route path="/album/:albumId" element={<Album />} />
-                </Routes>
+        <div className="flex-col justify-between h-vh ">
+            <div className="flex">
+                <div className="sidebar w-1/5 bg-black">
+                    <p>sidebar</p>
+                </div>
+                <div className="flex items-top w-4/5 justify-center">
+                    <Routes>
+                        <Route
+                            path="/"
+                            element={
+                                backendToken ? (
+                                    <Home />
+                                ) : (
+                                    <Navigate to="/login" />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/signup"
+                            element={
+                                !backendToken ? <SignUp /> : <Navigate to="/" />
+                            }
+                        />
+                        <Route
+                            path="/login"
+                            element={
+                                !backendToken ? <Login /> : <Navigate to="/" />
+                            }
+                        />
+                        <Route path="/album/:albumId" element={<Album />} />
+                    </Routes>
+                </div>
             </div>
-            {/* <Footer /> */}
+            <div className="flex sticky bottom-0">
+                <Footer />
+            </div>
             <Toaster />
         </div>
     )

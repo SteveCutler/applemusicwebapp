@@ -18,14 +18,11 @@ const FetchHeavyRotation = () => {
                         {
                             headers: {
                                 Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
-                                'music-user-token': appleMusicToken,
+                                //'music-user-token': appleMusicToken,
                             },
                         }
                     )
 
-                    if (!res.ok) {
-                        console.log('error: ', res.body)
-                    }
                     console.log(res)
 
                     const data = await res.data.data
@@ -42,7 +39,7 @@ const FetchHeavyRotation = () => {
         if (musicKitInstance) {
             fetchHeavyRotation()
         }
-    }, [appleMusicToken, musicKitInstance])
+    }, [musicKitInstance])
 
     return { heavyRotation, loading, error }
 }

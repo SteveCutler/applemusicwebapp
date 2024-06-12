@@ -3,33 +3,40 @@ import useMusicKit from './LoadMusickit'
 // import saveToken from './saveToken'
 // import fetchToken from './fetchToken'
 // import { useAuthContext } from '../../context/AuthContext'
-import AppleDashboard from './AppleDashboard'
+// import AppleDashboard from './AppleDashboard'
 // import { useMusicTokenContext } from '../../context/MusicTokenContext'
 import { useStore } from '../../store/store'
 const AppleMusicLogin = () => {
     const {
         fetchAppleToken,
         generateAppleToken,
+        authorizeMusicKit,
+        musicInstance,
         backendToken,
         appleMusicToken,
     } = useStore(state => ({
         fetchAppleToken: state.fetchAppleToken,
+        authorizeMusicKit: state.authorizeMusicKit,
+        musicInstance: state.musicKitInstance,
         generateAppleToken: state.generateAppleToken,
         backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
     }))
     // const { musicUserToken, setMusicUserToken } = useMusicTokenContext()
-    const musicKitLoaded = useMusicKit()
+    //const musicKitLoaded = useMusicKit()
+    authorizeMusicKit()
     //const [musicUserToken, setMusicUserToken] = useState<string | null>(null)
     // const { authUser } = useAuthContext()
-
+    console.log('music instance: ', musicInstance)
+    console.log('backend token: ', backendToken)
+    console.log('backend token: ', backendToken)
     if (!backendToken) {
         return
     }
-    const userId = backendToken
+    //const userId = backendToken
     useEffect(() => {
         const initialize = async () => {
-            if (musicKitLoaded && userId) {
+            if (musicInstance && backendToken) {
                 fetchAppleToken()
                 if (!appleMusicToken) {
                     await generateAppleToken()
@@ -39,7 +46,7 @@ const AppleMusicLogin = () => {
         if (!appleMusicToken) {
             initialize()
         }
-    }, [musicKitLoaded, userId, fetchAppleToken, generateAppleToken])
+    }, [musicInstance, backendToken, fetchAppleToken, generateAppleToken])
 
     // const createToken = async () => {
     //     if (!musicKitLoaded) {

@@ -31,17 +31,17 @@ type ArtworkObject = {
     url: String
 }
 
-const AppleDashboard: React.FC<appleDashboardProps> = () => {
-    const musicKitLoaded = useMusicKit()
+const AppleDashboard = () => {
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
     // )
+
     const { heavyRotation } = fetchHeavyRotation()
     const { recentlyPlayed } = FetchRecentlyPlayed()
     // const { recommendations } = FetchRecommendations()
 
     return (
-        <div className="h-screen ">
+        <div className="h-screen flex-col justify-left ">
             {/* MAIN DISPLAY */}
             {heavyRotation && (
                 <DisplayRow title={'HEAVY ROTATION'} albums={heavyRotation} />

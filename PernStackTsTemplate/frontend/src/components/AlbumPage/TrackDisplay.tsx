@@ -4,32 +4,38 @@ import Track from './Track'
 type TracksObject = {
     albumTracks: Song[]
 }
+
 type Song = {
-    attributes: TrackAttributeObject
-    id: String
+    id: string
+    type: string
+    attributes: {
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+    }
 }
 
 type TrackAttributeObject = {
-    artistName: String
-    dateAdded: String
-    genreNames: Array<String>
-    name: String
-    releasedDate: String
-    trackCount: Number
+    artistName: string
+    dateAdded: string
+    genreNames: Array<string>
+    name: string
+    releasedDate: string
+    trackCount: number
     playParams: PlayParameterObject
-    durationInMillis: Number
-    trackNumber: Number
+    durationInMillis: number
+    trackNumber: number
 }
 
 type PlayParameterObject = {
-    catalogId: String
-    id: String
+    catalogId: string
+    id: string
     isLibrary: Boolean
-    kind: String
+    kind: string
 }
 const TrackDisplay = ({ albumTracks }: TracksObject) => {
-    console.log(albumTracks)
-
     const convertToDuration = (milliseconds: Number) => {
         if (typeof milliseconds !== 'number' || milliseconds < 0) {
             throw new Error('Input must be a non-negative number')
@@ -47,16 +53,18 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
 
     return (
         <div className="flex-col w-1/2 justify-between items-between ">
-            {albumTracks.map(track => (
+            {albumTracks.map((song, index: number) => (
                 <>
                     <Track
-                        trackName={track.attributes.name}
+                        key={index}
+                        index={index}
+                        trackName={song.attributes.name}
                         trackDuration={convertToDuration(
-                            track.attributes.durationInMillis
+                            song.attributes.durationInMillis
                         )}
-                        songId={track.id}
+                        songId={song.id}
                         albumTracks={albumTracks}
-                        trackNumber={track.attributes.trackNumber}
+                        trackNumber={song.attributes.trackNumber}
                     />
                     <p>
                         {/* {convertToDuration(track.attributes.durationInMillis)} */}

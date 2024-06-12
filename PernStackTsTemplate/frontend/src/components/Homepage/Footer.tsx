@@ -3,32 +3,52 @@ import { FaCirclePlay } from 'react-icons/fa6'
 import { FaRegCirclePause } from 'react-icons/fa6'
 import { IoPlayBackCircleSharp } from 'react-icons/io5'
 import { IoPlayForwardCircleSharp } from 'react-icons/io5'
-import { useState } from 'react'
-import { usePlayerContext } from '../../context/PlayerContext'
-import { next } from '../../reducers/Actions'
+import Timeline from './Timeline'
+
+import { useStore } from '../../store/store'
 
 function Footer() {
-    const { musicInstance } = useMusickitContext()
+    // const { musicInstance } = useMusickitContext()
     // const [playbackState, setPlaybackState] = useState(2)
     const {
-        state,
         playSong,
         pauseSong,
+        isPlaying,
+        musicKitInstance,
+        setCurrentSongIndex,
+        setCurrrentSongId,
+        authorizeMusicKit,
+        switchTrack,
+        currentElapsedTime,
+        currentSongIndex,
+        currentSongId,
+        currentSongDuration,
         nextSong,
         previousSong,
-        togglePlayPause,
-    } = usePlayerContext()
+        playlist,
+        setPlaylist,
+    } = useStore(state => ({
+        currentSongDuration: state.currentSongDuration,
+        switchTrack: state.switchTrack,
+        currentElapsedTime: state.currentElapsedTime,
+        pauseSong: state.pauseSong,
+        nextSong: state.nextSong,
+        previousSong: state.previousSong,
+        setCurrentSongIndex: state.setCurrentSongIndex,
+        currentSongId: state.currentSongId,
+        setCurrrentSongId: state.setCurrentSongId,
+        currentSongIndex: state.currentSongIndex,
+        playlist: state.playlist,
+        authorizeMusicKit: state.authorizeMusicKit,
+        isPlaying: state.isPlaying,
+        musicKitInstance: state.musicKitInstance,
+        playSong: state.playSong,
+        setPlaylist: state.setPlaylist,
+    }))
 
-    if (musicInstance) {
-        console.log('music state ' + musicInstance.playbackMode)
-    }
-    console.log(state.currentSongTitle)
-
-    const changeState = (e: any) => {
+    const playPauseHandler = (e: any) => {
         e.preventDefault()
-        if (state.currentSongTitle) {
-            togglePlayPause(null, state.currentSongTitle)
-        }
+        isPlaying ? pauseSong() : playSong()
     }
     const playPrev = (e: any) => {
         e.preventDefault()
@@ -43,8 +63,7 @@ function Footer() {
 
     return (
         <div className="footer p-5 flex items-center justify-between h-20 bg-slate-900">
-            <p>test</p>
-            <div className="flex gap-1">
+            <div className="flex gap-1 mx-auto w-1/4 justify-start mx-10">
                 <button
                     className="btn flex rounded-full items-center justify-center btn-primary"
                     onClick={e => playPrev(e)}
@@ -53,9 +72,9 @@ function Footer() {
                 </button>
                 <button
                     className="btn flex items-center rounded-full justify-center btn-primary"
-                    onClick={e => changeState(e)}
+                    onClick={e => playPauseHandler(e)}
                 >
-                    {musicInstance && state.isPlaying === true ? (
+                    {isPlaying ? (
                         <FaRegCirclePause style={style} />
                     ) : (
                         <FaCirclePlay style={style} />
@@ -68,7 +87,16 @@ function Footer() {
                     <IoPlayForwardCircleSharp style={style} />
                 </button>
             </div>
-            <p>{state.currentSongTitle}</p>
+            <div className="flex-col w-1/2">
+                <div className="flex justify-center font-bold w-full">
+                    {musicKitInstance?.nowPlayingItem &&
+                        musicKitInstance?.nowPlayingItem.title}
+                </div>
+                <div className="flex w-full ">
+                    <Timeline />
+                </div>
+            </div>
+            <div className="w-1/4 flex justify-end mx-5"> volume</div>
         </div>
     )
 }

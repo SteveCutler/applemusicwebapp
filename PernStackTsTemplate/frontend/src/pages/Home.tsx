@@ -1,7 +1,9 @@
 import { useStore } from '../store/store'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import AppleMusicLogin from '../components/Apple/AppleMusicLogin'
 import AppleDashboard from '../components/Apple/AppleDashboard'
+import useMusicKit from '../components/Apple/LoadMusickit'
+
 const Home = () => {
     const {
         authorizeBackend,
@@ -21,37 +23,32 @@ const Home = () => {
         generateAppleToken: state.generateAppleToken,
     }))
 
-    useEffect(() => {
-        const initialize = () => {
-            console.log('use effect')
-            authorizeBackend()
+    const initialize = async () => {
+        let musicKitLoaded = false
+        if (!musicKitInstance && musicKitLoaded === false) {
+            console.log('Initializing MusicKit...')
             authorizeMusicKit()
-            // if (!appleMusicToken) {
-            //     fetchAppleToken()
-            //     if (!backendToken) {
-            //         generateAppleToken()
-            //     }
-            // }
+            musicKitLoaded = true
         }
+
+        if (!appleMusicToken && musicKitLoaded) {
+            console.log('fetching Apple token...')
+            fetchAppleToken()
+        }
+    }
+    useEffect(() => {
         initialize()
-    }, [
-        authorizeBackend,
+    }, [appleMusicToken])
 
-        authorizeMusicKit,
-
-        fetchAppleToken,
-        generateAppleToken,
-    ])
-    //const { authUser } = useAuthContext()
-
-    if (!backendToken) {
+    if (!appleMusicToken) {
         return <div>Loading...</div>
     }
 
     return (
-        <div className="flex-col h-screen w-full md:max-w-screen-lg mb-40 rounded-lg ">
-            <AppleMusicLogin />
-            {appleMusicToken && <AppleDashboard />}
+        <div className="flex-col  w-full md:max-w-screen-lg mb-40 rounded-lg ">
+            {/* <AppleMusicLogin /> */}
+
+            {appleMusicToken && musicKitInstance && <AppleDashboard />}
         </div>
     )
 }
