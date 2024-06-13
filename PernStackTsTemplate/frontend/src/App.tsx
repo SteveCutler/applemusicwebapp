@@ -8,6 +8,9 @@ import { useEffect } from 'react'
 import { Toaster } from 'react-hot-toast'
 import Album from './pages/Album'
 import Footer from './components/Homepage/Footer'
+import Sidebar from './components/Homepage/Sidebar'
+import Playlist from './pages/Playlist'
+import Library from './pages/Library'
 
 function App() {
     const { backendToken, authorizeBackend } = useStore(state => ({
@@ -27,8 +30,8 @@ function App() {
     return (
         <div className="flex-col justify-between h-vh ">
             <div className="flex">
-                <div className="sidebar w-1/5 bg-black">
-                    <p>sidebar</p>
+                <div className="sidebar w-1/6 bg-black">
+                    <Sidebar />
                 </div>
                 <div className="flex items-top w-4/5 justify-center">
                     <Routes>
@@ -54,7 +57,15 @@ function App() {
                                 !backendToken ? <Login /> : <Navigate to="/" />
                             }
                         />
+                        <Route
+                            path="/library"
+                            element={!backendToken ? <Login /> : <Library />}
+                        />
                         <Route path="/album/:albumId" element={<Album />} />
+                        <Route
+                            path="/playlist/:playlistId"
+                            element={<Playlist />}
+                        />
                     </Routes>
                 </div>
             </div>

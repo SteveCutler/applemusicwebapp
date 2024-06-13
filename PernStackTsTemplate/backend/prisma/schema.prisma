@@ -23,28 +23,24 @@ model User {
   appleMusicToken String?
   tokenExpiryDate DateTime?
   
+  library         Library?
+  libraryId       String?
 }
 
-model Track {
-  id         String             @id @default(cuid())
-  title      String
-  artist     String
-  album      String
-  duration   Int
+model Library {
+  id      String  @id @default(cuid())
+  albums  Album[]
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String  @unique
 }
 
-
-model Podcast {
-  id        String       @id @default(cuid())
-  title     String
-  episodes  PodcastEpisode[]
-}
-
-model PodcastEpisode {
-  id         String        @id @default(cuid())
-  title      String
-  description String
-  duration   Int
-  podcastId  String
-  podcast    Podcast    @relation(fields: [podcastId], references: [id])
+model Album {
+  id         String   @id @default(cuid())
+  albumId    String   @unique
+  name       String
+  artistName String
+  artworkUrl String
+  trackCount Int
+  library    Library  @relation(fields: [libraryId], references: [id])
+  libraryId  String
 }

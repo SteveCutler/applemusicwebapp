@@ -42,12 +42,15 @@ interface MusickitInstance {
             trackNumber: number
         }
     }
+    mute: () => void
+    unmute: () => Promise<void>
     nowPlayingItemIndex: number
     isPlaying: boolean
     changeToMediaItem: (index: number) => Promise<void>
     Queue: {
         items: any
     }
+    volume: number
     seekToTime: (elapsedTime: number) => Promise<void>
     playNext: () => Promise<void>
     stop: () => Promise<void>
@@ -82,6 +85,7 @@ interface State {
     musicKitInstance: MusickitInstance | null
     appleMusicToken: string | null
     searchTerm: string
+    volume: number
     playlist: Song[]
     currentSongIndex: number
     currentSongId: string | null
@@ -89,6 +93,7 @@ interface State {
     currentElapsedTime: number | null
     isPlaying: boolean
     scrubTime: number | null
+    muted: boolean
 }
 
 interface Actions {
@@ -99,6 +104,7 @@ interface Actions {
     setAuthorized: (isAuthorized: boolean) => void
     setCurrentSongIndex: (currentSongIndex: number) => void
     setCurrentSongId: () => void
+    setCurrentVolume: (volume: number) => void
     authorizeMusicKit: () => Promise<void>
     switchTrack: (trackNumber: number) => Promise<void>
     fetchAppleToken: () => Promise<void>
@@ -112,6 +118,7 @@ interface Actions {
     updatePlayback: (index: number, isPlaying: boolean) => void
     getCurrentSongTitle: () => string | null
     setScrubTime: (time: number | null) => void
+    setMuted: (muted: boolean) => void
 }
 
 type Store = State & Actions
@@ -120,6 +127,7 @@ export const useStore = create<Store>((set, get) => ({
     // State
     isAuthorized: false,
     scrubTime: null,
+    volume: 0.75,
     backendToken: null,
     musicKitInstance: null,
     appleMusicToken: '',
@@ -129,6 +137,7 @@ export const useStore = create<Store>((set, get) => ({
     currentSongDuration: null,
     currentElapsedTime: null,
     currentSongId: '',
+    muted: false,
     isPlaying: false,
 
     // Actions
@@ -151,12 +160,34 @@ export const useStore = create<Store>((set, get) => ({
             console.log('error in authorize backend')
         }
     },
+
+    setMuted: async (muted: boolean) => {
+        const { musicKitInstance } = get()
+        if (musicKitInstance && muted) {
+            musicKitInstance.mute()
+            set({ volume: 0 })
+        } else if (musicKitInstance) {
+            await musicKitInstance.unmute()
+
+            set({ volume: musicKitInstance.volume })
+        }
+
+        set({ muted })
+    },
     setCurrentSongId: async () => {
         const { musicKitInstance } = get()
         if (musicKitInstance) {
             set({ currentSongId: musicKitInstance.nowPlayingItem.id })
         }
     },
+    setCurrentVolume: async (volume: number) => {
+        const { musicKitInstance } = get()
+        if (musicKitInstance) {
+            musicKitInstance.volume = volume
+            set({ volume })
+        }
+    },
+
     setBackendToken: (token: string) => set({ backendToken: token }),
     setAuthorized: (isAuthorized: boolean) => set({ isAuthorized }),
     setCurrentSongIndex: async (currentSongIndex: number) => {

@@ -6,6 +6,7 @@ import DisplayRow from '../Homepage/DisplayRow'
 import fetchHeavyRotation from './FetchHeavyRotation'
 import FetchRecentlyPlayed from './FetchRecentlyPlayed'
 import FetchRecommendations from './FetchRecommendations'
+import { useStore } from '../../store/store'
 
 interface appleDashboardProps {
     musicUserToken: String
@@ -32,12 +33,22 @@ type ArtworkObject = {
 }
 
 const AppleDashboard = () => {
+    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        authorizeMusicKit: state.authorizeMusicKit,
+    }))
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
     // )
 
-    const { heavyRotation } = fetchHeavyRotation()
-    const { recentlyPlayed } = FetchRecentlyPlayed()
+    useEffect(() => {
+        authorizeMusicKit
+    }, [])
+    let { heavyRotation } = fetchHeavyRotation()
+    let { recentlyPlayed } = FetchRecentlyPlayed()
+
+    console.log('heavy rotation: ', heavyRotation)
+
     // const { recommendations } = FetchRecommendations()
 
     return (

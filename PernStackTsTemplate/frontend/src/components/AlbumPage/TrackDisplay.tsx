@@ -62,6 +62,7 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
                         trackDuration={convertToDuration(
                             song.attributes.durationInMillis
                         )}
+                        artistName={song.attributes.artistName}
                         songId={song.id}
                         albumTracks={albumTracks}
                         trackNumber={song.attributes.trackNumber}

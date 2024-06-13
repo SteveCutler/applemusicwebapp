@@ -14,6 +14,7 @@ type TrackPropTypes = {
     albumTracks: Array<Song>
     trackNumber: number
     index: number
+    artistName: string
 }
 
 interface Song {
@@ -45,6 +46,7 @@ const Track: React.FC<TrackPropTypes> = ({
     albumTracks,
     index,
     trackNumber,
+    artistName,
 }) => {
     //const albumSongs = albumTracks.data
     // const {
@@ -198,14 +200,26 @@ const Track: React.FC<TrackPropTypes> = ({
             >
                 {timeLeft()}
             </div>
-            <div
-                className={
-                    isPlaying && songId === currentSongId
-                        ? 'font-bold text-slate-200'
-                        : ''
-                }
-            >
-                {trackName}
+            <div className="flex justify-center gap-3">
+                <div
+                    className={
+                        isPlaying && songId === currentSongId
+                            ? 'font-bold text-slate-200'
+                            : ''
+                    }
+                >
+                    {trackName}
+                </div>
+                <p className="text-slate-100"> / </p>
+                <div
+                    className={
+                        isPlaying && songId === currentSongId
+                            ? 'font-bold text-slate-300'
+                            : 'text-slate-500'
+                    }
+                >
+                    {artistName}
+                </div>
             </div>
             <button onClick={playPauseHandler}>
                 {isPlaying && songId === currentSongId ? (

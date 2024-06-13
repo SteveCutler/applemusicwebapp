@@ -20,3 +20,14 @@ musicplayer state management -
 -current playlist
 -timeline
 -volume
+
+
+-search page & result display: recent searches, combine artist album, song, playlist, podcast searches together into one page?
+-artist display page (page you go to when you click on artist name) - top albums, top songs, featured playlists etc
+-build out sidebar with song history/playlists
+-create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
+
+-work on the loading issues (have the middle of the site change without effecting the sidebar etc)
+
+
+**fix bug where if two of the same song on playlist they both get highlighted in playlist view when playing (filter by trackId?)

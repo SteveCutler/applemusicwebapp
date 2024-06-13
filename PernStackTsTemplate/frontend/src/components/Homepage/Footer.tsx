@@ -6,6 +6,7 @@ import { IoPlayForwardCircleSharp } from 'react-icons/io5'
 import Timeline from './Timeline'
 
 import { useStore } from '../../store/store'
+import VolumeSlider from './VolumeSlider'
 
 function Footer() {
     // const { musicInstance } = useMusickitContext()
@@ -96,7 +97,10 @@ function Footer() {
                     <Timeline />
                 </div>
             </div>
-            <div className="w-1/4 flex justify-end mx-5"> volume</div>
+            <div className="w-1/4 flex justify-end mx-5">
+                {' '}
+                <VolumeSlider />
+            </div>
         </div>
     )
 }

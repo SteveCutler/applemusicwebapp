@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import AlbumItem from './AlbumItem'
 import { Link } from 'react-router-dom'
+import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 type DisplayRow = {
     title: String
@@ -10,6 +11,7 @@ type DisplayRow = {
 type AlbumType = {
     attributes: AttributeObject
     id: String
+    type: string
 }
 
 type AttributeObject = {
@@ -34,14 +36,32 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums }) => {
             <h1 className="text-5xl pt-4 font-bold text-center">{title}</h1>
             <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 ">
                 {albums &&
-                    albums.map(album => (
-                        <AlbumItem
-                            title={album.attributes.name}
-                            artistName={album.attributes.artistName}
-                            albumArtUrl={album.attributes.artwork.url}
-                            albumId={album.id}
-                        />
-                    ))}
+                    albums.map(
+                        album =>
+                            album.type === 'library-playlists' ? (
+                                <AlbumItem
+                                    title={album.attributes.name}
+                                    artistName="Playlist"
+                                    albumArtUrl={defaultPlaylistArtwork}
+                                    albumId={album.id}
+                                    type={album.type}
+                                />
+                            ) : (
+                                <AlbumItem
+                                    title={album.attributes.name}
+                                    artistName={album.attributes.artistName}
+                                    albumArtUrl={album.attributes.artwork.url}
+                                    albumId={album.id}
+                                    type={album.type}
+                                />
+                            )
+                        // <AlbumItem
+                        //     title={album.attributes.name}
+                        //     artistName={album.attributes.artistName}
+                        //     albumArtUrl={album.attributes.artwork.url}
+                        //     albumId={album.id}
+                        // />
+                    )}
             </div>
         </div>
     )
