@@ -25,7 +25,7 @@ const Home = () => {
 
     const initialize = async () => {
         let musicKitLoaded = false
-        if (!musicKitInstance && musicKitLoaded === false) {
+        if (musicKitLoaded === false) {
             console.log('Initializing MusicKit...')
             authorizeMusicKit()
             musicKitLoaded = true
@@ -37,8 +37,10 @@ const Home = () => {
         }
     }
     useEffect(() => {
-        initialize()
-    }, [appleMusicToken])
+        if (!musicKitInstance) {
+            initialize()
+        }
+    }, [musicKitInstance, appleMusicToken])
 
     if (!appleMusicToken) {
         return <div>Loading...</div>

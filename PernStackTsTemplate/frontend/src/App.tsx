@@ -11,6 +11,7 @@ import Footer from './components/Homepage/Footer'
 import Sidebar from './components/Homepage/Sidebar'
 import Playlist from './pages/Playlist'
 import Library from './pages/Library'
+import Stacks from './pages/Stacks'
 
 function App() {
     const { backendToken, authorizeBackend } = useStore(state => ({
@@ -28,7 +29,7 @@ function App() {
         console.log('backend previously authorized')
     }, [authorizeBackend])
     return (
-        <div className="flex-col justify-between h-vh ">
+        <div className="flex-col justify-between h-screen ">
             <div className="flex">
                 <div className="sidebar w-1/6 bg-black">
                     <Sidebar />
@@ -61,6 +62,7 @@ function App() {
                             path="/library"
                             element={!backendToken ? <Login /> : <Library />}
                         />
+                        <Route path="/stacks" element={<Stacks />} />
                         <Route path="/album/:albumId" element={<Album />} />
                         <Route
                             path="/playlist/:playlistId"

@@ -37,6 +37,8 @@ model Library {
 model Album {
   id         String   @id @default(cuid())
   albumId    String   @unique
+  href String
+  type  String
   name       String
   artistName String
   artworkUrl String

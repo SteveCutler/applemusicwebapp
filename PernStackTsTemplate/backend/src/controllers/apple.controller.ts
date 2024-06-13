@@ -7,18 +7,19 @@ import bcryptjs from 'bcryptjs'
 
 type AlbumType = {
     attributes: AttributeObject
-    relationships: RelationshipObject
+    type: string
+    href: string
     id: string
 }
 
 type AttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
+    artistName?: string
+    artwork?: ArtworkObject
+    dateAdded?: string
+    genreNames?: Array<string>
     name: string
     releasedDate: string
-    trackCount: Number
+    trackCount: number
 }
 type RelationshipObject = {
     tracks: TracksObject
@@ -32,14 +33,14 @@ type Track = {
 }
 
 type TrackAttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
-    durationInMillis: Number
+    artistName?: string
+    artwork?: ArtworkObject
+    dateAdded?: string
+    genreNames?: Array<string>
+    durationInMillis: number
     name: string
-    releasedDate: string
-    trackCount: Number
+    releasedDate?: string
+    trackCount: number
     playParams: PlayParameterObject
 }
 
@@ -51,8 +52,8 @@ type PlayParameterObject = {
 }
 
 type ArtworkObject = {
-    height: Number
-    width: Number
+    height: number
+    width: number
     url: string
 }
 
@@ -99,16 +100,22 @@ export const getToken = async (req: Request, res: Response) => {
         res.status(500).send('Error updating token')
     }
 }
-export const getLibrary = async (req: Request, res: Response) => {
-    const { userId, userToken } = req.body
+
+export const updateLibrary = async (req: Request, res: Response) => {
+    const { userId, appleMusicToken } = req.body
     const albums: AlbumType[] = []
+    let responseSent = false
+
+    console.log('dev token: ', process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN)
+    console.log('userId: ', userId)
+    console.log('applemusictoken: ', appleMusicToken)
 
     const fetchAlbums = async (url: string) => {
         try {
             const res = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
-                    'Music-User-Token': userToken,
+                    'Music-User-Token': appleMusicToken,
                 },
             })
             const data = res.data
@@ -116,44 +123,127 @@ export const getLibrary = async (req: Request, res: Response) => {
             albums.push(...data.data)
 
             if (data.next) {
-                await fetchAlbums(data.next)
+                await fetchAlbums(`https://api.music.apple.com${data.next}`)
             }
         } catch (error) {
             console.error('Failed to fetch albums:', error)
-            res.status(500).json({ error: 'Failed to fetch albums' })
+            if (!responseSent) {
+                responseSent = true
+                res.status(500).json({ error: 'Failed to fetch albums' })
+            }
         }
     }
 
     const initialUrl = 'https://api.music.apple.com/v1/me/library/albums'
     await fetchAlbums(initialUrl)
 
-    const formattedAlbums = albums.map(album => ({
-        albumId: album.id,
-        name: album.attributes.name,
-        artistName: album.attributes.artistName,
-        artworkUrl: album.attributes.artwork.url,
-        trackCount: album.attributes.trackCount,
-        library: {
-            connectOrCreate: {
-                where: { id: userId },
-                create: { id: userId },
+    if (responseSent) return
+
+    // Fetch existing album IDs to avoid duplicates
+    const existingAlbumIds = (
+        await prisma.album.findMany({
+            where: {
+                albumId: {
+                    in: albums.map(album => album.id),
+                },
             },
-        },
-    }))
-
-    await saveAlbumsToDB(userId, formattedAlbums)
-
-    res.json({ success: true, albums: formattedAlbums })
-}
-
-const saveAlbumsToDB = async (userId: string, albums: any) => {
-    try {
-        await prisma.album.createMany({
-            data: albums,
+            select: {
+                albumId: true,
+            },
         })
-        console.log('Albums saved successfully!')
+    ).map(album => album.albumId)
+
+    // Fetch the user's library ID
+    const userLibrary = await prisma.library.findUnique({
+        where: { userId },
+        select: { id: true },
+    })
+
+    if (!userLibrary) {
+        if (!responseSent) {
+            responseSent = true
+            return res.status(404).json({ error: 'User library not found' })
+        }
+        return res.status(404).json({ error: 'User library not found' })
+    }
+    const newAlbums = albums
+        .filter(album => !existingAlbumIds.includes(album.id))
+        .map(album => ({
+            albumId: album.id,
+            name: album.attributes.name,
+            artistName: album.attributes.artistName || '',
+            artworkUrl: album.attributes.artwork?.url || '',
+            trackCount: album.attributes.trackCount,
+            href: album.href,
+            type: album.type,
+            libraryId: userLibrary.id,
+        }))
+
+    try {
+        // Insert new albums
+        if (newAlbums.length > 0) {
+            await prisma.album.createMany({
+                data: newAlbums,
+            })
+        }
+
+        // Associate all albums with the user's library
+        await prisma.library.update({
+            where: { id: userLibrary.id },
+            data: {
+                albums: {
+                    connect: albums.map(album => ({ albumId: album.id })),
+                },
+            },
+        })
+
+        if (!responseSent) {
+            responseSent = true
+            res.status(200).json({ message: 'Albums saved successfully!' })
+        }
     } catch (error) {
         console.error('Error saving albums:', error)
-        throw error
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Failed to save albums' })
+        }
     }
+}
+export const getLibrary = async (req: Request, res: Response) => {
+    const { userId } = req.body
+    const albums: AlbumType[] = []
+    console.log(userId)
+    const userLibrary = await prisma.library.findUnique({
+        where: { userId },
+        select: { id: true },
+    })
+
+    if (!userLibrary) {
+        return res
+            .status(400)
+            .json({ message: "User library ID is required, can't be found" })
+    }
+
+    const returnAlbums = async (userLibrary: string) => {
+        try {
+            const result = await prisma.library.findUnique({
+                where: {
+                    id: userLibrary,
+                },
+                select: {
+                    albums: true,
+                },
+            })
+            if (result && result != null) {
+                // console.log('result:', result)
+                res.status(200).json(result)
+            } else {
+                res.status(404).json({ message: 'albums not found' })
+            }
+        } catch (error) {
+            console.error('Error fetching albums:', error)
+            res.status(500).send('Error fetching albums')
+        }
+    }
+
+    await returnAlbums(userLibrary.id)
 }

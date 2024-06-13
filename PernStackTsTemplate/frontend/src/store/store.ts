@@ -79,12 +79,22 @@ interface MusicKitDescriptor {
     type: string
 }
 
+interface Album {
+    id: string
+    albumId: string
+    name: string
+    artistName: string
+    artworkUrl: string
+    trackCount: number
+}
+
 interface State {
     isAuthorized: boolean
     backendToken: string | null
     musicKitInstance: MusickitInstance | null
     appleMusicToken: string | null
     searchTerm: string
+    albums: Array<Album> | null
     volume: number
     playlist: Song[]
     currentSongIndex: number
@@ -119,6 +129,7 @@ interface Actions {
     getCurrentSongTitle: () => string | null
     setScrubTime: (time: number | null) => void
     setMuted: (muted: boolean) => void
+    setAlbums: (albums: Array<Album>) => void
 }
 
 type Store = State & Actions
@@ -129,6 +140,7 @@ export const useStore = create<Store>((set, get) => ({
     scrubTime: null,
     volume: 0.75,
     backendToken: null,
+    albums: null,
     musicKitInstance: null,
     appleMusicToken: '',
     searchTerm: '',
@@ -174,6 +186,9 @@ export const useStore = create<Store>((set, get) => ({
 
         set({ muted })
     },
+
+    setAlbums: (albums: Array<Album>) => set({ albums: albums }),
+
     setCurrentSongId: async () => {
         const { musicKitInstance } = get()
         if (musicKitInstance) {

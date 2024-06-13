@@ -90,7 +90,7 @@ const Album = () => {
                         <MdArrowBackIosNew style={style} />
                     </div>
                 </Link>
-                <div className="  flex-col ">
+                <div className="flex-col ">
                     <h1 className="text-3xl font-bold">
                         {albumData.attributes.name}
                     </h1>
