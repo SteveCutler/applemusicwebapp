@@ -95,7 +95,7 @@ const Track: React.FC<TrackPropTypes> = ({
     }))
 
     const initializeMusic = async () => {
-        await setPlaylist(albumTracks, index)
+        await setPlaylist(albumTracks, index, true)
     }
 
     const pause = async () => {
@@ -164,7 +164,7 @@ const Track: React.FC<TrackPropTypes> = ({
             // console.log('adding album to playlist')
             await initializeMusic()
             // await setCurrrentSongId(playlist[index].id)
-            await play()
+            // await play()
 
             return
         }

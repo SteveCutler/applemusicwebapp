@@ -36,6 +36,9 @@ interface MusickitInstance {
     }
     nowPlayingItem: {
         id: string
+        container: {
+            id: string
+        }
         attributes: {
             name: string
             durationInMillis: number
@@ -69,12 +72,102 @@ interface MusickitInstance {
 interface QueueMethods {
     jumpToItem: (trackNumber: number) => Promise<void>
 }
+
+interface SearchResults {
+    albums?: {
+        data: SearchResultAlbum[]
+    }
+    artists?: {
+        data: SearchResultArtist[]
+    }
+    songs?: {
+        data: SearchResultsSong[]
+    }
+}
+
+interface SearchResultArtist {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    href: string
+    id: string
+    relationships: {
+        albums: AlbumRelationships[]
+    }
+    type: string
+}
+
+interface SearchResultsSong {
+    href: string
+    id: string
+    type: string
+    attributes: {
+        albumName: string
+        artistName: string
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        composerName: string
+        durartionInMillis: number
+        genreNames: Array<string>
+        name: string
+        playParams: {
+            id: string
+            kind: string
+        }
+        releaseDate: string
+        trackNumber: number
+        url: string
+    }
+}
+interface SearchResultAlbum {
+    attributes: {
+        artistName: string
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        contentRating: string
+        copyright: string
+        editorialNotes: {
+            short: string
+            tagline: string
+            standard: string
+        }
+        genreNames: Array<string>
+        name: string
+        recordLabel: string
+        releaseDate: string
+        trackCount: 17
+        playParans: {
+            id: string
+            kind: string
+        }
+    }
+    href: string
+    id: string
+    type: string
+}
 interface SetQueueOptions {
     album?: string | undefined
     items?: Array<MusicKitDescriptor>
     startWith?: number | undefined
+    startPlaying?: boolean
 }
 interface MusicKitDescriptor {
+    id: string
+    type: string
+}
+
+interface AlbumRelationships {
+    href: string
     id: string
     type: string
 }
@@ -95,7 +188,9 @@ interface State {
     appleMusicToken: string | null
     searchTerm: string
     albums: Array<Album> | null
+    albumData: Song[]
     volume: number
+    searchResults: SearchResults
     playlist: Song[]
     currentSongIndex: number
     currentSongId: string | null
@@ -120,7 +215,8 @@ interface Actions {
     fetchAppleToken: () => Promise<void>
     generateAppleToken: () => Promise<void>
     setSearchTerm: (term: string) => void
-    setPlaylist: (songs: Song[], index: number) => void
+    setAlbumData: (album: Song[]) => void
+    setPlaylist: (songs: Song[], index: number, startPlaying: boolean) => void
     playSong: () => void
     pauseSong: () => Promise<void>
     nextSong: () => void
@@ -130,6 +226,7 @@ interface Actions {
     setScrubTime: (time: number | null) => void
     setMuted: (muted: boolean) => void
     setAlbums: (albums: Array<Album>) => void
+    setSearchResults: (results: SearchResults) => void
 }
 
 type Store = State & Actions
@@ -141,8 +238,10 @@ export const useStore = create<Store>((set, get) => ({
     volume: 0.75,
     backendToken: null,
     albums: null,
+    albumData: [],
     musicKitInstance: null,
     appleMusicToken: '',
+    searchResults: {},
     searchTerm: '',
     playlist: [],
     currentSongIndex: 0,
@@ -189,6 +288,9 @@ export const useStore = create<Store>((set, get) => ({
 
     setAlbums: (albums: Array<Album>) => set({ albums: albums }),
 
+    setSearchResults: (results: SearchResults) =>
+        set({ searchResults: results }),
+
     setCurrentSongId: async () => {
         const { musicKitInstance } = get()
         if (musicKitInstance) {
@@ -203,6 +305,7 @@ export const useStore = create<Store>((set, get) => ({
         }
     },
 
+    setAlbumData: (album: Song[]) => set({ albumData: album }),
     setBackendToken: (token: string) => set({ backendToken: token }),
     setAuthorized: (isAuthorized: boolean) => set({ isAuthorized }),
     setCurrentSongIndex: async (currentSongIndex: number) => {
@@ -443,7 +546,11 @@ export const useStore = create<Store>((set, get) => ({
 
     setSearchTerm: (term: string) => set({ searchTerm: term }),
 
-    setPlaylist: async (songs: Song[], index: number) => {
+    setPlaylist: async (
+        songs: Song[],
+        index: number,
+        startPlaying: boolean
+    ) => {
         console.log('set playlist')
         const { musicKitInstance, playlist } = get()
 
@@ -456,6 +563,7 @@ export const useStore = create<Store>((set, get) => ({
             await musicKitInstance.setQueue({
                 items: songDescriptors,
                 startWith: index,
+                startPlaying: startPlaying,
             })
         }
         set({ playlist: songs, currentSongIndex: index })

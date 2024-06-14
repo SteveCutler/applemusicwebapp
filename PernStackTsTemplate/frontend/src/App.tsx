@@ -12,6 +12,7 @@ import Sidebar from './components/Homepage/Sidebar'
 import Playlist from './pages/Playlist'
 import Library from './pages/Library'
 import Stacks from './pages/Stacks'
+import Search from './pages/Search'
 
 function App() {
     const { backendToken, authorizeBackend } = useStore(state => ({
@@ -51,6 +52,10 @@ function App() {
                             element={
                                 !backendToken ? <SignUp /> : <Navigate to="/" />
                             }
+                        />
+                        <Route
+                            path="/search"
+                            element={!backendToken ? <Login /> : <Search />}
                         />
                         <Route
                             path="/login"
