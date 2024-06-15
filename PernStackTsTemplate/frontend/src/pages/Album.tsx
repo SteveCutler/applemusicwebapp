@@ -4,6 +4,7 @@ import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
+import { useStore } from '../store/store'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -57,15 +58,22 @@ type ArtworkObject = {
 }
 
 const Album = () => {
-    const { albumId } = useParams<{ albumId: string }>()
-    // console.log(albumId)
+    const { albumId, type } = useParams<{ albumId: string; type: string }>()
+    console.log(type)
     const { albumData, loading, error } = useFetchAlbumData(albumId)
+    const { setSearchTerm } = useStore(state => ({
+        setSearchTerm: state.setSearchTerm,
+    }))
 
     // console.log('album data: ', albumData)
     const constructImageUrl = (url: string, size: number) => {
         return url
             .replace('{w}', size.toString())
             .replace('{h}', size.toString())
+    }
+
+    const setTerm = () => {
+        setSearchTerm(albumData.attributes.artistName)
     }
 
     const style = { fontSize: '1.5em' }
@@ -94,9 +102,19 @@ const Album = () => {
                     <h1 className="text-3xl font-bold">
                         {albumData.attributes.name}
                     </h1>
-                    <h1 className="text-2xl font-bold">
+                    <Link
+                        to={
+                            type === 'library-albums'
+                                ? `/search/`
+                                : `/artist/${artistId}`
+                        }
+                        onClick={
+                            type === 'library-albums' ? setTerm : undefined
+                        }
+                        className="text-2xl hover:text-blue-200 hover:cursor-pointer font-bold"
+                    >
                         {albumData.attributes.artistName}
-                    </h1>
+                    </Link>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
                     <div className="">

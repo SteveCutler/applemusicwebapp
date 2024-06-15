@@ -32,12 +32,20 @@ musicplayer state management -
 
 **fix bug where if two of the same song on playlist they both get highlighted in playlist view when playing (filter by trackId?)
 
-**need to set certain global variables when user signs up:
+**need to set certain global variables when user signs up, settings page where these can be changed:
 country code
 bitrate
 load library
+
+log out button
+
+artist page
+
+playlists in the sidebar
 
 
 **add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
 
 **fix issue on library page of making sure only the album playing changes to the play sign
+
+one work around for loading artist page for library albums is to link them to the search page with the url param of the artist name?

@@ -38,7 +38,8 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums }) => {
                 {albums &&
                     albums.map(
                         album =>
-                            album.type === 'library-playlists' ? (
+                            album.type === 'library-playlists' &&
+                            album.attributes ? (
                                 <AlbumItem
                                     title={album.attributes.name}
                                     artistName="Playlist"
@@ -47,13 +48,17 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums }) => {
                                     type={album.type}
                                 />
                             ) : (
-                                <AlbumItem
-                                    title={album.attributes.name}
-                                    artistName={album.attributes.artistName}
-                                    albumArtUrl={album.attributes.artwork.url}
-                                    albumId={album.id}
-                                    type={album.type}
-                                />
+                                album.attributes && (
+                                    <AlbumItem
+                                        title={album.attributes.name}
+                                        artistName={album.attributes.artistName}
+                                        albumArtUrl={
+                                            album.attributes.artwork.url
+                                        }
+                                        albumId={album.id}
+                                        type={album.type}
+                                    />
+                                )
                             )
                         // <AlbumItem
                         //     title={album.attributes.name}

@@ -28,7 +28,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             to={
                 albumId.startsWith('p')
                     ? `/playlist/${albumId}`
-                    : `/album/${albumId}`
+                    : `/album/${albumId}/${type}`
             }
         >
             <div className="">
@@ -37,6 +37,11 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             <div className="">
                 <h2 className="text-xl font-bold">{title}</h2>
                 <h3>{artistName}</h3>
+                {type === 'library-albums' && (
+                    <div className="bg-slate-300 text-slate-800 w-fit p-1 my-1 font-light  flex rounded-lg">
+                        <span>Library</span>
+                    </div>
+                )}
             </div>
         </Link>
     )

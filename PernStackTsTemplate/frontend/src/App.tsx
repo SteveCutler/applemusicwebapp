@@ -13,6 +13,7 @@ import Playlist from './pages/Playlist'
 import Library from './pages/Library'
 import Stacks from './pages/Stacks'
 import Search from './pages/Search'
+import Artist from './pages/Artist'
 
 function App() {
     const { backendToken, authorizeBackend } = useStore(state => ({
@@ -54,8 +55,12 @@ function App() {
                             }
                         />
                         <Route
-                            path="/search"
+                            path="/search/"
                             element={!backendToken ? <Login /> : <Search />}
+                        />
+                        <Route
+                            path="/artist/:Id"
+                            element={!backendToken ? <Login /> : <Artist />}
                         />
                         <Route
                             path="/login"
@@ -68,7 +73,10 @@ function App() {
                             element={!backendToken ? <Login /> : <Library />}
                         />
                         <Route path="/stacks" element={<Stacks />} />
-                        <Route path="/album/:albumId" element={<Album />} />
+                        <Route
+                            path="/album/:albumId/:type"
+                            element={<Album />}
+                        />
                         <Route
                             path="/playlist/:playlistId"
                             element={<Playlist />}

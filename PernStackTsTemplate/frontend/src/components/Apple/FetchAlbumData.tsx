@@ -4,7 +4,7 @@ import useMusicKit from './LoadMusickit'
 import { useStore } from '../../store/store'
 
 type AlbumType = {
-    attributes: AttributeObject
+    attributes?: AttributeObject
     relationships: RelationshipObject
     id: string
 }
@@ -55,23 +55,22 @@ type ArtworkObject = {
 }
 
 const FetchAlbumData = (albumId: string | undefined) => {
-   
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const {musicKitInstance, authorizeMusicKit, albumData, setAlbumData} = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData
-
-    }))
+    const { musicKitInstance, authorizeMusicKit, albumData, setAlbumData } =
+        useStore(state => ({
+            musicKitInstance: state.musicKitInstance,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        }))
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
     useEffect(() => {
-         const fetchAlbumData = async () => {
+        const fetchAlbumData = async () => {
             if (!musicKitInstance) {
                 await authorizeMusicKit()
                 return
@@ -110,9 +109,11 @@ const FetchAlbumData = (albumId: string | undefined) => {
                             queryParameters
                         )
 
-                        console.log(res)
+                        // console.log(res)
 
                         const data = await res.data.data
+
+                        console.log('data: ', albumData)
 
                         setAlbumData(data[0])
                     } catch (error: any) {
