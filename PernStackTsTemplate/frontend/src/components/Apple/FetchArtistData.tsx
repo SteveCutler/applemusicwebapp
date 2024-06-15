@@ -80,10 +80,33 @@ type ArtworkObject = {
     url: string
 }
 
+type AlbumData = {
+    attributes: {
+        artistName: string
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        editorialNotes: {
+            short: string
+            standard: string
+        }
+        genreName: Array<string>
+        name: string
+        trackCount: number
+        url: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
 const FetchArtistData = (id: string | undefined) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [artistData, setArtistData] = useState<Artist | null>(null)
+    const [artistAlbumData, setArtistAlbumData] =
+        useState<Array<AlbumData> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
     const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
@@ -120,10 +143,15 @@ const FetchArtistData = (id: string | undefined) => {
                     const res = await musicKitInstance.api.music(
                         `/v1/catalog/us/artists/${artistId}`
                     )
+                    const albumRes = await musicKitInstance.api.music(
+                        `/v1/catalog/us/artists/${artistId}/albums`
+                    )
 
-                    console.log(res)
+                    const data: Artist = await res.data.data[0]
+                    const albumData: Array<AlbumData> = await albumRes.data.data
+                    console.log(albumData)
+                    setArtistAlbumData(albumData)
 
-                    const data: Artist = await res.data.data
                     setArtistData(data)
                 } catch (error: any) {
                     console.error(error)
@@ -141,7 +169,7 @@ const FetchArtistData = (id: string | undefined) => {
         fetchArtistData()
     }, [musicKitInstance, id, authorizeMusicKit])
 
-    return { artistData, loading, error }
+    return { artistData, artistAlbumData, loading, error }
 }
 
 export default FetchArtistData

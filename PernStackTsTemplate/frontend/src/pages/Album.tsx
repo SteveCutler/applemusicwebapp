@@ -106,7 +106,7 @@ const Album = () => {
                         to={
                             type === 'library-albums'
                                 ? `/search/`
-                                : `/artist/${artistId}`
+                                : `/artist/${albumId}`
                         }
                         onClick={
                             type === 'library-albums' ? setTerm : undefined
