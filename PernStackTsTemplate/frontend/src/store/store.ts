@@ -192,6 +192,7 @@ interface State {
     volume: number
     searchResults: SearchResults
     playlist: Song[]
+    gridDisplay: boolean
     currentSongIndex: number
     currentSongId: string | null
     currentSongDuration: number | null
@@ -212,6 +213,7 @@ interface Actions {
     setCurrentVolume: (volume: number) => void
     authorizeMusicKit: () => Promise<void>
     switchTrack: (trackNumber: number) => Promise<void>
+    setGridDisplay: (bool: boolean) => void
     fetchAppleToken: () => Promise<void>
     generateAppleToken: () => Promise<void>
     setSearchTerm: (term: string) => void
@@ -249,6 +251,7 @@ export const useStore = create<Store>((set, get) => ({
     currentElapsedTime: null,
     currentSongId: '',
     muted: false,
+    gridDisplay: true,
     isPlaying: false,
 
     // Actions
@@ -288,6 +291,7 @@ export const useStore = create<Store>((set, get) => ({
 
     setAlbums: (albums: Array<Album>) => set({ albums: albums }),
 
+    setGridDisplay: (bool: boolean) => set({ gridDisplay: bool }),
     setSearchResults: (results: SearchResults) =>
         set({ searchResults: results }),
 

@@ -3,6 +3,8 @@ import { useStore } from '../store/store'
 import FetchLibraryAlbums from '../components/Apple/FetchLibraryAlbums'
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
+import { IoGridOutline } from 'react-icons/io5'
+import { IoGrid } from 'react-icons/io5'
 
 interface Album {
     id: string
@@ -16,8 +18,11 @@ interface Album {
 const Library = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
+
     const {
         authorizeMusicKit,
+        gridDisplay,
+        setGridDisplay,
         backendToken,
         appleMusicToken,
         musicKitInstance,
@@ -25,6 +30,8 @@ const Library = () => {
         albums,
         setAlbums,
     } = useStore(state => ({
+        gridDisplay: state.gridDisplay,
+        setGridDisplay: state.setGridDisplay,
         authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
         musicKitInstance: state.musicKitInstance,
@@ -129,6 +136,13 @@ const Library = () => {
     // console.log(libraryAlbums)
     const style = { fontSize: '2rem' }
 
+    const toggleGrid = () => {
+        if (gridDisplay) {
+            setGridDisplay(false)
+        } else {
+            setGridDisplay(true)
+        }
+    }
     return (
         <div className="flex-col w-full h-full">
             <div className="flex justify-between my-5 px-5 mx-auto items-center gap-2">
@@ -137,14 +151,27 @@ const Library = () => {
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
                 </button> */}
-                <button
-                    disabled={loading}
-                    onClick={updateLibrary}
-                    className=" btn btn-primary rounded-full"
-                    title="Refresh library"
-                >
-                    <IoMdRefreshCircle style={style} />
-                </button>
+                <div className="flex justify-center items-center gap-3">
+                    <span
+                        className={`flex justify-right hover:cursor-pointer text-slate-300 hover:text-slate-100 p-2 rounded-lg ${gridDisplay && 'bg-slate-500'}`}
+                        onClick={toggleGrid}
+                    >
+                        {gridDisplay ? (
+                            <IoGrid style={style} />
+                        ) : (
+                            <IoGridOutline style={style} />
+                        )}
+                    </span>
+
+                    <button
+                        disabled={loading}
+                        onClick={updateLibrary}
+                        className=" btn btn-primary rounded-full"
+                        title="Refresh library"
+                    >
+                        <IoMdRefreshCircle style={style} />
+                    </button>
+                </div>
             </div>
             <div className="flex-col pt-5  mx-5 border-t-2 border-slate-500 w-full gap-2">
                 {albums && <AlbumList />}

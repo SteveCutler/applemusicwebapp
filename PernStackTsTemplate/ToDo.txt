@@ -31,3 +31,13 @@ musicplayer state management -
 
 
 **fix bug where if two of the same song on playlist they both get highlighted in playlist view when playing (filter by trackId?)
+
+**need to set certain global variables when user signs up:
+country code
+bitrate
+load library
+
+
+**add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
+
+**fix issue on library page of making sure only the album playing changes to the play sign

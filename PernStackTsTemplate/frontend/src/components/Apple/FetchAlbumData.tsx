@@ -55,16 +55,23 @@ type ArtworkObject = {
 }
 
 const FetchAlbumData = (albumId: string | undefined) => {
-    const [albumData, setAlbumData] = useState<AlbumType | null>(null)
+   
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const musicKitInstance = useStore(state => state.musicKitInstance)
-    const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
+    const {musicKitInstance, authorizeMusicKit, albumData, setAlbumData} = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        authorizeMusicKit: state.authorizeMusicKit,
+        albumData: state.albumData,
+        setAlbumData: state.setAlbumData
+
+    }))
+    // const musicKitInstance = useStore(state => state.musicKitInstance)
+    // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
     useEffect(() => {
-        const fetchAlbumData = async () => {
+         const fetchAlbumData = async () => {
             if (!musicKitInstance) {
                 await authorizeMusicKit()
                 return
