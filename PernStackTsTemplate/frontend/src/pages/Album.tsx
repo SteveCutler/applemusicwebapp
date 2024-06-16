@@ -91,7 +91,7 @@ const Album = () => {
 
     if (albumData) {
         return (
-            <div className="flex-col w-4/5 h-screen">
+            <div className="flex-col w-4/5 h-full">
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
                         {' '}

@@ -33,9 +33,20 @@ type ArtworkObject = {
 }
 
 const AppleDashboard = () => {
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        heavyRotation,
+        setHeavyRotation,
+        recommendations,
+        recentlyPlayed,
+    } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
+        recommendations: state.recommendations,
         authorizeMusicKit: state.authorizeMusicKit,
+        heavyRotation: state.heavyRotation,
+        setHeavyRotation: state.setHeavyRotation,
+        recentlyPlayed: state.recentlyPlayed,
     }))
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
@@ -44,10 +55,13 @@ const AppleDashboard = () => {
     useEffect(() => {
         authorizeMusicKit
     }, [])
-    let { heavyRotation } = fetchHeavyRotation()
-    let { recentlyPlayed } = FetchRecentlyPlayed()
+    fetchHeavyRotation()
+    FetchRecentlyPlayed()
+    FetchRecommendations()
 
     console.log('heavy rotation: ', heavyRotation)
+    console.log('recently played: ', recentlyPlayed)
+    console.log('recommendations: ', recommendations)
 
     // const { recommendations } = FetchRecommendations()
 

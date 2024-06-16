@@ -4,8 +4,15 @@ import useMusicKit from './LoadMusickit'
 import { useStore } from '../../store/store'
 
 const FetchRecentlyPlayed = () => {
-    const musicKitInstance = useStore(state => state.musicKitInstance)
-    const [recentlyPlayed, setRecentlyPlayed] = useState<any[]>([])
+    const { musicKitInstance, recentlyPlayed, setRecentlyPlayed } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            recentlyPlayed: state.recentlyPlayed,
+            setRecentlyPlayed: state.setRecentlyPlayed,
+        })
+    )
+
+    // const [recentlyPlayed, setRecentlyPlayed] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 

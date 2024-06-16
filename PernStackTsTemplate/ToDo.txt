@@ -39,9 +39,9 @@ load library
 
 log out button
 
-artist page
+----artist page---
 
-playlists in the sidebar
+---playlists in the sidebar---
 
 
 **add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
@@ -49,3 +49,11 @@ playlists in the sidebar
 **fix issue on library page of making sure only the album playing changes to the play sign
 
 one work around for loading artist page for library albums is to link them to the search page with the url param of the artist name?
+
+add reactive play button to large photo in albums and album items on home page
+
+----
+
+handling all the recommendation streams and displaying them
+creating a song page
+fixing the album reactive play icon

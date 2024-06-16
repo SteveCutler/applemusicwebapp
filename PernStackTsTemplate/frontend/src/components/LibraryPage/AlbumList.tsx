@@ -1,4 +1,5 @@
 import { useStore } from '../../store/store'
+import AlbumItem from '../Homepage/AlbumItem'
 import AlbumGrid from './AlbumGrid'
 import AlbumRow from './AlbumRow'
 
@@ -11,17 +12,25 @@ const AlbumList = () => {
     console.log('albums: ', albums)
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap w-full gap-1 justify-around  ">
+            <div className="flex flex-wrap w-full gap-1 justify-center  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (
-                        <AlbumGrid
+                        <AlbumItem
                             albumId={album.albumId}
-                            name={album.name}
+                            title={album.name}
                             artistName={album.artistName}
-                            artworkUrl={album.artworkUrl}
-                            trackCount={album.trackCount}
+                            albumArtUrl={album.artworkUrl}
+                            // trackCount={album.trackCount}
+                            type="library-albums"
                         />
+                        // <AlbumGrid
+                        //     albumId={album.albumId}
+                        //     name={album.name}
+                        //     artistName={album.artistName}
+                        //     artworkUrl={album.artworkUrl}
+                        //     trackCount={album.trackCount}
+                        // />
                     ))}
             </div>
         )

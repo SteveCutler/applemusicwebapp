@@ -3,6 +3,7 @@ import { FaSearch } from 'react-icons/fa'
 import { LuLibrary } from 'react-icons/lu'
 import { ImStack } from 'react-icons/im'
 import { Link } from 'react-router-dom'
+import SidebarPlaylists from './SidebarPlaylists'
 
 const Sidebar = () => {
     return (
@@ -39,13 +40,8 @@ const Sidebar = () => {
                         <p className="p-2">Stacks</p>
                     </Link>
                 </div>
-                <div className="flex-col m-5 py-5 w-4/5 border-b-2 border-slate-600 font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
-                    <p>test</p>
+                <div className="flex-col m-5 py-2 w-4/5 border-b-2 border-slate-600 font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                    <SidebarPlaylists />
                 </div>
             </div>
         </>

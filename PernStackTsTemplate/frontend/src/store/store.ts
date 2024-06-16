@@ -14,6 +14,7 @@ type AuthUserType = {
 
 interface Song {
     id: string
+    href?: string
     type: string
     attributes: {
         id?: string
@@ -24,6 +25,10 @@ interface Song {
         durationInMillis: number
         playParams: {
             catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
         }
     }
 }
@@ -43,6 +48,7 @@ interface MusickitInstance {
             name: string
             durationInMillis: number
             trackNumber: number
+            albumId?: string
         }
     }
     mute: () => void
@@ -81,7 +87,7 @@ interface SearchResults {
         data: SearchResultArtist[]
     }
     songs?: {
-        data: SearchResultsSong[]
+        data: Song[]
     }
 }
 
@@ -172,6 +178,40 @@ interface AlbumRelationships {
     type: string
 }
 
+type playlist = {
+    attributes: {
+        canEdit: boolean
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+type AlbumType = {
+    attributes: AttributeObject
+    id: String
+    type: string
+}
+
+type AttributeObject = {
+    artistName: String
+    artwork: ArtworkObject
+    dateAdded: String
+    genreNames: Array<String>
+    name: String
+    releasedDate: String
+    trackCount: Number
+}
+
+type ArtworkObject = {
+    height: Number
+    width: Number
+    url: String
+}
 interface Album {
     id: string
     albumId: string
@@ -179,6 +219,12 @@ interface Album {
     artistName: string
     artworkUrl: string
     trackCount: number
+}
+
+interface HeavyRotAlbum {
+    href: string
+    id: string
+    type: string
 }
 
 interface State {
@@ -198,8 +244,12 @@ interface State {
     currentSongDuration: number | null
     currentElapsedTime: number | null
     isPlaying: boolean
+    libraryPlaylists: Array<playlist> | null
     scrubTime: number | null
     muted: boolean
+    heavyRotation: AlbumType[]
+    recentlyPlayed: AlbumType[]
+    recommendations: AlbumType[]
 }
 
 interface Actions {
@@ -222,6 +272,7 @@ interface Actions {
     playSong: () => void
     pauseSong: () => Promise<void>
     nextSong: () => void
+    setLibraryPlaylists: (playlists: Array<playlist> | null) => void
     previousSong: () => void
     updatePlayback: (index: number, isPlaying: boolean) => void
     getCurrentSongTitle: () => string | null
@@ -229,6 +280,9 @@ interface Actions {
     setMuted: (muted: boolean) => void
     setAlbums: (albums: Array<Album>) => void
     setSearchResults: (results: SearchResults) => void
+    setHeavyRotation: (albums: AlbumType[]) => void
+    setRecentlyPlayed: (albums: AlbumType[]) => void
+    setRecommendations: (albums: AlbumType[]) => void
 }
 
 type Store = State & Actions
@@ -246,6 +300,9 @@ export const useStore = create<Store>((set, get) => ({
     searchResults: {},
     searchTerm: '',
     playlist: [],
+    recentlyPlayed: [],
+    heavyRotation: [],
+    libraryPlaylists: null,
     currentSongIndex: 0,
     currentSongDuration: null,
     currentElapsedTime: null,
@@ -253,6 +310,7 @@ export const useStore = create<Store>((set, get) => ({
     muted: false,
     gridDisplay: true,
     isPlaying: false,
+    recommendations: [],
 
     // Actions
     authorizeBackend: async () => {
@@ -289,12 +347,19 @@ export const useStore = create<Store>((set, get) => ({
         set({ muted })
     },
 
+    setHeavyRotation: (albums: AlbumType[]) => set({ heavyRotation: albums }),
+    setRecommendations: (albums: AlbumType[]) =>
+        set({ recommendations: albums }),
+    setRecentlyPlayed: (albums: AlbumType[]) => set({ recentlyPlayed: albums }),
+
     setAlbums: (albums: Array<Album>) => set({ albums: albums }),
 
     setGridDisplay: (bool: boolean) => set({ gridDisplay: bool }),
     setSearchResults: (results: SearchResults) =>
         set({ searchResults: results }),
 
+    setLibraryPlaylists: (playlists: Array<playlist> | null) =>
+        set({ libraryPlaylists: playlists }),
     setCurrentSongId: async () => {
         const { musicKitInstance } = get()
         if (musicKitInstance) {
@@ -458,11 +523,11 @@ export const useStore = create<Store>((set, get) => ({
                                 const isPlaying =
                                     playbackState === 2 ? true : false
 
-                                console.log('is it playing? :', music.layer)
                                 const currentSongId = nowPlayingItem?.id
                                 const currentSongDuration =
                                     nowPlayingItem?.attributes
                                         .durationInMillis || null
+
                                 useStore.setState({
                                     isPlaying,
                                     currentSongId,
@@ -569,6 +634,9 @@ export const useStore = create<Store>((set, get) => ({
                 startWith: index,
                 startPlaying: startPlaying,
             })
+        }
+        if (startPlaying && musicKitInstance?.nowPlayingItem) {
+            set({ isPlaying: true })
         }
         set({ playlist: songs, currentSongIndex: index })
     },

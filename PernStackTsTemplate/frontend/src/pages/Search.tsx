@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/store'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import AlbumItem from '../components/Homepage/AlbumItem'
+import ArtistItem from '../components/Homepage/ArtistItem'
+import SongItem from '../components/Homepage/SongItem'
 
 const Search = () => {
     const {
@@ -22,6 +25,7 @@ const Search = () => {
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const onChange = (e: any) => {
         setSearchTerm(e.target.value)
@@ -42,6 +46,10 @@ const Search = () => {
     }
 
     useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+
         if (!musicKitInstance) {
             initialize()
         }
@@ -86,73 +94,68 @@ const Search = () => {
     }, [searchTerm, musicKitInstance])
 
     return (
-        <div className="w-full flex-col justify-center items-center mx-auto">
-            <div className="text-3xl m-3 px-3">SEARCH</div>
-            <form className="m-3 p-3" action="">
+        <div className="w-screen flex-col h-full justify-center items-center mx-auto">
+            {/* <div className="text-3xl m-3 px-3">SEARCH</div> */}
+            <form className="m-3 p-3 w-full" action="">
                 <input
                     type="text"
                     value={searchTerm}
                     onChange={e => onChange(e)}
+                    ref={inputRef}
                     placeholder="What do you want to listen to?..."
-                    className="border rounded-full px-4 py-2 w-1/2 text-slate-600 bg-white"
+                    className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
                 />
             </form>
-            <div className="m-3 p-3">
-                {searchResults.albums && (
-                    <p className="text-center m-2 text-3xl">Albums</p>
-                )}
-                {searchResults.albums &&
-                    searchResults.albums.data.map(album => (
-                        <Link
-                            to={`/album/${album.id}`}
-                            className="flex gap-4 hover:cursor-pointer hover:text-slate-300 justify-between text-center items-center"
-                        >
-                            <div>{album.attributes.name}</div>
-                            <div>{album.attributes.artistName}</div>
-                            <div>{album.attributes.trackCount} tracks</div>
-                            <div>
-                                Released on: {album.attributes.releaseDate}
-                            </div>
-                        </Link>
-                    ))}
-            </div>
-            <div className="m-3 p-3">
-                {searchResults.songs && (
-                    <p className="text-center m-2 text-3xl">Songs</p>
-                )}
-                {searchResults.songs &&
-                    searchResults.songs.data.map(song => (
-                        <Link
-                            to={`/album/${song.id}`}
-                            className="flex gap-4 hover:cursor-pointer hover:text-slate-300 justify-between text-center items-center"
-                        >
-                            <div>{song.attributes.name}</div>
-                            <div>{song.attributes.artistName}</div>
-                            {/* <div>{song.attributes.trackCount} tracks</div> */}
-                            <div>
-                                Released on: {song.attributes.releaseDate}
-                            </div>
-                        </Link>
-                    ))}
-            </div>
-            <div className="m-3 p-3">
+            {/*  */}
+            <div className="flex-col mx-3 px-3">
                 {searchResults.artists && (
-                    <p className="text-center text-3xl">Artists</p>
+                    <p className="text-left font-bold  mt-7 pb-3 text-3xl">
+                        Artists:
+                    </p>
                 )}
-                {searchResults.artists &&
-                    searchResults.artists.data.map(artist => (
-                        <Link
-                            to={`/album/${artist.id}`}
-                            className="flex gap-4 hover:cursor-pointer hover:text-slate-300 justify-between text-center items-center"
-                        >
-                            <div>{artist.attributes.name}</div>
-                            {/* <div>{artist.attributes.artistName}</div> */}
-                            {/* <div>{artist.attributes.trackCount} tracks</div> */}
-                            {/* <div>
-                                Released on: {album.attributes.releaseDate}
-                            </div> */}
-                        </Link>
-                    ))}
+                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                    {searchResults.artists &&
+                        searchResults.artists.data.map(artist => (
+                            <ArtistItem
+                                title={artist.attributes.name}
+                                artUrl={artist.attributes.artwork?.url}
+                                artistId={artist.id}
+                            />
+                        ))}
+                </div>
+            </div>
+
+            <div className="flex-col mx-3 mb-4 px-3">
+                {searchResults.albums && (
+                    <p className="text-left font-bold  mt-7 mb-0 pb-3 text-3xl">
+                        Albums:
+                    </p>
+                )}
+                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                    {searchResults.albums &&
+                        searchResults.albums.data.map(album => (
+                            <AlbumItem
+                                title={album.attributes.name}
+                                artistName={album.attributes.artistName}
+                                albumId={album.id}
+                                type={album.type}
+                                albumArtUrl={album.attributes.artwork.url}
+                            />
+                        ))}
+                </div>
+            </div>
+            <div className="flex-col mx-3 mb-4 px-3">
+                {searchResults.albums && (
+                    <p className="text-left font-bold  mt-7 pb-3 text-3xl">
+                        Songs:
+                    </p>
+                )}
+                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                    {searchResults.songs &&
+                        searchResults.songs.data.map(song => (
+                            <SongItem song={song} />
+                        ))}
+                </div>
             </div>
         </div>
     )

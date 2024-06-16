@@ -1,22 +1,30 @@
 import { useState, useEffect } from 'react'
 import useMusicKit from './LoadMusickit'
 import { useMusickitContext } from '../../context/MusickitContext'
+import { useStore } from '../../store/store'
 
-const FetchRecommendations = (musicUserToken: String) => {
-    const [recommendations, setRecommendations] = useState<any[]>([])
+const FetchRecommendations = () => {
+    const { musicKitInstance, recommendations, setRecommendations } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            recommendations: state.recommendations,
+            setRecommendations: state.setRecommendations,
+        })
+    )
+    // const [recommendations, setRecommendations] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
-    const musicKitLoaded = useMusicKit()
+    // const musicKitLoaded = useMusicKit()
     const { musicInstance: music } = useMusickitContext()
 
     useEffect(() => {
         const fetchRecommendations = async () => {
-            if (music) {
+            if (musicKitInstance) {
                 try {
                     console.log(music)
                     const queryParameters = { l: 'en-us', limit: 5 }
-                    const res = await music.api.music(
+                    const res = await musicKitInstance.api.music(
                         '/v1/me/recommendations',
                         queryParameters
                     )
@@ -37,10 +45,10 @@ const FetchRecommendations = (musicUserToken: String) => {
             }
         }
 
-        if (musicKitLoaded) {
+        if (musicKitInstance) {
             fetchRecommendations()
         }
-    }, [musicUserToken, musicKitLoaded, music])
+    }, [musicKitInstance])
 
     return { recommendations, loading, error }
 }

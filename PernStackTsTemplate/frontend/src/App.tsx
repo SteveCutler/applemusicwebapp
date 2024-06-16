@@ -74,7 +74,7 @@ function App() {
                         />
                         <Route path="/stacks" element={<Stacks />} />
                         <Route
-                            path="/album/:albumId/:type"
+                            path="/album/:albumId/:type?"
                             element={<Album />}
                         />
                         <Route

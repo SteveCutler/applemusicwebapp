@@ -20,6 +20,8 @@ const Artist = () => {
     const { artistData, artistAlbumData, loading, error } =
         useFetchArtistData(Id)
 
+    // data flow is taking albumID right now, specify with type?
+
     //console.log('artistData: ', artistData[0])
     const initialize = async () => {
         let musicKitLoaded = false

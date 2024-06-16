@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react'
 import { useStore } from '../../store/store'
 const FetchHeavyRotation = () => {
-    const { appleMusicToken, musicKitInstance } = useStore(state => ({
+    const {
+        appleMusicToken,
+        musicKitInstance,
+        heavyRotation,
+        setHeavyRotation,
+    } = useStore(state => ({
         appleMusicToken: state.appleMusicToken,
+        heavyRotation: state.heavyRotation,
+        setHeavyRotation: state.setHeavyRotation,
         musicKitInstance: state.musicKitInstance,
     }))
-    const [heavyRotation, setHeavyRotation] = useState<any[]>([])
+    // const [heavyRotation, setHeavyRotation] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 

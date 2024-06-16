@@ -129,22 +129,19 @@ const FetchArtistData = (id: string | undefined) => {
             }
 
             try {
-                const res = await musicKitInstance.api.music(
-                    `v1/catalog/us/albums/${id}/artists`
-                )
-                // const data = await res.json()
-                const artistId = res.data.data[0].id
+                //RETRIEVE ARTIST ID BASED ON ALBUM ID
 
-                // console.log('music kit instance and album id')
-                // console.log('music kit instance: ', musicKitInstance)
-                // console.log('artistId: ', id)
+                // const res = await musicKitInstance.api.music(
+                //     `v1/catalog/us/albums/${id}/artists`
+                // )
+                // const artistId = res.data.data[0].id
 
                 try {
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/us/artists/${artistId}`
+                        `/v1/catalog/us/artists/${id}`
                     )
                     const albumRes = await musicKitInstance.api.music(
-                        `/v1/catalog/us/artists/${artistId}/albums`
+                        `/v1/catalog/us/artists/${id}/albums`
                     )
 
                     const data: Artist = await res.data.data[0]

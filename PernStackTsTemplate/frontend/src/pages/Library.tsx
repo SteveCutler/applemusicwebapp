@@ -90,7 +90,7 @@ const Library = () => {
         }
     }
     useEffect(() => {
-        if (!musicKitInstance) {
+        if (!musicKitInstance || !appleMusicToken) {
             initialize()
         }
 
@@ -146,7 +146,7 @@ const Library = () => {
     return (
         <div className="flex-col w-full h-full">
             <div className="flex justify-between my-5 px-5 mx-auto items-center gap-2">
-                <span className="text-3xl font-bold">LIBRARY</span>
+                <span className="text-3xl font-bold"></span>
 
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library

@@ -24,20 +24,18 @@ const Home = () => {
     }))
 
     const initialize = async () => {
-        let musicKitLoaded = false
-        if (musicKitLoaded === false) {
+        if (!musicKitInstance) {
             console.log('Initializing MusicKit...')
             authorizeMusicKit()
-            musicKitLoaded = true
         }
 
-        if (!appleMusicToken && musicKitLoaded) {
+        if (!appleMusicToken && musicKitInstance) {
             console.log('fetching Apple token...')
             fetchAppleToken()
         }
     }
     useEffect(() => {
-        if (!musicKitInstance) {
+        if (!musicKitInstance || !appleMusicToken) {
             initialize()
         }
     }, [musicKitInstance, appleMusicToken])
