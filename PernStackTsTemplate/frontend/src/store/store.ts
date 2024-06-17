@@ -250,6 +250,7 @@ interface State {
     heavyRotation: AlbumType[]
     recentlyPlayed: AlbumType[]
     recommendations: AlbumType[]
+    albumArtUrl: string
 }
 
 interface Actions {
@@ -266,6 +267,7 @@ interface Actions {
     setGridDisplay: (bool: boolean) => void
     fetchAppleToken: () => Promise<void>
     generateAppleToken: () => Promise<void>
+    setAlbumArtUrl: (url: string) => void
     setSearchTerm: (term: string) => void
     setAlbumData: (album: Song[]) => void
     setPlaylist: (songs: Song[], index: number, startPlaying: boolean) => void
@@ -291,6 +293,7 @@ export const useStore = create<Store>((set, get) => ({
     // State
     isAuthorized: false,
     scrubTime: null,
+    albumArtUrl: '',
     volume: 0.75,
     backendToken: null,
     albums: null,
@@ -373,6 +376,8 @@ export const useStore = create<Store>((set, get) => ({
             set({ volume })
         }
     },
+
+    setAlbumArtUrl: (url: string) => set({ albumArtUrl: url }),
 
     setAlbumData: (album: Song[]) => set({ albumData: album }),
     setBackendToken: (token: string) => set({ backendToken: token }),
@@ -498,109 +503,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     authorizeMusicKit: async () => {
-        if (!(window as any).MusicKit) {
-            const script = document.createElement('script')
-            script.src =
-                'https://js-cdn.music.apple.com/musickit/v3/musickit.js'
-            script.onload = () => {
-                document.addEventListener('musickitloaded', async () => {
-                    try {
-                        console.log('creating musickit')
-                        const music = await (window as any).MusicKit.configure({
-                            developerToken: import.meta.env
-                                .VITE_MUSICKIT_DEVELOPER_TOKEN,
-                            app: {
-                                name: 'AppleMusicDashboard',
-                                build: '1.0.0',
-                            },
-                        })
-                        if (music) {
-                            console.log('adding event listeners...')
-                            // Attach event listeners here
-                            const updateState = () => {
-                                const { playbackState, nowPlayingItem } = music
-
-                                const isPlaying =
-                                    playbackState === 2 ? true : false
-
-                                const currentSongId = nowPlayingItem?.id
-                                const currentSongDuration =
-                                    nowPlayingItem?.attributes
-                                        .durationInMillis || null
-
-                                useStore.setState({
-                                    isPlaying,
-                                    currentSongId,
-                                    currentSongDuration,
-                                    scrubTime: null,
-                                })
-                            }
-
-                            music.addEventListener(
-                                'playbackStateDidChange',
-                                ({ oldState, state }: any) => {
-                                    console.log(
-                                        `Changed the playback state from ${oldState} to ${state}`
-                                    )
-                                    updateState()
-                                    // if (music) {
-                                    //     const { playbackState } = music
-                                    //     useStore.setState({
-                                    //         isPlaying: playbackState,
-                                    //     })
-                                    // }
-                                }
-                            )
-                            music.addEventListener(
-                                'nowPlayingItemDidChange',
-                                () => {
-                                    if (music) {
-                                        // Attach event listeners here
-
-                                        const { nowPlayingItem } = music
-
-                                        const currentSongId = nowPlayingItem?.id
-                                        const currentSongDuration =
-                                            nowPlayingItem?.attributes
-                                                .durationInMillis || null
-                                        useStore.setState({
-                                            currentSongId,
-                                            currentSongDuration,
-                                            currentElapsedTime: 0,
-                                            scrubTime: null,
-                                        })
-                                    }
-                                }
-                            )
-                            music.addEventListener(
-                                'playbackTimeDidChange',
-                                () => {
-                                    if (music) {
-                                        const { playbackState } = music
-
-                                        if (playbackState) {
-                                            const currentElapsedTime =
-                                                music.currentPlaybackTime * 1000
-                                            useStore.setState({
-                                                currentElapsedTime,
-                                            })
-                                        }
-                                    }
-                                }
-                            )
-                        }
-
-                        set({ musicKitInstance: music })
-                        console.log('MusicKit instance: ', music)
-                    } catch (error) {
-                        console.error(error)
-                    }
-                })
-            }
-            document.body.appendChild(script)
-            console.log('MusicKit script loaded')
-        } else {
-            console.log('musickit instance already exists')
+        const initializeMusicKit = async () => {
             const music = await (window as any).MusicKit.configure({
                 developerToken: import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN,
                 app: {
@@ -608,8 +511,119 @@ export const useStore = create<Store>((set, get) => ({
                     build: '1.0.0',
                 },
             })
-            set({ musicKitInstance: music })
-            console.log('MusicKit instance: ', music)
+
+            if (music) {
+                console.log('adding event listeners...')
+                const updateState = async () => {
+                    const { playbackState, nowPlayingItem } = music
+
+                    const constructImageUrl = (url: string, size: number) => {
+                        return url
+                            .replace('{w}', size.toString())
+                            .replace('{h}', size.toString())
+                    }
+
+                    const isPlaying = playbackState === 2 ? true : false
+                    const currentSongId = nowPlayingItem?.id
+                    const currentSongDuration =
+                        nowPlayingItem?.attributes.durationInMillis || null
+
+                    const displayArt =
+                        await nowPlayingItem?.attributes.artwork.url
+                    if (nowPlayingItem && displayArt) {
+                        const displayArtUrl = constructImageUrl(displayArt, 50)
+                        useStore.setState({ albumArtUrl: displayArtUrl })
+                    }
+
+                    useStore.setState({
+                        isPlaying,
+                        currentSongId,
+                        currentSongDuration,
+                        scrubTime: null,
+                    })
+                }
+
+                // Remove existing listeners to avoid duplicate listeners
+                music.removeEventListener('playbackStateDidChange', updateState)
+                music.removeEventListener(
+                    'nowPlayingItemDidChange',
+                    updateState
+                )
+                music.removeEventListener('playbackTimeDidChange', updateState)
+
+                music.addEventListener(
+                    'playbackStateDidChange',
+                    ({ oldState, state }: any) => {
+                        console.log(
+                            `Changed the playback state from ${oldState} to ${state}`
+                        )
+                        updateState()
+                    }
+                )
+
+                music.addEventListener('nowPlayingItemDidChange', () => {
+                    if (music) {
+                        const { nowPlayingItem } = music
+                        const currentSongId = nowPlayingItem?.id
+                        const currentSongDuration =
+                            nowPlayingItem?.attributes.durationInMillis || null
+                        const constructImageUrl = (
+                            url: string,
+                            size: number
+                        ) => {
+                            return url
+                                .replace('{w}', size.toString())
+                                .replace('{h}', size.toString())
+                        }
+                        const displayArt =
+                            nowPlayingItem?.attributes.artwork.url
+                        if (nowPlayingItem && displayArt) {
+                            const displayArtUrl = constructImageUrl(
+                                displayArt,
+                                50
+                            )
+                            useStore.setState({ albumArtUrl: displayArtUrl })
+                        }
+                        useStore.setState({
+                            currentSongId,
+                            currentSongDuration,
+                            currentElapsedTime: 0,
+                            scrubTime: null,
+                        })
+                    }
+                })
+
+                music.addEventListener('playbackTimeDidChange', () => {
+                    if (music) {
+                        const { playbackState } = music
+                        // if (playbackState) {
+                        //     const currentElapsedTime =
+                        //         music.currentPlaybackTime * 1000
+                        //     useStore.setState({ currentElapsedTime })
+                        // }
+                    }
+                })
+
+                set({ musicKitInstance: music })
+                console.log('MusicKit instance: ', music)
+            }
+        }
+
+        if (!(window as any).MusicKit) {
+            const script = document.createElement('script')
+            script.src =
+                'https://js-cdn.music.apple.com/musickit/v3/musickit.js'
+            script.onload = async () => {
+                document.addEventListener('musickitloaded', async () => {
+                    console.log('creating musickit')
+                    await initializeMusicKit()
+                })
+            }
+            document.body.appendChild(script)
+            console.log('MusicKit script loaded')
+        } else {
+            console.log('musickit instance already exists')
+            await initializeMusicKit()
         }
     },
 

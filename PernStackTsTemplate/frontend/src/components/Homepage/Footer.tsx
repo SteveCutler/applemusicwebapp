@@ -22,6 +22,7 @@ function Footer() {
         switchTrack,
         currentElapsedTime,
         currentSongIndex,
+        albumArtUrl,
         currentSongId,
         currentSongDuration,
         nextSong,
@@ -32,6 +33,7 @@ function Footer() {
         currentSongDuration: state.currentSongDuration,
         switchTrack: state.switchTrack,
         currentElapsedTime: state.currentElapsedTime,
+        albumArtUrl: state.albumArtUrl,
         pauseSong: state.pauseSong,
         nextSong: state.nextSong,
         previousSong: state.previousSong,
@@ -88,10 +90,17 @@ function Footer() {
                     <IoPlayForwardCircleSharp style={style} />
                 </button>
             </div>
-            <div className="flex-col w-1/2">
-                <div className="flex justify-center font-bold w-full">
-                    {musicKitInstance?.nowPlayingItem &&
-                        musicKitInstance?.nowPlayingItem.title}
+            <div className="flex justify-between items-center w-full">
+                <div className="flex gap-2 justify-start w-1/10">
+                    {albumArtUrl ? (
+                        <img src={albumArtUrl} alt="album image" />
+                    ) : (
+                        <span></span>
+                    )}
+                    <div className="flex  font-semibold">
+                        {musicKitInstance?.nowPlayingItem &&
+                            musicKitInstance?.nowPlayingItem.title}
+                    </div>
                 </div>
                 <div className="flex w-full ">
                     <Timeline />

@@ -163,13 +163,14 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 <img src={constructImageUrl(albumArtUrl, 500, 500)} />
             </div>
             <div className="flex justify-between h-full pt-2">
-                <div className="flex-col">
+                <div className="flex-col ">
                     <h2 className="text-xl font-bold">{title}</h2>
                     <h3>{artistName}</h3>
                 </div>
-                <div className="flex-col justify-between pt-3">
+                <div className="flex flex-col justify-between items-end h-full">
+                    {' '}
                     <div
-                        className="transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                        className="transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={async e => {
                             e.preventDefault()
                             e.stopPropagation() // Prevents the link's default behavior
@@ -188,7 +189,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         )}
                     </div>
                     {type === 'library-albums' && (
-                        <div className="bg-slate-300 h-fit text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
+                        <div className="bg-slate-300  text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
                             <span>Library</span>
                         </div>
                     )}

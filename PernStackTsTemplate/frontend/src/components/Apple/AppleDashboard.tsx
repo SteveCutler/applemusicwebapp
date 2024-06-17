@@ -64,6 +64,10 @@ const AppleDashboard = () => {
     console.log('recommendations: ', recommendations)
 
     // const { recommendations } = FetchRecommendations()
+    // Recently Added Endpoint: /v1/me/library/recently-added
+    // Recently played tracks: https://api.music.apple.com/v1/me/recent/played/tracks
+    // Recently played stations: https://api.music.apple.com/v1/me/recent/radio-stations
+    // Get recommendation based on ID https://api.music.apple.com/v1/me/recommendations/{id}
 
     return (
         <div className="h-screen flex-col justify-left ">

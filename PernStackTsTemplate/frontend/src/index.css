@@ -2,8 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+main,
 body {
-    background-image: linear-gradient(url('../public/bg.jpg'));
+    /* background-image: linear-gradient(url('../public/bg.jpg')); */
+    background-color: rgb(19, 26, 52);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

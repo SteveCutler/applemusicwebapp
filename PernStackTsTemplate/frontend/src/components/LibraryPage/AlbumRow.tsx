@@ -135,6 +135,7 @@ const AlbumRow: React.FC<AlbumProps> = ({
     const playData = async () => {
         console.log('album data: ', albumData)
         setPlaylist(albumData, 0, true)
+
         setAlbumData([])
     }
     const loadPlayer = async () => {
