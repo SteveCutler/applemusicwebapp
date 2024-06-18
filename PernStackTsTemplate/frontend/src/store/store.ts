@@ -3,6 +3,7 @@ import { toast } from 'react-hot-toast'
 import { saveToken } from '../components/Apple/saveToken'
 import e from 'express'
 import { CloudHail } from 'lucide-react'
+import { TrackHTMLAttributes } from 'react'
 
 type AuthUserType = {
     id: string
@@ -60,6 +61,7 @@ interface MusickitInstance {
         items: any
     }
     volume: number
+    currentPlaybackTime: () => void
     seekToTime: (elapsedTime: number) => Promise<void>
     playNext: () => Promise<void>
     stop: () => Promise<void>
@@ -180,7 +182,14 @@ interface AlbumRelationships {
 
 type playlist = {
     attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
         canEdit: boolean
+        playlistType?: string
         dataAdded: string
         isPublic: boolean
         lastModifiedDate: string
@@ -227,6 +236,40 @@ interface HeavyRotAlbum {
     type: string
 }
 
+interface RecommendationType {
+    attributes: {
+        title: {
+            stringForDisplay: string
+            contentIds?: string[]
+        }
+    }
+    relationships: {
+        contents: {
+            data: Array<playlist | AlbumType | StationType>
+        }
+    }
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
+}
+
 interface State {
     isAuthorized: boolean
     backendToken: string | null
@@ -250,7 +293,12 @@ interface State {
     heavyRotation: AlbumType[]
     recentlyPlayed: AlbumType[]
     recommendations: AlbumType[]
+    recentlyPlayedAlbums: RecommendationType | null
     albumArtUrl: string
+    personalizedPlaylists: RecommendationType | null
+    themedRecommendations: RecommendationType | null
+    moreLikeRecommendations: RecommendationType | null
+    stationsForYou: RecommendationType | null
 }
 
 interface Actions {
@@ -285,12 +333,18 @@ interface Actions {
     setHeavyRotation: (albums: AlbumType[]) => void
     setRecentlyPlayed: (albums: AlbumType[]) => void
     setRecommendations: (albums: AlbumType[]) => void
+    setThemedRecommendations: (items: RecommendationType | null) => void
+    setPersonalizedPlaylists: (playlists: RecommendationType | null) => void
+    setRecentlyPlayedAlbums: (albums: RecommendationType | null) => void
+    setMoreLikeRecommendations: (items: RecommendationType | null) => void
+    setStationsForYou: (stations: RecommendationType | null) => void
 }
 
 type Store = State & Actions
 
 export const useStore = create<Store>((set, get) => ({
     // State
+
     isAuthorized: false,
     scrubTime: null,
     albumArtUrl: '',
@@ -314,6 +368,11 @@ export const useStore = create<Store>((set, get) => ({
     gridDisplay: true,
     isPlaying: false,
     recommendations: [],
+    themedRecommendations: null,
+    personalizedPlaylists: null,
+    recentlyPlayedAlbums: null,
+    moreLikeRecommendations: null,
+    stationsForYou: null,
 
     // Actions
     authorizeBackend: async () => {
@@ -350,12 +409,18 @@ export const useStore = create<Store>((set, get) => ({
         set({ muted })
     },
 
+    setStationsForYou: (stations: RecommendationType | null) =>
+        set({ stationsForYou: stations }),
+    setThemedRecommendations: (items: RecommendationType | null) =>
+        set({ themedRecommendations: items }),
     setHeavyRotation: (albums: AlbumType[]) => set({ heavyRotation: albums }),
     setRecommendations: (albums: AlbumType[]) =>
         set({ recommendations: albums }),
     setRecentlyPlayed: (albums: AlbumType[]) => set({ recentlyPlayed: albums }),
 
     setAlbums: (albums: Array<Album>) => set({ albums: albums }),
+    setMoreLikeRecommendations: (items: RecommendationType | null) =>
+        set({ moreLikeRecommendations: items }),
 
     setGridDisplay: (bool: boolean) => set({ gridDisplay: bool }),
     setSearchResults: (results: SearchResults) =>
@@ -377,7 +442,13 @@ export const useStore = create<Store>((set, get) => ({
         }
     },
 
+    setPersonalizedPlaylists: (
+        personalizedPlaylists: RecommendationType | null
+    ) => set({ personalizedPlaylists }),
+
     setAlbumArtUrl: (url: string) => set({ albumArtUrl: url }),
+    setRecentlyPlayedAlbums: (albums: RecommendationType | null) =>
+        set({ recentlyPlayedAlbums: albums }),
 
     setAlbumData: (album: Song[]) => set({ albumData: album }),
     setBackendToken: (token: string) => set({ backendToken: token }),
@@ -596,11 +667,11 @@ export const useStore = create<Store>((set, get) => ({
                 music.addEventListener('playbackTimeDidChange', () => {
                     if (music) {
                         const { playbackState } = music
-                        // if (playbackState) {
-                        //     const currentElapsedTime =
-                        //         music.currentPlaybackTime * 1000
-                        //     useStore.setState({ currentElapsedTime })
-                        // }
+                        if (playbackState) {
+                            const currentElapsedTime =
+                                music.currentPlaybackTime * 1000
+                            useStore.setState({ currentElapsedTime })
+                        }
                     }
                 })
 

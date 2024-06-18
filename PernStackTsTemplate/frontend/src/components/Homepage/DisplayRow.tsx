@@ -4,8 +4,49 @@ import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 type DisplayRow = {
-    title: String
-    albums: Array<AlbumType>
+    title: string
+    albums: Array<AlbumType | playlist | StationType>
+    id?: string
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
+}
+
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
 }
 
 type AlbumType = {
@@ -30,44 +71,39 @@ type ArtworkObject = {
     url: String
 }
 
-const DisplayRow: React.FC<DisplayRow> = ({ title, albums }) => {
+const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
     return (
-        <div className="flex-col flex items-center my-5 rounded-lg  ">
+        <div className="flex-col flex items-center my-5 w-full rounded-lg  ">
             <h1 className="text-xl select-none flex w-full px-6 py-2 font-bold justify-start">
+                {id && id}
                 {title}
             </h1>
-            <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 ">
+            {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
+            <div className="carousel carousel-center max-w-5xl overflow-x-auto  flex p-4 space-x-4  rounded-box">
                 {albums &&
-                    albums.map(
-                        album =>
-                            album.type === 'library-playlists' &&
-                            album.attributes ? (
+                    albums.map(album =>
+                        album.type === 'library-playlists' &&
+                        album.attributes ? (
+                            <AlbumItem
+                                title={album.attributes.name}
+                                artistName="Playlist"
+                                albumArtUrl={defaultPlaylistArtwork}
+                                albumId={album.id}
+                                type={album.type}
+                                carousel={true}
+                            />
+                        ) : (
+                            album.attributes && (
                                 <AlbumItem
                                     title={album.attributes.name}
-                                    artistName="Playlist"
-                                    albumArtUrl={defaultPlaylistArtwork}
+                                    artistName={album.attributes.artistName}
+                                    albumArtUrl={album.attributes.artwork.url}
                                     albumId={album.id}
                                     type={album.type}
+                                    carousel={true}
                                 />
-                            ) : (
-                                album.attributes && (
-                                    <AlbumItem
-                                        title={album.attributes.name}
-                                        artistName={album.attributes.artistName}
-                                        albumArtUrl={
-                                            album.attributes.artwork.url
-                                        }
-                                        albumId={album.id}
-                                        type={album.type}
-                                    />
-                                )
                             )
-                        // <AlbumItem
-                        //     title={album.attributes.name}
-                        //     artistName={album.attributes.artistName}
-                        //     albumArtUrl={album.attributes.artwork.url}
-                        //     albumId={album.id}
-                        // />
+                        )
                     )}
             </div>
         </div>

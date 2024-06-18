@@ -37,16 +37,26 @@ const AppleDashboard = () => {
         musicKitInstance,
         authorizeMusicKit,
         heavyRotation,
+        themedRecommendations,
         setHeavyRotation,
         recommendations,
+        recentlyPlayedAlbums,
+        personalizedPlaylists,
         recentlyPlayed,
+        moreLikeRecommendations,
+        stationsForYou,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
+        moreLikeRecommendations: state.moreLikeRecommendations,
+        themedRecommendations: state.themedRecommendations,
+        personalizedPlaylists: state.personalizedPlaylists,
         recommendations: state.recommendations,
         authorizeMusicKit: state.authorizeMusicKit,
         heavyRotation: state.heavyRotation,
+        recentlyPlayedAlbums: state.recentlyPlayedAlbums,
         setHeavyRotation: state.setHeavyRotation,
         recentlyPlayed: state.recentlyPlayed,
+        stationsForYou: state.stationsForYou,
     }))
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
@@ -59,33 +69,64 @@ const AppleDashboard = () => {
     FetchRecentlyPlayed()
     FetchRecommendations()
 
-    console.log('heavy rotation: ', heavyRotation)
-    console.log('recently played: ', recentlyPlayed)
-    console.log('recommendations: ', recommendations)
-
-    // const { recommendations } = FetchRecommendations()
-    // Recently Added Endpoint: /v1/me/library/recently-added
-    // Recently played tracks: https://api.music.apple.com/v1/me/recent/played/tracks
-    // Recently played stations: https://api.music.apple.com/v1/me/recent/radio-stations
-    // Get recommendation based on ID https://api.music.apple.com/v1/me/recommendations/{id}
+    // console.log('heavy rotation: ', heavyRotation)
+    // console.log('recently played: ', recentlyPlayed)
+    // console.log('recommendations: ', recommendations)
+    // console.log('recentlyplayedalbums', recentlyPlayedAlbums)
+    // console.log('personalizedPlaylists: ', personalizedPlaylists)
+    // console.log('themed recos: ', themedRecommendations)
 
     return (
         <div className="h-screen flex-col justify-left ">
             {/* MAIN DISPLAY */}
             {heavyRotation && (
-                <DisplayRow title={'HEAVY ROTATION'} albums={heavyRotation} />
+                <DisplayRow title={'Heavy Rotation'} albums={heavyRotation} />
             )}
             {recentlyPlayed && (
-                <DisplayRow title={'RECENTLY PLAYED'} albums={recentlyPlayed} />
+                <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
             )}
 
             {/* NEED TO MAKE A CUSTOM HOOK FOR DISPLAYING RECOMMMENDATIONS */}
-            {/* {recommendations && (
+            {personalizedPlaylists && (
                 <DisplayRow
-                    title={'RECOMMENDATIONS'}
-                    albums={recommendations}
+                    title={
+                        personalizedPlaylists.attributes.title.stringForDisplay
+                    }
+                    albums={personalizedPlaylists.relationships.contents.data}
                 />
-            )} */}
+            )}
+            {recentlyPlayedAlbums && (
+                <DisplayRow
+                    title={
+                        recentlyPlayedAlbums.attributes.title.stringForDisplay
+                    }
+                    albums={recentlyPlayedAlbums.relationships.contents.data}
+                />
+            )}
+            {themedRecommendations && (
+                <DisplayRow
+                    title={
+                        themedRecommendations.attributes.title.stringForDisplay
+                    }
+                    albums={themedRecommendations.relationships.contents.data}
+                />
+            )}
+            {moreLikeRecommendations && (
+                <DisplayRow
+                    title={
+                        moreLikeRecommendations.attributes.title
+                            .stringForDisplay
+                    }
+                    id={moreLikeRecommendations.attributes.title.contentIds[0]}
+                    albums={moreLikeRecommendations.relationships.contents.data}
+                />
+            )}
+            {stationsForYou && (
+                <DisplayRow
+                    title={stationsForYou.attributes.title.stringForDisplay}
+                    albums={stationsForYou.relationships.contents.data}
+                />
+            )}
         </div>
     )
 }

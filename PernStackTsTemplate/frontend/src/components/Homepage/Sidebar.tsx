@@ -4,6 +4,8 @@ import { LuLibrary } from 'react-icons/lu'
 import { ImStack } from 'react-icons/im'
 import { Link } from 'react-router-dom'
 import SidebarPlaylists from './SidebarPlaylists'
+import { LogOut } from 'lucide-react'
+import LogoutButton from './LogoutButton'
 
 const Sidebar = () => {
     return (
@@ -39,6 +41,12 @@ const Sidebar = () => {
                         <ImStack />
                         <p className="p-2">Stacks</p>
                     </Link>
+                    <div className="flex w-full select:none active:scale[0.90] px-3 hover: cursor-pointer  rounded-xl hover:bg-slate-600 justify-left items-center">
+                        <div>
+                            <LogoutButton />
+                        </div>
+                        <span className="p-2 ">Logout</span>
+                    </div>
                 </div>
                 <div className="flex-col m-5 py-2 w-4/5 border-b-2 border-slate-600 font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <SidebarPlaylists />

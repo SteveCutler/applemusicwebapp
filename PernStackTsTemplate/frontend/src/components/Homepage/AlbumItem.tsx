@@ -9,6 +9,7 @@ interface AlbumPropTypes {
     albumArtUrl: String
     albumId: String
     type: string
+    carousel?: boolean
 }
 
 interface Song {
@@ -33,11 +34,12 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     albumArtUrl,
     albumId,
     type,
+    carousel,
 }) => {
-    const constructImageUrl = (url: String, width: Number, height: Number) => {
+    const constructImageUrl = (url: String, size: Number) => {
         return url
-            .replace('{w}', width.toString())
-            .replace('{h}', height.toString())
+            .replace('{w}', size.toString())
+            .replace('{h}', size.toString())
     }
 
     const {
@@ -152,15 +154,15 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <Link
-            className="flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/5   border-white p-4 rounded-3xl flex justify-between"
+            className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6   border-white p-4 rounded-3xl flex justify-between`}
             to={
                 albumId.startsWith('p')
                     ? `/playlist/${albumId}`
                     : `/album/${albumId}/${type}`
             }
         >
-            <div className="">
-                <img src={constructImageUrl(albumArtUrl, 500, 500)} />
+            <div className="h-full w-full">
+                <img src={constructImageUrl(albumArtUrl, 600)} />
             </div>
             <div className="flex justify-between h-full pt-2">
                 <div className="flex-col ">

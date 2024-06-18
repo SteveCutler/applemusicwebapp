@@ -7,6 +7,7 @@ import Timeline from './Timeline'
 
 import { useStore } from '../../store/store'
 import VolumeSlider from './VolumeSlider'
+import { Link } from 'react-router-dom'
 
 function Footer() {
     // const { musicInstance } = useMusickitContext()
@@ -62,6 +63,9 @@ function Footer() {
         nextSong()
     }
 
+    const albumId =
+        musicKitInstance?.nowPlayingItem?.relationships?.albums?.data[0]?.id
+
     const style = { fontSize: '1.5em' }
 
     return (
@@ -91,17 +95,24 @@ function Footer() {
                 </button>
             </div>
             <div className="flex justify-between items-center w-full">
-                <div className="flex gap-2 justify-start w-1/10">
+                <Link
+                    // to={`/album/${albumId}`}
+                    to=""
+                    className="flex gap-2 justify-start w-1/10"
+                >
                     {albumArtUrl ? (
                         <img src={albumArtUrl} alt="album image" />
                     ) : (
-                        <span></span>
+                        <span className="w-full"></span>
                     )}
-                    <div className="flex  font-semibold">
-                        {musicKitInstance?.nowPlayingItem &&
-                            musicKitInstance?.nowPlayingItem.title}
+                    <div className="flex w-full font-semibold">
+                        {musicKitInstance?.nowPlayingItem ? (
+                            musicKitInstance?.nowPlayingItem.title
+                        ) : (
+                            <span className="w-full"></span>
+                        )}
                     </div>
-                </div>
+                </Link>
                 <div className="flex w-full ">
                     <Timeline />
                 </div>
