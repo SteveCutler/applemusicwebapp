@@ -160,14 +160,17 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     ? `/playlist/${albumId}`
                     : `/album/${albumId}/${type}`
             }
+            title={`${title} by ${artistName}`}
         >
             <div className="h-full w-full">
-                <img src={constructImageUrl(albumArtUrl, 600)} />
+                {albumArtUrl && (
+                    <img src={constructImageUrl(albumArtUrl, 600)} />
+                )}
             </div>
             <div className="flex justify-between h-full pt-2">
-                <div className="flex-col ">
-                    <h2 className="text-xl font-bold">{title}</h2>
-                    <h3>{artistName}</h3>
+                <div className="flex-col h-full overflow-hidden">
+                    <h2 className="text-lg truncate font-bold">{title}</h2>
+                    <h3 className="truncate">{artistName}</h3>
                 </div>
                 <div className="flex flex-col justify-between items-end h-full">
                     {' '}

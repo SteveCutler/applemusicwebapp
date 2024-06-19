@@ -67,7 +67,16 @@ functionality to add albums to library, make playlists and make stacks
 
 fix home page functionality in general
 
-create a Radio stations page
+** create a Radio stations page
+** create a nowplaying page
+** revamp sidebar
+** add display for album image in the 'more like this album' display bar
+
+
+**add to library, like song
+** create playlist, add to playlist etc.
+
+** fix he fact that music stops and restarts when you navigate between Home and Library pages
 
 
 FEATURE IDEAS:

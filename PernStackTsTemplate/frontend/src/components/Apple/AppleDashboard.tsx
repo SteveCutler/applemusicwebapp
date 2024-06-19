@@ -7,6 +7,7 @@ import fetchHeavyRotation from './FetchHeavyRotation'
 import FetchRecentlyPlayed from './FetchRecentlyPlayed'
 import FetchRecommendations from './FetchRecommendations'
 import { useStore } from '../../store/store'
+import FetchRecentlyAddedToLib from './FetchRecentlyAddedToLib'
 
 interface appleDashboardProps {
     musicUserToken: String
@@ -43,10 +44,12 @@ const AppleDashboard = () => {
         recentlyPlayedAlbums,
         personalizedPlaylists,
         recentlyPlayed,
+        recentlyAddedToLib,
         moreLikeRecommendations,
         stationsForYou,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
+        recentlyAddedToLib: state.recentlyAddedToLib,
         moreLikeRecommendations: state.moreLikeRecommendations,
         themedRecommendations: state.themedRecommendations,
         personalizedPlaylists: state.personalizedPlaylists,
@@ -68,17 +71,35 @@ const AppleDashboard = () => {
     fetchHeavyRotation()
     FetchRecentlyPlayed()
     FetchRecommendations()
+    FetchRecentlyAddedToLib()
 
-    console.log('heavy rotation: ', heavyRotation)
-    console.log('recently played: ', recentlyPlayed)
+    // console.log('heavy rotation: ', heavyRotation)
+    // console.log('recently played: ', recentlyPlayed)
     // console.log('recommendations: ', recommendations)
-    console.log('recentlyplayedalbums', recentlyPlayedAlbums)
-    console.log('personalizedPlaylists: ', personalizedPlaylists)
-    console.log('themed recos: ', themedRecommendations)
+    // console.log('recentlyplayedalbums', recentlyPlayedAlbums)
+    // console.log('personalizedPlaylists: ', personalizedPlaylists)
+    // console.log('themed recos: ', themedRecommendations)
+    console.log('recently adde to lib: ', recentlyAddedToLib)
+
+    // const { recommendations } = FetchRecommendations()
+
+    // Recently played tracks: https://api.music.apple.com/v1/me/recent/played/tracks
+    // Recently played stations: https://api.music.apple.com/v1/me/recent/radio-stations
+    // Get recommendation based on ID https://api.music.apple.com/v1/me/recommendations/{id}
 
     return (
         <div className="h-100vh flex-col flex-grow flex justify-left ">
             {/* MAIN DISPLAY */}
+            {recentlyAddedToLib && (
+                <DisplayRow
+                    title={'Recently Added to Library'}
+                    albums={recentlyAddedToLib}
+                />
+            )}
+            {/* {recentlyPlayed && (
+                <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
+            )} */}
+
             {heavyRotation && (
                 <DisplayRow title={'Heavy Rotation'} albums={heavyRotation} />
             )}

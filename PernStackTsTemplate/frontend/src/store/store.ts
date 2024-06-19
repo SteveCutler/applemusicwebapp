@@ -270,6 +270,8 @@ interface StationType {
     type: string
 }
 
+type RecentlyAddedItem = AlbumType | playlist | StationType | Song
+
 interface State {
     isAuthorized: boolean
     backendToken: string | null
@@ -299,6 +301,8 @@ interface State {
     themedRecommendations: RecommendationType | null
     moreLikeRecommendations: RecommendationType | null
     stationsForYou: RecommendationType | null
+    recentlyAddedToLib: RecentlyAddedItem[]
+    recentHistory: Song[]
 }
 
 interface Actions {
@@ -338,6 +342,12 @@ interface Actions {
     setRecentlyPlayedAlbums: (albums: RecommendationType | null) => void
     setMoreLikeRecommendations: (items: RecommendationType | null) => void
     setStationsForYou: (stations: RecommendationType | null) => void
+    setRecentlyAddedToLib: (
+        items:
+            | RecentlyAddedItem[]
+            | ((prevItems: RecentlyAddedItem[]) => RecentlyAddedItem[])
+    ) => void
+    setRecentHistory: (songs: Song[] | ((prevItems: Song[]) => Song[])) => void
 }
 
 type Store = State & Actions
@@ -373,6 +383,8 @@ export const useStore = create<Store>((set, get) => ({
     recentlyPlayedAlbums: null,
     moreLikeRecommendations: null,
     stationsForYou: null,
+    recentlyAddedToLib: [],
+    recentHistory: [],
 
     // Actions
     authorizeBackend: async () => {
@@ -417,6 +429,21 @@ export const useStore = create<Store>((set, get) => ({
     setRecommendations: (albums: AlbumType[]) =>
         set({ recommendations: albums }),
     setRecentlyPlayed: (albums: AlbumType[]) => set({ recentlyPlayed: albums }),
+    setRecentlyAddedToLib: items =>
+        set(state => ({
+            recentlyAddedToLib:
+                typeof items === 'function'
+                    ? items(state.recentlyAddedToLib || [])
+                    : items,
+        })),
+
+    setRecentHistory: songs =>
+        set(state => ({
+            recentHistory:
+                typeof songs === 'function'
+                    ? songs(state.recentHistory || [])
+                    : songs,
+        })),
 
     setAlbums: (albums: Array<Album>) => set({ albums: albums }),
     setMoreLikeRecommendations: (items: RecommendationType | null) =>

@@ -5,8 +5,29 @@ import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.p
 
 type DisplayRow = {
     title: string
-    albums: Array<AlbumType | playlist | StationType>
+    albums: Array<AlbumType | playlist | StationType | Song>
     id?: string
+}
+
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
 }
 
 interface StationType {
