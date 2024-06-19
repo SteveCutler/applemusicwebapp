@@ -31,12 +31,12 @@ function App() {
         console.log('backend previously authorized')
     }, [authorizeBackend])
     return (
-        <div className="flex-col justify-between h-screen ">
-            <div className="flex">
-                <div className="sidebar w-1/6 bg-black">
+        <div className="flex-col justify-between flex min-h-screen ">
+            <div className="flex flex-grow">
+                <div className="sidebar w-1/6  bg-black">
                     <Sidebar />
                 </div>
-                <div className="flex items-top w-4/5 justify-center">
+                <div className="flex flex-col w-5/6 flex-grow items-top justify-center">
                     <Routes>
                         <Route
                             path="/"
@@ -84,7 +84,7 @@ function App() {
                     </Routes>
                 </div>
             </div>
-            <div className="flex sticky bottom-0">
+            <div className="flex-shrink-0 sticky bottom-0">
                 <Footer />
             </div>
             <Toaster />

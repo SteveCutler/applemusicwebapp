@@ -78,29 +78,9 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
             try {
                 console.log('music kit instance and album id')
                 console.log('music kit instance: ', musicKitInstance)
-                console.log('albumId: ', playlistId)
+                console.log('playlistId: ', playlistId)
 
-                if (playlistId.startsWith('p')) {
-                    try {
-                        const trackRes = await musicKitInstance.api.music(
-                            `/v1/me/library/playlists/${playlistId}/tracks`
-                        )
-                        const playlistRes = await musicKitInstance.api.music(
-                            `/v1/me/library/playlists/${playlistId}/`
-                        )
-
-                        const trackData = await trackRes.data.data
-                        const playlistData = await playlistRes.data.data
-
-                        setPlaylistTrackData(trackData)
-                        setPlaylistData(playlistData[0])
-                    } catch (error: any) {
-                        console.error(error)
-                        setError(error)
-                    } finally {
-                        setLoading(false)
-                    }
-                } else if (playlistId.startsWith('pl')) {
+                if (playlistId.startsWith('pl')) {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const trackRes = await musicKitInstance.api.music(
@@ -116,6 +96,26 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
 
                         const playlistData = await playlistRes.data.data
                         const trackData = await trackRes.data.data
+
+                        setPlaylistTrackData(trackData)
+                        setPlaylistData(playlistData[0])
+                    } catch (error: any) {
+                        console.error(error)
+                        setError(error)
+                    } finally {
+                        setLoading(false)
+                    }
+                } else if (playlistId.startsWith('p')) {
+                    try {
+                        const trackRes = await musicKitInstance.api.music(
+                            `/v1/me/library/playlists/${playlistId}/tracks`
+                        )
+                        const playlistRes = await musicKitInstance.api.music(
+                            `/v1/me/library/playlists/${playlistId}/`
+                        )
+
+                        const trackData = await trackRes.data.data
+                        const playlistData = await playlistRes.data.data
 
                         setPlaylistTrackData(trackData)
                         setPlaylistData(playlistData[0])

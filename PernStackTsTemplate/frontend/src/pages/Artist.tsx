@@ -3,6 +3,7 @@ import { useStore } from '../store/store'
 import { useParams } from 'react-router-dom'
 import useFetchArtistData from '../components/Apple/FetchArtistData'
 import AlbumItem from '../components/Homepage/AlbumItem'
+import ScrollToTop from '../components/Homepage/ScrollToTop'
 
 const Artist = () => {
     const {
@@ -53,6 +54,7 @@ const Artist = () => {
         <>
             {artistData && (
                 <div className="m-5 gap-4 p-5 flex-col w-full">
+                    <ScrollToTop />
                     <h1 className="text-6xl font-semibold m-3 p-3 text-slate-400">
                         {artistData.attributes.name}
                     </h1>

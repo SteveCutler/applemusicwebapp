@@ -69,23 +69,31 @@ const AppleDashboard = () => {
     FetchRecentlyPlayed()
     FetchRecommendations()
 
-    // console.log('heavy rotation: ', heavyRotation)
-    // console.log('recently played: ', recentlyPlayed)
+    console.log('heavy rotation: ', heavyRotation)
+    console.log('recently played: ', recentlyPlayed)
     // console.log('recommendations: ', recommendations)
-    // console.log('recentlyplayedalbums', recentlyPlayedAlbums)
-    // console.log('personalizedPlaylists: ', personalizedPlaylists)
-    // console.log('themed recos: ', themedRecommendations)
+    console.log('recentlyplayedalbums', recentlyPlayedAlbums)
+    console.log('personalizedPlaylists: ', personalizedPlaylists)
+    console.log('themed recos: ', themedRecommendations)
 
     return (
-        <div className="h-screen flex-col justify-left ">
+        <div className="h-100vh flex-col flex-grow flex justify-left ">
             {/* MAIN DISPLAY */}
             {heavyRotation && (
                 <DisplayRow title={'Heavy Rotation'} albums={heavyRotation} />
             )}
-            {recentlyPlayed && (
+            {/* {recentlyPlayed && (
                 <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
-            )}
+            )} */}
 
+            {recentlyPlayedAlbums && (
+                <DisplayRow
+                    title={
+                        recentlyPlayedAlbums.attributes.title.stringForDisplay
+                    }
+                    albums={recentlyPlayedAlbums.relationships.contents.data}
+                />
+            )}
             {/* NEED TO MAKE A CUSTOM HOOK FOR DISPLAYING RECOMMMENDATIONS */}
             {personalizedPlaylists && (
                 <DisplayRow
@@ -93,14 +101,6 @@ const AppleDashboard = () => {
                         personalizedPlaylists.attributes.title.stringForDisplay
                     }
                     albums={personalizedPlaylists.relationships.contents.data}
-                />
-            )}
-            {recentlyPlayedAlbums && (
-                <DisplayRow
-                    title={
-                        recentlyPlayedAlbums.attributes.title.stringForDisplay
-                    }
-                    albums={recentlyPlayedAlbums.relationships.contents.data}
                 />
             )}
             {themedRecommendations && (

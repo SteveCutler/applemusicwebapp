@@ -144,14 +144,14 @@ const Library = () => {
         }
     }
     return (
-        <div className="flex-col w-full h-full">
-            <div className="flex justify-between my-5 px-5 mx-auto items-center gap-2">
+        <div className="flex-col w-11/12 mx-auto h-full">
+            <div className=" flex justify-between my-5 px-5 mx-auto items-center gap-2">
                 <span className="text-3xl font-bold"></span>
 
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
                 </button> */}
-                <div className="flex justify-center items-center gap-3">
+                <div className="flex  justify-center items-center gap-4">
                     <span
                         className={`flex justify-right hover:cursor-pointer text-slate-300 hover:text-slate-100 p-2 rounded-lg ${gridDisplay && 'bg-slate-500'}`}
                         onClick={toggleGrid}
@@ -173,7 +173,7 @@ const Library = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex-col pt-5  mx-5 border-t-2 border-slate-500 w-full gap-2">
+            <div className="flex-col pt-5   border-t-2 border-slate-500 w-full gap-2">
                 {albums && <AlbumList />}
 
                 {loading && <div>Loading...</div>}

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import ScrollToTop from '../components/Homepage/ScrollToTop'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -110,7 +111,8 @@ const Album = () => {
 
     if (albumData) {
         return (
-            <div className="flex-col w-4/5 h-full">
+            <div className="flex-col w-4/5 mx-auto h-full">
+                <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
                         {' '}

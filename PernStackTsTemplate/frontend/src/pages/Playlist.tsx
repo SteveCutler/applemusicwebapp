@@ -4,6 +4,7 @@ import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../src/assets/images/defaultPlaylistArtwork.png'
+import ScrollToTop from '../components/Homepage/ScrollToTop'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -87,21 +88,29 @@ const Playlist = () => {
 
     if (playlistData && playlistTrackData) {
         return (
-            <div className="flex-col w-4/5 h-screen">
+            <div className="flex-col flex flex-grow mt-10 mx-auto w-4/5 ">
+                <ScrollToTop />
                 <Link to="/">
-                    <div className="sticky mb-10 mt-5 top-1 left-1">
+                    <div className="sticky mb-10 top-1 left-1">
                         {' '}
                         <MdArrowBackIosNew style={style} />
                     </div>
                 </Link>
-                <div className="  flex-col ">
+                <div className="flex-col">
                     <h1 className="text-3xl font-bold">
                         {playlistData.attributes.name}
                     </h1>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
                     <div className="">
-                        <img src={defaultPlaylistArtwork} alt="" />
+                        <img
+                            src={constructImageUrl(
+                                playlistData.attributes.artwork.url ??
+                                    defaultPlaylistArtwork,
+                                500
+                            )}
+                            alt=""
+                        />
                     </div>
                     <TrackDisplay albumTracks={playlistTrackData} />
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}

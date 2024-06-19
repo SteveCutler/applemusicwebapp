@@ -12,7 +12,7 @@ const AlbumList = () => {
     console.log('albums: ', albums)
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap w-full gap-1 justify-center  ">
+            <div className="flex flex-wrap w-full gap-2  justify-center  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (

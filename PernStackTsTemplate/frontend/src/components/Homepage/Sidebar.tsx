@@ -10,11 +10,11 @@ import LogoutButton from './LogoutButton'
 const Sidebar = () => {
     return (
         <>
-            <div className="flex-col ">
-                <div className="flex-col m-5 pt-5 w-4/5 pb-5 px-3 border-b-2 border-slate-600 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+            <div className="flex-col flex h-full ">
+                <div className="flex-col m-5 pt-5  w-4/5 pb-5 px-3 border-b-2 border-slate-600 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <Link
                         to="/"
-                        className="flex w-full px-3 hover: select:none cursor-pointer rounded-xl hover:bg-slate-600 justify-left items-center"
+                        className="flex w-full  px-3 hover: select:none cursor-pointer rounded-xl hover:bg-slate-600 justify-center items-center"
                     >
                         <IoHomeSharp />
                         <p className="p-2">Home</p>
@@ -22,26 +22,26 @@ const Sidebar = () => {
 
                     <Link
                         to="/search"
-                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-left items-center"
+                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-center items-center"
                     >
                         <FaSearch />
                         <p className="p-2">Search</p>
                     </Link>
                     <Link
                         to="/library"
-                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-left items-center"
+                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-center items-center"
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
                     </Link>
                     <Link
                         to="/stacks"
-                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-left items-center"
+                        className="flex w-full px-3 hover: cursor-pointer rounded-xl hover:bg-slate-600 justify-center items-center"
                     >
                         <ImStack />
                         <p className="p-2">Stacks</p>
                     </Link>
-                    <div className="flex w-full select:none active:scale[0.90] px-3 hover: cursor-pointer  rounded-xl hover:bg-slate-600 justify-left items-center">
+                    <div className="flex w-full select:none active:scale[0.90] px-3 hover: cursor-pointer  rounded-xl hover:bg-slate-600 justify-center items-center">
                         <div>
                             <LogoutButton />
                         </div>

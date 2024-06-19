@@ -82,12 +82,15 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
             <div className="carousel carousel-center max-w-5xl overflow-x-auto  flex p-4 space-x-4  rounded-box">
                 {albums &&
                     albums.map(album =>
-                        album.type === 'library-playlists' &&
-                        album.attributes ? (
+                        album.type === 'library-playlists' ||
+                        (album.type === 'playlists' && album.attributes) ? (
                             <AlbumItem
                                 title={album.attributes.name}
                                 artistName="Playlist"
-                                albumArtUrl={defaultPlaylistArtwork}
+                                albumArtUrl={
+                                    album.attributes.artwork?.url ??
+                                    defaultPlaylistArtwork
+                                }
                                 albumId={album.id}
                                 type={album.type}
                                 carousel={true}

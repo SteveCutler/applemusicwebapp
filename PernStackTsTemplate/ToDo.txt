@@ -60,3 +60,19 @@ handling all the recommendation streams and displaying them
 creating a song page
 fixing the album reactive play icon
 add history to sidebar and make history and palylists into dropdown modals that display like 5 items before twirldown
+
+library search - now playing modal?
+
+functionality to add albums to library, make playlists and make stacks
+
+fix home page functionality in general
+
+create a Radio stations page
+
+
+FEATURE IDEAS:
+-recommendations based on heavy rotation albums
+-wayback playback: pick a time in history and highlight your top albums of the time
+-in general get the historical plays information and do some interesting things with it
+-suggested playlist based on library listens
+-when the new mix drops make it a feature at the top of the page for the first day 
