@@ -37,7 +37,7 @@ function App() {
                 <div className="sidebar w-1/6  bg-black">
                     <Sidebar />
                 </div>
-                <div className="flex flex-col w-5/6 flex-grow items-top justify-center">
+                <div className="flex flex-col w-5/6 flex-grow items-center justify-start">
                     <Routes>
                         <Route
                             path="/"

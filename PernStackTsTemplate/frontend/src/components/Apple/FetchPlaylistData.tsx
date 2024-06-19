@@ -3,61 +3,48 @@ import useMusicKit from './LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 
-type AlbumType = {
-    attributes: AttributeObject
-    relationships: RelationshipObject
+type playlist = {
+    attributes: {
+        canEdit: boolean
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+        artwork?: {
+            url: string
+        }
+    }
+    href: string
     id: string
+    type: string
 }
 
-type AttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
-    name: string
-    releasedDate: string
-    trackCount: Number
-}
-type RelationshipObject = {
-    tracks: TracksObject
-}
-
-type TracksObject = {
-    data: Array<Track>
-}
-type Track = {
-    attributes: TrackAttributeObject
-}
-
-type TrackAttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
-    durationInMillis: Number
-    name: string
-    releasedDate: string
-    trackCount: Number
-    playParams: PlayParameterObject
-}
-
-type PlayParameterObject = {
-    catalogId: string
+interface Song {
     id: string
-    isLibrary: Boolean
-    kind: string
-}
-
-type ArtworkObject = {
-    height: Number
-    width: Number
-    url: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
 }
 
 const FetchPlaylistData = (playlistId: string | undefined) => {
-    const [playlistData, setPlaylistData] = useState<AlbumType | null>(null)
-    const [playlistTrackData, setPlaylistTrackData] =
-        useState<AlbumType | null>(null)
+    const [playlistData, setPlaylistData] = useState<playlist | null>(null)
+    const [playlistTrackData, setPlaylistTrackData] = useState<Song[] | null>(
+        null
+    )
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 

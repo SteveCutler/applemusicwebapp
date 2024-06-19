@@ -105,7 +105,7 @@ const Playlist = () => {
                     <div className="">
                         <img
                             src={constructImageUrl(
-                                playlistData.attributes.artwork.url ??
+                                playlistData.attributes.artwork?.url ??
                                     defaultPlaylistArtwork,
                                 500
                             )}

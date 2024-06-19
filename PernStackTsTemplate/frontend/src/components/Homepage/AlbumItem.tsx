@@ -128,6 +128,8 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         }
     }, [loading])
 
+    // console.log('albumArtUrl: ', albumArtUrl)
+
     const playData = async () => {
         if (
             musicKitInstance?.nowPlayingItem &&

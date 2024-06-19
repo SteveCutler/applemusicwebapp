@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useStore } from '../../store/store'
 import PlaylistRow from './PlaylistRow'
 import { PiPlaylistBold } from 'react-icons/pi'
+import CollapsibleListPlaylist from '../Apple/CollapsibleListPlaylist'
 // import { fetchLibraryPlaylists } from '../Apple/FetchLibraryPlaylists'
 
 type playlist = {
@@ -67,18 +68,14 @@ const SidebarPlaylists = () => {
     const style = { fontSize: '2rem' }
 
     return (
-        <div className="flex-col">
-            <p className=" flex font-semibold text-2xl border-b-2 pb-4 select-none border-slate-600 justify-center gap-2 items-center">
+        <div className="flex-col w-full">
+            <p className=" flex font-semibold text-2xl pb-2 w-full select-none border-slate-600 justify-center gap-2 items-center">
                 <PiPlaylistBold style={style} />
                 Playlists
             </p>
-            {libraryPlaylists &&
-                libraryPlaylists.map(playlist => (
-                    <PlaylistRow
-                        name={playlist.attributes.name}
-                        id={playlist.id}
-                    />
-                ))}
+            {libraryPlaylists && (
+                <CollapsibleListPlaylist items={libraryPlaylists} />
+            )}
         </div>
     )
 }

@@ -21,6 +21,8 @@ const Artist = () => {
     const { artistData, artistAlbumData, loading, error } =
         useFetchArtistData(Id)
 
+    console.log('artist data: ', artistData)
+
     // data flow is taking albumID right now, specify with type?
 
     //console.log('artistData: ', artistData[0])

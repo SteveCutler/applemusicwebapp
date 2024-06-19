@@ -25,14 +25,14 @@ interface Song {
 }
 
 const FetchRecentHistory = () => {
-    const { musicKitInstance, setRecentHistory, recentHistory } = useStore(
-        state => ({
+    const { musicKitInstance, setRecentHistory, currentSongId, recentHistory } =
+        useStore(state => ({
             musicKitInstance: state.musicKitInstance,
             recentlyAddedToLib: state.recentlyAddedToLib,
             setRecentHistory: state.setRecentHistory,
             recentHistory: state.recentHistory,
-        })
-    )
+            currentSongId: state.currentSongId,
+        }))
     // const [recommendations, setRecommendations] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -59,11 +59,11 @@ const FetchRecentHistory = () => {
                     const data: Song[] = await res.data.data
                     setRecentHistory((prevData: Song[] = []) => {
                         const updatedData = [...prevData, ...data]
-                        return updatedData.slice(0, 30) // Limit to 30 items
+                        return updatedData.slice(0, 15) // Limit to 30 items
                     })
 
                     // Check if there is a next URL for pagination and the current data length is less than 30
-                    if (res.data.next && recentHistory.length < 30) {
+                    if (res.data.next && recentHistory.length < 15) {
                         await fetchRecentHistory(res.data.next)
                     }
                 } catch (error: any) {
@@ -78,7 +78,7 @@ const FetchRecentHistory = () => {
         if (musicKitInstance) {
             fetchRecentHistory('/v1/me/recent/played/tracks')
         }
-    }, [musicKitInstance, setRecentHistory])
+    }, [musicKitInstance, setRecentHistory, currentSongId])
 
     return { loading, error }
 }

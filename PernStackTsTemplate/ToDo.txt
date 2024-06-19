@@ -72,6 +72,9 @@ fix home page functionality in general
 ** revamp sidebar
 ** add display for album image in the 'more like this album' display bar
 
+** add TOP ALBUMS or whatever to artists page
+**make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
+
 
 **add to library, like song
 ** create playlist, add to playlist etc.
