@@ -303,6 +303,7 @@ interface State {
     stationsForYou: RecommendationType | null
     recentlyAddedToLib: RecentlyAddedItem[]
     recentHistory: Song[]
+    songData: Song | null
 }
 
 interface Actions {
@@ -348,6 +349,7 @@ interface Actions {
             | ((prevItems: RecentlyAddedItem[]) => RecentlyAddedItem[])
     ) => void
     setRecentHistory: (songs: Song[] | ((prevItems: Song[]) => Song[])) => void
+    setSongData: (song: Song | null) => void
 }
 
 type Store = State & Actions
@@ -385,6 +387,7 @@ export const useStore = create<Store>((set, get) => ({
     stationsForYou: null,
     recentlyAddedToLib: [],
     recentHistory: [],
+    songData: null,
 
     // Actions
     authorizeBackend: async () => {
@@ -420,6 +423,8 @@ export const useStore = create<Store>((set, get) => ({
 
         set({ muted })
     },
+
+    setSongData: (songData: Song | null) => set({ songData }),
 
     setStationsForYou: (stations: RecommendationType | null) =>
         set({ stationsForYou: stations }),

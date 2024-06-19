@@ -129,32 +129,50 @@ const FetchArtistData = (id: string | undefined) => {
             }
 
             try {
-                //RETRIEVE ARTIST ID BASED ON ALBUM ID
+                if (id.startsWith('r')) {
+                    try {
+                        const res = await musicKitInstance.api.music(
+                            `/v1/me/library/artists/${id}`
+                        )
+                        const albumRes = await musicKitInstance.api.music(
+                            `/v1/me/library/artists/${id}/albums`
+                        )
 
-                // const res = await musicKitInstance.api.music(
-                //     `v1/catalog/us/albums/${id}/artists`
-                // )
-                // const artistId = res.data.data[0].id
+                        const data: Artist = await res.data.data[0]
+                        const albumData: Array<AlbumData> =
+                            await albumRes.data.data
+                        console.log('artistn data: ', data)
+                        setArtistAlbumData(albumData)
 
-                try {
-                    const res = await musicKitInstance.api.music(
-                        `/v1/catalog/us/artists/${id}`
-                    )
-                    const albumRes = await musicKitInstance.api.music(
-                        `/v1/catalog/us/artists/${id}/albums`
-                    )
+                        setArtistData(data)
+                    } catch (error: any) {
+                        console.error(error)
+                        setError(error)
+                    } finally {
+                        setLoading(false)
+                    }
+                } else {
+                    try {
+                        const res = await musicKitInstance.api.music(
+                            `/v1/catalog/us/artists/${id}`
+                        )
+                        const albumRes = await musicKitInstance.api.music(
+                            `/v1/catalog/us/artists/${id}/albums`
+                        )
 
-                    const data: Artist = await res.data.data[0]
-                    const albumData: Array<AlbumData> = await albumRes.data.data
-                    console.log(albumData)
-                    setArtistAlbumData(albumData)
+                        const data: Artist = await res.data.data[0]
+                        const albumData: Array<AlbumData> =
+                            await albumRes.data.data
+                        console.log('artistn data: ', data)
+                        setArtistAlbumData(albumData)
 
-                    setArtistData(data)
-                } catch (error: any) {
-                    console.error(error)
-                    setError(error)
-                } finally {
-                    setLoading(false)
+                        setArtistData(data)
+                    } catch (error: any) {
+                        console.error(error)
+                        setError(error)
+                    } finally {
+                        setLoading(false)
+                    }
                 }
             } catch (error: any) {
                 console.error(error)

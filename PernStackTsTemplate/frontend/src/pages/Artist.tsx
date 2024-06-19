@@ -53,7 +53,7 @@ const Artist = () => {
     return (
         <>
             {artistData && (
-                <div className="m-5 gap-4 p-5 flex-col w-full">
+                <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-screen w-full">
                     <ScrollToTop />
                     <h1 className="text-6xl font-semibold m-3 p-3 text-slate-400">
                         {artistData.attributes.name}

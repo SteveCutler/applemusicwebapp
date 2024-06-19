@@ -71,7 +71,10 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
     return (
-        <div className="flex-col border-2 shadow-lg hover:bg-slate-500 bg-slate-600 w-1/5   border-white p-3 rounded-3xl flex justify-between">
+        <Link
+            to={`/song/${song.id}`}
+            className="flex-col border-2 shadow-lg hover:bg-slate-500 bg-slate-600 w-1/5   border-white p-3 rounded-3xl flex justify-between"
+        >
             {song.attributes.artwork?.url && (
                 <div className="">
                     <img
@@ -116,7 +119,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
                     )} */}
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 
