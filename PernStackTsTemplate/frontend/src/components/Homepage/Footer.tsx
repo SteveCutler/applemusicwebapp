@@ -8,6 +8,7 @@ import Timeline from './Timeline'
 import { useStore } from '../../store/store'
 import VolumeSlider from './VolumeSlider'
 import { Link } from 'react-router-dom'
+import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 function Footer() {
     // const { musicInstance } = useMusickitContext()
@@ -103,7 +104,7 @@ function Footer() {
                     {albumArtUrl ? (
                         <img src={albumArtUrl} alt="album image" />
                     ) : (
-                        <span className="w-full"></span>
+                        <img src={defaultPlaylistArtwork} width="50" />
                     )}
                     <div className="flex w-full font-semibold">
                         {musicKitInstance?.nowPlayingItem ? (

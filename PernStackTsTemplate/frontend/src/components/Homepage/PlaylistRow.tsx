@@ -40,12 +40,18 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
         switchTrack,
         setPlaylist,
         pause,
+        setPlaylistData,
+        authorizeMusicKit,
         play,
+        playlistData,
         musicKitInstance,
     } = useStore(state => ({
         isPlaying: state.isPlaying,
+        playlistData: state.playlistData,
         currentSongId: state.currentSongId,
         musicKitInstance: state.musicKitInstance,
+        setPlaylistData: state.setPlaylistData,
+        authorizeMusicKit: state.authorizeMusicKit,
         setPlaylist: state.setPlaylist,
         playlist: state.playlist,
         recentHistory: state.recentHistory,
@@ -56,20 +62,67 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
 
     const [playlistTracks, setPlaylistTracks] = useState<Song[] | null>(null)
 
-    const playPauseHandler = async () => {
-        console.log('play pause ahndler')
-
-        const { playlistTrackData } = FetchPlaylistData(id)
-        setPlaylistTracks(playlistTrackData)
-        if (playlist !== playlistTrackData && playlistTrackData) {
-            setPlaylist(playlistTrackData, 0, true)
-            return
+    const fetchPlaylistTracks = async () => {
+        if (!musicKitInstance) {
+            await authorizeMusicKit()
         }
 
-        if (isPlaying) {
-            await pause()
+        try {
+            console.log('music kit instance and album id')
+            console.log('music kit instance: ', musicKitInstance)
+            console.log('playlistId: ', id)
+
+            if (id.startsWith('pl')) {
+                try {
+                    const queryParameters = { l: 'en-us' }
+                    const trackRes = await musicKitInstance?.api.music(
+                        `/v1/catalog/us/playlists/${id}/tracks`,
+
+                        queryParameters
+                    )
+
+                    const trackData = await trackRes.data.data
+                    console.log(trackData)
+
+                    setPlaylistTracks(trackData)
+                    await playPauseHandler(trackData)
+                } catch (error: any) {
+                    console.error(error)
+                }
+            } else if (id.startsWith('p')) {
+                try {
+                    const trackRes = await musicKitInstance?.api.music(
+                        `/v1/me/library/playlists/${id}/tracks`
+                    )
+
+                    const trackData = await trackRes.data.data
+                    console.log(trackData)
+
+                    setPlaylistTracks(trackData)
+                    await playPauseHandler(trackData)
+                } catch (error: any) {
+                    console.error(error)
+                }
+            }
+        } catch (error: any) {
+            console.error(error)
+            console.log('error in fetchPlaylistData')
+        } finally {
+        }
+    }
+
+    const playPauseHandler = async (trackData: Song[]) => {
+        if (playlist !== trackData && trackData) {
+            console.log('play pause handler')
+            console.log(trackData)
+            setPlaylist(trackData, 0, true)
+            return
         } else {
-            play()
+            if (isPlaying && playlist == trackData) {
+                await pause()
+            } else {
+                play()
+            }
         }
     }
     const style = { color: 'white' }
@@ -94,11 +147,10 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                         e.stopPropagation() // Prevents the link's default behavior
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
-
-                        await playPauseHandler()
+                        await fetchPlaylistTracks()
                     }}
                 >
-                    {isPlaying && playlist === playlistTrackData ? (
+                    {isPlaying && playlist === playlistTracks ? (
                         <FaRegCirclePause />
                     ) : (
                         <FaCirclePlay />

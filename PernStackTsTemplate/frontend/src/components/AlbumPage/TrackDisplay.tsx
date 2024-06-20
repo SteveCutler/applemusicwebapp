@@ -5,15 +5,24 @@ type TracksObject = {
     albumTracks: Song[]
 }
 
-type Song = {
+interface Song {
     id: string
+    href?: string
     type: string
     attributes: {
+        id?: string
         name: string
         trackNumber: number
         artistName: string
         albumName: string
         durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
     }
 }
 

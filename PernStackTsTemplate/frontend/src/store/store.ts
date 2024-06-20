@@ -50,6 +50,9 @@ interface MusickitInstance {
             durationInMillis: number
             trackNumber: number
             albumId?: string
+            artwork: {
+                url: string
+            }
         }
     }
     mute: () => void
@@ -296,7 +299,7 @@ interface State {
     recentlyPlayed: AlbumType[]
     recommendations: AlbumType[]
     recentlyPlayedAlbums: RecommendationType | null
-    albumArtUrl: string
+    albumArtUrl: string | null
     personalizedPlaylists: RecommendationType | null
     themedRecommendations: RecommendationType | null
     moreLikeRecommendations: RecommendationType | null
@@ -304,6 +307,7 @@ interface State {
     recentlyAddedToLib: RecentlyAddedItem[]
     recentHistory: Song[]
     songData: Song | null
+    playlistData: Song[] | null
 }
 
 interface Actions {
@@ -320,7 +324,7 @@ interface Actions {
     setGridDisplay: (bool: boolean) => void
     fetchAppleToken: () => Promise<void>
     generateAppleToken: () => Promise<void>
-    setAlbumArtUrl: (url: string) => void
+    setAlbumArtUrl: (url: string | null) => void
     setSearchTerm: (term: string) => void
     setAlbumData: (album: Song[]) => void
     setPlaylist: (songs: Song[], index: number, startPlaying: boolean) => void
@@ -350,6 +354,7 @@ interface Actions {
     ) => void
     setRecentHistory: (songs: Song[] | ((prevItems: Song[]) => Song[])) => void
     setSongData: (song: Song | null) => void
+    setPlaylistData: (songs: Song[] | null) => void
 }
 
 type Store = State & Actions
@@ -359,7 +364,7 @@ export const useStore = create<Store>((set, get) => ({
 
     isAuthorized: false,
     scrubTime: null,
-    albumArtUrl: '',
+    albumArtUrl: null,
     volume: 0.75,
     backendToken: null,
     albums: null,
@@ -388,6 +393,7 @@ export const useStore = create<Store>((set, get) => ({
     recentlyAddedToLib: [],
     recentHistory: [],
     songData: null,
+    playlistData: null,
 
     // Actions
     authorizeBackend: async () => {
@@ -425,6 +431,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     setSongData: (songData: Song | null) => set({ songData }),
+    setPlaylistData: (songs: Song[] | null) => set({ playlistData: songs }),
 
     setStationsForYou: (stations: RecommendationType | null) =>
         set({ stationsForYou: stations }),
@@ -478,7 +485,7 @@ export const useStore = create<Store>((set, get) => ({
         personalizedPlaylists: RecommendationType | null
     ) => set({ personalizedPlaylists }),
 
-    setAlbumArtUrl: (url: string) => set({ albumArtUrl: url }),
+    setAlbumArtUrl: (url: string | null) => set({ albumArtUrl: url }),
     setRecentlyPlayedAlbums: (albums: RecommendationType | null) =>
         set({ recentlyPlayedAlbums: albums }),
 
@@ -631,11 +638,20 @@ export const useStore = create<Store>((set, get) => ({
                     const currentSongDuration =
                         nowPlayingItem?.attributes.durationInMillis || null
 
-                    const displayArt =
-                        await nowPlayingItem?.attributes.artwork.url
-                    if (nowPlayingItem && displayArt) {
-                        const displayArtUrl = constructImageUrl(displayArt, 50)
-                        useStore.setState({ albumArtUrl: displayArtUrl })
+                    if (nowPlayingItem) {
+                        const displayArt =
+                            await nowPlayingItem?.attributes.artwork.url
+                        if (displayArt) {
+                            const displayArtUrl = constructImageUrl(
+                                displayArt,
+                                50
+                            )
+                            useStore.setState({ albumArtUrl: displayArtUrl })
+                        } else {
+                            useStore.setState({ albumArtUrl: null })
+                        }
+                    } else {
+                        useStore.setState({ albumArtUrl: null })
                     }
 
                     useStore.setState({
@@ -666,33 +682,36 @@ export const useStore = create<Store>((set, get) => ({
 
                 music.addEventListener('nowPlayingItemDidChange', () => {
                     if (music) {
-                        const { nowPlayingItem } = music
-                        const currentSongId = nowPlayingItem?.id
-                        const currentSongDuration =
-                            nowPlayingItem?.attributes.durationInMillis || null
-                        const constructImageUrl = (
-                            url: string,
-                            size: number
-                        ) => {
-                            return url
-                                .replace('{w}', size.toString())
-                                .replace('{h}', size.toString())
-                        }
-                        const displayArt =
-                            nowPlayingItem?.attributes.artwork.url
-                        if (nowPlayingItem && displayArt) {
-                            const displayArtUrl = constructImageUrl(
-                                displayArt,
-                                50
-                            )
-                            useStore.setState({ albumArtUrl: displayArtUrl })
-                        }
-                        useStore.setState({
-                            currentSongId,
-                            currentSongDuration,
-                            currentElapsedTime: 0,
-                            scrubTime: null,
-                        })
+                        updateState()
+                        // const { nowPlayingItem } = music
+                        // const currentSongId = nowPlayingItem?.id
+                        // const currentSongDuration =
+                        //     nowPlayingItem?.attributes.durationInMillis || null
+                        // const constructImageUrl = (
+                        //     url: string,
+                        //     size: number
+                        // ) => {
+                        //     return url
+                        //         .replace('{w}', size.toString())
+                        //         .replace('{h}', size.toString())
+                        // }
+
+                        // const displayArt =
+                        //     nowPlayingItem?.attributes.artwork.url
+
+                        // if (nowPlayingItem && displayArt) {
+                        //     const displayArtUrl = constructImageUrl(
+                        //         displayArt,
+                        //         50
+                        //     )
+                        //     useStore.setState({ albumArtUrl: displayArtUrl })
+                        // }
+                        // useStore.setState({
+                        //     currentSongId,
+                        //     currentSongDuration,
+                        //     currentElapsedTime: 0,
+                        //     scrubTime: null,
+                        // })
                     }
                 })
 
