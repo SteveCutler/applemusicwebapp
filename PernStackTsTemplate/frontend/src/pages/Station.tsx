@@ -130,19 +130,6 @@ const Station = () => {
                     <h1 className="text-3xl font-bold">
                         {stationData.attributes.name}
                     </h1>
-                    <Link
-                        to={
-                            type === 'library-albums'
-                                ? `/search/`
-                                : `/artist/${stationId}`
-                        }
-                        onClick={
-                            type === 'library-albums' ? setTerm : undefined
-                        }
-                        className="text-2xl hover:text-blue-200 hover:cursor-pointer font-bold"
-                    >
-                        {stationData.attributes.artistName}
-                    </Link>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
                     <div className="relative">
@@ -165,10 +152,8 @@ const Station = () => {
                             }}
                         >
                             {isPlaying &&
-                            musicKitInstance?.nowPlayingItem &&
-                            playlist.includes(
-                                musicKitInstance?.nowPlayingItem
-                            ) ? (
+                            musicKitInstance?.nowPlayingItem.attributes.name ===
+                                stationData.attributes.name ? (
                                 <FaRegCirclePause style={styleButton} />
                             ) : (
                                 <FaCirclePlay style={styleButton} />

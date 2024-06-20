@@ -9,6 +9,20 @@ type AlbumType = {
     id: string
 }
 
+type StationType = {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
 type AttributeObject = {
     artistName: string
     artwork: ArtworkObject
@@ -57,7 +71,7 @@ type ArtworkObject = {
 const FetchStationData = (stationId: string | undefined) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
-    const [stationData, setStationData] = useState({})
+    const [stationData, setStationData] = useState<StationType | null>(null)
 
     // const musicKitLoaded = useMusicKit()
     const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
