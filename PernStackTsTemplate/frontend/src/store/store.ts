@@ -61,7 +61,7 @@ interface MusickitInstance {
     isPlaying: boolean
     changeToMediaItem: (index: number) => Promise<void>
     Queue: {
-        items: any
+        items?: any
     }
     volume: number
     currentPlaybackTime: () => void
@@ -78,6 +78,15 @@ interface MusickitInstance {
     pause: () => Promise<void>
     skipToNextItem: () => Promise<void>
     skipToPreviousItem: () => Promise<void>
+}
+
+interface SetQueueOptions {
+    album?: string | undefined
+    items?: Array<MusicKitDescriptor>
+    startWith?: number | undefined
+    station?: string
+    startPlaying?: boolean
+    url?: string
 }
 
 interface QueueMethods {
@@ -166,12 +175,7 @@ interface SearchResultAlbum {
     id: string
     type: string
 }
-interface SetQueueOptions {
-    album?: string | undefined
-    items?: Array<MusicKitDescriptor>
-    startWith?: number | undefined
-    startPlaying?: boolean
-}
+
 interface MusicKitDescriptor {
     id: string
     type: string
@@ -307,7 +311,7 @@ interface State {
     recentlyAddedToLib: RecentlyAddedItem[]
     recentHistory: Song[]
     songData: Song | null
-    playlistData: Song[] | null
+    playlistData: Song[]
 }
 
 interface Actions {
@@ -354,7 +358,7 @@ interface Actions {
     ) => void
     setRecentHistory: (songs: Song[] | ((prevItems: Song[]) => Song[])) => void
     setSongData: (song: Song | null) => void
-    setPlaylistData: (songs: Song[] | null) => void
+    setPlaylistData: (songs: Song[]) => void
 }
 
 type Store = State & Actions
@@ -393,7 +397,7 @@ export const useStore = create<Store>((set, get) => ({
     recentlyAddedToLib: [],
     recentHistory: [],
     songData: null,
-    playlistData: null,
+    playlistData: [],
 
     // Actions
     authorizeBackend: async () => {
@@ -431,7 +435,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     setSongData: (songData: Song | null) => set({ songData }),
-    setPlaylistData: (songs: Song[] | null) => set({ playlistData: songs }),
+    setPlaylistData: (songs: Song[]) => set({ playlistData: songs }),
 
     setStationsForYou: (stations: RecommendationType | null) =>
         set({ stationsForYou: stations }),

@@ -15,6 +15,7 @@ import Stacks from './pages/Stacks'
 import Search from './pages/Search'
 import Artist from './pages/Artist'
 import Song from './pages/Song'
+import Station from './pages/Station'
 
 function App() {
     const { backendToken, authorizeBackend } = useStore(state => ({
@@ -77,6 +78,10 @@ function App() {
                         <Route
                             path="/album/:albumId/:type?"
                             element={<Album />}
+                        />
+                        <Route
+                            path="/station/:stationId/:type?"
+                            element={<Station />}
                         />
                         <Route path="/song/:songId/:type?" element={<Song />} />
                         <Route

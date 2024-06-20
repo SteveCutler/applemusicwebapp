@@ -3,18 +3,17 @@ import { Link } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
-interface AlbumPropTypes {
-    title: String
-    artistName: String
-    albumArtUrl?: String
-    albumId: String
+interface StationItemTypes {
+    title: string
+    artistName: string
+    albumArtUrl?: string
+    stationId: string
     type: string
     carousel?: boolean
 }
 
 interface Song {
     id: string
-    href?: string
     type: string
     attributes: {
         id?: string
@@ -26,18 +25,14 @@ interface Song {
         playParams: {
             catalogId: string
         }
-        artwork?: {
-            bgColor: string
-            url: string
-        }
     }
 }
 
-const AlbumItem: React.FC<AlbumPropTypes> = ({
+const StationItem: React.FC<StationItemTypes> = ({
     title,
     artistName,
     albumArtUrl,
-    albumId,
+    stationId,
     type,
     carousel,
 }) => {
@@ -46,114 +41,44 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             .replace('{w}', size.toString())
             .replace('{h}', size.toString())
     }
-    const [albumData, setAlbumData] = useState<Song[]>([])
 
     const {
         isPlaying,
         authorizeMusicKit,
-
+        playlistData,
+        setPlaylistData,
         setPlaylist,
         playSong,
         pause,
         playlist,
         musicKitInstance,
     } = useStore(state => ({
+        playlistData: state.playlistData,
+        setPlaylistData: state.setPlaylistData,
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
         playSong: state.playSong,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
-
+        setAlbumData: state.setAlbumData,
+        albumData: state.albumData,
         setPlaylist: state.setPlaylist,
         playlist: state.playlist,
     }))
 
     const [loading, setLoading] = useState<Boolean>(false)
 
-    const retrieveAlbumTracks = async () => {
-        if (!musicKitInstance) {
-            await authorizeMusicKit()
-            return
-        }
-        if (!musicKitInstance || !albumId) {
-            return
-        }
-        setLoading(true)
+    const playRadioStation = async () => {
         try {
-            console.log('music kit instance and album id')
-            console.log('music kit instance: ', musicKitInstance)
-            console.log('albumId: ', albumId)
-
-            if (albumId.startsWith('l')) {
-                try {
-                    const res = await musicKitInstance.api.music(
-                        `/v1/me/library/albums/${albumId}/tracks`
-                    )
-
-                    const data: Song[] = await res.data.data
-                    console.log(data)
-
-                    setAlbumData(data)
-                    setLoading(false)
-
-                    return
-                } catch (error: any) {
-                    console.error(error)
-                    setLoading(false)
-                }
-            } else {
-                try {
-                    const queryParameters = { l: 'en-us' }
-                    const res = await musicKitInstance.api.music(
-                        `/v1/catalog/{{storefrontId}}/albums/${albumId}/tracks`,
-
-                        queryParameters
-                    )
-
-                    const data: Song[] = await res.data.data
-                    console.log(data)
-                    setAlbumData(data)
-                    setLoading(false)
-
-                    return
-                } catch (error: any) {
-                    console.error(error)
-                    setLoading(false)
-                }
-            }
-        } catch (error: any) {
-            console.error(error)
-            setLoading(false)
+            await musicKitInstance?.setQueue({ station: stationId })
+        } catch (error) {
+            console.error('Error playing radio station:', error)
         }
     }
-    useEffect(() => {
-        if (albumData.length > 0 && !loading) {
-            playData()
-        }
-    }, [loading])
-
-    // console.log('albumArtUrl: ', albumArtUrl)
 
     const playData = async () => {
-        if (isPlaying && playlist === albumData) {
-            await pause()
-            return
-        } else if (!isPlaying && playlist === albumData) {
-            playSong()
-            return
-        } else {
-            setPlaylist(albumData, 0, true)
-            return
-        }
-        // setAlbumData([])
-        //musicKitInstance?.play(songId)
-
-        // console.log('album data: ', albumData)
-        // setPlaylist(albumData, 0, true)
-        // setAlbumData([])
-    }
-    const loadPlayer = async () => {
-        await retrieveAlbumTracks()
+        await playRadioStation()
+        musicKitInstance?.play()
     }
 
     const style = { fontSize: '2rem', color: 'royalblue ' }
@@ -161,11 +86,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     return (
         <Link
             className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
-            to={
-                albumId.startsWith('p')
-                    ? `/playlist/${albumId}`
-                    : `/album/${albumId}/${type}`
-            }
+            to={`/station/${stationId}`}
             title={`${title} by ${artistName}`}
         >
             <div className="h-full w-full">
@@ -188,10 +109,12 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                             // await FetchAlbumData(albumId)
                             // handlePlayPause()
 
-                            await loadPlayer()
+                            playData()
                         }}
                     >
-                        {isPlaying && playlist === albumData ? (
+                        {isPlaying &&
+                        musicKitInstance?.nowPlayingItem &&
+                        playlist.includes(musicKitInstance?.nowPlayingItem) ? (
                             <FaRegCirclePause style={style} />
                         ) : (
                             <FaCirclePlay style={style} />
@@ -208,4 +131,4 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     )
 }
 
-export default AlbumItem
+export default StationItem

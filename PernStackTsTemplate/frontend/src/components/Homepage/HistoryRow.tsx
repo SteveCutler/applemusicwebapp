@@ -58,7 +58,7 @@ const HistoryRow: React.FC<playlistProps> = ({
             // setCurrrentSongId()
         }
     }
-    const style = { color: 'white' }
+    const style = { fontSize: '1.5rem', color: 'royalblue' }
     return (
         <Link
             to={`/song/${id}`}
@@ -87,9 +87,9 @@ const HistoryRow: React.FC<playlistProps> = ({
                 }}
             >
                 {isPlaying && id === musicKitInstance?.nowPlayingItem.id ? (
-                    <FaRegCirclePause />
+                    <FaRegCirclePause style={style} />
                 ) : (
-                    <FaCirclePlay />
+                    <FaCirclePlay style={style} />
                 )}
             </div>
         </Link>

@@ -56,10 +56,7 @@ add reactive play button to large photo in albums and album items on home page
 
 add image to nowplaying bar at bottom - how do other streaming websites do it?
 
-handling all the recommendation streams and displaying them
-creating a song page
 fixing the album reactive play icon
-add history to sidebar and make history and palylists into dropdown modals that display like 5 items before twirldown
 
 library search - now playing modal?
 
@@ -69,18 +66,19 @@ fix home page functionality in general
 
 ** create a Radio stations page
 ** create a nowplaying page
-** revamp sidebar
+
 ** add display for album image in the 'more like this album' display bar
 
 ** add TOP ALBUMS or whatever to artists page
 **make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
 
-
+** fix issue where when a song is playing, any song item with that ID will play as well
 **add to library, like song
 ** create playlist, add to playlist etc.
 
-** fix he fact that music stops and restarts when you navigate between Home and Library pages
-
+** add big play button to album/playlist/song image
+** add functionality to playlist play buttons on homepage (if type === playlists or something)
+** add modal dropdown menu on all the display items to like, add to library, add to playlist etc.
 
 FEATURE IDEAS:
 -recommendations based on heavy rotation albums

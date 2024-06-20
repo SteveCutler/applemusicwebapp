@@ -129,7 +129,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
             }
         }
     }
-    const style = { color: 'white' }
+    const style = { fontSize: '1rem', color: 'royalblue' }
 
     return (
         <Link
@@ -155,9 +155,9 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                     }}
                 >
                     {isPlaying && playlist === playlistTracks ? (
-                        <FaRegCirclePause />
+                        <FaRegCirclePause style={style} />
                     ) : (
-                        <FaCirclePlay />
+                        <FaCirclePlay style={style} />
                     )}
                 </div>
             </div>

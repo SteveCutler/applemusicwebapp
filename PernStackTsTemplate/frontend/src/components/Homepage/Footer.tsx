@@ -101,11 +101,7 @@ function Footer() {
                     to=""
                     className="flex gap-2 justify-start w-1/10"
                 >
-                    {albumArtUrl ? (
-                        <img src={albumArtUrl} alt="album image" />
-                    ) : (
-                        <img src={defaultPlaylistArtwork} width="50" />
-                    )}
+                    {albumArtUrl && <img src={albumArtUrl} alt="album image" />}
                     <div className="flex w-full font-semibold">
                         {musicKitInstance?.nowPlayingItem ? (
                             musicKitInstance?.nowPlayingItem.title

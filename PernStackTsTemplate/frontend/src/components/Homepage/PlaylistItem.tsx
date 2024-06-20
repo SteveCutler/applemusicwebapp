@@ -6,8 +6,8 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 interface AlbumPropTypes {
     title: String
     artistName: String
-    albumArtUrl?: String
-    albumId: String
+    albumArtUrl: String
+    playlistId: String
     type: string
     carousel?: boolean
 }
@@ -33,11 +33,11 @@ interface Song {
     }
 }
 
-const AlbumItem: React.FC<AlbumPropTypes> = ({
+const PlaylistItem: React.FC<AlbumPropTypes> = ({
     title,
     artistName,
     albumArtUrl,
-    albumId,
+    playlistId,
     type,
     carousel,
 }) => {
@@ -46,7 +46,6 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             .replace('{w}', size.toString())
             .replace('{h}', size.toString())
     }
-    const [albumData, setAlbumData] = useState<Song[]>([])
 
     const {
         isPlaying,
@@ -58,42 +57,47 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         playlist,
         musicKitInstance,
     } = useStore(state => ({
+        playlistData: state.playlistData,
+        setPlaylistData: state.setPlaylistData,
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
         playSong: state.playSong,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
-
+        setAlbumData: state.setAlbumData,
+        albumData: state.albumData,
         setPlaylist: state.setPlaylist,
         playlist: state.playlist,
     }))
 
     const [loading, setLoading] = useState<Boolean>(false)
+    const [playlistData, setPlaylistData] = useState<Song[]>([])
 
     const retrieveAlbumTracks = async () => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
             return
         }
-        if (!musicKitInstance || !albumId) {
+        if (!musicKitInstance || !playlistId) {
             return
         }
         setLoading(true)
         try {
             console.log('music kit instance and album id')
             console.log('music kit instance: ', musicKitInstance)
-            console.log('albumId: ', albumId)
+            console.log('playlistId: ', playlistId)
 
-            if (albumId.startsWith('l')) {
+            if (playlistId.startsWith('pl')) {
                 try {
+                    // const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/me/library/albums/${albumId}/tracks`
+                        `/v1/catalog/us/playlists/${playlistId}/tracks`
                     )
 
                     const data: Song[] = await res.data.data
                     console.log(data)
 
-                    setAlbumData(data)
+                    setPlaylistData(data)
                     setLoading(false)
 
                     return
@@ -103,16 +107,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 }
             } else {
                 try {
-                    const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/{{storefrontId}}/albums/${albumId}/tracks`,
-
-                        queryParameters
+                        `/v1/me/library/playlists/${playlistId}/tracks`
                     )
 
                     const data: Song[] = await res.data.data
                     console.log(data)
-                    setAlbumData(data)
+                    setPlaylistData(data)
                     setLoading(false)
 
                     return
@@ -127,7 +128,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         }
     }
     useEffect(() => {
-        if (albumData.length > 0 && !loading) {
+        if (playlistData.length > 0 && !loading) {
             playData()
         }
     }, [loading])
@@ -135,22 +136,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     // console.log('albumArtUrl: ', albumArtUrl)
 
     const playData = async () => {
-        if (isPlaying && playlist === albumData) {
-            await pause()
-            return
-        } else if (!isPlaying && playlist === albumData) {
-            playSong()
-            return
+        if (playlist === playlistData) {
+            {
+                isPlaying ? await pause() : playSong()
+            }
         } else {
-            setPlaylist(albumData, 0, true)
-            return
+            await setPlaylist(playlistData, 0, true)
         }
-        // setAlbumData([])
-        //musicKitInstance?.play(songId)
-
-        // console.log('album data: ', albumData)
-        // setPlaylist(albumData, 0, true)
-        // setAlbumData([])
     }
     const loadPlayer = async () => {
         await retrieveAlbumTracks()
@@ -162,9 +154,9 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         <Link
             className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
             to={
-                albumId.startsWith('p')
-                    ? `/playlist/${albumId}`
-                    : `/album/${albumId}/${type}`
+                playlistId.startsWith('p')
+                    ? `/playlist/${playlistId}`
+                    : `/album/${playlistId}/${type}`
             }
             title={`${title} by ${artistName}`}
         >
@@ -191,7 +183,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                             await loadPlayer()
                         }}
                     >
-                        {isPlaying && playlist === albumData ? (
+                        {isPlaying && playlistData === playlist ? (
                             <FaRegCirclePause style={style} />
                         ) : (
                             <FaCirclePlay style={style} />
@@ -208,4 +200,4 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     )
 }
 
-export default AlbumItem
+export default PlaylistItem

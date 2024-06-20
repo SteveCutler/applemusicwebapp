@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react'
 import AlbumItem from './AlbumItem'
 import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import PlaylistItem from './PlaylistItem'
+import StationItem from './StationItem'
 
 type DisplayRow = {
     title: string
@@ -104,15 +106,24 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                 {albums &&
                     albums.map(album =>
                         album.type === 'library-playlists' ||
-                        (album.type === 'playlists' && album.attributes) ? (
-                            <AlbumItem
+                        album.type === 'playlists' ? (
+                            <PlaylistItem
                                 title={album.attributes.name}
                                 artistName="Playlist"
                                 albumArtUrl={
                                     album.attributes.artwork?.url ??
                                     defaultPlaylistArtwork
                                 }
-                                albumId={album.id}
+                                playlistId={album.id}
+                                type={album.type}
+                                carousel={true}
+                            />
+                        ) : album.type === 'stations' ? (
+                            <StationItem
+                                title={album.attributes.name}
+                                artistName="Station"
+                                albumArtUrl={album.attributes.artwork?.url}
+                                stationId={album.id}
                                 type={album.type}
                                 carousel={true}
                             />
@@ -121,7 +132,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                                 <AlbumItem
                                     title={album.attributes.name}
                                     artistName={album.attributes.artistName}
-                                    albumArtUrl={album.attributes.artwork.url}
+                                    albumArtUrl={album.attributes.artwork?.url}
                                     albumId={album.id}
                                     type={album.type}
                                     carousel={true}
