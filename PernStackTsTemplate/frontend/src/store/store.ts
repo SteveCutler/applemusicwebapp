@@ -638,9 +638,12 @@ export const useStore = create<Store>((set, get) => ({
                     const currentSongDuration =
                         nowPlayingItem?.attributes.durationInMillis || null
 
-                    if (nowPlayingItem) {
+                    if (
+                        nowPlayingItem &&
+                        nowPlayingItem.attributes.artwork?.url
+                    ) {
                         const displayArt =
-                            await nowPlayingItem?.attributes.artwork.url
+                            await nowPlayingItem.attributes.artwork?.url
                         if (displayArt) {
                             const displayArtUrl = constructImageUrl(
                                 displayArt,

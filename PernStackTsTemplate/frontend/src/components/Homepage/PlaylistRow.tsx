@@ -112,16 +112,20 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
     }
 
     const playPauseHandler = async (trackData: Song[]) => {
-        if (playlist !== trackData && trackData) {
+        if (playlist != trackData && trackData) {
             console.log('play pause handler')
             console.log(trackData)
+            console.log('playlist: ', playlist)
+            console.log('trackData: ', trackData)
             setPlaylist(trackData, 0, true)
             return
         } else {
-            if (isPlaying && playlist == trackData) {
+            if (isPlaying && playlist === trackData) {
                 await pause()
+                return
             } else {
                 play()
+                return
             }
         }
     }
