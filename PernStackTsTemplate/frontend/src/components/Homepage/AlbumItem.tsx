@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
     title: String
@@ -177,8 +178,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 <div className="flex-col h-full overflow-hidden">
                     <h2 className="text-lg truncate font-bold">{title}</h2>
                     <h3 className="truncate">{artistName}</h3>
+                    {type === 'library-albums' && (
+                        <div className="bg-slate-300  text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
+                            <span>Library</span>
+                        </div>
+                    )}
                 </div>
-                <div className="flex flex-col justify-between items-end h-full">
+                <div className="flex flex-col justify-start gap-2 mt-2 items-end h-full">
                     {' '}
                     <div
                         className="transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
@@ -197,11 +203,16 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                             <FaCirclePlay style={style} />
                         )}
                     </div>
-                    {type === 'library-albums' && (
-                        <div className="bg-slate-300  text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
-                            <span>Library</span>
-                        </div>
-                    )}
+                    <div
+                        onClick={async e => {
+                            e.preventDefault()
+                            e.stopPropagation() // Prevents the link's default behavior
+                            // await FetchAlbumData(albumId)
+                            // handlePlayPause()
+                        }}
+                    >
+                        <OptionsModal />
+                    </div>
                 </div>
             </div>
         </Link>
