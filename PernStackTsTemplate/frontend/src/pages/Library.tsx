@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/store'
-import FetchLibraryAlbums from '../components/Apple/FetchLibraryAlbums'
+
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
 import { IoGridOutline } from 'react-icons/io5'
 import { IoGrid } from 'react-icons/io5'
+import e from 'express'
 
 interface Album {
     id: string
@@ -41,6 +42,12 @@ const Library = () => {
         setAlbums: state.setAlbums,
     }))
 
+    const inputRef = useRef<HTMLInputElement>(null)
+    const [librarySearchTerm, setLibrarySearchTerm] = useState('')
+    const [librarySearchResults, setLibrarySearchResults] = useState<
+        Album[] | null
+    >(albums)
+
     const userId = backendToken
 
     const fetchLibrary = async () => {
@@ -65,16 +72,13 @@ const Library = () => {
             const data = await res.json()
             // console.log(data)
             setAlbums(data.albums)
+            setLibrarySearchResults(data.albums)
             setLoading(false)
         } catch (error) {
             setError('Failed to fetch albums')
             setLoading(false)
         }
     }
-
-    // const authorizeAppleConnection = async () => {
-    //     await authorizeMusicKit()
-    // }
 
     const initialize = async () => {
         let musicKitLoaded = false
@@ -89,6 +93,7 @@ const Library = () => {
             await fetchAppleToken()
         }
     }
+
     useEffect(() => {
         if (!musicKitInstance || !appleMusicToken) {
             initialize()
@@ -96,8 +101,27 @@ const Library = () => {
 
         if (!albums && appleMusicToken) {
             fetchLibrary()
+        } else {
+            setLibrarySearchResults(albums)
         }
-    }, [musicKitInstance, appleMusicToken])
+
+        if (librarySearchTerm === '') {
+            setLibrarySearchResults(albums)
+        } else {
+            const searchResults: Album[] | null = albums
+                ? albums.filter(
+                      album =>
+                          album.name
+                              .toLowerCase()
+                              .includes(librarySearchTerm.toLowerCase()) ||
+                          album.artistName
+                              .toLowerCase()
+                              .includes(librarySearchTerm.toLowerCase())
+                  )
+                : null
+            setLibrarySearchResults(searchResults)
+        }
+    }, [musicKitInstance, appleMusicToken, librarySearchTerm])
 
     const updateLibrary = async () => {
         setLoading(true)
@@ -131,10 +155,9 @@ const Library = () => {
         }
     }
 
-    // const { libraryAlbums } = FetchLibraryAlbums()
-
-    // console.log(libraryAlbums)
-    const style = { fontSize: '2rem' }
+    const onChange = (e: any) => {
+        setLibrarySearchTerm(e.target.value)
+    }
 
     const toggleGrid = () => {
         if (gridDisplay) {
@@ -143,10 +166,22 @@ const Library = () => {
             setGridDisplay(true)
         }
     }
+
+    const style = { fontSize: '2rem' }
+
     return (
         <div className="flex-col w-11/12 mx-auto h-full">
-            <div className=" flex justify-between my-5 px-5 mx-auto items-center gap-2">
-                <span className="text-3xl font-bold"></span>
+            <div className=" flex justify-between my-5 pt-5  mx-auto items-center gap-2">
+                <form className=" p-3 w-full" action="">
+                    <input
+                        type="text"
+                        value={librarySearchTerm}
+                        onChange={e => onChange(e)}
+                        ref={inputRef}
+                        placeholder="Filter library..."
+                        className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
+                    />
+                </form>
 
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
@@ -173,8 +208,8 @@ const Library = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex-col pt-5   border-t-2 border-slate-500 w-full gap-2">
-                {albums && <AlbumList />}
+            <div className="flex-col pt-10   border-t-2 border-slate-500 w-full gap-2">
+                {albums && <AlbumList albums={librarySearchResults} />}
 
                 {loading && <div>Loading...</div>}
                 {error && <div>Error</div>}

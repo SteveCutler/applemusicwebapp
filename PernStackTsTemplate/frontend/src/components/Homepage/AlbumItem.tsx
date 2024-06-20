@@ -5,10 +5,10 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
-    title: String
-    artistName: String
-    albumArtUrl?: String
-    albumId: String
+    title: string
+    artistName: string
+    albumArtUrl?: string
+    albumId: string
     type: string
     carousel?: boolean
 }
@@ -161,7 +161,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
+            className={`${carousel && 'carousel-item'} relative z-25 flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
             to={
                 albumId.startsWith('p')
                     ? `/playlist/${albumId}`
@@ -206,12 +206,11 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     <div
                         onClick={async e => {
                             e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                            // await FetchAlbumData(albumId)
-                            // handlePlayPause()
+                            e.stopPropagation()
                         }}
+                        className="z-5000 relative"
                     >
-                        <OptionsModal />
+                        <OptionsModal name={title} type="albums" id={albumId} />
                     </div>
                 </div>
             </div>

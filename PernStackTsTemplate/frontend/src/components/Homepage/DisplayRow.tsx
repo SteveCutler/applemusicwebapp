@@ -96,7 +96,7 @@ type ArtworkObject = {
 
 const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
     return (
-        <div className="flex-col flex items-center my-5 w-full rounded-lg  ">
+        <div className="flex-col flex items-center my-5  w-full rounded-lg  ">
             <h1 className="text-xl select-none flex w-full px-6 py-2 font-bold justify-start">
                 {id && id}
                 {title}

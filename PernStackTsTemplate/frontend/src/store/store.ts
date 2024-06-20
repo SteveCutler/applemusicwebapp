@@ -341,7 +341,7 @@ interface Actions {
     getCurrentSongTitle: () => string | null
     setScrubTime: (time: number | null) => void
     setMuted: (muted: boolean) => void
-    setAlbums: (albums: Array<Album>) => void
+    setAlbums: (albums: Array<Album> | null) => void
     setSearchResults: (results: SearchResults) => void
     setHeavyRotation: (albums: AlbumType[]) => void
     setRecentlyPlayed: (albums: AlbumType[]) => void
@@ -461,7 +461,7 @@ export const useStore = create<Store>((set, get) => ({
                     : songs,
         })),
 
-    setAlbums: (albums: Array<Album>) => set({ albums: albums }),
+    setAlbums: (albums: Array<Album> | null) => set({ albums: albums }),
     setMoreLikeRecommendations: (items: RecommendationType | null) =>
         set({ moreLikeRecommendations: items }),
 

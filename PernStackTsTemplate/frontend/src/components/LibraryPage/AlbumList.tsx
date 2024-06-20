@@ -3,9 +3,21 @@ import AlbumItem from '../Homepage/AlbumItem'
 import AlbumGrid from './AlbumGrid'
 import AlbumRow from './AlbumRow'
 
-const AlbumList = () => {
-    const { albums, gridDisplay } = useStore(state => ({
-        albums: state.albums,
+interface Album {
+    id: string
+    albumId: string
+    name: string
+    artistName: string
+    artworkUrl: string
+    trackCount: number
+}
+
+interface AlbumListProps {
+    albums: Album[] | null
+}
+
+const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
+    const { gridDisplay } = useStore(state => ({
         gridDisplay: state.gridDisplay,
     }))
 
