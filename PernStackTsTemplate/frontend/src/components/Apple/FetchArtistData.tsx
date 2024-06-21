@@ -115,6 +115,7 @@ const FetchArtistData = (id: string | undefined) => {
         albumData: state.albumData,
         setAlbumData: state.setAlbumData,
     }))
+
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -130,6 +131,7 @@ const FetchArtistData = (id: string | undefined) => {
 
             try {
                 if (id.startsWith('r')) {
+                    console.log(`${id} start with 'r'`)
                     try {
                         const res = await musicKitInstance.api.music(
                             `/v1/me/library/artists/${id}`
@@ -141,7 +143,7 @@ const FetchArtistData = (id: string | undefined) => {
                         const data: Artist = await res.data.data[0]
                         const albumData: Array<AlbumData> =
                             await albumRes.data.data
-                        console.log('artistn data: ', data)
+                        console.log('artist album data: ', albumData)
                         setArtistAlbumData(albumData)
 
                         setArtistData(data)
@@ -164,6 +166,7 @@ const FetchArtistData = (id: string | undefined) => {
                         const albumData: Array<AlbumData> =
                             await albumRes.data.data
                         console.log('artistn data: ', data)
+                        console.log('artist album data: ', albumData)
                         setArtistAlbumData(albumData)
 
                         setArtistData(data)

@@ -12,7 +12,7 @@ import SidebarSongHistory from './SidebarSongHistory'
 const Sidebar = () => {
     return (
         <>
-            <div className="flex-col flex h-full ">
+            <div className="flex-col flex select-none h-full ">
                 <div className="flex-col m-5 pt-5 pb-5 w-4/5  px-3 border-b-2 border-slate-600 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <Link
                         to="/"

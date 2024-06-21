@@ -24,7 +24,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
     console.log('albums: ', albums)
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap w-full gap-2  justify-center  ">
+            <div className="flex flex-wrap w-full mx-auto gap-2  justify-center  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (

@@ -54,11 +54,9 @@ add reactive play button to large photo in albums and album items on home page
 
 ----
 
-add image to nowplaying bar at bottom - how do other streaming websites do it?
 
-fixing the album reactive play icon
 
-library search - now playing modal?
+ now playing modal?
 
 functionality to add albums to library, make playlists and make stacks
 
@@ -66,8 +64,6 @@ fix home page functionality in general
 
 ** add feature on library albums to go to full catalog album
 
-
-** add a radio to the end of a playlist based on playlist content
 
 ** create a nowplaying page
 
@@ -80,6 +76,45 @@ fix home page functionality in general
 
 **add buttons to move along display rows
 
+**work on artist page:
+GET https://api.music.apple.com/v1/catalog/{storefront}/artists/{id}/{relationship}
+
+Path Parameters
+id
+string
+(Required)
+
+A unique identifier for the artist.
+relationship
+string
+(Required)
+
+The name of the relationship you want to fetch for this resource.
+Possible Values: albums, genres, music-videos, playlists, station
+
+-----
+
+GET https://api.music.apple.com/v1/catalog/{storefront}/artists/{id}/view/{view}
+
+Path Parameters
+id
+string
+(Required)
+
+A unique identifier for the artist.
+storefront
+string
+(Required)
+
+An iTunes Store territory, specified by an ISO 3166 alpha-2 country code. The possible values are the id attributes of Storefront objects.
+view
+string
+(Required)
+
+The name of the resource view to fetch.
+Possible Values: appears-on-albums, compilation-albums, featured-albums, featured-music-videos, featured-playlists, full-albums, latest-release, live-albums, similar-artists, singles, top-music-videos, top-songs""
+
+----
 
 follow artist?
 
@@ -91,7 +126,6 @@ add two buttons - one for list display and one for grid display
 
 ** add big play button to album/playlist/song image
 ** add functionality to playlist play buttons on homepage (if type === playlists or something)
-** add modal dropdown menu on all the display items to like, add to library, add to playlist etc.
 
 FEATURE IDEAS:
 -recommendations based on heavy rotation albums

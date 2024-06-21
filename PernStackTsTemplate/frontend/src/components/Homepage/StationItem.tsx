@@ -85,7 +85,7 @@ const StationItem: React.FC<StationItemTypes> = ({
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
+            className={`${carousel && 'carousel-item'} select-none flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
             to={`/station/${stationId}`}
             title={`${title} by ${artistName}`}
         >

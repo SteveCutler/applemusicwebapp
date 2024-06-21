@@ -5,7 +5,11 @@
 main,
 body {
     /* background-image: linear-gradient(url('../public/bg.jpg')); */
-    background-color: rgb(19, 26, 52);
+    background: linear-gradient(
+        to bottom,
+        rgb(204, 204, 204),
+        rgb(62, 84, 140)
+    );
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

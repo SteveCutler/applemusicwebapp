@@ -62,7 +62,7 @@ type ArtworkObject = {
 const Album = () => {
     const { albumId, type } = useParams<{ albumId: string; type: string }>()
     console.log(type)
-    const { albumData, loading, error } = useFetchAlbumData(albumId)
+    const { albumData, artistId, loading, error } = useFetchAlbumData(albumId)
     const {
         setSearchTerm,
         musicKitInstance,
@@ -127,7 +127,7 @@ const Album = () => {
                         to={
                             type === 'library-albums'
                                 ? `/search/`
-                                : `/artist/${albumId}`
+                                : `/artist/${artistId}`
                         }
                         onClick={
                             type === 'library-albums' ? setTerm : undefined

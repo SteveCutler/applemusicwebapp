@@ -170,7 +170,7 @@ const Library = () => {
     const style = { fontSize: '2rem' }
 
     return (
-        <div className="flex-col w-11/12 mx-auto h-full">
+        <div className="flex-col w-11/12  mx-auto h-full">
             <div className=" flex justify-between my-5 pt-5  mx-auto items-center gap-2">
                 <form className=" p-3 w-full" action="">
                     <input
@@ -208,7 +208,7 @@ const Library = () => {
                     </button>
                 </div>
             </div>
-            <div className="flex-col pt-10   border-t-2 border-slate-500 w-full gap-2">
+            <div className="flex-col pt-10  justify-center mx-auto border-t-2 border-slate-500 w-11/12 ">
                 {albums && <AlbumList albums={librarySearchResults} />}
 
                 {loading && <div>Loading...</div>}

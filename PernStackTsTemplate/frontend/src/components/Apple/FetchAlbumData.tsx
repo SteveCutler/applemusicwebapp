@@ -57,6 +57,7 @@ type ArtworkObject = {
 const FetchAlbumData = (albumId: string | undefined) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
+    const [artistId, setArtistId] = useState<String | null>(null)
 
     // const musicKitLoaded = useMusicKit()
     const { musicKitInstance, authorizeMusicKit, albumData, setAlbumData } =
@@ -89,11 +90,15 @@ const FetchAlbumData = (albumId: string | undefined) => {
                         const res = await musicKitInstance.api.music(
                             `/v1/me/library/albums/${albumId}`
                         )
+                        const artistRes = await musicKitInstance.api.music(
+                            `/v1/me/library/albums/${albumId}/artists`
+                        )
 
-                        console.log(res)
+                        const artistId = await artistRes.data.data[0].id
 
                         const data = await res.data.data
                         setAlbumData(data[0])
+                        setArtistId(artistId)
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -104,18 +109,24 @@ const FetchAlbumData = (albumId: string | undefined) => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/{{storefrontId}}/albums/${albumId}`,
+                            `/v1/catalog/us/albums/${albumId}`,
+
+                            queryParameters
+                        )
+                        const artistRes = await musicKitInstance.api.music(
+                            `/v1/catalog/us/albums/${albumId}/artists`,
 
                             queryParameters
                         )
 
-                        // console.log(res)
+                        const artistId = await artistRes.data.data[0].id
 
                         const data = await res.data.data
 
                         console.log('data: ', albumData)
 
                         setAlbumData(data[0])
+                        setArtistId(artistId)
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -133,7 +144,7 @@ const FetchAlbumData = (albumId: string | undefined) => {
         fetchAlbumData()
     }, [musicKitInstance, albumId, authorizeMusicKit])
 
-    return { albumData, loading, error }
+    return { albumData, artistId, loading, error }
 }
 
 export default FetchAlbumData
