@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import e from 'express'
+import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
     song: Song
@@ -70,9 +71,19 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
 
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
+    const handleNavigation = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        navigate(`/song/${song.id}`)
+    }
+
+    const navigate = useNavigate()
+
     return (
-        <Link
-            to={`/song/${song.id}`}
+        <div
+            // to={`/song/${song.id}`}
+            onClick={handleNavigation}
             className="flex-col border-2 shadow-lg hover:bg-slate-500 bg-slate-600 w-1/5   border-white p-3 rounded-3xl flex justify-between"
         >
             {song.attributes.artwork?.url && (
@@ -93,7 +104,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
                     </h2>
                     <h3>{song.attributes.artistName}</h3>
                 </div>
-                <div className="flex-col justify-between pt-3">
+                <div className="flex flex-col justify-start gap-2 mt-2 items-end h-full">
                     <div
                         className="transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={async e => {
@@ -112,14 +123,22 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
                             <FaCirclePlay style={style} />
                         )}
                     </div>
-                    {/* {type === 'library-albums' && (
-                        <div className="bg-slate-300 h-fit text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
-                            <span>Library</span>
-                        </div>
-                    )} */}
+                    <div
+                        onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation() // Prevents the link's default behavior
+                        }}
+                        className="relative z-100"
+                    >
+                        <OptionsModal
+                            name={song.attributes.name}
+                            type="songs"
+                            id={song.id}
+                        />
+                    </div>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 

@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
-    title: String
-    artistName: String
-    albumArtUrl: String
-    playlistId: String
+    title: string
+    artistName: string
+    albumArtUrl: string
+    playlistId: string
     type: string
     carousel?: boolean
 }
@@ -148,16 +149,21 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
         await retrieveAlbumTracks()
     }
 
+    const handleNavigation = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        navigate(`/playlist/${playlistId}`)
+    }
+
+    const navigate = useNavigate()
+
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
     return (
-        <Link
+        <div
             className={`${carousel && 'carousel-item'} flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
-            to={
-                playlistId.startsWith('p')
-                    ? `/playlist/${playlistId}`
-                    : `/album/${playlistId}/${type}`
-            }
+            onClick={handleNavigation}
             title={`${title} by ${artistName}`}
         >
             <div className="h-full w-full">
@@ -170,7 +176,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                     <h2 className="text-lg truncate font-bold">{title}</h2>
                     <h3 className="truncate">{artistName}</h3>
                 </div>
-                <div className="flex flex-col justify-between items-end h-full">
+                <div className="flex flex-col justify-start gap-2 mt-2 items-end h-full">
                     {' '}
                     <div
                         className="transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
@@ -189,6 +195,19 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                             <FaCirclePlay style={style} />
                         )}
                     </div>
+                    <div
+                        onClick={e => {
+                            e.preventDefault()
+                            e.stopPropagation() // Prevents the link's default behavior
+                        }}
+                        className="relative z-100"
+                    >
+                        <OptionsModal
+                            name={title}
+                            type="playlists"
+                            id={playlistId}
+                        />
+                    </div>
                     {type === 'library-albums' && (
                         <div className="bg-slate-300  text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
                             <span>Library</span>
@@ -196,7 +215,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                     )}
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 

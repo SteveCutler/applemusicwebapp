@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
@@ -157,16 +157,24 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         await retrieveAlbumTracks()
     }
 
+    const handleNavigation = (e: React.MouseEvent) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (albumId.startsWith('p')) {
+            navigate(`/playlist/${albumId}`)
+        } else {
+            navigate(`/album/${albumId}/${type}`)
+        }
+    }
+
+    const navigate = useNavigate()
+
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
     return (
-        <Link
-            className={`${carousel && 'carousel-item'} relative z-25 flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
-            to={
-                albumId.startsWith('p')
-                    ? `/playlist/${albumId}`
-                    : `/album/${albumId}/${type}`
-            }
+        <div
+            className={`${carousel && 'carousel-item'} select-none hover:cursor-pointer flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
+            onClick={handleNavigation}
             title={`${title} by ${artistName}`}
         >
             <div className="h-full w-full">
@@ -204,17 +212,17 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         )}
                     </div>
                     <div
-                        onClick={async e => {
+                        onClick={e => {
                             e.preventDefault()
-                            e.stopPropagation()
+                            e.stopPropagation() // Prevents the link's default behavior
                         }}
-                        className="z-5000 relative"
+                        className="relative z-100"
                     >
-                        <OptionsModal name={title} type="albums" id={albumId} />
+                        <OptionsModal name={title} type={type} id={albumId} />
                     </div>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 

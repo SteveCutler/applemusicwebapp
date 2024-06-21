@@ -64,6 +64,10 @@ functionality to add albums to library, make playlists and make stacks
 
 fix home page functionality in general
 
+** add feature on library albums to go to full catalog album
+
+
+** add a radio to the end of a playlist based on playlist content
 
 ** create a nowplaying page
 
@@ -79,6 +83,10 @@ fix home page functionality in general
 
 **add buttons to move along display rows
 **add to library, like song
+
+add song to library
+follow artist?
+favourite?  
 
 ** create playlist, add to playlist etc.
 
