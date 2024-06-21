@@ -88,7 +88,7 @@ const AppleDashboard = () => {
     // Get recommendation based on ID https://api.music.apple.com/v1/me/recommendations/{id}
 
     return (
-        <div className="h-100vh flex-col z-10 relative flex-grow flex justify-left ">
+        <div className="h-100vh flex-col  flex-grow flex justify-left ">
             {/* MAIN DISPLAY */}
             {recentlyAddedToLib && (
                 <DisplayRow

@@ -70,7 +70,7 @@ function Footer() {
     const style = { fontSize: '1.5em' }
 
     return (
-        <div className="footer p-5 flex z-1000 items-center justify-between h-20 bg-slate-900">
+        <div className="footer p-5 flex  items-center justify-between h-20 bg-slate-900">
             <div className="flex gap-1 mx-auto w-1/4 justify-start mx-10">
                 <button
                     className="btn flex rounded-full items-center justify-center btn-primary"

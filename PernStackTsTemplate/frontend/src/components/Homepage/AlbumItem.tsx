@@ -216,7 +216,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                             e.preventDefault()
                             e.stopPropagation() // Prevents the link's default behavior
                         }}
-                        className="relative z-100"
+                        className=""
                     >
                         <OptionsModal name={title} type={type} id={albumId} />
                     </div>

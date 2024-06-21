@@ -177,31 +177,31 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             </div>
             <ul
                 tabIndex={0}
-                className="dropdown-content font-bold bottom-0 menu p-2 shadow w-fit bg-base-100 rounded-box"
+                className="dropdown-content font-bold bottom-0 menu w-40  p-2 shadow w-fit bg-base-100 rounded-box"
             >
                 <li className="w-full flex justify-between items-center">
-                    <div
-                        className=" justify-center items-center w-1/2"
+                    <a
+                        className=" justify-center items-center w-1/3"
                         onClick={async e => {
                             addFavorite(e)
                         }}
                     >
                         <IoHeartCircleOutline style={style} />
-                    </div>
-                    <div
-                        className=" justify-center items-center w-1/2"
+                    </a>
+                    <a
+                        className=" justify-center items-center w-1/3"
                         onClick={async e => {
                             addDislike(e)
                         }}
                     >
                         <IoHeartDislikeCircleOutline style={style} />
-                    </div>
+                    </a>
                 </li>
                 <li
                     onClick={e => {
                         addToLibrary(e)
                     }}
-                    className="w-fit"
+                    className=" justify-center items-center"
                 >
                     <div>Add to Library</div>
                 </li>
@@ -213,7 +213,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
                         // handlePlayPause()
                         console.log('click')
                     }}
-                    className="w-fit"
+                    className=" justify-center items-center"
                 >
                     <a
                         onClick={() => {
