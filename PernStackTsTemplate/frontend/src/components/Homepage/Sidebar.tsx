@@ -50,11 +50,13 @@ const Sidebar = () => {
                         <span className="p-2 ">Logout</span>
                     </div>
                 </div>
-                <div className="flex-col mx-5 my-2 w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                <div className="flex-col mx-5  w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">
                         <FaHistory /> History
                     </p>
-                    <SidebarSongHistory />
+                    <div>
+                        <SidebarSongHistory />
+                    </div>
                 </div>
                 <div className="flex-col mx-5 my-2 w-4/5 flex font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <SidebarPlaylists />

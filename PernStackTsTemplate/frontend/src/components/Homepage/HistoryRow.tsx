@@ -40,18 +40,18 @@ const HistoryRow: React.FC<playlistProps> = ({
     const playPauseHandler = async () => {
         if (playlist !== recentHistory) {
             setPlaylist(recentHistory, index, true)
+        } else {
         }
 
         if (id === currentSongId) {
             // console.log('songId is current song')
-            if (isPlaying) {
-                // console.log('is playing: pausing')
-                await pause()
-            } else {
-                // console.log('isnt playing: playing')
-                await play()
-                // setCurrrentSongId()
-            }
+            isPlaying
+                ? // console.log('is playing: pausing')
+                  await pause()
+                : // console.log('isnt playing: playing')
+                  play()
+
+            // setCurrrentSongId()
         } else {
             // console.log('isnt playing: setting track')
             await switchTrack(index)
@@ -62,10 +62,10 @@ const HistoryRow: React.FC<playlistProps> = ({
     return (
         <Link
             to={`/song/${id}`}
-            className="  overflow-hidden text-ellipsis whitespace-nowrap  truncate w-full mx-auto   font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-3 py-1 rounded-lg hover:cursor-pointer"
+            className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-2 truncate w-full mx-auto   font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-3 py-1 rounded-lg hover:cursor-pointer"
         >
             <div
-                className="text-sm  flex-col overflow-hidden text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
+                className="text-sm  flex-col overflow-hidden flex text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
                 title={`${name} by ${artistName}`}
             >
                 <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-semibold">
@@ -76,7 +76,7 @@ const HistoryRow: React.FC<playlistProps> = ({
                 </div>
             </div>
             <div
-                className="transform hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                 onClick={async e => {
                     e.preventDefault()
                     e.stopPropagation() // Prevents the link's default behavior

@@ -73,20 +73,19 @@ fix home page functionality in general
 
 ** add display for album image in the 'more like this album' display bar
 
-** add TOP ALBUMS or whatever to artists page
 **make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
 ** sort playlist by most recently played
 
 ** fix issue where when a song is playing, any song item with that ID will play as well
 
-** adding the modals somehow increased the height of the display rows and now they're scrolling/the menu is hidden if the scroll position is not right, must fix
-
 **add buttons to move along display rows
-**add to library, like song
 
-add song to library
+
 follow artist?
-favourite?  
+
+** add TOP ALBUMS or whatever to artists page
+add different display options for library (artist, album, song, genre?)
+add two buttons - one for list display and one for grid display
 
 ** create playlist, add to playlist etc.
 

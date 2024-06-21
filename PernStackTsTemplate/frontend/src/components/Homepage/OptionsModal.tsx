@@ -181,29 +181,29 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             >
                 <li className="w-full flex justify-between items-center">
                     <a
-                        className=" justify-center items-center w-1/3"
+                        className=" justify-center items-center w-full"
                         onClick={async e => {
                             addFavorite(e)
                         }}
                     >
-                        <IoHeartCircleOutline style={style} />
+                        Like <IoHeartCircleOutline style={style} />
                     </a>
                     <a
-                        className=" justify-center items-center w-1/3"
+                        className=" justify-center items-center w-full"
                         onClick={async e => {
                             addDislike(e)
                         }}
                     >
-                        <IoHeartDislikeCircleOutline style={style} />
+                        Dislike <IoHeartDislikeCircleOutline style={style} />
                     </a>
                 </li>
                 <li
                     onClick={e => {
                         addToLibrary(e)
                     }}
-                    className=" justify-center items-center"
+                    className=" justify-center items-center "
                 >
-                    <div>Add to Library</div>
+                    <div className="w-full">Add to Library</div>
                 </li>
                 <li
                     onClick={async e => {
@@ -213,12 +213,13 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
                         // handlePlayPause()
                         console.log('click')
                     }}
-                    className=" justify-center items-center"
+                    className=" justify-center items-center w-full"
                 >
                     <a
                         onClick={() => {
                             console.log('click')
                         }}
+                        className="w-full"
                     >
                         Add to Playlist
                     </a>

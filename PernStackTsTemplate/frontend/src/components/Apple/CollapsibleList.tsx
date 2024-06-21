@@ -34,7 +34,7 @@ const CollapsibleList: React.FC<RecentHistory> = ({ items }) => {
 
     return (
         <div>
-            <ul className="shadow menu mx-auto flex w-full gap-2 items-center rounded-box ">
+            <ul className="shadow px-4 mx-auto  w-full gap-2 items-center rounded-box ">
                 {visibleItems.map((item, index) => (
                     <li key={index}>
                         <HistoryRow

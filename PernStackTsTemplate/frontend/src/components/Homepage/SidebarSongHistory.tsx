@@ -13,7 +13,7 @@ const SidebarSongHistory = () => {
 
     console.log('recent history: ', recentHistory)
     return (
-        <div className="flex-col w-full items-center justify-left ">
+        <div className="">
             {recentHistory && <CollapsibleList items={recentHistory} />}
         </div>
     )

@@ -99,14 +99,6 @@ const AppleDashboard = () => {
             {/* {recentlyPlayed && (
                 <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
             )} */}
-
-            {heavyRotation && (
-                <DisplayRow title={'Heavy Rotation'} albums={heavyRotation} />
-            )}
-            {/* {recentlyPlayed && (
-                <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
-            )} */}
-
             {recentlyPlayedAlbums && (
                 <DisplayRow
                     title={
@@ -115,6 +107,14 @@ const AppleDashboard = () => {
                     albums={recentlyPlayedAlbums.relationships.contents.data}
                 />
             )}
+
+            {heavyRotation && (
+                <DisplayRow title={'Heavy Rotation'} albums={heavyRotation} />
+            )}
+            {/* {recentlyPlayed && (
+                <DisplayRow title={'Recently Played'} albums={recentlyPlayed} />
+            )} */}
+
             {/* NEED TO MAKE A CUSTOM HOOK FOR DISPLAYING RECOMMMENDATIONS */}
             {personalizedPlaylists && (
                 <DisplayRow

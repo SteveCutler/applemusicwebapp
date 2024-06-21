@@ -676,6 +676,9 @@ export const useStore = create<Store>((set, get) => ({
                     updateState
                 )
                 music.removeEventListener('playbackTimeDidChange', updateState)
+                music.removeEventListener('queueEnded', updateState)
+
+                music.autoplayEnabled = true
 
                 music.addEventListener(
                     'playbackStateDidChange',
@@ -686,6 +689,9 @@ export const useStore = create<Store>((set, get) => ({
                         updateState()
                     }
                 )
+                music.addEventListener('queueEnded', () => {
+                    console.log('Queue ended, enabling autoplay')
+                })
 
                 music.addEventListener('nowPlayingItemDidChange', () => {
                     if (music) {
