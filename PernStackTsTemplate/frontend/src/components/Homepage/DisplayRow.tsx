@@ -6,11 +6,39 @@ import PlaylistItem from './PlaylistItem'
 import StationItem from './StationItem'
 import { FaArrowCircleRight } from 'react-icons/fa'
 import { FaArrowCircleLeft } from 'react-icons/fa'
+import SongItem from './SongItem'
+import ArtistItem from './ArtistItem'
 
 type DisplayRow = {
     title: string
-    albums: Array<AlbumType | playlist | StationType | Song>
+    albums: Array<AlbumType | playlist | StationType | Song | Artist>
     id?: string
+}
+
+type Artist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
+}
+
+type AlbumRelationships = {
+    href: string
+    id: string
+    type: string
 }
 
 interface Song {
@@ -86,7 +114,7 @@ type AttributeObject = {
     dateAdded: String
     genreNames: Array<String>
     name: String
-    releasedDate: String
+    releaseDate: String
     trackCount: Number
 }
 
@@ -128,7 +156,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className="carousel flex carousel-center max-w-5xl overflow-x-auto   p-2 space-x-2  rounded-box"
+                    className="carousel flex carousel-center max-w-5xl overflow-x-auto h-full p-2 space-x-2  rounded-box"
                     ref={carouselRef}
                 >
                     {albums &&
@@ -155,6 +183,12 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                                     type={album.type}
                                     carousel={true}
                                 />
+                            ) : album.type === 'songs' ||
+                              album.type === 'library-songs' ? (
+                                <SongItem song={album} />
+                            ) : album.type === 'artists' ||
+                              album.type === 'library-artists' ? (
+                                <ArtistItem carousel={true} artist={album} />
                             ) : (
                                 album.attributes && (
                                     <AlbumItem
@@ -166,6 +200,9 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                                         albumId={album.id}
                                         type={album.type}
                                         carousel={true}
+                                        releaseDate={
+                                            album.attributes.releaseDate
+                                        }
                                     />
                                 )
                             )

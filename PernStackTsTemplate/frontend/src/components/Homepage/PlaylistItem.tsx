@@ -202,7 +202,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                     />
                 </div>
             </div>
-            <div className="flex justify-between h-full pt-2">
+            <div className="flex justify-between h-full ">
                 <div className="flex-col h-full overflow-hidden">
                     <h2 className="text-md truncate font-bold">{title}</h2>
                     <h3 className="truncate">{artistName}</h3>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+
+import FetchAlbumCatalogId from '../../hooks/AlbumPage/FetchLibraryAlbumCatalogId'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
@@ -11,6 +13,8 @@ interface AlbumPropTypes {
     albumId: string
     type: string
     carousel?: boolean
+    releaseDate?: string
+    width?: string
 }
 
 interface Song {
@@ -41,6 +45,8 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     albumId,
     type,
     carousel,
+    releaseDate,
+    width,
 }) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
@@ -157,11 +163,26 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         await retrieveAlbumTracks()
     }
 
-    const handleNavigation = (e: React.MouseEvent) => {
+    const handleNavigation = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
         if (albumId.startsWith('p')) {
             navigate(`/playlist/${albumId}`)
+        } else if (albumId.startsWith('l')) {
+            try {
+                const res = await musicKitInstance?.api.music(
+                    `v1/me/library/albums/${albumId}/catalog`
+                )
+
+                const catalogId = await res.data.data[0].id
+
+                console.log(catalogId)
+                navigate(`/album/${catalogId}/${type}`)
+            } catch (error: any) {
+                console.error(error)
+            } finally {
+                setLoading(false)
+            }
         } else {
             navigate(`/album/${albumId}/${type}`)
         }
@@ -173,11 +194,11 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : 'w-1/5'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${title} by ${artistName}`}
         >
-            <div className=" relative w-full shadow-lg">
+            <div className=" relative w-fit shadow-lg">
                 {albumArtUrl && (
                     <img src={constructImageUrl(albumArtUrl, 600)} />
                 )}
@@ -215,7 +236,15 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
             <div className="flex-col h-full overflow-hidden">
                 <h2 className="text-md truncate font-bold">{title}</h2>
-                <h3 className="truncate">{artistName}</h3>
+                <div className=" justify-between items-center ">
+                    <h3 className="truncate">{artistName}</h3>
+                    {releaseDate && (
+                        <h3 className="text-sm font-bold ">
+                            {releaseDate.split('-')[0]}
+                        </h3>
+                    )}
+                </div>
+
                 {type === 'library-albums' && (
                     <div className="bg-slate-300  text-slate-600 w-fit h-fit p-1 font-bold text-sm  flex rounded-lg">
                         <span>Library</span>

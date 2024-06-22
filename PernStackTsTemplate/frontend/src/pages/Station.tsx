@@ -118,7 +118,7 @@ const Station = () => {
 
     if (stationData) {
         return (
-            <div className="flex-col w-4/5 mx-auto h-full">
+            <div className="flex-col w-4/5 text-slate-800 mx-auto h-full">
                 <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
@@ -127,7 +127,7 @@ const Station = () => {
                     </div>
                 </Link>
                 <div className="flex-col ">
-                    <h1 className="text-3xl font-bold">
+                    <h1 className="text-5xl font-bold">
                         {stationData.attributes.name}
                     </h1>
                 </div>

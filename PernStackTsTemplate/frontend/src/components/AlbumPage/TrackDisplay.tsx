@@ -61,7 +61,7 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
     }
 
     return (
-        <div className="flex-col w-1/2 justify-between items-between ">
+        <div className="flex-col  justify-between items-between ">
             {albumTracks.map((song, index: number) => (
                 <>
                     <Track

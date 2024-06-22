@@ -6,6 +6,32 @@ import AlbumItem from '../components/Homepage/AlbumItem'
 import ArtistItem from '../components/Homepage/ArtistItem'
 import SongItem from '../components/Homepage/SongItem'
 
+type Artist = {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
+}
+
+type AlbumRelationships = {
+    href: string
+    id: string
+    type: string
+}
+
 const Search = () => {
     const {
         searchTerm,
@@ -116,11 +142,7 @@ const Search = () => {
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.artists &&
                         searchResults.artists.data.map(artist => (
-                            <ArtistItem
-                                title={artist.attributes.name}
-                                artUrl={artist.attributes.artwork?.url}
-                                artistId={artist.id}
-                            />
+                            <ArtistItem artist={artist} />
                         ))}
                 </div>
             </div>

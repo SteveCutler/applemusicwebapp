@@ -5,6 +5,7 @@ Create a playbar footer with playback controls, next song, previous song, volume
 Create a sidebar with playlists, recently played, or whatever
 Make each AlbumItem/Music item a button that takes you to the album or playlists
 Create Album page with tracks, play buttons on each track etc.
+
 Settings menu
 
 Design a layout and create the tailwind
@@ -52,13 +53,26 @@ one work around for loading artist page for library albums is to link them to th
 
 add reactive play button to large photo in albums and album items on home page
 
+add default image for artist, song playlist etc
+
 ----
 
 pagination for artistalbums
 
-
-
  now playing modal?
+
+ **THIS WEEKEND
+ -fix modal display issue
+~~-work on artist page to get it displaying all the data with text in a proper way~~
+ -work on album page to get it displaying relevent data
+ -work on song page to get it displaying relevant data
+ -make a now playing page or modal with the current song and the queue displaying,
+ -add an 'add to queue' feature on the options modal
+ -create the playlist functionality
+ -on album item make artist name into hyperlink
+ -figure out how to deal with the descrepencies between catalog artist and library artist
+ -add big play button to playlist page image so you can just start the playlist
+
 
 functionality to add albums to library, make playlists and make stacks
 

@@ -75,7 +75,7 @@ const AppleDashboard = () => {
 
     // console.log('heavy rotation: ', heavyRotation)
     // console.log('recently played: ', recentlyPlayed)
-    // console.log('recommendations: ', recommendations)
+    // console.log('recommendations: ', reco    mmendations)
     // console.log('recentlyplayedalbums', recentlyPlayedAlbums)
     // console.log('personalizedPlaylists: ', personalizedPlaylists)
     // console.log('themed recos: ', themedRecommendations)

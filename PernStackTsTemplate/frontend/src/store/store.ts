@@ -98,11 +98,31 @@ interface SearchResults {
         data: SearchResultAlbum[]
     }
     artists?: {
-        data: SearchResultArtist[]
+        data: Artist[]
     }
     songs?: {
         data: Song[]
     }
+}
+
+type Artist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
 }
 
 interface SearchResultArtist {

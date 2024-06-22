@@ -31,10 +31,10 @@ interface Song {
 }
 
 const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
-    const constructImageUrl = (url: String, width: Number, height: Number) => {
+    const constructImageUrl = (url: String, size: Number) => {
         return url
-            .replace('{w}', width.toString())
-            .replace('{h}', height.toString())
+            .replace('{w}', size.toString())
+            .replace('{h}', size.toString())
     }
 
     const {
@@ -88,16 +88,16 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
             className={`${carousel && 'carousel-item'}  select-none flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
         >
             {song.attributes.artwork?.url && (
-                <div className=" w-full h-full relative shadow-lg  ">
+                <div className=" relative flex-col h-full w-full flex flex-shrink  ">
+                    div.flex
                     <img
+                        className="shadow-lg"
                         src={constructImageUrl(
                             song.attributes.artwork?.url,
-                            600,
                             600
                         )}
                     />
-
-                    <div className="absolute bottom-1 right-1">
+                    <div className=" absolute bottom-1 right-1">
                         <div
                             onClick={e => {
                                 e.preventDefault()
@@ -134,12 +134,19 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                     </div>
                 </div>
             )}
-            <div className="flex justify-between mb-5">
-                <div className="flex-col h-full overflow-hidden">
+            <div className="flex w-full justify-between mb-5">
+                <div className="flex-col w-full h-full overflow-hidden">
                     <h2 className="text-md truncate font-bold">
                         {song.attributes.name}
                     </h2>
-                    <h3 className="truncate">{song.attributes.artistName}</h3>
+                    <div className="flex items-center justify-between">
+                        <h3 className="truncate">
+                            {song.attributes.artistName}
+                        </h3>
+                        <h3 className="text-sm font-bold">
+                            {song.attributes.releaseDate.split('-')[0]}
+                        </h3>
+                    </div>
                 </div>
                 {song.type === 'library-songs' && (
                     <div className="bg-slate-300  text-slate-600 w-fit p-1 font-bold text-sm  flex rounded-lg">

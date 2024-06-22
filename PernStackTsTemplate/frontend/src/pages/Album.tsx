@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom'
 import useFetchAlbumData from '../components/Apple/FetchAlbumData'
+import fetchAlbumCatalogId from '../hooks/AlbumPage/FetchLibraryAlbumCatalogId'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
@@ -62,7 +63,9 @@ type ArtworkObject = {
 const Album = () => {
     const { albumId, type } = useParams<{ albumId: string; type: string }>()
     console.log(type)
+
     const { albumData, artistId, loading, error } = useFetchAlbumData(albumId)
+
     const {
         setSearchTerm,
         musicKitInstance,
@@ -168,9 +171,11 @@ const Album = () => {
                             )}
                         </div>
                     </div>
-                    <TrackDisplay
-                        albumTracks={albumData.relationships.tracks.data}
-                    />
+                    <div className=" w-1/2">
+                        <TrackDisplay
+                            albumTracks={albumData.relationships.tracks.data}
+                        />
+                    </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
                 </div>
             </div>

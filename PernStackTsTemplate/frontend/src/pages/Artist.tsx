@@ -1,11 +1,21 @@
 import { useEffect } from 'react'
 import { useStore } from '../store/store'
 import { useParams } from 'react-router-dom'
-import useFetchArtistData from '../components/Apple/FetchArtistData'
+import useFetchArtistData from '../hooks/ArtistPage/FetchArtistData'
+import useFetchArtistAlbumData from '../hooks/ArtistPage/FetchArtistAlbumData'
+import useFetchArtistAppearsOnAlbumsData from '../hooks/ArtistPage/FetchArtistAppearsOnAlbumsData'
+import useFetchArtistCompilationAlbumsData from '../hooks/ArtistPage/FetchArtistCompilationAlbumsData'
+import useFetchArtistFeaturedPlaylistsData from '../hooks/ArtistPage/FetchArtistFeaturedPlaylistsData'
+import useFetchArtistLatestReleaseData from '../hooks/ArtistPage/FetchArtistLatestReleaseData'
+import useFetchArtistSimilarArtistsData from '../hooks/ArtistPage/FetchArtistSimilarArtistsData'
+import useFetchArtistSinglesData from '../hooks/ArtistPage/FetchArtistSinglesData'
+import useFetchArtistTopSongsData from '../hooks/ArtistPage/FetchArtistTopSongsData'
+import useFetchFeaturedAlbumsData from '../hooks/ArtistPage/FetchFeaturedAlbumsData'
 import AlbumItem from '../components/Homepage/AlbumItem'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import SongItem from '../components/Homepage/SongItem'
 import DisplayRow from '../components/Homepage/DisplayRow'
+import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 
 const Artist = () => {
     const {
@@ -21,26 +31,16 @@ const Artist = () => {
     }))
     console.log('test')
     const { Id } = useParams<{ Id: string }>()
-    const {
-        artistData,
-        artistAlbumData,
-        topSongsData,
-        singlesData,
-        similarArtistsData,
-        featuredPlaylistsData,
-        featuredAlbumsData,
-        appearsOnAlbumsData,
-        compilationAlbumsData,
-        fullAlbumsData,
-        latestReleaseData,
-        loading,
-        error,
-    } = useFetchArtistData(Id)
-
-    console.log('artist ] data: ', artistData)
-    console.log('artist album data: ', artistAlbumData)
-
-    // data flow is taking albumID right now, specify with type?
+    const { artistData } = useFetchArtistData(Id)
+    const { artistAlbumData } = useFetchArtistAlbumData(Id)
+    const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
+    const { featuredPlaylistsData } = useFetchArtistFeaturedPlaylistsData(Id)
+    const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
+    const { latestReleaseData } = useFetchArtistLatestReleaseData(Id)
+    const { similarArtistsData } = useFetchArtistSimilarArtistsData(Id)
+    const { singlesData } = useFetchArtistSinglesData(Id)
+    const { topSongsData } = useFetchArtistTopSongsData(Id)
+    const { featuredAlbumsData } = useFetchFeaturedAlbumsData(Id)
 
     //console.log('artistData: ', artistData[0])
     const initialize = async () => {
@@ -77,37 +77,140 @@ const Artist = () => {
                     <h1 className="text-6xl font-semibold m-3 p-3 text-slate-900">
                         {artistData.attributes.name}
                     </h1>
-                    <div className="flex justify-center items-center">
-                        <img
-                            className="mx-3 px-3 pb-5"
-                            src={constructImageUrl(
-                                artistData.attributes.artwork.url,
-                                600
+                    <div className="flex justify-around gap-2 items-start">
+                        <div className="flex-col w-1/2">
+                            <img
+                                className="pb-5"
+                                src={constructImageUrl(
+                                    artistData.attributes.artwork.url,
+                                    600
+                                )}
+                            />
+
+                            {artistData.attributes.editorialNotes && (
+                                <div className="flex w-full mx-3 px-3 pb-5 text-3xl  text-slate-800">
+                                    {artistData.attributes.editorialNotes
+                                        .standard
+                                        ? artistData.attributes.editorialNotes
+                                              .standard
+                                        : artistData.attributes.editorialNotes
+                                              .short}
+                                </div>
                             )}
-                        />
-                        {topSongsData && (
-                            <div className="w-1/2 gap-4 mx-3 px-3  ">
-                                <DisplayRow
-                                    title="Top Songs"
-                                    albums={topSongsData.splice(6)}
-                                />
-                            </div>
-                        )}
+                        </div>
+
+                        <div className="flex-col">
+                            {topSongsData && (
+                                <div className=" justify-start">
+                                    {' '}
+                                    <h2 className="text-4xl font-bold text-slate-800">
+                                        Top Songs:
+                                    </h2>
+                                    <TrackDisplay albumTracks={topSongsData} />
+                                </div>
+                            )}
+
+                            {latestReleaseData && (
+                                <div className="flex-col mx-auto justify-center ">
+                                    <h2 className="text-4xl text-center pt-3 pb-3 font-bold text-slate-800">
+                                        Latest Release:
+                                    </h2>
+                                    <div className="flex w-1/2 items-center mx-auto justify-center">
+                                        <AlbumItem
+                                            title={
+                                                latestReleaseData[0].attributes
+                                                    .name
+                                            }
+                                            artistName={
+                                                latestReleaseData[0].attributes
+                                                    .artistName
+                                            }
+                                            albumId={latestReleaseData[0].id}
+                                            type={latestReleaseData[0].type}
+                                            albumArtUrl={
+                                                latestReleaseData[0].attributes
+                                                    .artwork.url
+                                            }
+                                            releaseDate={
+                                                latestReleaseData[0].attributes
+                                                    .releaseDate
+                                            }
+                                            width="w-1/2"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
+
+                    {/* {topSongsData && (
+                        <div className="w-full gap-4 mx-3 px-3   ">
+                            <>
+                                <DisplayRow
+                                    title={'Top Songs:'}
+                                    albums={topSongsData}
+                                />
+                            </>
+                        </div>
+                    )} */}
+
+                    {featuredAlbumsData && (
+                        <div className="w-full gap-4 mx-3 px-3   ">
+                            <>
+                                <DisplayRow
+                                    title={'Featured Albums:'}
+                                    albums={featuredAlbumsData}
+                                />
+                            </>
+                        </div>
+                    )}
+
+                    {artistAlbumData && (
+                        <h2 className="mx-3 px-3 text-5xl text-slate-800 font-bold">
+                            Albums:
+                        </h2>
+                    )}
                     {artistAlbumData && (
                         <div className="w-full gap-4 mx-3 px-3 flex flex-wrap">
                             {artistAlbumData.map(album => (
-                                <AlbumItem
-                                    title={album.attributes.name}
-                                    artistName={album.attributes.artistName}
-                                    albumArtUrl={album.attributes.url}
-                                    albumId={album.id}
-                                    type={album.type}
-                                />
+                                <>
+                                    <AlbumItem
+                                        title={album.attributes.name}
+                                        artistName={album.attributes.artistName}
+                                        albumArtUrl={
+                                            album.attributes.artwork.url
+                                        }
+                                        albumId={album.id}
+                                        type={album.type}
+                                        releaseDate={
+                                            album.attributes.releaseDate
+                                        }
+                                    />
+                                </>
                                 // <p className="">{album.attributes.name}</p>
                             ))}
                         </div>
                     )}
+
+                    {similarArtistsData && (
+                        <div className="w-full gap-4 mx-3 px-3   ">
+                            <>
+                                <DisplayRow
+                                    title={'Similar Artists:'}
+                                    albums={similarArtistsData}
+                                />
+                            </>
+                        </div>
+                    )}
+
+                    <div className=" w-full flex mx-auto ">
+                        {featuredPlaylistsData && (
+                            <DisplayRow
+                                title="Featured Playlists:"
+                                albums={featuredPlaylistsData}
+                            />
+                        )}
+                    </div>
                 </div>
             )}
         </>
