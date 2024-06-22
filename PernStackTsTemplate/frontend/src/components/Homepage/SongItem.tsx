@@ -7,6 +7,7 @@ import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
     song: Song
+    carousel?: boolean
 }
 
 interface Song {
@@ -29,7 +30,7 @@ interface Song {
     }
 }
 
-const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
+const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
     const constructImageUrl = (url: String, width: Number, height: Number) => {
         return url
             .replace('{w}', width.toString())
@@ -84,59 +85,67 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song }) => {
         <div
             // to={`/song/${song.id}`}
             onClick={handleNavigation}
-            className="flex-col border-2 shadow-lg hover:bg-slate-500 bg-slate-600 w-1/5   border-white p-3 rounded-3xl flex justify-between"
+            className={`${carousel && 'carousel-item'}  select-none flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
         >
             {song.attributes.artwork?.url && (
-                <div className="">
+                <div className=" w-full h-full relative shadow-lg  ">
                     <img
                         src={constructImageUrl(
                             song.attributes.artwork?.url,
-                            500,
-                            500
+                            600,
+                            600
                         )}
                     />
+
+                    <div className="absolute bottom-1 right-1">
+                        <div
+                            onClick={e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                            }}
+                            className="relative z-100"
+                        >
+                            <OptionsModal
+                                name={song.attributes.name}
+                                type="songs"
+                                id={song.id}
+                            />
+                        </div>
+                    </div>
+                    <div className="absolute bottom-1 left-1">
+                        <div
+                            className="transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            onClick={async e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                                // await FetchAlbumData(albumId)
+                                // handlePlayPause()
+
+                                await playData()
+                            }}
+                        >
+                            {isPlaying &&
+                            musicKitInstance?.nowPlayingItem.id === song.id ? (
+                                <FaRegCirclePause style={style} />
+                            ) : (
+                                <FaCirclePlay style={style} />
+                            )}
+                        </div>
+                    </div>
                 </div>
             )}
-            <div className="flex justify-between h-full pt-2">
-                <div className="flex-col">
-                    <h2 className="text-xl font-bold">
+            <div className="flex justify-between mb-5">
+                <div className="flex-col h-full overflow-hidden">
+                    <h2 className="text-md truncate font-bold">
                         {song.attributes.name}
                     </h2>
-                    <h3>{song.attributes.artistName}</h3>
+                    <h3 className="truncate">{song.attributes.artistName}</h3>
                 </div>
-                <div className="flex flex-col justify-start gap-2 mt-2 items-end h-full">
-                    <div
-                        className="transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
-                        onClick={async e => {
-                            e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                            // await FetchAlbumData(albumId)
-                            // handlePlayPause()
-
-                            await playData()
-                        }}
-                    >
-                        {isPlaying &&
-                        musicKitInstance?.nowPlayingItem.id === song.id ? (
-                            <FaRegCirclePause style={style} />
-                        ) : (
-                            <FaCirclePlay style={style} />
-                        )}
+                {song.type === 'library-songs' && (
+                    <div className="bg-slate-300  text-slate-600 w-fit p-1 font-bold text-sm  flex rounded-lg">
+                        <span>Library</span>
                     </div>
-                    <div
-                        onClick={e => {
-                            e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                        }}
-                        className="relative z-100"
-                    >
-                        <OptionsModal
-                            name={song.attributes.name}
-                            type="songs"
-                            id={song.id}
-                        />
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     )

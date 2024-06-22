@@ -94,7 +94,7 @@ const Search = () => {
     }, [searchTerm, musicKitInstance])
 
     return (
-        <div className="w-full flex-col h-full pt-7 px-9 justify-center items-center mx-auto">
+        <div className="w-full  flex-col h-full pt-7 px-9 justify-center items-center mx-auto">
             {/* <div className="text-3xl m-3 px-3">SEARCH</div> */}
             <form className="m-3 p-3 w-full" action="">
                 <input
@@ -109,7 +109,7 @@ const Search = () => {
             {/*  */}
             <div className="flex-col mx-3 px-3">
                 {searchResults.artists && (
-                    <p className="text-left font-bold  mt-7 pb-3 text-3xl">
+                    <p className="text-left text-3xl text-slate-900 font-bold  mt-7 pb-3 ">
                         Artists:
                     </p>
                 )}
@@ -127,7 +127,7 @@ const Search = () => {
 
             <div className="flex-col mx-3 mb-4 px-3">
                 {searchResults.albums && (
-                    <p className="text-left font-bold  mt-7 mb-0 pb-3 text-3xl">
+                    <p className="text-left font-bold text-slate-900 mt-7 mb-0 pb-3 text-3xl">
                         Albums:
                     </p>
                 )}
@@ -146,7 +146,7 @@ const Search = () => {
             </div>
             <div className="flex-col mx-3 mb-4 px-3">
                 {searchResults.albums && (
-                    <p className="text-left font-bold  mt-7 pb-3 text-3xl">
+                    <p className="text-left font-bold text-slate-900 mt-7 pb-3 text-3xl">
                         Songs:
                     </p>
                 )}

@@ -73,7 +73,7 @@ const Playlist = () => {
             .replace('{h}', size.toString())
     }
 
-    const style = { fontSize: '1.5em' }
+    const style = { fontSize: '1.5em', color: 'royalblue' }
     if (loading) {
         return <div>Loading...</div>
     }
@@ -88,7 +88,7 @@ const Playlist = () => {
 
     if (playlistData && playlistTrackData) {
         return (
-            <div className="flex-col flex flex-grow mt-10 mx-auto w-4/5 ">
+            <div className="flex-col flex text-slate-900 flex-grow mt-10 mx-auto w-4/5 ">
                 <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 top-1 left-1">
@@ -97,7 +97,7 @@ const Playlist = () => {
                     </div>
                 </Link>
                 <div className="flex-col">
-                    <h1 className="text-3xl font-bold">
+                    <h1 className="text-5xl font-bold">
                         {playlistData.attributes.name}
                     </h1>
                 </div>

@@ -3,7 +3,7 @@ import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import { useStore } from './store/store'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Toaster } from 'react-hot-toast'
 import Album from './pages/Album'
@@ -18,20 +18,38 @@ import Song from './pages/Song'
 import Station from './pages/Station'
 
 function App() {
-    const { backendToken, authorizeBackend } = useStore(state => ({
-        backendToken: state.backendToken,
-        authorizeBackend: state.authorizeBackend,
-    }))
+    const { backendToken, authorizeBackend, setBackendToken } = useStore(
+        state => ({
+            backendToken: state.backendToken,
+            authorizeBackend: state.authorizeBackend,
+            setBackendToken: state.setBackendToken,
+        })
+    )
+
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+    const authToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('authToken='))
+        ?.split('=')[1]
+
     useEffect(() => {
-        const authBackend = async () => {
-            console.log('authorizing backend')
-            authorizeBackend()
+        const checkAuth = async () => {
+            if (authToken) {
+                setBackendToken(authToken)
+            } else {
+                await authorizeBackend()
+            }
+
+            setIsCheckingAuth(false)
         }
-        if (!backendToken) {
-            authBackend()
-        }
-        console.log('backend previously authorized')
-    }, [authorizeBackend])
+
+        checkAuth()
+    }, [authorizeBackend, setBackendToken])
+
+    if (isCheckingAuth) {
+        return <div>Loading...</div>
+    }
+
     return (
         <div className="flex-col justify-between flex min-h-screen ">
             <div className="flex flex-grow">
@@ -43,7 +61,7 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                backendToken ? (
+                                backendToken || authToken ? (
                                     <Home />
                                 ) : (
                                     <Navigate to="/login" />
@@ -53,26 +71,52 @@ function App() {
                         <Route
                             path="/signup"
                             element={
-                                !backendToken ? <SignUp /> : <Navigate to="/" />
+                                backendToken || authToken ? (
+                                    <Navigate to="/" />
+                                ) : (
+                                    <SignUp />
+                                )
                             }
                         />
                         <Route
                             path="/search/"
-                            element={!backendToken ? <Login /> : <Search />}
+                            element={
+                                backendToken || authToken ? (
+                                    <Search />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/artist/:Id"
-                            element={!backendToken ? <Login /> : <Artist />}
+                            element={
+                                backendToken || authToken ? (
+                                    <Artist />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/login"
                             element={
-                                !backendToken ? <Login /> : <Navigate to="/" />
+                                backendToken || authToken ? (
+                                    <Navigate to="/" />
+                                ) : (
+                                    <Login />
+                                )
                             }
                         />
                         <Route
                             path="/library"
-                            element={!backendToken ? <Login /> : <Library />}
+                            element={
+                                backendToken || authToken ? (
+                                    <Library />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route path="/stacks" element={<Stacks />} />
                         <Route

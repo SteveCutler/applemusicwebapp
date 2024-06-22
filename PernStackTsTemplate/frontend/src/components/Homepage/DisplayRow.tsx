@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import PlaylistItem from './PlaylistItem'
 import StationItem from './StationItem'
+import { FaArrowCircleRight } from 'react-icons/fa'
+import { FaArrowCircleLeft } from 'react-icons/fa'
 
 type DisplayRow = {
     title: string
@@ -108,24 +110,25 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
             carouselRef.current.scrollBy({ left: 500, behavior: 'smooth' })
         }
     }
+    const style = { fontSize: '1.5rem' }
 
     return (
         <div className="flex-col flex items-center my-5  w-full rounded-lg  ">
-            <h1 className="text-4xl select-none flex w-full px-6 py-2 text-slate-800  font-bold justify-start">
+            <h1 className="text-5xl select-none flex w-full px-6 py-2 text-slate-800  font-bold justify-start">
                 {id && id}
                 {title}
             </h1>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center  items-center">
                 <button
-                    className="z-10 p-2 bg-gray-300 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 -translate-y-10 hover:text-slate-500 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
                     onClick={scrollLeft}
                 >
-                    &#8249;
+                    <FaArrowCircleLeft style={style} />
                 </button>
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className="carousel flex carousel-center max-w-5xl overflow-x-auto   p-4 space-x-4  rounded-box"
+                    className="carousel flex carousel-center max-w-5xl overflow-x-auto   p-2 space-x-2  rounded-box"
                     ref={carouselRef}
                 >
                     {albums &&
@@ -169,10 +172,10 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                         )}
                 </div>
                 <button
-                    className="z-10 p-2 bg-gray-300 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 hover:text-slate-500 -translate-y-10 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
                     onClick={scrollRight}
                 >
-                    &#8250;
+                    <FaArrowCircleRight style={style} />
                 </button>
             </div>
         </div>

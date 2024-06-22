@@ -111,7 +111,7 @@ const Album = () => {
 
     if (albumData) {
         return (
-            <div className="flex-col w-4/5 mx-auto h-full">
+            <div className="flex-col w-4/5 mx-auto text-slate-900 h-full">
                 <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
@@ -120,7 +120,7 @@ const Album = () => {
                     </div>
                 </Link>
                 <div className="flex-col ">
-                    <h1 className="text-3xl font-bold">
+                    <h1 className="text-5xl font-bold">
                         {albumData.attributes.name}
                     </h1>
                     <Link

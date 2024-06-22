@@ -42,21 +42,27 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ title, artistId, artUrl }) => {
 
     return (
         <Link
-            className="flex-col border-2 shadow-lg hover:bg-slate-500 bg-slate-600 w-1/5   border-white p-3 rounded-3xl flex justify-between"
+            className="flex-col  w-1/5   flex justify-between"
             to={`/artist/${artistId}`}
         >
             {artUrl && (
-                <div className="">
-                    <img src={constructImageUrl(artUrl, 500, 500)} />
+                <div className="shadow-lg">
+                    <img src={constructImageUrl(artUrl, 600, 600)} />
                 </div>
             )}
 
-            <div className="flex justify-between h-full pt-2">
+            <div className="flex text-slate-800 justify-between mb-5">
+                <div className="flex-col h-full overflow-hidden">
+                    <h2 className="text-md truncate font-bold">{title}</h2>
+                </div>
+            </div>
+
+            {/* <div className="flex justify-between h-full pt-2">
                 <div className="flex-col">
                     <h2 className="text-xl font-bold">{title}</h2>
                 </div>
                 <div className="flex-col justify-between pt-3"></div>
-            </div>
+            </div> */}
         </Link>
     )
 }

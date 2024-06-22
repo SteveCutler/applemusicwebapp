@@ -165,7 +165,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             <div
                 tabIndex={0}
                 role="button"
-                className=" bg-slate-400 transform  relative z-50000 rounded-full justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
+                className=" bg-slate-400 transform  rounded-full relative z-1000 justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
                 onClick={async e => {
                     e.preventDefault()
                     e.stopPropagation() // Prevents the link's default behavior
@@ -177,7 +177,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             </div>
             <ul
                 tabIndex={0}
-                className="dropdown-content font-bold bottom-0 menu w-40  p-2 shadow w-fit bg-base-100 rounded-box"
+                className="dropdown-content font-bold bottom-0 menu w-fit  p-2 shadow  bg-base-100 rounded-box"
             >
                 <li className="w-full flex justify-between items-center">
                     <a

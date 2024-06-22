@@ -85,46 +85,39 @@ const StationItem: React.FC<StationItemTypes> = ({
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col shadow-lg hover:bg-slate-700 bg-slate-800 w-1/6 flex-grow  border-white p-4 rounded-3xl flex justify-between`}
+            className={`${carousel && 'carousel-item'} select-none flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
             to={`/station/${stationId}`}
             title={`${title} by ${artistName}`}
         >
-            <div className="h-full w-full">
+            <div className=" relative w-full shadow-lg">
                 {albumArtUrl && (
                     <img src={constructImageUrl(albumArtUrl, 600)} />
                 )}
-            </div>
-            <div className="flex justify-between h-full pt-2">
-                <div className="flex-col h-full overflow-hidden">
-                    <h2 className="text-lg truncate font-bold">{title}</h2>
-                    <h3 className="truncate">{artistName}</h3>
-                </div>
-                <div className="flex flex-col justify-between items-end h-full">
-                    {' '}
-                    <div
-                        className="transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
-                        onClick={async e => {
-                            e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                            // await FetchAlbumData(albumId)
-                            // handlePlayPause()
+                <div
+                    className=" absolute bottom-1 left-1 transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                    onClick={async e => {
+                        e.preventDefault()
+                        e.stopPropagation() // Prevents the link's default behavior
+                        // await FetchAlbumData(albumId)
+                        // handlePlayPause()
 
-                            playData()
-                        }}
-                    >
-                        {isPlaying &&
-                        musicKitInstance?.nowPlayingItem &&
-                        playlist.includes(musicKitInstance?.nowPlayingItem) ? (
-                            <FaRegCirclePause style={style} />
-                        ) : (
-                            <FaCirclePlay style={style} />
-                        )}
-                    </div>
-                    {type === 'library-albums' && (
-                        <div className="bg-slate-300  text-slate-600 w-fit p-1 my-1 font-bold text-sm  flex rounded-lg">
-                            <span>Library</span>
-                        </div>
+                        playData()
+                    }}
+                >
+                    {isPlaying &&
+                    musicKitInstance?.nowPlayingItem &&
+                    playlist.includes(musicKitInstance?.nowPlayingItem) ? (
+                        <FaRegCirclePause style={style} />
+                    ) : (
+                        <FaCirclePlay style={style} />
                     )}
+                </div>
+            </div>
+
+            <div className="flex justify-between mb-5">
+                <div className="flex-col  overflow-hidden">
+                    <h2 className="text-md truncate font-bold">{title}</h2>
+                    <h3 className="truncate">Radio Station</h3>
                 </div>
             </div>
         </Link>

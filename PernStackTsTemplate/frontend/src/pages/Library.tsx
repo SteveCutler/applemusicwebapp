@@ -186,7 +186,7 @@ const Library = () => {
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
                 </button> */}
-                <div className="flex  justify-center items-center gap-4">
+                <div className="flex  justify-center items-center gap-1">
                     <span
                         className={`flex justify-right hover:cursor-pointer text-slate-300 hover:text-slate-100 p-2 rounded-lg ${gridDisplay && 'bg-slate-500'}`}
                         onClick={toggleGrid}

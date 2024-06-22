@@ -129,7 +129,8 @@ const Track: React.FC<TrackPropTypes> = ({
         return `${formattedMinutes}:${formattedSeconds}`
     }
 
-    const style = { color: 'white' }
+    const style = { color: 'black', fontSize: '1.3rem' }
+    const styleBlue = { color: 'royalblue', fontSize: '1.3rem' }
 
     const timeLeft = () => {
         if (currentSongDuration == null || currentElapsedTime == null) {
@@ -195,13 +196,13 @@ const Track: React.FC<TrackPropTypes> = ({
     return (
         <div
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-${isPlaying && songId === currentSongId ? '300' : '700'}`}
+            className={`flex border-4  text-slate-600 rounded-lg bg-slate-300 my-2 px-3 justify-between items-center border-slate-${isPlaying && songId === currentSongId ? '700' : '500'}`}
         >
             <div
                 className={
                     isPlaying && songId === currentSongId
-                        ? 'font-bold text-slate-200'
-                        : ''
+                        ? 'font-bold text-slate-800'
+                        : 'font-bold text-slate-600'
                 }
             >
                 {timeLeft()}
@@ -210,8 +211,8 @@ const Track: React.FC<TrackPropTypes> = ({
                 <div
                     className={
                         isPlaying && songId === currentSongId
-                            ? 'font-bold text-slate-200'
-                            : ''
+                            ? 'font-bold text-slate-900'
+                            : 'font-semibold'
                     }
                 >
                     {trackName}
@@ -220,8 +221,8 @@ const Track: React.FC<TrackPropTypes> = ({
                 <div
                     className={
                         isPlaying && songId === currentSongId
-                            ? 'font-bold text-slate-300'
-                            : 'text-slate-500'
+                            ? 'font-bold text-slate-900'
+                            : 'font-semibold text-slate-600'
                     }
                 >
                     {artistName}
@@ -231,7 +232,7 @@ const Track: React.FC<TrackPropTypes> = ({
                 {isPlaying && songId === currentSongId ? (
                     <FaRegCirclePause style={style} />
                 ) : (
-                    <FaCirclePlay />
+                    <FaCirclePlay style={styleBlue} />
                 )}
             </button>
         </div>

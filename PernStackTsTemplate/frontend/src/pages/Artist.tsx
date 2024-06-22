@@ -4,6 +4,8 @@ import { useParams } from 'react-router-dom'
 import useFetchArtistData from '../components/Apple/FetchArtistData'
 import AlbumItem from '../components/Homepage/AlbumItem'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
+import SongItem from '../components/Homepage/SongItem'
+import DisplayRow from '../components/Homepage/DisplayRow'
 
 const Artist = () => {
     const {
@@ -19,8 +21,21 @@ const Artist = () => {
     }))
     console.log('test')
     const { Id } = useParams<{ Id: string }>()
-    const { artistData, artistAlbumData, loading, error } =
-        useFetchArtistData(Id)
+    const {
+        artistData,
+        artistAlbumData,
+        topSongsData,
+        singlesData,
+        similarArtistsData,
+        featuredPlaylistsData,
+        featuredAlbumsData,
+        appearsOnAlbumsData,
+        compilationAlbumsData,
+        fullAlbumsData,
+        latestReleaseData,
+        loading,
+        error,
+    } = useFetchArtistData(Id)
 
     console.log('artist ] data: ', artistData)
     console.log('artist album data: ', artistAlbumData)
@@ -59,18 +74,28 @@ const Artist = () => {
             {artistData && (
                 <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-full w-full">
                     <ScrollToTop />
-                    <h1 className="text-6xl font-semibold m-3 p-3 text-slate-400">
+                    <h1 className="text-6xl font-semibold m-3 p-3 text-slate-900">
                         {artistData.attributes.name}
                     </h1>
-                    <img
-                        className="m-3 p-3"
-                        src={constructImageUrl(
-                            artistData.attributes.artwork.url,
-                            600
+                    <div className="flex justify-center items-center">
+                        <img
+                            className="mx-3 px-3 pb-5"
+                            src={constructImageUrl(
+                                artistData.attributes.artwork.url,
+                                600
+                            )}
+                        />
+                        {topSongsData && (
+                            <div className="w-1/2 gap-4 mx-3 px-3  ">
+                                <DisplayRow
+                                    title="Top Songs"
+                                    albums={topSongsData.splice(6)}
+                                />
+                            </div>
                         )}
-                    />
+                    </div>
                     {artistAlbumData && (
-                        <div className="w-full gap-4 flex flex-wrap">
+                        <div className="w-full gap-4 mx-3 px-3 flex flex-wrap">
                             {artistAlbumData.map(album => (
                                 <AlbumItem
                                     title={album.attributes.name}
