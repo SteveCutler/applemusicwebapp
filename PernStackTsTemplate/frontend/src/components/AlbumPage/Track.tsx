@@ -228,7 +228,10 @@ const Track: React.FC<TrackPropTypes> = ({
                     {artistName}
                 </div>
             </div>
-            <button onClick={playPauseHandler}>
+            <button
+                onClick={playPauseHandler}
+                className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
+            >
                 {isPlaying && songId === currentSongId ? (
                     <FaRegCirclePause style={style} />
                 ) : (
