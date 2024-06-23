@@ -18,13 +18,13 @@ import Song from './pages/Song'
 import Station from './pages/Station'
 
 function App() {
-    const { backendToken, authorizeBackend, setBackendToken } = useStore(
-        state => ({
+    const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
+        useStore(state => ({
             backendToken: state.backendToken,
+            queueToggle: state.queueToggle,
             authorizeBackend: state.authorizeBackend,
             setBackendToken: state.setBackendToken,
-        })
-    )
+        }))
 
     const [isCheckingAuth, setIsCheckingAuth] = useState(true)
     const authToken = document.cookie
@@ -56,7 +56,9 @@ function App() {
                 <div className="sidebar w-1/6  bg-black">
                     <Sidebar />
                 </div>
-                <div className="flex flex-col w-5/6 flex-grow items-center justify-start">
+                <div
+                    className={`flex flex-col ${queueToggle ? 'w-4/6' : 'w-5/6'}  flex-grow items-center justify-start`}
+                >
                     <Routes>
                         <Route
                             path="/"
@@ -134,6 +136,11 @@ function App() {
                         />
                     </Routes>
                 </div>
+                {queueToggle && (
+                    <div className="sidebar w-1/6  bg-black">
+                        <Sidebar />
+                    </div>
+                )}
             </div>
             <div className="flex-shrink-0 sticky bottom-0">
                 <Footer />

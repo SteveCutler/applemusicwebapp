@@ -350,6 +350,7 @@ interface State {
     playlistData: Song[]
     shuffle: boolean
     repeat: number
+    queueToggle: boolean
 }
 
 interface Actions {
@@ -400,6 +401,7 @@ interface Actions {
     setPlaylistData: (songs: Song[]) => void
     setShuffle: () => void
     setRepeat: () => void
+    setQueueToggle: () => void
 }
 
 type Store = State & Actions
@@ -441,6 +443,7 @@ export const useStore = create<Store>((set, get) => ({
     playlistData: [],
     shuffle: false,
     repeat: 0,
+    queueToggle: false,
 
     // Actions
     authorizeBackend: async () => {
@@ -508,6 +511,15 @@ export const useStore = create<Store>((set, get) => ({
                 musicKitInstance.repeatMode = MusicKit.PlayerRepeatMode.all
                 set({ repeat: 1 })
             }
+        }
+    },
+
+    setQueueToggle: () => {
+        const { queueToggle } = get()
+        if (queueToggle) {
+            set({ queueToggle: false })
+        } else {
+            set({ queueToggle: true })
         }
     },
 

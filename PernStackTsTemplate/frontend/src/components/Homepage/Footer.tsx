@@ -5,6 +5,7 @@ import { IoPlayBackCircleSharp } from 'react-icons/io5'
 import { IoPlayForwardCircleSharp } from 'react-icons/io5'
 import Timeline from './Timeline'
 import { LuShuffle, LuRepeat, LuRepeat1 } from 'react-icons/lu'
+import { FaListOl } from 'react-icons/fa'
 
 import { useStore } from '../../store/store'
 import VolumeSlider from './VolumeSlider'
@@ -36,8 +37,12 @@ function Footer() {
         setRepeat,
         playlist,
         setPlaylist,
+        queueToggle,
+        setQueueToggle,
     } = useStore(state => ({
         repeat: state.repeat,
+        queueToggle: state.queueToggle,
+        setQueueToggle: state.setQueueToggle,
         setRepeat: state.setRepeat,
         currentSongDuration: state.currentSongDuration,
         shuffle: state.shuffle,
@@ -71,6 +76,10 @@ function Footer() {
     const playNext = (e: any) => {
         e.preventDefault()
         nextSong()
+    }
+
+    const handleQueueToggle = (e: any) => {
+        setQueueToggle()
     }
 
     const albumId =
@@ -153,8 +162,16 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="w-1/4 flex justify-end mx-5">
-                {' '}
+            <div className="w-1/4 flex items-center justify-end mx-5">
+                <button
+                    className={` ${queueToggle && 'bg-slate-300'} btn flex rounded-full items-center justify-end btn-primary`}
+                    onClick={e => {
+                        e.preventDefault()
+                        handleQueueToggle(e)
+                    }}
+                >
+                    <FaListOl style={style} />
+                </button>{' '}
                 <VolumeSlider />
             </div>
         </div>
