@@ -36,9 +36,22 @@ interface Song {
 // interface MusickitInstanceType {
 //     MusickitInstance: any
 // }
+
+interface MusicKit {
+    Player: {
+        ShuffleMode: {
+            off: string
+            songs: string
+        }
+    }
+}
 interface MusickitInstance {
     api: {
         music: (endpoint: string, options?: object) => Promise<any>
+    }
+    PlayerShuffleMode: {
+        off: string
+        songs: string
     }
     nowPlayingItem: {
         id: string
@@ -58,6 +71,8 @@ interface MusickitInstance {
     mute: () => void
     unmute: () => Promise<void>
     nowPlayingItemIndex: number
+    repeatMode: () => void
+    shuffleMode: () => void
     isPlaying: boolean
     changeToMediaItem: (index: number) => Promise<void>
     Queue: {
@@ -72,6 +87,7 @@ interface MusickitInstance {
     player: {
         nowPlayingItem: MusicKitDescriptor
         queue: QueueMethods
+        shuffleMode: string
     }
     setQueue: (options: SetQueueOptions) => Promise<void>
     play: () => Promise<void>
@@ -332,6 +348,8 @@ interface State {
     recentHistory: Song[]
     songData: Song | null
     playlistData: Song[]
+    shuffle: boolean
+    repeat: number
 }
 
 interface Actions {
@@ -371,6 +389,7 @@ interface Actions {
     setRecentlyPlayedAlbums: (albums: RecommendationType | null) => void
     setMoreLikeRecommendations: (items: RecommendationType | null) => void
     setStationsForYou: (stations: RecommendationType | null) => void
+
     setRecentlyAddedToLib: (
         items:
             | RecentlyAddedItem[]
@@ -379,6 +398,8 @@ interface Actions {
     setRecentHistory: (songs: Song[] | ((prevItems: Song[]) => Song[])) => void
     setSongData: (song: Song | null) => void
     setPlaylistData: (songs: Song[]) => void
+    setShuffle: () => void
+    setRepeat: () => void
 }
 
 type Store = State & Actions
@@ -418,6 +439,8 @@ export const useStore = create<Store>((set, get) => ({
     recentHistory: [],
     songData: null,
     playlistData: [],
+    shuffle: false,
+    repeat: 0,
 
     // Actions
     authorizeBackend: async () => {
@@ -452,6 +475,40 @@ export const useStore = create<Store>((set, get) => ({
         }
 
         set({ muted })
+    },
+    setShuffle: () => {
+        const { musicKitInstance, shuffle } = get()
+
+        if (musicKitInstance) {
+            const MusicKit = (window as any).MusicKit
+
+            if (shuffle === true) {
+                musicKitInstance.shuffleMode = MusicKit.PlayerShuffleMode.off
+                set({ shuffle: false })
+            } else {
+                musicKitInstance.shuffleMode = MusicKit.PlayerShuffleMode.songs
+                set({ shuffle: true })
+            }
+        }
+    },
+
+    setRepeat: () => {
+        const { musicKitInstance, repeat } = get()
+
+        if (musicKitInstance) {
+            const MusicKit = (window as any).MusicKit
+
+            if (repeat === 1) {
+                musicKitInstance.repeatMode = MusicKit.PlayerRepeatMode.one
+                set({ repeat: 2 })
+            } else if (repeat === 2) {
+                musicKitInstance.repeatMode = MusicKit.PlayerRepeatMode.none
+                set({ repeat: 0 })
+            } else {
+                musicKitInstance.repeatMode = MusicKit.PlayerRepeatMode.all
+                set({ repeat: 1 })
+            }
+        }
     },
 
     setSongData: (songData: Song | null) => set({ songData }),
@@ -872,13 +929,15 @@ export const useStore = create<Store>((set, get) => ({
         }
     },
     nextSong: async () => {
-        const { musicKitInstance, playlist } = get()
+        const { musicKitInstance, playlist, repeat, shuffle } = get()
 
         if (musicKitInstance) {
             try {
                 if (
                     musicKitInstance.nowPlayingItemIndex ===
-                    playlist.length - 1
+                        playlist.length - 1 &&
+                    repeat === 0 &&
+                    shuffle === false
                 ) {
                     console.log('currently on last song - stopping player')
                     await musicKitInstance.stop()
