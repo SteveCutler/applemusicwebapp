@@ -16,6 +16,7 @@ import ScrollToTop from '../components/Homepage/ScrollToTop'
 import SongItem from '../components/Homepage/SongItem'
 import DisplayRow from '../components/Homepage/DisplayRow'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
+import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
 const Artist = () => {
     const {
@@ -23,7 +24,17 @@ const Artist = () => {
         authorizeMusicKit,
         fetchAppleToken,
         appleMusicToken,
+        setPlaylist,
+        isPlaying,
+        playlist,
+        pauseSong,
+        playSong,
     } = useStore(state => ({
+        setPlaylist: state.setPlaylist,
+        pauseSong: state.pauseSong,
+        playSong: state.playSong,
+        isPlaying: state.isPlaying,
+        playlist: state.playlist,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
@@ -69,6 +80,15 @@ const Artist = () => {
             .replace('{h}', size.toString())
     }
 
+    const loadPlayer = async () => {
+        if (topSongsData) {
+            setPlaylist(topSongsData, 0, true)
+        }
+        // await retrieveAlbumTracks()
+    }
+
+    const styleButton = { fontSize: '3rem', color: 'royalblue ' }
+
     return (
         <>
             {artistData && (
@@ -78,7 +98,7 @@ const Artist = () => {
                         {artistData.attributes.name}
                     </h1>
                     <div className="flex justify-around gap-2 items-start">
-                        <div className="flex-col w-1/2">
+                        <div className="flex-col relative w-1/2">
                             <img
                                 className="pb-5"
                                 src={constructImageUrl(
@@ -86,6 +106,27 @@ const Artist = () => {
                                     600
                                 )}
                             />
+                            {topSongsData && (
+                                <div
+                                    className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                                    onClick={async e => {
+                                        e.preventDefault()
+                                        e.stopPropagation() // Prevents the link's default behavior
+                                        // await FetchAlbumData(albumId)
+                                        // handlePlayPause()
+
+                                        await loadPlayer()
+                                    }}
+                                >
+                                    {isPlaying &&
+                                    musicKitInstance?.nowPlayingItem &&
+                                    playlist === topSongsData ? (
+                                        <FaRegCirclePause style={styleButton} />
+                                    ) : (
+                                        <FaCirclePlay style={styleButton} />
+                                    )}
+                                </div>
+                            )}
 
                             {artistData.attributes.editorialNotes && (
                                 <div className="flex w-full mx-3 px-3 pb-5 text-3xl  text-slate-800">

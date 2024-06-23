@@ -1,6 +1,9 @@
 import { useParams } from 'react-router-dom'
 import useFetchAlbumData from '../components/Apple/FetchAlbumData'
 import fetchAlbumCatalogId from '../hooks/AlbumPage/FetchLibraryAlbumCatalogId'
+import FetchRelatedAlbums from '../hooks/AlbumPage/FetchRelatedAlbums'
+import FetchAppearsOn from '../hooks/AlbumPage/FetchAppearsOn'
+import useFetchArtistSimilarArtistsData from '../hooks/ArtistPage/FetchArtistSimilarArtistsData'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
@@ -8,6 +11,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
+import DisplayRow from '../components/Homepage/DisplayRow'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -60,25 +64,113 @@ type ArtworkObject = {
     url: string
 }
 
+type Artist = {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
+}
+
+type AlbumRelationships = {
+    href: string
+    id: string
+    type: string
+}
+
 const Album = () => {
     const { albumId, type } = useParams<{ albumId: string; type: string }>()
     console.log(type)
 
     const { albumData, artistId, loading, error } = useFetchAlbumData(albumId)
+    const { relatedAlbums } = FetchRelatedAlbums(albumId)
+    const { appearsOn } = FetchAppearsOn(albumId)
+    const [similarArtistsData, setSimilarArtistsData] =
+        useState<Array<Artist> | null>(null)
 
+    const [featuredAlbumsData, setFeaturedAlbumsData] =
+        useState<Array<AlbumType> | null>(null)
     const {
         setSearchTerm,
         musicKitInstance,
+        authorizeMusicKit,
         isPlaying,
         playlist,
         setPlaylist,
     } = useStore(state => ({
         setSearchTerm: state.setSearchTerm,
+        authorizeMusicKit: state.authorizeMusicKit,
         musicKitInstance: state.musicKitInstance,
         isPlaying: state.isPlaying,
         playlist: state.playlist,
         setPlaylist: state.setPlaylist,
     }))
+
+    useEffect(() => {
+        const fetchFeaturedAlbums = async () => {
+            if (!musicKitInstance) {
+                await authorizeMusicKit()
+                return
+            }
+            if (!artistId) {
+                return
+            }
+
+            try {
+                const featuredAlbums = await musicKitInstance.api.music(
+                    `/v1/catalog/us/artists/${artistId}/view/featured-albums`
+                )
+
+                const featuredAlbumsData: Array<AlbumType> =
+                    await featuredAlbums.data.data
+                setFeaturedAlbumsData(featuredAlbumsData)
+            } catch (error: any) {
+                console.error(error)
+            }
+        }
+
+        const fetchSimilarArtist = async () => {
+            if (!musicKitInstance) {
+                authorizeMusicKit()
+                return
+            }
+            if (!artistId) {
+                return
+            }
+
+            try {
+                const similarArtists = await musicKitInstance.api.music(
+                    `/v1/catalog/us/artists/${artistId}/view/similar-artists`
+                )
+                console.log('similarArtist: ', similarArtists)
+
+                const similarArtistsData: Array<Artist> =
+                    await similarArtists.data.data
+                setSimilarArtistsData(similarArtistsData)
+            } catch (error: any) {
+                console.error(error)
+            }
+        }
+
+        if (!featuredAlbumsData) {
+            fetchFeaturedAlbums()
+        }
+        if (!similarArtistsData) {
+            fetchSimilarArtist()
+        }
+    }, [artistId, musicKitInstance])
 
     // console.log('album data: ', albumData)
     const constructImageUrl = (url: string, size: number) => {
@@ -141,7 +233,7 @@ const Album = () => {
                     </Link>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
-                    <div className="relative">
+                    <div className="relative h-fit">
                         <img
                             src={constructImageUrl(
                                 albumData.attributes.artwork.url,
@@ -150,7 +242,7 @@ const Album = () => {
                             alt=""
                         />
                         <div
-                            className=" absolute bottom-10 right-10 hover:cursor-pointer transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior
@@ -178,6 +270,37 @@ const Album = () => {
                     </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
                 </div>
+
+                {relatedAlbums && (
+                    <div>
+                        <DisplayRow
+                            title={'Similar Albums:'}
+                            albums={relatedAlbums}
+                        />
+                    </div>
+                )}
+                {featuredAlbumsData && (
+                    <div>
+                        <DisplayRow
+                            title={`More by ${albumData.attributes.artistName}`}
+                            albums={featuredAlbumsData}
+                        />
+                    </div>
+                )}
+
+                {similarArtistsData && (
+                    <div>
+                        <DisplayRow
+                            title={'Similar Artists:'}
+                            albums={similarArtistsData}
+                        />
+                    </div>
+                )}
+                {appearsOn && (
+                    <div>
+                        <DisplayRow title={'Appears On:'} albums={appearsOn} />
+                    </div>
+                )}
             </div>
         )
     }

@@ -84,7 +84,7 @@ const Song = () => {
 
     if (songData) {
         return (
-            <div className="flex-col w-4/5 mx-auto h-full">
+            <div className="flex-col w-4/5 text-slate-800 mx-auto h-full">
                 <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
@@ -93,7 +93,7 @@ const Song = () => {
                     </div>
                 </Link>
                 <div className="flex-col ">
-                    <h1 className="text-3xl font-bold">
+                    <h1 className="text-5xl font-bold">
                         {songData.attributes.name}
                     </h1>
                     {trackAlbumData && (

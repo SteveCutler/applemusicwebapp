@@ -129,13 +129,13 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
 
     const scrollLeft = () => {
         if (carouselRef.current) {
-            carouselRef.current.scrollBy({ left: -500, behavior: 'smooth' })
+            carouselRef.current.scrollBy({ left: -1000, behavior: 'smooth' })
         }
     }
 
     const scrollRight = () => {
         if (carouselRef.current) {
-            carouselRef.current.scrollBy({ left: 500, behavior: 'smooth' })
+            carouselRef.current.scrollBy({ left: 1000, behavior: 'smooth' })
         }
     }
     const style = { fontSize: '1.5rem' }
