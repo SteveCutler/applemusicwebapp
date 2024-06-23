@@ -206,7 +206,7 @@ const Album = () => {
 
     if (albumData) {
         return (
-            <div className="flex-col w-4/5 mx-auto text-slate-900 h-full">
+            <div className="flex-col w-11/12 mx-auto text-slate-900 h-full">
                 <ScrollToTop />
                 <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">

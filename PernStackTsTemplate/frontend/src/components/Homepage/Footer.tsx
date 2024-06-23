@@ -165,6 +165,7 @@ function Footer() {
             <div className="w-1/4 flex items-center justify-end mx-5">
                 <button
                     className={` ${queueToggle && 'bg-slate-300'} btn flex rounded-full items-center justify-end btn-primary`}
+                    title="Display Queue"
                     onClick={e => {
                         e.preventDefault()
                         handleQueueToggle(e)

@@ -16,6 +16,7 @@ import Search from './pages/Search'
 import Artist from './pages/Artist'
 import Song from './pages/Song'
 import Station from './pages/Station'
+import QueueDisplay from './components/Homepage/QueueDisplay'
 
 function App() {
     const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
@@ -53,11 +54,11 @@ function App() {
     return (
         <div className="flex-col justify-between flex min-h-screen ">
             <div className="flex flex-grow">
-                <div className="sidebar w-1/6  bg-black">
+                <div className="sidebar w-2/12  bg-black">
                     <Sidebar />
                 </div>
                 <div
-                    className={`flex flex-col ${queueToggle ? 'w-4/6' : 'w-5/6'}  flex-grow items-center justify-start`}
+                    className={`flex flex-col ${queueToggle ? 'w-6/12' : 'w-10/12'}  flex-grow items-center justify-start`}
                 >
                     <Routes>
                         <Route
@@ -137,8 +138,8 @@ function App() {
                     </Routes>
                 </div>
                 {queueToggle && (
-                    <div className="sidebar w-1/6  bg-black">
-                        <Sidebar />
+                    <div className="sidebar w-3/12  bg-black">
+                        <QueueDisplay />
                     </div>
                 )}
             </div>

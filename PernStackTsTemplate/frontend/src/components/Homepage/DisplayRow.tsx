@@ -7,6 +7,7 @@ import StationItem from './StationItem'
 import { FaArrowCircleRight } from 'react-icons/fa'
 import { FaArrowCircleLeft } from 'react-icons/fa'
 import SongItem from './SongItem'
+import { useStore } from '../../store/store'
 import ArtistItem from './ArtistItem'
 
 type DisplayRow = {
@@ -126,6 +127,9 @@ type ArtworkObject = {
 
 const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
     const carouselRef = useRef<HTMLDivElement>(null)
+    const { queueToggle } = useStore(state => ({
+        queueToggle: state.queueToggle,
+    }))
 
     const scrollLeft = () => {
         if (carouselRef.current) {
@@ -156,7 +160,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className="carousel flex carousel-center max-w-5xl overflow-x-auto h-full p-2 space-x-2  rounded-box"
+                    className={`carousel flex carousel-center ${queueToggle ? 'max-w-3xl' : 'max-w-5xl'} overflow-x-auto h-full p-2 space-x-2  rounded-box`}
                     ref={carouselRef}
                 >
                     {albums &&
