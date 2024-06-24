@@ -7,6 +7,7 @@ import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.p
 interface playlistProps {
     song: Song
     index: number
+    albumId?: string
 }
 
 interface Song {
@@ -29,7 +30,11 @@ interface Song {
         }
     }
 }
-const QueueTrackDisplay: React.FC<playlistProps> = ({ song, index }) => {
+const QueueTrackDisplay: React.FC<playlistProps> = ({
+    song,
+    index,
+    albumId,
+}) => {
     const {
         isPlaying,
         currentSongId,
@@ -83,7 +88,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({ song, index }) => {
     const style = { fontSize: '1.5rem', color: 'royalblue' }
     return (
         <Link
-            to={`/song/${song.attributes.id}`}
+            to={`/song/${song.id}`}
             className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
         >
             {song.attributes.artwork?.url ? (

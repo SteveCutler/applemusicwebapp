@@ -64,57 +64,38 @@ pagination for artistalbums
  **THIS WEEKEND
  -fix modal display issue
 ~~-work on artist page to get it displaying all the data with text in a proper way~~
- -work on album page to get it displaying relevent data
+ ~~-work on album page to get it displaying relevent data~~
  -work on song page to get it displaying relevant data
- -make a now playing page or modal with the current song and the queue displaying,
- -add an 'add to queue' feature on the options modal
+ ~~ make a now playing page or modal with the current song and the queue displaying,
+ -add an 'add to queue', 'play next' feature on the options modal
  -create the playlist functionality
  -on album item make artist name into hyperlink
- -figure out how to deal with the descrepencies between catalog artist and library artist
- -add big play button to playlist page image so you can just start the playlist
+ ~~figure out how to deal with the descrepencies between catalog artist and library artist
+ ~~ -add big play button to playlist page image so you can just start the playlist
 
 
-functionality to add albums to library, make playlists and make stacks
+functionality to make playlists and make stacks
 
 fix home page functionality in general
-
-** add feature on library albums to go to full catalog album
 
 
 ** create a nowplaying page
 
 ** add display for album image in the 'more like this album' display bar
 
-**make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
-** sort playlist by most recently played
+** make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
+
+** sort playlists by most recently played
 
 ** fix issue where when a song is playing, any song item with that ID will play as well
 
-**add buttons to move along display rows
 
-**work on artist page:
-GET https://api.music.apple.com/v1/catalog/{storefront}/artists/{id}/{relationship}
-
-Path Parameters
-id
-string
-(Required)
-
-A unique identifier for the artist.
-relationship
-string
-(Required)
-
-The name of the relationship you want to fetch for this resource.
-Possible Values: albums, genres, music-videos, playlists, station
-
------
 
 ** displaying all the data retrieved about the artist, find a way to optimize so it doesn't take forever to load
 
 follow artist?
 
-** add TOP ALBUMS or whatever to artists page
+
 add different display options for library (artist, album, song, genre?)
 add two buttons - one for list display and one for grid display
 

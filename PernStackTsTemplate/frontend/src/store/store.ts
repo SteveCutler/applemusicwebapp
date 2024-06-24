@@ -778,6 +778,13 @@ export const useStore = create<Store>((set, get) => ({
                         updateState()
                     }
                 )
+                music.addEventListener('queueItemsDidChange', () => {
+                    if (music) {
+                        const currentQueue = music.queue.items
+                        set({ playlist: currentQueue })
+                    }
+                })
+
                 music.addEventListener('queueEnded', () => {
                     console.log('Queue ended, enabling autoplay')
                 })
@@ -876,7 +883,7 @@ export const useStore = create<Store>((set, get) => ({
         if (startPlaying && musicKitInstance?.nowPlayingItem) {
             set({ isPlaying: true })
         }
-        set({ playlist: songs, currentSongIndex: index })
+        set({ currentSongIndex: index })
     },
 
     playSong: async () => {

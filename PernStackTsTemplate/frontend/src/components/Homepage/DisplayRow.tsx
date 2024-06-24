@@ -145,7 +145,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex items-center my-5  w-full rounded-lg  ">
+        <div className="flex-col flex items-center relative z-2 my-5  w-full rounded-lg  ">
             <h1 className="text-5xl select-none flex w-full px-6 py-2 text-slate-800  font-bold justify-start">
                 {id && id}
                 {title}

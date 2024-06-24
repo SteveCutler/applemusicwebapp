@@ -160,7 +160,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
                 // await FetchAlbumData(albumId)
                 // handlePlayPause()
             }}
-            className=" dropdown  "
+            className=" dropdown text-white "
         >
             <div
                 tabIndex={0}
@@ -177,7 +177,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             </div>
             <ul
                 tabIndex={0}
-                className="dropdown-content font-bold bottom-0 menu w-fit  p-2 shadow  bg-base-100 rounded-box"
+                className="dropdown-content relative z-20 font-bold right-4 -bottom-0 menu w-40  p-2 shadow  bg-base-100 rounded-box"
             >
                 <li className="w-full flex justify-between items-center">
                     <a
@@ -203,7 +203,9 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
                     }}
                     className=" justify-center items-center "
                 >
-                    <div className="w-full">Add to Library</div>
+                    <div className="w-full flex justify-center text-center">
+                        Add to Library
+                    </div>
                 </li>
                 <li
                     onClick={async e => {
@@ -219,7 +221,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
                         onClick={() => {
                             console.log('click')
                         }}
-                        className="w-full"
+                        className="w-full flex justify-center text-center"
                     >
                         Add to Playlist
                     </a>

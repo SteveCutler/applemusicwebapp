@@ -90,28 +90,43 @@ function Footer() {
     return (
         <div className="footer p-5 flex  items-center justify-between h-20 bg-slate-900">
             <div className="flex justify-between items-center w-full">
-                <Link
+                <div
                     // to={`/album/${albumId}`}
-                    to=""
-                    className="flex gap-2 justify-start w-1/4"
+
+                    className="flex  gap-2 justify-start w-1/4"
                 >
                     {albumArtUrl && (
                         <img
                             src={albumArtUrl}
                             alt="album image"
-                            className="w-1/4 h-10"
+                            className="h-1/2"
                         />
                     )}
-                    <div className="flex w-full font-semibold">
+                    <div className="flex flex-col w-full justify-center text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
-                            musicKitInstance?.nowPlayingItem.title
+                            <>
+                                <div className="font-semibold w-full flex flex-grow">
+                                    {
+                                        musicKitInstance?.nowPlayingItem
+                                            .attributes.name
+                                    }
+                                </div>
+                                <div>
+                                    {
+                                        playlist[
+                                            musicKitInstance
+                                                ?.nowPlayingItemIndex
+                                        ].attributes.albumName
+                                    }
+                                </div>
+                            </>
                         ) : (
                             <span className="flex flex-grow w-full"></span>
                         )}
                     </div>
-                </Link>
-                <div className="flex flex-col justify-center mt-5 w-full ">
-                    <div className="w-3/5 mx-auto">
+                </div>
+                <div className="flex flex-col justify-center mt-5 w-1/2 mx-auto ">
+                    <div className="">
                         <Timeline />
                     </div>
                     <div className="flex gap-1 mx-auto w-1/4 justify-center mx-10">
