@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/store'
+import { GiLoveSong } from 'react-icons/gi'
 
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
@@ -127,7 +128,7 @@ const Library = () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/update-library',
+                'http://localhost:5000/api/apple/fetch-albums',
                 {
                     method: 'POST',
                     headers: {
@@ -153,6 +154,69 @@ const Library = () => {
         if (albums === null) {
             fetchLibrary()
         }
+    }
+
+    const getRatedSongs = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch(
+                'http://localhost:5000/api/apple/fetch-song-ratings',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        appleMusicToken,
+                    }),
+                    credentials: 'include',
+                }
+            )
+
+            // const data = await res.json()
+            // console.log(data)
+            // setAlbums(data.albums)
+            setLoading(false)
+        } catch (error) {
+            setError('Failed to fetch song ratings')
+            setLoading(false)
+        }
+
+        // if (albums === null) {
+        //     fetchLibrary()
+        // }
+    }
+    const getRatedAlbums = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch(
+                'http://localhost:5000/api/apple/fetch-album-ratings',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        appleMusicToken,
+                    }),
+                    credentials: 'include',
+                }
+            )
+
+            // const data = await res.json()
+            console.log('check for rated albums: ', res)
+            // setAlbums(data.albums)
+            setLoading(false)
+        } catch (error) {
+            setError('Failed to fetch song ratings')
+            setLoading(false)
+        }
+
+        // if (albums === null) {
+        //     fetchLibrary()
+        // }
     }
 
     const onChange = (e: any) => {
@@ -182,6 +246,11 @@ const Library = () => {
                         className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
                     />
                 </form>
+                {loading && (
+                    <div className="text-black text-center rounded-lg p-1 w-full justify-center font-bold flex">
+                        Syncing library...
+                    </div>
+                )}
 
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
@@ -206,12 +275,27 @@ const Library = () => {
                     >
                         <IoMdRefreshCircle style={style} />
                     </button>
+                    <button
+                        disabled={loading}
+                        onClick={getRatedSongs}
+                        className=" btn btn-primary rounded-full"
+                        title="Check for Song ratings"
+                    >
+                        <GiLoveSong style={style} />
+                    </button>
+                    <button
+                        disabled={loading}
+                        onClick={getRatedAlbums}
+                        className=" btn btn-primary rounded-full"
+                        title="Check for Song ratings"
+                    >
+                        <GiLoveSong style={style} />
+                    </button>
                 </div>
             </div>
             <div className="flex-col pt-10  justify-center mx-auto border-t-2 border-slate-500 w-11/12 ">
                 {albums && <AlbumList albums={librarySearchResults} />}
 
-                {loading && <div>Loading...</div>}
                 {error && <div>Error</div>}
             </div>
         </div>

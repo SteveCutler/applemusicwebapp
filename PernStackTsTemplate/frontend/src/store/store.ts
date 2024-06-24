@@ -639,7 +639,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     fetchAppleToken: async () => {
-        const { musicKitInstance, appleMusicToken } = get()
+        const { musicKitInstance, appleMusicToken, generateAppleToken } = get()
         const { backendToken } = get()
         if (!appleMusicToken) {
             try {
@@ -676,7 +676,7 @@ export const useStore = create<Store>((set, get) => ({
                     set({ appleMusicToken: appleMusicToken })
                 } else {
                     console.log('Token expired')
-                    toast.error('Token expired')
+                    generateAppleToken()
                 }
             } catch (error) {
                 console.error('Error fetching token:', error)
@@ -696,9 +696,9 @@ export const useStore = create<Store>((set, get) => ({
                 },
             })
             if (music && !appleMusicToken) {
-                const userToken = music.authorize()
+                const userToken = await music.authorize()
                 set({ appleMusicToken: userToken })
-                //saveToken(userToken, backendToken)
+                saveToken(userToken, backendToken)
             }
         } catch (error) {
             console.error(error)
