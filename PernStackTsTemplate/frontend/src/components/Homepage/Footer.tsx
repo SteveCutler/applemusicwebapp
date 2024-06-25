@@ -88,8 +88,8 @@ function Footer() {
     const style = { fontSize: '1.5em' }
 
     return (
-        <div className="footer p-5 flex  items-center justify-between h-20 bg-slate-900">
-            <div className="flex justify-between items-center w-full">
+        <div className="footer px-5 flex  items-center justify-between  bg-slate-900">
+            <div className="flex justify-between items-center mt-3 w-full">
                 <div
                     // to={`/album/${albumId}`}
 
@@ -102,7 +102,7 @@ function Footer() {
                             className="h-1/2"
                         />
                     )}
-                    <div className="flex flex-col w-full justify-center text-xs font-normal">
+                    <div className="flex flex-col w-full justify-center items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <>
                                 <div className="font-semibold w-full flex flex-grow">
@@ -125,10 +125,7 @@ function Footer() {
                         )}
                     </div>
                 </div>
-                <div className="flex flex-col justify-center mt-5 w-1/2 mx-auto ">
-                    <div className="">
-                        <Timeline />
-                    </div>
+                <div className="flex flex-col justify-between items-around gap-3  w-1/2 mx-auto ">
                     <div className="flex gap-1 mx-auto w-1/4 justify-center mx-10">
                         <button
                             className={` ${shuffle && 'bg-slate-300'} btn flex rounded-full mx-2 items-center justify-center btn-primary`}
@@ -174,6 +171,9 @@ function Footer() {
                                 <LuRepeat style={style} />
                             )}
                         </button>
+                    </div>
+                    <div className="">
+                        <Timeline />
                     </div>
                 </div>
             </div>
