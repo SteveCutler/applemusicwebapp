@@ -9,12 +9,17 @@ import { IoGrid } from 'react-icons/io5'
 import e from 'express'
 
 interface Album {
+    attributes: {
+        artistName?: string
+        artwork?: { height: number; width: number; url?: string }
+        dateAdded?: string
+        genreNames?: Array<string>
+        name?: string
+        releaseDate?: string
+        trackCount?: number
+    }
     id: string
-    albumId: string
-    name: string
-    artistName: string
-    artworkUrl: string
-    trackCount: number
+    type: string
 }
 
 const Library = () => {
@@ -112,10 +117,10 @@ const Library = () => {
             const searchResults: Album[] | null = albums
                 ? albums.filter(
                       album =>
-                          album.name
+                          album.attributes.name
                               .toLowerCase()
                               .includes(librarySearchTerm.toLowerCase()) ||
-                          album.artistName
+                          album.attributes.artistName
                               .toLowerCase()
                               .includes(librarySearchTerm.toLowerCase())
                   )
@@ -161,6 +166,37 @@ const Library = () => {
         try {
             const res = await fetch(
                 'http://localhost:5000/api/apple/fetch-song-ratings',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        appleMusicToken,
+                    }),
+                    credentials: 'include',
+                }
+            )
+
+            // const data = await res.json()
+            // console.log(data)
+            // setAlbums(data.albums)
+            setLoading(false)
+        } catch (error) {
+            setError('Failed to fetch song ratings')
+            setLoading(false)
+        }
+
+        // if (albums === null) {
+        //     fetchLibrary()
+        // }
+    }
+    const getSongs = async () => {
+        setLoading(true)
+        try {
+            const res = await fetch(
+                'http://localhost:5000/api/apple/fetch-songs',
                 {
                     method: 'POST',
                     headers: {
@@ -288,6 +324,14 @@ const Library = () => {
                         onClick={getRatedAlbums}
                         className=" btn btn-primary rounded-full"
                         title="Check for Song ratings"
+                    >
+                        <GiLoveSong style={style} />
+                    </button>
+                    <button
+                        disabled={loading}
+                        onClick={getSongs}
+                        className=" btn btn-primary rounded-full"
+                        title="Retrieve songs from library"
                     >
                         <GiLoveSong style={style} />
                     </button>

@@ -12,6 +12,20 @@ type AlbumType = {
     id: string
 }
 
+interface Album {
+    attributes: {
+        artistName: string
+        artwork?: { height: number; width: number; url?: string }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: number
+    }
+    id: string
+    type: string
+}
+
 type AttributeObject = {
     artistName?: string
     artwork?: ArtworkObject
@@ -39,8 +53,8 @@ type Song = {
         artistName: string
         albumName: string
         durationInMillis: number
-        playParams: {
-            catalogId: string
+        playParams?: {
+            catalogId?: string
         }
         artwork?: {
             bgColor: string
@@ -50,11 +64,14 @@ type Song = {
 }
 
 type Rating = {
-    id: string
-    attributes: {
-        value: number
-        ratedAt?: string
-    }
+    songId: string
+    value: number
+    userId: string
+    ratedAt?: string
+    songName?: string
+    artistName?: string
+    albumName?: string
+    artworkUrl?: string
 }
 
 export const saveToken = async (req: Request, res: Response) => {
@@ -171,12 +188,14 @@ export const fetchAndSaveAlbums = async (
     const newAlbums = filteredAlbums
         .filter(album => album && !existingAlbumIds.includes(album.id))
         .map(album => ({
-            albumId: album.id,
-            name: album.attributes.name || '',
             artistName: album.attributes.artistName || '',
             artworkUrl: album.attributes.artwork?.url || '',
+            dateAdded: album.attributes.dateAdded,
+            genreNames: album.attributes.genreNames,
+            name: album.attributes.name || '',
+            releaseDate: album.attributes.releasedDate,
             trackCount: album.attributes.trackCount,
-            href: album.href,
+            albumId: album.id,
             type: album.type,
             userId: userId,
         }))
@@ -276,6 +295,7 @@ export const fetchAndSaveSongs = async (
             durationInMillis: song.attributes.durationInMillis,
             artworkUrl: song.attributes.artwork?.url || '',
             userId: userId,
+            catalogId: song.attributes.playParams?.catalogId || '',
         }))
         .filter(song => song.songId && song.name && song.artistName)
 
@@ -331,10 +351,18 @@ export const fetchAndSaveRatings = async (
 
                 if (res.data && res.data.data) {
                     const ratingData = res.data.data[0]
-                    console.log(
-                        `Rating data ${ratingData} for ${songId} found.`
-                    )
-                    ratings.push(ratingData)
+                    ratings.push({
+                        songId: ratingData.id,
+                        value: ratingData.attributes.value,
+                        userId: userId,
+                        ratedAt:
+                            ratingData.attributes.ratedAt ||
+                            new Date().toISOString(),
+                        songName: ratingData.attributes.name,
+                        artistName: ratingData.attributes.artistName,
+                        albumName: ratingData.attributes.albumName,
+                        artworkUrl: ratingData.attributes.artwork?.url,
+                    })
                 }
             } catch (error: any) {
                 if (
@@ -412,10 +440,14 @@ export const fetchAndSaveRatings = async (
 
     // Save ratings
     const ratingData = ratings.map(rating => ({
-        songId: rating.id,
-        value: rating.attributes.value,
+        songId: rating.songId,
+        value: rating.value,
         userId: userId,
-        ratedAt: rating.attributes.ratedAt || new Date().toISOString(),
+        ratedAt: rating.ratedAt,
+        songName: rating.songName,
+        artistName: rating.artistName,
+        albumName: rating.albumName,
+        artworkUrl: rating.artworkUrl,
     }))
 
     try {
@@ -479,11 +511,14 @@ export const fetchAndSaveAlbumRatings = async (
                     )
                     tracks.forEach(track => {
                         ratings.push({
-                            id: track.id,
-                            attributes: {
-                                value: 1,
-                                ratedAt: new Date().toISOString(), // Mark the rating with current date
-                            },
+                            songId: track.id,
+                            value: 1,
+                            userId: userId,
+                            ratedAt: new Date().toISOString(), // Mark the rating with current date
+                            songName: track.attributes.name,
+                            artistName: track.attributes.artistName,
+                            albumName: track.attributes.albumName,
+                            artworkUrl: track.attributes.artwork?.url,
                         })
                     })
                 }
@@ -573,10 +608,14 @@ export const fetchAndSaveAlbumRatings = async (
     await fetchRatings(uniqueAlbumIds)
 
     const ratingData = ratings.map(rating => ({
-        songId: rating.id,
-        value: rating.attributes.value,
+        songId: rating.songId,
+        value: rating.value,
         userId: userId,
-        ratedAt: rating.attributes.ratedAt || new Date().toISOString(),
+        ratedAt: rating.ratedAt,
+        songName: rating.songName,
+        artistName: rating.artistName,
+        albumName: rating.albumName,
+        artworkUrl: rating.artworkUrl,
     }))
 
     try {
@@ -599,255 +638,101 @@ export const fetchAndSaveAlbumRatings = async (
     }
 }
 
-// export const updateLibrary = async (req: Request, res: Response) => {
-//     const { userId, appleMusicToken } = req.body
-//     const albums: AlbumType[] = []
-//     const songs: Song[] = []
-//     const ratings: Rating[] = []
-//     let responseSent = false
+export const addSongsToRatingsHandler = async (req: Request, res: Response) => {
+    const { userId, songDetails } = req.body
+    await addSongsToRatings(userId, songDetails, res)
+}
 
-//     const fetchAlbums = async (url: string) => {
-//         try {
-//             const res = await axios.get(url, {
-//                 headers: {
-//                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
-//                     'Music-User-Token': appleMusicToken,
-//                 },
-//             })
-//             const data = res.data
-//             albums.push(...data.data)
+export const addSongsToRatings = async (
+    userId: string,
+    songDetails: Array<{
+        songId: string
+        songName?: string
+        artistName?: string
+        albumName?: string
+        artworkUrl?: string
+        catalogId?: string
+    }>,
+    res: Response
+) => {
+    console.log('song details receive: ', songDetails)
+    const ratings = songDetails.map(song => ({
+        songId: song.songId,
+        catalogId: song.catalogId,
+        songName: song.songName,
+        artistName: song.artistName,
+        albumName: song.albumName,
+        artworkUrl: song.artworkUrl,
+        userId: userId,
+        value: 1,
+        ratedAt: new Date().toISOString(),
+    }))
 
-//             if (data.next) {
-//                 await fetchAlbums(`https://api.music.apple.com${data.next}`)
-//             }
-//         } catch (error) {
-//             console.error('Failed to fetch albums:', error)
-//             if (!responseSent) {
-//                 responseSent = true
-//                 res.status(500).json({ error: 'Failed to fetch albums' })
-//             }
-//         }
-//     }
+    try {
+        if (ratings.length > 0) {
+            await prisma.rating.createMany({
+                data: ratings,
+            })
+        }
 
-//     const fetchSongs = async (url: string) => {
-//         try {
-//             const res = await axios.get(url, {
-//                 headers: {
-//                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
-//                     'Music-User-Token': appleMusicToken,
-//                 },
-//             })
-//             const data = res.data
-//             songs.push(...data.data)
+        res.status(200).json({
+            message: 'Songs added to ratings successfully!',
+        })
+    } catch (error) {
+        console.error('Error adding songs to ratings:', error)
+        if (!res.headersSent) {
+            res.status(500).json({
+                error: 'Failed to add songs to ratings',
+            })
+        }
+    }
+}
 
-//             if (data.next) {
-//                 await fetchSongs(`https://api.music.apple.com${data.next}`)
-//             }
-//         } catch (error) {
-//             console.error('Failed to fetch songs:', error)
-//             if (!responseSent) {
-//                 responseSent = true
-//                 res.status(500).json({ error: 'Failed to fetch songs' })
-//             }
-//         }
-//     }
+export const getRatings = async (req: Request, res: Response) => {
+    const { userId } = req.body
 
-//     const fetchRatings = async (songIds: string[]) => {
-//         for (const songId of songIds) {
-//             const endpoint = songId.startsWith('i')
-//                 ? `https://api.music.apple.com/v1/me/ratings/library-songs/${songId}`
-//                 : `https://api.music.apple.com/v1/me/ratings/songs/${songId}`
+    try {
+        const ratings = await prisma.rating.findMany({
+            where: { userId: userId },
+            select: {
+                songId: true,
+                ratedAt: true,
+                songName: true,
+                catalogId: true,
+                artistName: true,
+                albumName: true,
+                artworkUrl: true,
+            },
+        })
 
-//             try {
-//                 const res = await axios.get(endpoint, {
-//                     headers: {
-//                         Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
-//                         'Music-User-Token': appleMusicToken,
-//                     },
-//                 })
+        const formattedSongs = ratings.map(song => ({
+            id: song.songId,
+            type: 'library-songs',
+            attributes: {
+                ratedAt: song.ratedAt,
+                name: song.songName,
+                artistName: song.artistName,
+                albumName: song.albumName,
+                playParams: {
+                    catalogId: song.catalogId,
+                },
+                artwork: song.artworkUrl
+                    ? { url: song.artworkUrl } // Adjust height and width as needed
+                    : undefined,
+            },
+        }))
 
-//                 if (res.data && res.data.data) {
-//                     const ratingData = res.data.data[0]
-//                     console.log(
-//                         `Rating data ${ratingData} for ${songId} found.`
-//                     )
-//                     ratings.push(ratingData)
-//                 }
-//             } catch (error: any) {
-//                 if (
-//                     error.response &&
-//                     error.response.data &&
-//                     error.response.data.errors
-//                 ) {
-//                     const errorMessage = error.response.data.errors[0]
-//                     if (errorMessage.status === '404') {
-//                         console.log(`Song ID ${songId} not rated, skipping.`)
-//                     } else {
-//                         console.error(
-//                             `Failed to fetch rating for song: ${songId}`,
-//                             errorMessage
-//                         )
-//                     }
-//                 } else {
-//                     console.error(
-//                         `Unexpected error fetching rating for song: ${songId}`,
-//                         error
-//                     )
-//                 }
-//             }
-//         }
-//     }
-
-//     const initialAlbumsUrl = 'https://api.music.apple.com/v1/me/library/albums'
-//     await fetchAlbums(initialAlbumsUrl)
-
-//     const initialSongsUrl = 'https://api.music.apple.com/v1/me/library/songs'
-//     await fetchSongs(initialSongsUrl)
-
-//     if (responseSent) return
-
-//     // Filter out duplicate song IDs before fetching ratings
-//     const uniqueSongIds = Array.from(new Set(songs.map(song => song.id)))
-
-//     // Fetch existing song IDs to avoid duplicates
-//     const existingSongIds = (
-//         await prisma.song.findMany({
-//             where: {
-//                 songId: {
-//                     in: uniqueSongIds.filter(
-//                         id => id !== undefined
-//                     ) as string[],
-//                 },
-//             },
-//             select: {
-//                 songId: true,
-//             },
-//         })
-//     ).map(song => song.songId)
-
-//     // Filter out existing songs from uniqueSongIds
-//     const newSongIds = uniqueSongIds.filter(id => !existingSongIds.includes(id))
-
-//     // await fetchRatings(newSongIds)
-
-//     // Filter out duplicate albums and songs before saving to DB
-//     const uniqueAlbums = Array.from(new Set(albums.map(album => album.id))).map(
-//         id => albums.find(album => album?.id === id)
-//     )
-
-//     const uniqueSongs = Array.from(new Set(songs.map(song => song.id))).map(
-//         id => songs.find(song => song?.id === id)
-//     )
-
-//     // Remove undefined values from uniqueAlbums and uniqueSongs
-//     const filteredAlbums = uniqueAlbums.filter(
-//         album => album !== undefined
-//     ) as AlbumType[]
-//     const filteredSongs = uniqueSongs.filter(
-//         song => song !== undefined
-//     ) as Song[]
-
-//     // Fetch existing album IDs to avoid duplicates
-//     const existingAlbumIds = (
-//         await prisma.album.findMany({
-//             where: {
-//                 albumId: {
-//                     in: filteredAlbums
-//                         .map(album => album.id)
-//                         .filter(id => id !== undefined) as string[],
-//                 },
-//             },
-//             select: {
-//                 albumId: true,
-//             },
-//         })
-//     ).map(album => album.albumId)
-
-//     // Fetch the user
-//     const user = await prisma.user.findUnique({
-//         where: { id: userId },
-//     })
-
-//     if (!user) {
-//         if (!responseSent) {
-//             responseSent = true
-//             return res.status(404).json({ error: 'User not found' })
-//         }
-//         return res.status(404).json({ error: 'User not found' })
-//     }
-
-//     const newAlbums = filteredAlbums
-//         .filter(album => album && !existingAlbumIds.includes(album.id))
-//         .map(album => ({
-//             albumId: album.id,
-//             name: album.attributes.name || '',
-//             artistName: album.attributes.artistName || '',
-//             artworkUrl: album.attributes.artwork?.url || '',
-//             trackCount: album.attributes.trackCount,
-//             href: album.href,
-//             type: album.type,
-//             userId: userId,
-//         }))
-
-//     const newSongs = filteredSongs
-//         .filter(song => song && !existingSongIds.includes(song.id))
-//         .map(song => ({
-//             songId: song.id,
-//             name: song.attributes.name || '',
-//             trackNumber: song.attributes.trackNumber,
-//             artistName: song.attributes.artistName || '',
-//             albumName: song.attributes.albumName || '',
-//             durationInMillis: song.attributes.durationInMillis,
-//             artworkUrl: song.attributes.artwork?.url || '',
-//             userId: userId,
-//         }))
-//         // Filter out any song with undefined required fields
-//         .filter(song => song.songId && song.name && song.artistName)
-
-//     try {
-//         // Insert new albums
-//         if (newAlbums.length > 0) {
-//             await prisma.album.createMany({
-//                 data: newAlbums,
-//             })
-//         }
-
-//         // Insert new songs
-//         if (newSongs.length > 0) {
-//             await prisma.song.createMany({
-//                 data: newSongs,
-//             })
-//         }
-
-//         // Save ratings
-//         const ratingData = ratings.map(rating => ({
-//             songId: rating.id,
-//             value: rating.attributes.value,
-//             userId: userId,
-//             ratedAt: rating.attributes.ratedAt || new Date().toISOString(), // Use the actual date if available
-//         }))
-
-//         if (ratingData.length > 0) {
-//             await prisma.rating.createMany({
-//                 data: ratingData,
-//             })
-//         }
-
-//         if (!responseSent) {
-//             responseSent = true
-//             res.status(200).json({
-//                 message: 'Library, songs, and ratings saved successfully!',
-//             })
-//         }
-//     } catch (error) {
-//         console.error('Error saving albums, songs, or ratings:', error)
-//         if (!res.headersSent) {
-//             res.status(500).json({
-//                 error: 'Failed to save albums, songs, or ratings',
-//             })
-//         }
-//     }
-// }
+        res.status(200).json({
+            message: 'Ratings retrieved successfully!',
+            data: formattedSongs,
+        })
+    } catch (error) {
+        console.error('Error retrieving ratings:', error)
+        res.status(500).json({
+            error: 'Failed to retrieve ratings',
+        })
+    }
+}
 
 export const getLibrary = async (req: Request, res: Response) => {
     const { userId } = req.body
@@ -868,7 +753,42 @@ export const getLibrary = async (req: Request, res: Response) => {
 
         const { albums, songs } = user
 
-        res.status(200).json({ albums, songs })
+        // Format the albums to match the Album interface
+        const formattedAlbums = albums.map(album => ({
+            id: album.albumId,
+            type: album.type,
+            attributes: {
+                artistName: album.artistName,
+                artwork: album.artworkUrl
+                    ? { url: album.artworkUrl } // Adjust height and width as needed
+                    : undefined,
+                dateAdded: album.dateAdded, // Assuming createdAt is the date added
+                genreNames: album.genreNames || [],
+                name: album.name,
+                releaseDate: album.releaseDate, // Assuming releaseDate is available in the album data
+                trackCount: album.trackCount,
+            },
+        }))
+
+        const formattedSongs = songs.map(song => ({
+            id: song.songId,
+            type: 'library-songs',
+            attributes: {
+                name: song.name,
+                trackNumber: song.trackNumber,
+                artistName: song.artistName,
+                albumName: song.albumName,
+                durationInMillis: song.durationInMillis,
+                playParams: {
+                    catalogId: song.catalogId,
+                },
+                artwork: song.artworkUrl
+                    ? { url: song.artworkUrl } // Adjust height and width as needed
+                    : undefined,
+            },
+        }))
+
+        res.status(200).json({ albums: formattedAlbums, songs: formattedSongs })
     } catch (error) {
         console.error('Error fetching user library:', error)
         res.status(500).send('Error fetching user library')

@@ -4,12 +4,28 @@ import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
 interface StationItemTypes {
-    title: string
-    artistName: string
-    albumArtUrl?: string
-    stationId: string
-    type: string
+    stationItem: StationType
     carousel?: boolean
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
 }
 
 interface Song {
@@ -28,14 +44,7 @@ interface Song {
     }
 }
 
-const StationItem: React.FC<StationItemTypes> = ({
-    title,
-    artistName,
-    albumArtUrl,
-    stationId,
-    type,
-    carousel,
-}) => {
+const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -86,12 +95,17 @@ const StationItem: React.FC<StationItemTypes> = ({
     return (
         <Link
             className={`${carousel && 'carousel-item'} select-none flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
-            to={`/station/${stationId}`}
-            title={`${title} by ${artistName}`}
+            to={`/station/${stationItem.id}`}
+            title={`${stationItem.attributes.name}`}
         >
             <div className=" relative w-full shadow-lg">
-                {albumArtUrl && (
-                    <img src={constructImageUrl(albumArtUrl, 600)} />
+                {stationItem.attributes.artwork?.url && (
+                    <img
+                        src={constructImageUrl(
+                            stationItem.attributes.artwork?.url,
+                            600
+                        )}
+                    />
                 )}
                 <div
                     className=" absolute bottom-1 left-1 transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
@@ -116,7 +130,9 @@ const StationItem: React.FC<StationItemTypes> = ({
 
             <div className="flex justify-between mb-5">
                 <div className="flex-col  overflow-hidden">
-                    <h2 className="text-md truncate font-bold">{title}</h2>
+                    <h2 className="text-md truncate font-bold">
+                        {stationItem.attributes.name}
+                    </h2>
                     <h3 className="truncate">Radio Station</h3>
                 </div>
             </div>

@@ -30,36 +30,50 @@ model User {
 }
 
 model Album {
+
+
   id          String   @id @default(cuid())
   albumId     String   @unique
+  dateAdded   String?
+  genreNames  String[]
+  releaseDate String?
+
   name        String?
   artistName  String?
   artworkUrl  String?
-  trackCount  Int
-  href        String
+  trackCount  Int?
+  href        String?
   type        String
   userId      String
   user        User     @relation(fields: [userId], references: [id])
 }
 
 model Rating {
-  id       Int      @id @default(autoincrement())
-  songId   String
-  value    Int
-  userId   String
-  ratedAt  DateTime
-  user     User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(cuid())
+  songId    String
+  catalogId String?
+  userId    String
+  value     Int
+  ratedAt   DateTime @default(now())
+  songName  String?  // Optional field for song name
+  artistName String? // Optional field for artist name
+  albumName String?  // Optional field for album name
+  artworkUrl String? // Optional field for artwork URL
+
+  // Relations
+  user User @relation(fields: [userId], references: [id])
 }
 
 model Song {
   id               String       @id @default(cuid())
   songId           String       @unique
   name             String?
-  trackNumber      Int
+  trackNumber      Int?
   artistName       String?
   albumName        String?
   durationInMillis Int
   artworkUrl       String?
   userId           String
+  catalogId       String?
   user             User         @relation(fields: [userId], references: [id])
 }

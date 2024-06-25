@@ -1,5 +1,5 @@
 import express from 'express';
-import { saveToken, getToken, fetchAndSaveAlbumsHandler, fetchAndSaveSongsHandler, fetchAndSaveRatingsHandler, fetchAndSaveAlbumRatingsHandler, getLibrary, } from '../controllers/apple.controller.js';
+import { saveToken, getToken, fetchAndSaveAlbumsHandler, fetchAndSaveSongsHandler, fetchAndSaveRatingsHandler, fetchAndSaveAlbumRatingsHandler, addSongsToRatingsHandler, getRatings, getLibrary, } from '../controllers/apple.controller.js';
 import protectRoute from '../middleware/protectRoute.js';
 const app = express();
 app.use(express.json());
@@ -16,6 +16,10 @@ router.post('/fetch-songs', protectRoute, fetchAndSaveSongsHandler);
 router.post('/fetch-song-ratings', protectRoute, fetchAndSaveRatingsHandler);
 // http://localhost:5000/api/apple/fetch-album-ratings
 router.post('/fetch-album-ratings', protectRoute, fetchAndSaveAlbumRatingsHandler);
+// http://localhost:5000/api/apple/add-songs-to-ratings
+router.post('/add-songs-to-ratings', protectRoute, addSongsToRatingsHandler);
+// http://localhost:5000/api/apple/get-ratings
+router.post('/get-ratings', protectRoute, getRatings);
 // http://localhost:5000/api/apple/get-library
 router.post('/get-library', protectRoute, getLibrary);
 export default router;

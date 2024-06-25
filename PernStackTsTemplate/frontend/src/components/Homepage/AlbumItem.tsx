@@ -7,14 +7,24 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
-    title: string
-    artistName: string
-    albumArtUrl?: string
-    albumId: string
-    type: string
+    albumItem: AlbumType
     carousel?: boolean
     releaseDate?: string
     width?: string
+}
+
+type AlbumType = {
+    attributes: {
+        artistName: string
+        artwork?: { height: number; width: number; url?: string }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: number
+    }
+    id: string
+    type: string
 }
 
 interface Song {
@@ -39,11 +49,7 @@ interface Song {
 }
 
 const AlbumItem: React.FC<AlbumPropTypes> = ({
-    title,
-    artistName,
-    albumArtUrl,
-    albumId,
-    type,
+    albumItem,
     carousel,
     releaseDate,
     width,
@@ -82,19 +88,19 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             await authorizeMusicKit()
             return
         }
-        if (!musicKitInstance || !albumId) {
+        if (!musicKitInstance || !albumItem.id) {
             return
         }
         setLoading(true)
         try {
             console.log('music kit instance and album id')
             console.log('music kit instance: ', musicKitInstance)
-            console.log('albumId: ', albumId)
+            console.log('albumId: ', albumItem.id)
 
-            if (albumId.startsWith('l')) {
+            if (albumItem.id.startsWith('l')) {
                 try {
                     const res = await musicKitInstance.api.music(
-                        `/v1/me/library/albums/${albumId}/tracks`
+                        `/v1/me/library/albums/${albumItem.id}/tracks`
                     )
 
                     const data: Song[] = await res.data.data
@@ -112,7 +118,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/{{storefrontId}}/albums/${albumId}/tracks`,
+                        `/v1/catalog/{{storefrontId}}/albums/${albumItem.id}/tracks`,
 
                         queryParameters
                     )
@@ -166,25 +172,25 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     const handleNavigation = async (e: React.MouseEvent) => {
         e.preventDefault()
         e.stopPropagation()
-        if (albumId.startsWith('p')) {
-            navigate(`/playlist/${albumId}`)
-        } else if (albumId.startsWith('l')) {
+        if (albumItem.id.startsWith('p')) {
+            navigate(`/playlist/${albumItem.id}`)
+        } else if (albumItem.id.startsWith('l')) {
             try {
                 const res = await musicKitInstance?.api.music(
-                    `v1/me/library/albums/${albumId}/catalog`
+                    `v1/me/library/albums/${albumItem.id}/catalog`
                 )
 
                 const catalogId = await res.data.data[0].id
 
                 console.log(catalogId)
-                navigate(`/album/${catalogId}/${type}`)
+                navigate(`/album/${catalogId}/${albumItem.type}`)
             } catch (error: any) {
                 console.error(error)
             } finally {
                 setLoading(false)
             }
         } else {
-            navigate(`/album/${albumId}/${type}`)
+            navigate(`/album/${albumItem.id}/${albumItem.type}`)
         }
     }
 
@@ -196,11 +202,16 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         <div
             className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : 'w-1/5'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
-            title={`${title} by ${artistName}`}
+            title={`${albumItem.attributes.name} by ${albumItem.attributes.artistName}`}
         >
             <div className=" relative w-fit shadow-lg">
-                {albumArtUrl && (
-                    <img src={constructImageUrl(albumArtUrl, 600)} />
+                {albumItem.attributes.artwork?.url && (
+                    <img
+                        src={constructImageUrl(
+                            albumItem.attributes.artwork?.url,
+                            600
+                        )}
+                    />
                 )}
                 <div className="absolute bottom-1 right-1">
                     <div
@@ -210,7 +221,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         }}
                         className=""
                     >
-                        <OptionsModal name={title} type={type} id={albumId} />
+                        <OptionsModal object={albumItem} />
                     </div>
                 </div>
                 <div className="absolute bottom-1 left-1">
@@ -235,9 +246,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             </div>
 
             <div className="flex-col h-full overflow-hidden">
-                <h2 className="text-md truncate font-bold">{title}</h2>
+                <h2 className="text-md truncate font-bold">
+                    {albumItem.attributes.name}
+                </h2>
                 <div className=" justify-between items-center ">
-                    <h3 className="truncate">{artistName}</h3>
+                    <h3 className="truncate">
+                        {albumItem.attributes.artistName}
+                    </h3>
                     {releaseDate && (
                         <h3 className="text-sm font-bold ">
                             {releaseDate.split('-')[0]}
@@ -245,7 +260,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     )}
                 </div>
 
-                {type === 'library-albums' && (
+                {albumItem.type === 'library-albums' && (
                     <div className="bg-slate-300  text-slate-600 w-fit h-fit p-1 font-bold text-sm  flex rounded-lg">
                         <span>Library</span>
                     </div>

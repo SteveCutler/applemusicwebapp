@@ -104,7 +104,15 @@ type playlist = {
 }
 
 type AlbumType = {
-    attributes: AttributeObject
+    attributes: {
+        artistName: String
+        artwork?: { height: Number; width: Number; url?: String }
+        dateAdded: String
+        genreNames: Array<String>
+        name: String
+        releaseDate: String
+        trackCount: Number
+    }
     id: String
     type: string
 }
@@ -168,41 +176,24 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, id }) => {
                             album.type === 'library-playlists' ||
                             album.type === 'playlists' ? (
                                 <PlaylistItem
-                                    title={album.attributes.name}
-                                    artistName="Playlist"
-                                    albumArtUrl={
-                                        album.attributes.artwork?.url ??
-                                        defaultPlaylistArtwork
-                                    }
-                                    playlistId={album.id}
-                                    type={album.type}
+                                    playlistItem={album}
                                     carousel={true}
                                 />
                             ) : album.type === 'stations' ? (
                                 <StationItem
-                                    title={album.attributes.name}
-                                    artistName="Station"
-                                    albumArtUrl={album.attributes.artwork?.url}
-                                    stationId={album.id}
-                                    type={album.type}
+                                    stationItem={album}
                                     carousel={true}
                                 />
                             ) : album.type === 'songs' ||
                               album.type === 'library-songs' ? (
-                                <SongItem song={album} />
+                                <SongItem song={album} carousel={true} />
                             ) : album.type === 'artists' ||
                               album.type === 'library-artists' ? (
                                 <ArtistItem carousel={true} artist={album} />
                             ) : (
                                 album.attributes && (
                                     <AlbumItem
-                                        title={album.attributes.name}
-                                        artistName={album.attributes.artistName}
-                                        albumArtUrl={
-                                            album.attributes.artwork?.url
-                                        }
-                                        albumId={album.id}
-                                        type={album.type}
+                                        albumItem={album}
                                         carousel={true}
                                         releaseDate={
                                             album.attributes.releaseDate

@@ -5,11 +5,8 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 
 interface AlbumPropTypes {
-    title: string
-    artistName: string
-    albumArtUrl: string
-    playlistId: string
-    type: string
+    playlistItem: playlist
+
     carousel?: boolean
 }
 
@@ -34,14 +31,48 @@ interface Song {
     }
 }
 
-const PlaylistItem: React.FC<AlbumPropTypes> = ({
-    title,
-    artistName,
-    albumArtUrl,
-    playlistId,
-    type,
-    carousel,
-}) => {
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
+const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -79,20 +110,20 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
             await authorizeMusicKit()
             return
         }
-        if (!musicKitInstance || !playlistId) {
+        if (!musicKitInstance || !playlistItem.id) {
             return
         }
         setLoading(true)
         try {
             console.log('music kit instance and album id')
             console.log('music kit instance: ', musicKitInstance)
-            console.log('playlistId: ', playlistId)
+            console.log('playlistId: ', playlistItem.id)
 
-            if (playlistId.startsWith('pl')) {
+            if (playlistItem.id.startsWith('pl')) {
                 try {
                     // const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/us/playlists/${playlistId}/tracks`
+                        `/v1/catalog/us/playlists/${playlistItem.id}/tracks`
                     )
 
                     const data: Song[] = await res.data.data
@@ -109,7 +140,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
             } else {
                 try {
                     const res = await musicKitInstance.api.music(
-                        `/v1/me/library/playlists/${playlistId}/tracks`
+                        `/v1/me/library/playlists/${playlistItem.id}/tracks`
                     )
 
                     const data: Song[] = await res.data.data
@@ -153,7 +184,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
         e.preventDefault()
         e.stopPropagation()
 
-        navigate(`/playlist/${playlistId}`)
+        navigate(`/playlist/${playlistItem.id}`)
     }
 
     const navigate = useNavigate()
@@ -164,11 +195,16 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
         <div
             className={`${carousel && 'carousel-item'} hover:cursor-pointer select-none flex-col  w-1/5 flex-grow  text-slate-800 hover:text-slate-200 rounded-3xl flex justify-between`}
             onClick={handleNavigation}
-            title={`${title} by ${artistName}`}
+            title={`${playlistItem.attributes.name}`}
         >
             <div className="h-full relative shadow-lg w-full">
-                {albumArtUrl && (
-                    <img src={constructImageUrl(albumArtUrl, 600)} />
+                {playlistItem.attributes.artwork?.url && (
+                    <img
+                        src={constructImageUrl(
+                            playlistItem.attributes.artwork?.url,
+                            600
+                        )}
+                    />
                 )}
 
                 <div
@@ -195,19 +231,17 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                     }}
                     className="absolute bottom-1 right-1 z-100"
                 >
-                    <OptionsModal
-                        name={title}
-                        type="playlists"
-                        id={playlistId}
-                    />
+                    <OptionsModal object={playlistItem} />
                 </div>
             </div>
             <div className="flex justify-between h-full ">
                 <div className="flex-col h-full overflow-hidden">
-                    <h2 className="text-md truncate font-bold">{title}</h2>
-                    <h3 className="truncate">{artistName}</h3>
+                    <h2 className="text-md truncate font-bold">
+                        {playlistItem.attributes.name}
+                    </h2>
+                    <h3 className="truncate">Playlist</h3>
 
-                    {type === 'library-playlists' && (
+                    {playlistItem.type === 'library-playlists' && (
                         <div className="bg-slate-300  text-slate-600 w-fit p-1 font-bold text-sm  flex rounded-lg">
                             <span>Library</span>
                         </div>

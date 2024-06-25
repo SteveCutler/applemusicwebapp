@@ -8,6 +8,7 @@ import SidebarPlaylists from './SidebarPlaylists'
 import { LogOut } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 import SidebarSongHistory from './SidebarSongHistory'
+import SidebarFavouriteSongs from './SidebarFavouriteSongs'
 
 const Sidebar = () => {
     return (
@@ -49,6 +50,12 @@ const Sidebar = () => {
                         </div>
                         <span className="p-2 ">Logout</span>
                     </div>
+                </div>
+                <div className="flex-col mx-5  w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                    <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">
+                        Recently Liked Songs:
+                    </p>
+                    <SidebarFavouriteSongs />
                 </div>
                 <div className="flex-col mx-5  w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">

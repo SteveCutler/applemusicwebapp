@@ -6,20 +6,112 @@ import { IoHeartDislikeCircleOutline } from 'react-icons/io5'
 import { IoHeartCircleOutline } from 'react-icons/io5'
 
 interface OptionsProps {
-    name: string
-    type: string
-    id: string
+    object: Song | AlbumType | playlist | Artist
 }
 
-const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
+interface songDetailsObject {
+    songId: string
+    songName?: string
+    artistName?: string
+    albumName?: string
+    artworkUrl?: string
+}
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
+type AlbumType = {
+    attributes: {
+        artistName: String
+        artwork?: { height: Number; width: Number; url?: String }
+        dateAdded: String
+        genreNames: Array<String>
+        name: String
+        releaseDate: String
+        trackCount: Number
+    }
+    id: String
+    type: string
+}
+
+type Artist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
+}
+
+type AlbumRelationships = {
+    href: string
+    id: string
+    type: string
+}
+
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+const OptionsModal: React.FC<OptionsProps> = ({ object }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
-    const { musicKitInstance, authorizeMusicKit, appleMusicToken } = useStore(
-        state => ({
-            authorizeMusicKit: state.authorizeMusicKit,
-            appleMusicToken: state.appleMusicToken,
-            musicKitInstance: state.musicKitInstance,
-        })
-    )
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        appleMusicToken,
+        backendToken,
+    } = useStore(state => ({
+        authorizeMusicKit: state.authorizeMusicKit,
+        backendToken: state.backendToken,
+        appleMusicToken: state.appleMusicToken,
+        musicKitInstance: state.musicKitInstance,
+    }))
+
+    const userId = backendToken
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -27,15 +119,15 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
             return
         }
         if (
-            id.startsWith('l') ||
-            id.startsWith('i') ||
-            (id.startsWith('p') && !id.startsWith('pl'))
+            object.id.startsWith('l') ||
+            object.id.startsWith('i') ||
+            (object.id.startsWith('p') && !object.id.startsWith('pl'))
         ) {
             toast.error(`${name} is already in your library!`)
             return
         }
         try {
-            const params = { [type]: [id] }
+            const params = { [object.type]: [object.id] }
             const queryParameters = { ids: params }
             const { response } = await musicKitInstance.api.music(
                 '/v1/me/library',
@@ -53,6 +145,43 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
         }
     }
 
+    const prepareSongDetails = (songs: Array<Song>) => {
+        return songs.map(song => ({
+            songId: song.id,
+            songName: song.attributes.name,
+            artistName: song.attributes.artistName,
+            albumName: song.attributes.albumName,
+            artworkUrl: song.attributes.artwork?.url,
+            catalogId: song.attributes.playParams.catalogId,
+        }))
+    }
+
+    const addToFavourites = async (songDetails: Array<songDetailsObject>) => {
+        console.log('song details: ', songDetails)
+        try {
+            const res = await fetch(
+                'http://localhost:5000/api/apple/add-songs-to-ratings',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        songDetails,
+                    }),
+                    credentials: 'include',
+                }
+            )
+
+            // const data = await res.json();
+            console.log(res)
+            // setAlbums(data.albums);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const addFavorite = async (e: React.MouseEvent) => {
         e.stopPropagation()
         if (!musicKitInstance) {
@@ -65,7 +194,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
 
         try {
             const response = await fetch(
-                `https://api.music.apple.com/v1/me/ratings/${type}/${id}`,
+                `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`,
                 {
                     method: 'PUT',
 
@@ -91,6 +220,56 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
 
             if (response.status === 200) {
                 toast.success(`${name} added to favorites`)
+                if (
+                    object.type === 'songs' ||
+                    object.type === 'library-songs'
+                ) {
+                    const songData = prepareSongDetails([object])
+
+                    addToFavourites(songData)
+                } else if (
+                    object.type === 'albums' ||
+                    object.type === 'library-albums'
+                ) {
+                    if (object.id.startsWith('l')) {
+                        try {
+                            const res = await musicKitInstance.api.music(
+                                `/v1/me/library/albums/${object.id}/tracks`
+                            )
+
+                            console.log(res)
+
+                            const data: Array<Song> = await res.data.data
+                            // let ids: Array<string> = []
+                            // data.map(item => ids.push(item.id))
+                            const songData = prepareSongDetails(data)
+
+                            addToFavourites(songData)
+                            return
+                        } catch (error: any) {
+                            console.error(error)
+                        }
+                    } else {
+                        try {
+                            const queryParameters = { l: 'en-us' }
+                            const res = await musicKitInstance.api.music(
+                                `/v1/catalog/{{storefrontId}}/albums/${object.id}/tracks`,
+
+                                queryParameters
+                            )
+
+                            console.log(res)
+
+                            const data: Array<Song> = await res.data.data
+                            const songData = prepareSongDetails(data)
+
+                            addToFavourites(songData)
+                            return
+                        } catch (error: any) {
+                            console.error(error)
+                        }
+                    }
+                }
             } else {
                 toast.error(`Error adding ${name} to favorites...`)
             }
@@ -110,7 +289,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ name, type, id }) => {
 
         try {
             const response = await fetch(
-                `https://api.music.apple.com/v1/me/ratings/${type}/${id}`,
+                `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`,
                 {
                     method: 'PUT',
 

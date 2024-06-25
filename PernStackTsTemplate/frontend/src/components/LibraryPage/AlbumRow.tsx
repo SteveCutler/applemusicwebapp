@@ -13,7 +13,7 @@ interface AlbumProps {
     // type: string
     name: string
     artistName: string
-    artworkUrl: string
+    artworkUrl?: string
     trackCount: number
 }
 

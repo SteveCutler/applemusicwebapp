@@ -105,11 +105,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                             }}
                             className="relative z-100"
                         >
-                            <OptionsModal
-                                name={song.attributes.name}
-                                type="songs"
-                                id={song.id}
-                            />
+                            <OptionsModal object={song} />
                         </div>
                     </div>
                     <div className="absolute bottom-1 left-1">

@@ -6,6 +6,8 @@ import {
     fetchAndSaveSongsHandler,
     fetchAndSaveRatingsHandler,
     fetchAndSaveAlbumRatingsHandler,
+    addSongsToRatingsHandler,
+    getRatings,
     getLibrary,
 } from '../controllers/apple.controller.js'
 import protectRoute from '../middleware/protectRoute.js'
@@ -31,6 +33,10 @@ router.post(
     protectRoute,
     fetchAndSaveAlbumRatingsHandler
 )
+// http://localhost:5000/api/apple/add-songs-to-ratings
+router.post('/add-songs-to-ratings', protectRoute, addSongsToRatingsHandler)
+// http://localhost:5000/api/apple/get-ratings
+router.post('/get-ratings', protectRoute, getRatings)
 
 // http://localhost:5000/api/apple/get-library
 router.post('/get-library', protectRoute, getLibrary)

@@ -3,17 +3,22 @@ import AlbumItem from '../Homepage/AlbumItem'
 import AlbumGrid from './AlbumGrid'
 import AlbumRow from './AlbumRow'
 
-interface Album {
+type AlbumType = {
+    attributes: {
+        artistName: string
+        artwork?: { height: number; width: number; url?: string }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: number
+    }
     id: string
-    albumId: string
-    name: string
-    artistName: string
-    artworkUrl: string
-    trackCount: number
+    type: string
 }
 
 interface AlbumListProps {
-    albums: Album[] | null
+    albums: AlbumType[] | null
 }
 
 const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
@@ -29,12 +34,8 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
                 {albums &&
                     albums.map(album => (
                         <AlbumItem
-                            albumId={album.albumId}
-                            title={album.name}
-                            artistName={album.artistName}
-                            albumArtUrl={album.artworkUrl}
+                            albumItem={album}
                             // trackCount={album.trackCount}
-                            type="library-albums"
                         />
                         // <AlbumGrid
                         //     albumId={album.albumId}
@@ -54,11 +55,11 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
                 {albums &&
                     albums.map(album => (
                         <AlbumRow
-                            albumId={album.albumId}
-                            name={album.name}
-                            artistName={album.artistName}
-                            artworkUrl={album.artworkUrl}
-                            trackCount={album.trackCount}
+                            albumId={album.id}
+                            name={album.attributes.name}
+                            artistName={album.attributes.artistName}
+                            artworkUrl={album.attributes.artwork?.url}
+                            trackCount={album.attributes.trackCount}
                         />
                     ))}
             </div>
