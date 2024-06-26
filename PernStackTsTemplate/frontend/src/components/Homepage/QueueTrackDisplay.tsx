@@ -3,6 +3,7 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import { Link } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import OptionsModal from './OptionsModal'
 
 interface playlistProps {
     song: Song
@@ -57,13 +58,36 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         switchTrack: state.switchTrack,
     }))
 
+    const createSongObject = (item: any) => {
+        return {
+            id: item.id,
+            type: 'songs',
+            href: item.attributes.url,
+            attributes: {
+                name: item.attributes.name,
+                id: item.id,
+                trackNumber: item.attributes.trackNumber,
+                artistName: item.attributes.artistName,
+                albumName: item.attributes.albumName,
+                durationInMillis: item.attributes.durationInMillis,
+                playParams: {
+                    catalogId: item.attributes.playParams.catalogId ?? item.id,
+                },
+                artwork: {
+                    bgColor: item.attributes.artwork.bgColor ?? '',
+                    url: item.attributes.artwork.url ?? '',
+                },
+            },
+        }
+    }
+
     const playPauseHandler = async () => {
         if (playlist !== recentHistory) {
             setPlaylist(recentHistory, index, true)
         } else {
         }
 
-        if (id === currentSongId) {
+        if (song.id === currentSongId) {
             // console.log('songId is current song')
             isPlaying
                 ? // console.log('is playing: pausing')
@@ -114,6 +138,18 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     {song.attributes.artistName}
                 </div>
             </div>
+            {/* <div className="transform scale-75  items-center flex  transition-transform duration-100 easy-ease">
+                {musicKitInstance?.queue &&
+                    musicKitInstance?.nowPlayingItem && (
+                        <OptionsModal
+                            object={createSongObject(
+                                musicKitInstance.queue.items[
+                                    musicKitInstance?.nowPlayingItemIndex
+                                ]
+                            )}
+                        />
+                    )}
+            </div> */}
             <div
                 className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                 onClick={async e => {
