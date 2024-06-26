@@ -13,16 +13,24 @@ interface AlbumPropTypes {
     width?: string
 }
 
-type AlbumType = {
+type AlbumData = {
     attributes: {
         artistName: string
-        artwork?: { height: number; width: number; url?: string }
-        dateAdded: string
-        genreNames: Array<string>
+
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        editorialNotes: {
+            short: string
+            standard: string
+        }
+        genreName: Array<string>
         name: string
-        releaseDate: string
         trackCount: number
+        url: string
     }
+    href: string
     id: string
     type: string
 }
@@ -32,7 +40,7 @@ interface Song {
     href?: string
     type: string
     attributes: {
-        id?: string
+        id: string
         name: string
         trackNumber: number
         artistName: string
@@ -54,6 +62,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     releaseDate,
     width,
 }) => {
+    // console.log('album item: ', albumItem)
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -198,76 +207,78 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
-    return (
-        <div
-            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : 'w-1/5'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex `}
-            onClick={handleNavigation}
-            title={`${albumItem.attributes.name} by ${albumItem.attributes.artistName}`}
-        >
-            <div className=" relative w-fit shadow-lg">
-                {albumItem.attributes.artwork?.url && (
-                    <img
-                        src={constructImageUrl(
-                            albumItem.attributes.artwork?.url,
-                            600
-                        )}
-                    />
-                )}
-                <div className="absolute bottom-1 right-1">
-                    <div
-                        onClick={e => {
-                            e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                        }}
-                        className=""
-                    >
-                        <OptionsModal object={albumItem} />
+    if (albumItem) {
+        return (
+            <div
+                className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : 'w-1/5'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+                onClick={handleNavigation}
+                title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
+            >
+                <div className=" relative w-fit shadow-lg">
+                    {albumItem.attributes.artwork?.url && (
+                        <img
+                            src={constructImageUrl(
+                                albumItem.attributes.artwork?.url,
+                                600
+                            )}
+                        />
+                    )}
+                    <div className="absolute bottom-1 right-1">
+                        <div
+                            onClick={e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                            }}
+                            className=""
+                        >
+                            <OptionsModal object={albumItem} />
+                        </div>
+                    </div>
+                    <div className="absolute bottom-1 left-1">
+                        <div
+                            className="transform  p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            onClick={async e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                                // await FetchAlbumData(albumId)
+                                // handlePlayPause()
+
+                                await loadPlayer()
+                            }}
+                        >
+                            {isPlaying && playlist === albumData ? (
+                                <FaRegCirclePause style={style} />
+                            ) : (
+                                <FaCirclePlay style={style} />
+                            )}
+                        </div>
                     </div>
                 </div>
-                <div className="absolute bottom-1 left-1">
-                    <div
-                        className="transform  p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
-                        onClick={async e => {
-                            e.preventDefault()
-                            e.stopPropagation() // Prevents the link's default behavior
-                            // await FetchAlbumData(albumId)
-                            // handlePlayPause()
 
-                            await loadPlayer()
-                        }}
-                    >
-                        {isPlaying && playlist === albumData ? (
-                            <FaRegCirclePause style={style} />
-                        ) : (
-                            <FaCirclePlay style={style} />
-                        )}
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex-col h-full overflow-hidden">
-                <h2 className="text-md truncate font-bold">
-                    {albumItem.attributes.name}
-                </h2>
-                <div className=" justify-between items-center ">
-                    <h3 className="truncate">
-                        {albumItem.attributes.artistName}
-                    </h3>
-                    {releaseDate && (
-                        <h3 className="text-sm font-bold ">
-                            {releaseDate.split('-')[0]}
+                <div className="flex-col h-full overflow-hidden">
+                    <h2 className="text-md truncate font-bold">
+                        {albumItem.attributes.name}
+                    </h2>
+                    <div className=" justify-between items-center ">
+                        <h3 className="truncate">
+                            {albumItem.attributes.artistName}
                         </h3>
+                        {releaseDate && (
+                            <h3 className="text-sm font-bold ">
+                                {releaseDate.split('-')[0]}
+                            </h3>
+                        )}
+                    </div>
+
+                    {albumItem.type === 'library-albums' && (
+                        <div className="bg-slate-300  text-slate-600 w-fit h-fit p-1 font-bold text-sm  flex rounded-lg">
+                            <span>Library</span>
+                        </div>
                     )}
                 </div>
-
-                {albumItem.type === 'library-albums' && (
-                    <div className="bg-slate-300  text-slate-600 w-fit h-fit p-1 font-bold text-sm  flex rounded-lg">
-                        <span>Library</span>
-                    </div>
-                )}
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default AlbumItem

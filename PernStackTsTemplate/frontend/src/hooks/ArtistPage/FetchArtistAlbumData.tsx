@@ -3,12 +3,6 @@ import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 
-type AlbumType = {
-    attributes?: AttributeObject
-    relationships: RelationshipObject
-    id: string
-}
-
 type playlist = {
     attributes: {
         canEdit: boolean
@@ -120,6 +114,7 @@ type ArtworkObject = {
 type AlbumData = {
     attributes: {
         artistName: string
+
         artwork: {
             bgColor: string
             url: string
@@ -138,12 +133,27 @@ type AlbumData = {
     type: string
 }
 
+type AlbumType = {
+    attributes: {
+        artistName: String
+        artwork?: { height: Number; width: Number; url?: String }
+        dateAdded: String
+        genreNames: Array<String>
+        name: String
+        releaseDate: String
+        trackCount: Number
+    }
+    id: String
+    href?: string
+    type: string
+}
+
 const FetchArtistData = (id: string | undefined) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
     const [artistAlbumData, setArtistAlbumData] =
-        useState<Array<AlbumData> | null>(null)
+        useState<Array<AlbumType> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
     const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
@@ -176,7 +186,7 @@ const FetchArtistData = (id: string | undefined) => {
 
                         console.log('test album res: ', albumRes)
 
-                        const albumData: Array<AlbumData> =
+                        const albumData: Array<AlbumType> =
                             await albumRes.data.data
                         console.log('artist album data: ', albumData)
                         setArtistAlbumData(albumData)
@@ -192,7 +202,7 @@ const FetchArtistData = (id: string | undefined) => {
                             `/v1/catalog/ca/artists/${id}/albums`
                         )
 
-                        const albumData: Array<AlbumData> =
+                        const albumData: Array<AlbumType> =
                             await albumRes.data.data
 
                         setArtistAlbumData(albumData)

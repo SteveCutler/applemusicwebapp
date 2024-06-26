@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from '../../store/store'
 import FetchRecentHistory from '../Apple/FetchRecentHistory'
 import HistoryRow from './HistoryRow'
@@ -8,6 +8,12 @@ const SidebarSongHistory = () => {
         recentHistory: state.recentHistory,
         currentSongId: state.currentSongId,
     }))
+
+    useEffect(() => {
+        if (!recentHistory) {
+            FetchRecentHistory()
+        }
+    }, [recentHistory])
 
     FetchRecentHistory()
 

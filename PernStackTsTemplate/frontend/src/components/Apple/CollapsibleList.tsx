@@ -23,6 +23,7 @@ interface Song {
             bgColor: string
             url: string
         }
+        ratedAt?: Date
     }
 }
 

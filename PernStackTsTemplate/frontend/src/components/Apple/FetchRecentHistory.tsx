@@ -75,10 +75,10 @@ const FetchRecentHistory = () => {
             }
         }
 
-        if (musicKitInstance) {
+        if (musicKitInstance && !recentHistory) {
             fetchRecentHistory('/v1/me/recent/played/tracks')
         }
-    }, [musicKitInstance, setRecentHistory, currentSongId])
+    }, [musicKitInstance, setRecentHistory])
 
     return { loading, error }
 }

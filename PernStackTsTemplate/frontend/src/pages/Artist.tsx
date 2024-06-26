@@ -40,19 +40,19 @@ const Artist = () => {
         fetchAppleToken: state.fetchAppleToken,
         appleMusicToken: state.appleMusicToken,
     }))
-    console.log('test')
     const { Id } = useParams<{ Id: string }>()
     const { artistData } = useFetchArtistData(Id)
     const { artistAlbumData } = useFetchArtistAlbumData(Id)
-    const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
+    // const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
     const { featuredPlaylistsData } = useFetchArtistFeaturedPlaylistsData(Id)
-    const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
+    // const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
     const { latestReleaseData } = useFetchArtistLatestReleaseData(Id)
     const { similarArtistsData } = useFetchArtistSimilarArtistsData(Id)
-    const { singlesData } = useFetchArtistSinglesData(Id)
+    // const { singlesData } = useFetchArtistSinglesData(Id)
     const { topSongsData } = useFetchArtistTopSongsData(Id)
     const { featuredAlbumsData } = useFetchFeaturedAlbumsData(Id)
 
+    console.log('latestReleaseData', latestReleaseData)
     //console.log('artistData: ', artistData[0])
     const initialize = async () => {
         let musicKitLoaded = false
@@ -158,24 +158,7 @@ const Artist = () => {
                                     </h2>
                                     <div className="flex w-1/2 items-center mx-auto justify-center">
                                         <AlbumItem
-                                            title={
-                                                latestReleaseData[0].attributes
-                                                    .name
-                                            }
-                                            artistName={
-                                                latestReleaseData[0].attributes
-                                                    .artistName
-                                            }
-                                            albumId={latestReleaseData[0].id}
-                                            type={latestReleaseData[0].type}
-                                            albumArtUrl={
-                                                latestReleaseData[0].attributes
-                                                    .artwork.url
-                                            }
-                                            releaseDate={
-                                                latestReleaseData[0].attributes
-                                                    .releaseDate
-                                            }
+                                            albumItem={latestReleaseData[0]}
                                             width="w-1/2"
                                         />
                                     </div>
@@ -184,7 +167,7 @@ const Artist = () => {
                         </div>
                     </div>
 
-                    {/* {topSongsData && (
+                    {topSongsData && (
                         <div className="w-full gap-4 mx-3 px-3   ">
                             <>
                                 <DisplayRow
@@ -193,7 +176,7 @@ const Artist = () => {
                                 />
                             </>
                         </div>
-                    )} */}
+                    )}
 
                     {featuredAlbumsData && (
                         <div className="w-full gap-4 mx-3 px-3   ">
@@ -215,18 +198,7 @@ const Artist = () => {
                         <div className="w-full gap-4 mx-3 px-3 flex flex-wrap">
                             {artistAlbumData.map(album => (
                                 <>
-                                    <AlbumItem
-                                        title={album.attributes.name}
-                                        artistName={album.attributes.artistName}
-                                        albumArtUrl={
-                                            album.attributes.artwork.url
-                                        }
-                                        albumId={album.id}
-                                        type={album.type}
-                                        releaseDate={
-                                            album.attributes.releaseDate
-                                        }
-                                    />
+                                    <AlbumItem albumItem={album} />
                                 </>
                                 // <p className="">{album.attributes.name}</p>
                             ))}

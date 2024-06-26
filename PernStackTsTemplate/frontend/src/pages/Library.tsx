@@ -311,7 +311,7 @@ const Library = () => {
                     >
                         <IoMdRefreshCircle style={style} />
                     </button>
-                    <button
+                    {/* <button
                         disabled={loading}
                         onClick={getRatedSongs}
                         className=" btn btn-primary rounded-full"
@@ -334,11 +334,13 @@ const Library = () => {
                         title="Retrieve songs from library"
                     >
                         <GiLoveSong style={style} />
-                    </button>
+                    </button> */}
                 </div>
             </div>
             <div className="flex-col pt-10  justify-center mx-auto border-t-2 border-slate-500 w-11/12 ">
-                {albums && <AlbumList albums={librarySearchResults} />}
+                {librarySearchResults && (
+                    <AlbumList albums={librarySearchResults} />
+                )}
 
                 {error && <div>Error</div>}
             </div>

@@ -17,8 +17,22 @@ type AlbumType = {
     type: string
 }
 
+interface Album {
+    attributes: {
+        artistName?: string
+        artwork?: { height: number; width: number; url?: string }
+        dateAdded?: string
+        genreNames?: Array<string>
+        name?: string
+        releaseDate?: string
+        trackCount?: number
+    }
+    id: string
+    type: string
+}
+
 interface AlbumListProps {
-    albums: AlbumType[] | null
+    albums: Album[] | null
 }
 
 const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {

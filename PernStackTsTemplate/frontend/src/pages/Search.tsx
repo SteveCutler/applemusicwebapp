@@ -156,13 +156,7 @@ const Search = () => {
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.albums &&
                         searchResults.albums.data.map(album => (
-                            <AlbumItem
-                                title={album.attributes.name}
-                                artistName={album.attributes.artistName}
-                                albumId={album.id}
-                                type={album.type}
-                                albumArtUrl={album.attributes.artwork.url}
-                            />
+                            <AlbumItem albumItem={album} />
                         ))}
                 </div>
             </div>
