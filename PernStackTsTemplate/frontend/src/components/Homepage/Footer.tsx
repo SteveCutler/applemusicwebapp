@@ -11,6 +11,7 @@ import { useStore } from '../../store/store'
 import VolumeSlider from './VolumeSlider'
 import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import OptionsModal from './OptionsModal'
 
 function Footer() {
     // const { musicInstance } = useMusickitContext()
@@ -64,6 +65,29 @@ function Footer() {
         playSong: state.playSong,
         setPlaylist: state.setPlaylist,
     }))
+
+    const createSongObject = (item: any) => {
+        return {
+            id: item.id,
+            type: 'songs',
+            href: item.attributes.url,
+            attributes: {
+                name: item.attributes.name,
+                id: item.id,
+                trackNumber: item.attributes.trackNumber,
+                artistName: item.attributes.artistName,
+                albumName: item.attributes.albumName,
+                durationInMillis: item.attributes.durationInMillis,
+                playParams: {
+                    catalogId: item.attributes.playParams.catalogId ?? item.id,
+                },
+                artwork: {
+                    bgColor: item.attributes.artwork.bgColor ?? '',
+                    url: item.attributes.artwork.url ?? '',
+                },
+            },
+        }
+    }
 
     const playPauseHandler = (e: any) => {
         e.preventDefault()
@@ -123,6 +147,19 @@ function Footer() {
                         ) : (
                             <span className="flex flex-grow w-full"></span>
                         )}
+                    </div>
+                    <div className="flex justify-start items-end">
+                        {musicKitInstance?.queue &&
+                            musicKitInstance?.nowPlayingItem && (
+                                <OptionsModal
+                                    object={createSongObject(
+                                        musicKitInstance.queue.items[
+                                            musicKitInstance
+                                                ?.nowPlayingItemIndex
+                                        ]
+                                    )}
+                                />
+                            )}
                     </div>
                 </div>
                 <div className="flex flex-col justify-between items-around gap-3  w-1/2 mx-auto ">

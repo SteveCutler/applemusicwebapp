@@ -25,14 +25,15 @@ interface Song {
 }
 
 const FetchRecentHistory = () => {
-    const { musicKitInstance, setRecentHistory, currentSongId, recentHistory } =
-        useStore(state => ({
+    const { musicKitInstance, setRecentHistory, recentHistory } = useStore(
+        state => ({
             musicKitInstance: state.musicKitInstance,
             recentlyAddedToLib: state.recentlyAddedToLib,
             setRecentHistory: state.setRecentHistory,
             recentHistory: state.recentHistory,
             currentSongId: state.currentSongId,
-        }))
+        })
+    )
     // const [recommendations, setRecommendations] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -75,10 +76,10 @@ const FetchRecentHistory = () => {
             }
         }
 
-        if (musicKitInstance && !recentHistory) {
+        if (musicKitInstance && recentHistory.length < 1) {
             fetchRecentHistory('/v1/me/recent/played/tracks')
         }
-    }, [musicKitInstance, setRecentHistory])
+    }, [musicKitInstance])
 
     return { loading, error }
 }

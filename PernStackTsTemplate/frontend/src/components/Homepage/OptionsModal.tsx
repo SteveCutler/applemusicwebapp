@@ -7,6 +7,7 @@ import { IoHeartCircleOutline } from 'react-icons/io5'
 
 interface OptionsProps {
     object: Song | AlbumType | playlist | Artist
+    footer?: boolean
 }
 
 interface songDetailsObject {
@@ -97,7 +98,7 @@ type playlist = {
     type: string
 }
 
-const OptionsModal: React.FC<OptionsProps> = ({ object }) => {
+const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
     const {
         musicKitInstance,
@@ -183,36 +184,39 @@ const OptionsModal: React.FC<OptionsProps> = ({ object }) => {
     }
 
     const addFavorite = async (e: React.MouseEvent) => {
+        console.log('song: ', object)
         e.stopPropagation()
         if (!musicKitInstance) {
             return
         }
         if (!appleMusicToken) {
             toast.error('Apple Music Token is missing')
+            fetch
             return
         }
 
-        try {
-            const response = await fetch(
-                `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`,
-                {
-                    method: 'PUT',
+        const url = footer
+            ? `https://api.music.apple.com/v1/me/ratings/songs/${object.attributes.id}`
+            : `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`
 
-                    headers: {
-                        Authorization: `Bearer ${
-                            import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
-                        }`,
-                        'Music-User-Token': appleMusicToken, // Add Music User Token here
-                        'Content-Type': 'application/json',
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+
+                headers: {
+                    Authorization: `Bearer ${
+                        import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                    }`,
+                    'Music-User-Token': appleMusicToken, // Add Music User Token here
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'rating',
+                    attributes: {
+                        value: 1,
                     },
-                    body: JSON.stringify({
-                        type: 'rating',
-                        attributes: {
-                            value: 1,
-                        },
-                    }),
-                }
-            )
+                }),
+            })
 
             //api.music.apple.com/v1/me/ratings/albums/1138988512
 

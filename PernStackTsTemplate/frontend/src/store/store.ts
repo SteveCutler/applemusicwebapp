@@ -99,6 +99,8 @@ interface MusickitInstance {
 
 interface SetQueueOptions {
     album?: string | undefined
+    song?: string | undefined
+    songs?: Array<string> | undefined
     playlist?: string | undefined
     musicVideo?: string | undefined
     items?: Array<MusicKitDescriptor>
@@ -892,13 +894,15 @@ export const useStore = create<Store>((set, get) => ({
         const { musicKitInstance, playlist } = get()
 
         if (musicKitInstance) {
-            const songDescriptors = songs.map(song => ({
-                id: song.id,
-                type: 'song',
-            }))
+            let songIds: Array<string> = []
+
+            songs.forEach(song => {
+                songIds.push(song.id)
+            })
+
             console.log('setting playlist and start position')
             await musicKitInstance.setQueue({
-                items: songDescriptors,
+                songs: songIds,
                 startWith: index,
                 startPlaying: startPlaying,
             })

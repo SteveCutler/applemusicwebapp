@@ -89,7 +89,6 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
         >
             {song.attributes.artwork?.url && (
                 <div className=" relative flex-col h-full w-full flex flex-shrink  ">
-                    div.flex
                     <img
                         className="shadow-lg"
                         src={constructImageUrl(
