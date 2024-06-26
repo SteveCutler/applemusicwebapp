@@ -99,6 +99,8 @@ interface MusickitInstance {
 
 interface SetQueueOptions {
     album?: string | undefined
+    playlist?: string | undefined
+    musicVideo?: string | undefined
     items?: Array<MusicKitDescriptor>
     startWith?: number | undefined
     station?: string
@@ -382,7 +384,12 @@ interface Actions {
     setAlbumArtUrl: (url: string | null) => void
     setSearchTerm: (term: string) => void
     setAlbumData: (album: Song[]) => void
-    setPlaylist: (songs: Song[], index: number, startPlaying: boolean) => void
+    setPlaylist: (
+        songs: Song[],
+        index: number,
+        startPlaying: boolean,
+        type?: string
+    ) => void
     playSong: () => void
     pauseSong: () => Promise<void>
     nextSong: () => void
@@ -538,7 +545,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     setSongData: (songData: Song | null) => set({ songData }),
-    setFavouriteSongs: (songs: Array<favouriteSong> | null) =>
+    setFavouriteSongs: (songs: Array<Song> | null) =>
         set({ favouriteSongs: songs }),
     setPlaylistData: (songs: Song[]) => set({ playlistData: songs }),
 

@@ -168,12 +168,13 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
     // console.log('albumArtUrl: ', albumArtUrl)
 
     const playData = async () => {
-        if (playlist === playlistData) {
-            {
-                isPlaying ? await pause() : playSong()
-            }
-        } else {
-            await setPlaylist(playlistData, 0, true)
+        if (musicKitInstance) {
+            console.log('setting playlist and start position')
+            await musicKitInstance.setQueue({
+                playlist: playlistItem.id,
+                startWith: 0,
+                startPlaying: true,
+            })
         }
     }
     const loadPlayer = async () => {

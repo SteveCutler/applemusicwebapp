@@ -85,7 +85,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                     console.log(trackData)
 
                     setPlaylistTracks(trackData)
-                    await playPauseHandler(trackData)
+                    playPauseHandler()
                 } catch (error: any) {
                     console.error(error)
                 }
@@ -99,7 +99,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                     console.log(trackData)
 
                     setPlaylistTracks(trackData)
-                    await playPauseHandler(trackData)
+                    playPauseHandler()
                 } catch (error: any) {
                     console.error(error)
                 }
@@ -111,22 +111,14 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
         }
     }
 
-    const playPauseHandler = async (trackData: Song[]) => {
-        if (playlist != trackData && trackData) {
-            console.log('play pause handler')
-            console.log(trackData)
-            console.log('playlist: ', playlist)
-            console.log('trackData: ', trackData)
-            setPlaylist(trackData, 0, true)
-            return
-        } else {
-            if (isPlaying && playlist === trackData) {
-                await pause()
-                return
-            } else {
-                play()
-                return
-            }
+    const playPauseHandler = async () => {
+        if (musicKitInstance) {
+            console.log('setting playlist and start position')
+            await musicKitInstance.setQueue({
+                playlist: id,
+                startWith: 0,
+                startPlaying: true,
+            })
         }
     }
     const style = { fontSize: '1rem', color: 'royalblue' }

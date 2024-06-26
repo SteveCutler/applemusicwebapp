@@ -157,22 +157,20 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     // console.log('albumArtUrl: ', albumArtUrl)
 
     const playData = async () => {
-        if (isPlaying && playlist === albumData) {
-            await pause()
-            return
-        } else if (!isPlaying && playlist === albumData) {
-            playSong()
-            return
-        } else {
-            setPlaylist(albumData, 0, true)
-            return
+        if (musicKitInstance) {
+            const albumDescriptor = [
+                {
+                    id: albumItem.id,
+                    type: 'album',
+                },
+            ]
+            console.log('setting playlist and start position')
+            await musicKitInstance.setQueue({
+                album: albumItem.id,
+                startWith: 0,
+                startPlaying: true,
+            })
         }
-        // setAlbumData([])
-        //musicKitInstance?.play(songId)
-
-        // console.log('album data: ', albumData)
-        // setPlaylist(albumData, 0, true)
-        // setAlbumData([])
     }
     const loadPlayer = async () => {
         await retrieveAlbumTracks()

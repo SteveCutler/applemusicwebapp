@@ -99,7 +99,7 @@ function Footer() {
                         <img
                             src={albumArtUrl}
                             alt="album image"
-                            className="h-1/2"
+                            className="w-1/3"
                         />
                     )}
                     <div className="flex flex-col w-full justify-center items-start text-xs font-normal">
