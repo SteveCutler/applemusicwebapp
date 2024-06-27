@@ -1,11 +1,5 @@
 inspired by Spotify layout?
 
-Create a now playing context, click on a play button on the track to update the global now playing state, 
-Create a playbar footer with playback controls, next song, previous song, volume, 
-Create a sidebar with playlists, recently played, or whatever
-Make each AlbumItem/Music item a button that takes you to the album or playlists
-Create Album page with tracks, play buttons on each track etc.
-
 Settings menu
 
 Design a layout and create the tailwind
@@ -14,44 +8,46 @@ Keep on with context API but later migrate it over the Zustand
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
 
-when you switch albums you can have different songs playing at the same time - maybe something to do with the musicInstance? maybe I need a reset function that sets state to null that I call in the play function if anything different is already playing
-musicplayer state management - 
--now playing
--up next
--current playlist
--timeline
--volume
 
+
+THINGS TO FOCUS ON
+add feature for users to follow artist - checks if they have anything new and displays on homepage
+create playlist functionality - create new playlist, add song to playlist, re-order playlist, etc.
+re-design library page, pagination or something so it doesn't load a million albums at once?
+    > also find a workaround for the images that are not display, maybe have to retrieve in batches, maybe one solution solves both problems
+Create stacks functionality (playlist composed of multiple albumIds)
+create a playlist made up of favourited songs (that will display in your apple music as well)
+pull more historical data and do something interesting with that.
+work on search page - design, search hints, etc
+create a settings page
+investigate podcasts?
+investigate adding friends?
+search based on choice (album, song, artist, playlist, podcast?)
+
+WHAT I NEED TO DO BEFORE I CAN LAUNCH
+can wait for podcasts until after
+test with multiple computers & apple music accounts,
+most of the above 
+add more datapoints to homepage (make sure I have all of them)
+look at spotify and apple music and see what I'm missing
 
 -recent searches, add podcast searches together into one page?
--artist display page (page you go to when you click on artist name) - top albums, top songs, featured playlists etc
--build out sidebar with song history/playlists
 -create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
 
--work on the loading issues (have the middle of the site change without effecting the sidebar etc)
-
+** create sign up page that scans apple music library for albums, songs, playlists, favourites, etc.
 
 **fix bug where if two of the same song on playlist they both get highlighted in playlist view when playing (filter by trackId?)
 
 **need to set certain global variables when user signs up, settings page where these can be changed:
 country code
 bitrate
-load library
+
 
 log out button
 
-----artist page---
-
----playlists in the sidebar---
-
 
 **add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
-
 **fix issue on library page of making sure only the album playing changes to the play sign
-
-one work around for loading artist page for library albums is to link them to the search page with the url param of the artist name?
-
-add reactive play button to large photo in albums and album items on home page
 
 add default image for artist, song playlist etc
 
@@ -62,24 +58,13 @@ pagination for artistalbums
  now playing modal?
 
  **THIS WEEKEND
- -fix modal display issue
-~~-work on artist page to get it displaying all the data with text in a proper way~~
- ~~-work on album page to get it displaying relevent data~~
  -work on song page to get it displaying relevant data
- ~~ make a now playing page or modal with the current song and the queue displaying,
+ 
  -add an 'add to queue', 'play next' feature on the options modal
  -create the playlist functionality
  -on album item make artist name into hyperlink
- ~~figure out how to deal with the descrepencies between catalog artist and library artist
- ~~ -add big play button to playlist page image so you can just start the playlist
 
 
-functionality to make playlists and make stacks
-
-fix home page functionality in general
-
-
-** create a nowplaying page
 
 ** add display for album image in the 'more like this album' display bar
 
@@ -90,8 +75,6 @@ fix home page functionality in general
 ** fix issue where when a song is playing, any song item with that ID will play as well
 
 
-
-** displaying all the data retrieved about the artist, find a way to optimize so it doesn't take forever to load
 
 follow artist?
 

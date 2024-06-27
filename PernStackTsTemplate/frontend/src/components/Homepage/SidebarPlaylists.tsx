@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '../../store/store'
 import PlaylistRow from './PlaylistRow'
 import { PiPlaylistBold } from 'react-icons/pi'
 import CollapsibleListPlaylist from '../Apple/CollapsibleListPlaylist'
+import { CiCirclePlus } from 'react-icons/ci'
+import CreatePlaylistModal from './CreatePlaylistModal'
 // import { fetchLibraryPlaylists } from '../Apple/FetchLibraryPlaylists'
 
 type playlist = {
@@ -17,6 +19,9 @@ type playlist = {
     id: string
     type: string
 }
+// const handleClick = () => {
+//     console.log('launch modal')
+// }
 
 const SidebarPlaylists = () => {
     const {
@@ -31,6 +36,7 @@ const SidebarPlaylists = () => {
         authorizeMusicKit: state.authorizeMusicKit,
     }))
 
+    const [isModalOpen, setIsModalOpen] = useState(false)
     const fetchLibraryPlaylists = async () => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
@@ -72,10 +78,23 @@ const SidebarPlaylists = () => {
             <p className=" flex font-semibold text-2xl pb-2 w-full select-none border-slate-600 justify-center gap-2 items-center">
                 <PiPlaylistBold style={style} />
                 Playlists
+                <div
+                    className="hover:cursor-pointer  rounded-full hover:bg-slate-200 hover:text-slate-700 hover:scale-110 active:scale-95"
+                    onClick={() => {
+                        setIsModalOpen(true)
+                    }}
+                >
+                    <CiCirclePlus />
+                </div>
             </p>
             {libraryPlaylists && (
                 <CollapsibleListPlaylist items={libraryPlaylists} />
             )}
+
+            <CreatePlaylistModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     )
 }

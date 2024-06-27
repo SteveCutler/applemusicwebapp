@@ -63,8 +63,8 @@ const Playlist = () => {
     const { playlistData, playlistTrackData, loading, error } =
         useFetchPlaylistData(playlistId)
 
-    console.log(playlistData)
-    console.log(playlistTrackData)
+    // console.log(playlistData)
+    // console.log(playlistTrackData)
 
     // console.log('album data: ', albumData)
     const constructImageUrl = (url: string, size: number) => {
@@ -78,12 +78,16 @@ const Playlist = () => {
         return <div>Loading...</div>
     }
 
-    if (error) {
-        return <div>Error: {error}</div>
-    }
+    // if (error) {
+    //     return <div>Error: {error}</div>
+    // }
 
     if (!playlistData || !playlistTrackData) {
-        return <div>No album data available</div>
+        return (
+            <div className="flex text-3xl m-5 p-5 text-slate-800">
+                No playlist data available
+            </div>
+        )
     }
 
     if (playlistData && playlistTrackData) {

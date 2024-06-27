@@ -63,9 +63,9 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
             }
 
             try {
-                console.log('music kit instance and album id')
-                console.log('music kit instance: ', musicKitInstance)
-                console.log('playlistId: ', playlistId)
+                // console.log('music kit instance and album id')
+                // console.log('music kit instance: ', musicKitInstance)
+                // console.log('playlistId: ', playlistId)
 
                 if (playlistId.startsWith('pl')) {
                     try {
@@ -87,8 +87,12 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
                         setPlaylistTrackData(trackData)
                         setPlaylistData(playlistData[0])
                     } catch (error: any) {
-                        console.error(error)
-                        setError(error)
+                        if (error.response?.status === 404) {
+                            setPlaylistTrackData([])
+                        } else {
+                            console.error(error)
+                            setError(error.message)
+                        }
                     } finally {
                         setLoading(false)
                     }
@@ -107,8 +111,12 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
                         setPlaylistTrackData(trackData)
                         setPlaylistData(playlistData[0])
                     } catch (error: any) {
-                        console.error(error)
-                        setError(error)
+                        if (error.response?.status === 404) {
+                            setPlaylistTrackData([])
+                        } else {
+                            console.error(error)
+                            setError(error.message)
+                        }
                     } finally {
                         setLoading(false)
                     }

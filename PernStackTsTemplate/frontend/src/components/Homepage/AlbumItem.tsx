@@ -212,7 +212,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 onClick={handleNavigation}
                 title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             >
-                <div className=" relative w-fit shadow-lg">
+                <div className=" relative z-1 w-fit shadow-lg">
                     {albumItem.attributes.artwork?.url && (
                         <img
                             src={constructImageUrl(
