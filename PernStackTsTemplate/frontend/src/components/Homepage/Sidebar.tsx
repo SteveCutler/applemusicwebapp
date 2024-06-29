@@ -19,14 +19,16 @@ import { TbHistory } from 'react-icons/tb'
 import { MdLibraryMusic } from 'react-icons/md'
 import { IoLibrary } from 'react-icons/io5'
 import { BiSolidPlaylist } from 'react-icons/bi'
+import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
 
 const Sidebar = () => {
+    FetchRecentlyAddedToLib()
     const style = { fontSize: '1.5rem' }
     const { queueToggle } = useStore(state => ({
         queueToggle: state.queueToggle,
     }))
 
-    const [viewType, setViewType] = useState('')
+    const [viewType, setViewType] = useState('likes')
 
     return (
         <>
@@ -36,16 +38,16 @@ const Sidebar = () => {
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}
                         title="Log out"
                     >
-                        <div className="hover:text-white hover:cursor-pointer">
+                        <div className=" hover:cursor-pointer hover:text-slate-500">
                             <IoSettingsSharp />
                         </div>
-                        <div className="hover:text-white">
+                        <div className="hover:text-slate-500">
                             <LogoutButton />
                         </div>
                     </div>
                     <Link
                         to="/"
-                        className="flex w-full mx-auto  px-3 hover:text-slate-100  select:none cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto  px-3 hover:text-slate-100  select:none cursor-default rounded-xl  justify-center items-center"
                     >
                         <IoHomeSharp />
                         <p className="p-2">Home</p>
@@ -53,14 +55,14 @@ const Sidebar = () => {
 
                     <Link
                         to="/search"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
                     >
                         <FaSearch />
                         <p className="p-2">Search</p>
                     </Link>
                     <Link
                         to="/library"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
@@ -80,13 +82,13 @@ const Sidebar = () => {
                         <span className="p-2 ">Logout</span>
                     </div> */}
                 </div>
-                <div className="flex-col bg-black p-1 rounded-lg w-full border-b-2  border-slate-600    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
-                    <div className="div flex px-1 justify-around">
+                <div className="flex-col bg-black p-1  rounded-lg w-full border-b-2  border-slate-700    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
+                    <div className="div flex px-1  justify-around">
                         {/* likes */}
                         {/* activity */}
                         {/* history */}
                         <div
-                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'likes' ? 'bg-slate-700' : ''}`}
+                            className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'likes' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
                             onClick={() => setViewType('likes')}
                             title="Likes"
                         >
@@ -94,7 +96,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'history' ? 'bg-slate-700' : ''}`}
+                            className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'history' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
                             onClick={() => setViewType('history')}
                             title="History"
                         >
@@ -102,7 +104,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'library' ? 'bg-slate-700' : ''} `}
+                            className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'library' ? 'bg-slate-700' : 'hover:bg-slate-800'} `}
                             onClick={() => setViewType('library')}
                             title="Library"
                         >
@@ -110,7 +112,7 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'playlists' ? 'bg-slate-700' : ''}`}
+                            className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'playlists' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
                             onClick={() => setViewType('playlists')}
                             title="Playlists"
                         >

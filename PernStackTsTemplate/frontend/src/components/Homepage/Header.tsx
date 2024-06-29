@@ -40,16 +40,16 @@ function Header() {
         <div className=" top-0  flex items-start w-3/5 absolute justify-between h-20 pt-2 text-black">
             <div className="flex gap-2 ">
                 <button
-                    className={`${canGoBack ? 'hover:text-slate-500' : ' disabled hover:text-black cursor-normal'} `}
+                    className={`cursor-default ${canGoBack ? 'hover:text-slate-500 ' : ' disabled hover:text-black '} `}
                     onClick={navigateBack}
                     disabled={!canGoBack}
                 >
                     <IoArrowBackCircle style={style} />
                 </button>
                 <button
-                    className={`${canGoForward ? 'hover:text-slate-500' : 'disabled hover:text-black cursor-normal'} `}
+                    className={` cursor-default ${!canGoForward ? 'hover:text-slate-500 cursor-normal' : 'disabled hover:text-black cursor-normal'} `}
                     onClick={navigateForward}
-                    disabled={!canGoForward}
+                    disabled={canGoForward}
                 >
                     <IoArrowForwardCircle style={style} />
                 </button>

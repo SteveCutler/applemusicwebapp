@@ -61,8 +61,8 @@ const FetchSongData = (songId: string | undefined) => {
             }
 
             try {
-                console.log('music kit instance and album id')
-                console.log('music kit instance: ', musicKitInstance)
+                // console.log('music kit instance and album id')
+                // console.log('music kit instance: ', musicKitInstance)
                 console.log('songId: ', songId)
 
                 if (songId.startsWith('i')) {
@@ -102,6 +102,7 @@ const FetchSongData = (songId: string | undefined) => {
                     }
                 } else {
                     try {
+                        console.log('fetching song data')
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
                             `/v1/catalog/us/songs/${songId}`,
@@ -122,7 +123,7 @@ const FetchSongData = (songId: string | undefined) => {
 
                         const data: Song = await res.data.data[0]
 
-                        console.log('song data: ', songData)
+                        console.log('song data: ', data)
                         // return { data, trackAlbumData }
                         setTrackAlbumData(trackAlbumData)
                         setTrackArtistData(trackArtistData)

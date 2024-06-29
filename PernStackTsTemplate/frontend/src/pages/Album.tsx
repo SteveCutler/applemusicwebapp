@@ -233,8 +233,9 @@ const Album = () => {
                     </Link>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
-                    <div className="relative h-fit">
+                    <div className="relative w-full">
                         <img
+                            className="w-full"
                             src={constructImageUrl(
                                 albumData.attributes.artwork.url,
                                 500

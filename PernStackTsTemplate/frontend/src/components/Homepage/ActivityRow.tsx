@@ -3,6 +3,7 @@ import { useStore } from '../../store/store'
 import CollapsibleList from '../Apple/CollapsibleList'
 import CollapsibleListFavs from '../Apple/CollapsibleListFavs'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import defaultPic from '../../assets/images/defaultPlaylistArtwork.png'
 import { useNavigate } from 'react-router-dom'
 
 interface ActivityProp {
@@ -108,7 +109,30 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
     const navigate = useNavigate()
 
     const navigateTo = (id: string) => {
-        navigate(`/album/${id}`)
+        switch (item.type) {
+            case 'songs':
+            case 'library-songs':
+            case 'song':
+                navigate(`/song/${id}`)
+
+                break
+            case 'playlists':
+            case 'library-playlists':
+                navigate(`/playlist/${id}`)
+
+                break
+            case 'albums':
+            case 'library-albums':
+                navigate(`/album/${id}`)
+                break
+            case 'station':
+            case 'library-station':
+                navigate(`/station/${id}`)
+                break
+            default:
+                console.log('default response')
+                break
+        }
     }
 
     const style = { color: 'white', fontSize: '1.3rem' }
@@ -123,7 +147,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
     const playPauseHandler = async () => {
         if (musicKitInstance) {
             switch (item.type) {
-                case 'songs' || 'library-songs' || 'song':
+                case 'songs':
+                case 'library-songs':
+                case 'song':
                     await musicKitInstance.setQueue({
                         playlist: item.id,
                         startWith: 0,
@@ -131,7 +157,8 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                     })
 
                     break
-                case 'playlists' || 'library-playlists':
+                case 'playlists':
+                case 'library-playlists':
                     await musicKitInstance.setQueue({
                         playlist: item.id,
                         startWith: 0,
@@ -139,7 +166,8 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                     })
 
                     break
-                case 'albums' || 'library-albums':
+                case 'albums':
+                case 'library-albums':
                     if (musicKitInstance) {
                         await musicKitInstance.setQueue({
                             album: item.id,
@@ -148,7 +176,8 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         })
                     }
                     break
-                case 'stations' || 'library-station':
+                case 'stations':
+                case 'library-stations':
                     if (musicKitInstance) {
                         await musicKitInstance.setQueue({ station: item.id })
                         musicKitInstance.play()
@@ -169,17 +198,20 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                     className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
                     onClick={() => navigateTo(item.id)}
                 >
-                    {item.attributes.artwork?.url && (
-                        <div className="w-10/12 truncate gap-1 flex">
+                    <div className="w-10/12 truncate gap-1 flex">
+                        {item.attributes.artwork?.url ? (
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
                                     50
                                 )}
                             />
-                            <div className="flex flex-col justify-center  items-start  ">
-                                <div
-                                    className={`truncate 
+                        ) : (
+                            <img src={defaultPic} width="50px" />
+                        )}
+                        <div className="flex flex-col justify-center  items-start  ">
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -187,12 +219,12 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold'
                         }
                     `}
-                                >
-                                    {item.attributes.name}
-                                </div>
+                            >
+                                {item.attributes.name}
+                            </div>
 
-                                <div
-                                    className={`truncate 
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -200,11 +232,11 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    {item.attributes.artistName}
-                                </div>
-                                <div
-                                    className={`truncate 
+                            >
+                                {item.attributes.artistName}
+                            </div>
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -212,18 +244,18 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    Album
-                                </div>
+                            >
+                                Song
                             </div>
                         </div>
-                    )}
+                    </div>
 
                     <button
                         // onClick={playPauseHandler}
                         className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={e => {
                             e.preventDefault()
+                            e.stopPropagation()
                             playPauseHandler()
                         }}
                     >
@@ -244,17 +276,20 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                     className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
                     onClick={() => navigateTo(item.id)}
                 >
-                    {item.attributes.artwork?.url && (
-                        <div className="w-10/12 truncate gap-1 flex">
+                    <div className="w-10/12 truncate gap-1 flex">
+                        {item.attributes.artwork?.url ? (
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
                                     50
                                 )}
                             />
-                            <div className="flex flex-col justify-center  items-start  ">
-                                <div
-                                    className={`truncate 
+                        ) : (
+                            <img src={defaultPic} width="50px" />
+                        )}
+                        <div className="flex flex-col justify-center  items-start  ">
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -262,12 +297,12 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold'
                         }
                     `}
-                                >
-                                    {item.attributes.name}
-                                </div>
+                            >
+                                {item.attributes.name}
+                            </div>
 
-                                <div
-                                    className={`truncate 
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -275,11 +310,11 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    {item.attributes.artistName}
-                                </div>
-                                <div
-                                    className={`truncate 
+                            >
+                                {item.attributes.artistName}
+                            </div>
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -287,18 +322,18 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    Album
-                                </div>
+                            >
+                                Album
                             </div>
                         </div>
-                    )}
+                    </div>
 
                     <button
                         // onClick={playPauseHandler}
                         className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={e => {
                             e.preventDefault()
+                            e.stopPropagation()
                             playPauseHandler()
                         }}
                     >
@@ -315,18 +350,24 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
         case 'playlists':
         case 'library-playlists':
             return (
-                <div className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between">
-                    {item.attributes.artwork?.url && (
-                        <div className="w-10/12 truncate gap-1 flex">
+                <div
+                    onClick={() => navigateTo(item.id)}
+                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                >
+                    <div className="w-10/12 truncate gap-1 flex">
+                        {item.attributes.artwork?.url ? (
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
                                     50
                                 )}
                             />
-                            <div className="flex flex-col justify-center  items-start  ">
-                                <div
-                                    className={`truncate 
+                        ) : (
+                            <img src={defaultPic} width="50px" />
+                        )}
+                        <div className="flex flex-col justify-center  items-start  ">
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -334,12 +375,12 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold'
                         }
                     `}
-                                >
-                                    {item.attributes.name}
-                                </div>
+                            >
+                                {item.attributes.name}
+                            </div>
 
-                                <div
-                                    className={`truncate 
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -347,11 +388,11 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    {item.attributes.artistName}
-                                </div>
-                                <div
-                                    className={`truncate 
+                            >
+                                {item.attributes.artistName}
+                            </div>
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -359,16 +400,16 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    Playlist
-                                </div>
+                            >
+                                Playlist
                             </div>
                         </div>
-                    )}
+                    </div>
 
                     <button
                         onClick={e => {
                             e.preventDefault()
+                            e.stopPropagation()
                             playPauseHandler()
                         }}
                         className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
@@ -385,18 +426,24 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             break
         case 'stations':
             return (
-                <div className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between">
-                    {item.attributes.artwork?.url && (
-                        <div className="w-10/12 truncate gap-1 flex">
+                <div
+                    onClick={() => navigateTo(item.id)}
+                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                >
+                    <div className="w-10/12 truncate gap-1 flex">
+                        {item.attributes.artwork?.url ? (
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
                                     50
                                 )}
                             />
-                            <div className="flex flex-col justify-center  items-start  ">
-                                <div
-                                    className={`truncate 
+                        ) : (
+                            <img src={defaultPic} width="50px" />
+                        )}
+                        <div className="flex flex-col justify-center  items-start  ">
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -404,12 +451,12 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold'
                         }
                     `}
-                                >
-                                    {item.attributes.name}
-                                </div>
+                            >
+                                {item.attributes.name}
+                            </div>
 
-                                <div
-                                    className={`truncate 
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -417,11 +464,11 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    {item.attributes.artistName}
-                                </div>
-                                <div
-                                    className={`truncate 
+                            >
+                                {item.attributes.artistName}
+                            </div>
+                            <div
+                                className={`truncate 
                         ${
                             isPlaying &&
                             item.id === musicKitInstance?.nowPlayingItem.id
@@ -429,18 +476,18 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                 : 'font-semibold text-slate-500'
                         }
                     `}
-                                >
-                                    Station
-                                </div>
+                            >
+                                Station
                             </div>
                         </div>
-                    )}
+                    </div>
 
                     <button
                         // onClick={playPauseHandler}
                         className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={e => {
                             e.preventDefault()
+                            e.stopPropagation()
                             playPauseHandler()
                         }}
                     >

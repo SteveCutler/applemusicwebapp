@@ -34,12 +34,14 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
     const {
         favouriteSongs,
         libraryPlaylists,
+        recentlyAddedToLib,
         backendToken,
         recentActivity,
         setRecentActivity,
         musicKitInstance,
     } = useStore(state => ({
         favouriteSongs: state.favouriteSongs,
+        recentlyAddedToLib: state.recentlyAddedToLib,
         libraryPlaylists: state.libraryPlaylists,
         recentActivity: state.recentActivity,
         setRecentActivity: state.setRecentActivity,
@@ -83,7 +85,7 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
         case 'likes':
             if (recentActivity) {
                 return (
-                    <div className="w-full  border-2 flex text-sm  font-normal flex-col text-white border-slate-600 h-full rounded-md bg-slate-900">
+                    <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
                         {favouriteSongs?.map(item => (
                             <ActivityRow item={item} />
                         ))}
@@ -95,7 +97,7 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
         case 'playlists':
             if (libraryPlaylists) {
                 return (
-                    <div className="w-full  border-2 flex text-sm  font-normal flex-col text-white border-slate-600 h-full rounded-md bg-slate-900">
+                    <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
                         {libraryPlaylists?.map(item => (
                             <ActivityRow item={item} />
                         ))}
@@ -105,10 +107,10 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
             }
             break
         case 'library':
-            if (recentActivity) {
+            if (recentlyAddedToLib) {
                 return (
-                    <div className="w-full  border-2 flex text-sm  font-normal flex-col text-white border-slate-600 h-full rounded-md bg-slate-900">
-                        {recentActivity.map(item => (
+                    <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
+                        {recentlyAddedToLib.map(item => (
                             <ActivityRow item={item} />
                         ))}
                         {/* {recentActivity && <CollapsibleListFavs items={recentActivity} />} */}
@@ -120,7 +122,7 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
         case 'history':
             if (recentActivity) {
                 return (
-                    <div className="w-full  border-2 flex text-sm  font-normal flex-col text-white border-slate-600 h-full rounded-md bg-slate-900">
+                    <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
                         {recentActivity.map(item => (
                             <ActivityRow item={item} />
                         ))}
