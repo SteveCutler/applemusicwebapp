@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
+import { Navigate, useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
+import { useStore } from '../../store/store'
 
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    const { setAuthUser } = useAuthContext()
+    // const { setAuthUser } = useAuthContext()
+    const { setBackendToken } = useStore(state => ({
+        setBackendToken: state.setBackendToken,
+    }))
+    const navigate = useNavigate()
 
     const logout = async () => {
         try {
@@ -16,7 +22,9 @@ const useLogout = () => {
 
             if (!res.ok) throw new Error(data.error)
             toast.success('Logged out succesfully')
-            setAuthUser(null)
+            // setAuthUser(null)
+            setBackendToken(null)
+            navigate('/login')
         } catch (error: any) {
             console.error(error.message)
             toast.error('Error logging out')

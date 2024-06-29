@@ -54,9 +54,11 @@ function App() {
     return (
         <div className="flex-col justify-between flex min-h-screen ">
             <div className="flex flex-grow ">
-                <div className="sidebar overflow-y-auto w-3/12 h-1/2 ">
-                    <Sidebar />
-                </div>
+                {backendToken && (
+                    <div className="sidebar overflow-y-auto w-3/12 h-1/2 ">
+                        <Sidebar />
+                    </div>
+                )}
                 <div
                     className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-9/12'}  overflow-y-auto flex-grow items-center justify-start`}
                 >
@@ -137,15 +139,17 @@ function App() {
                         />
                     </Routes>
                 </div>
-                {queueToggle && (
+                {queueToggle && backendToken && (
                     <div className="sidebar w-3/12 rounded-lg m-1 h-fit bg-black">
                         <QueueDisplay />
                     </div>
                 )}
             </div>
-            <div className="flex-shrink-0 sticky bottom-0">
-                <Footer />
-            </div>
+            {backendToken && (
+                <div className="flex-shrink-0 sticky bottom-0">
+                    <Footer />
+                </div>
+            )}
             <Toaster />
         </div>
     )
