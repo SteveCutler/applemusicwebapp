@@ -12,16 +12,26 @@ import SidebarFavouriteSongs from './SidebarFavouriteSongs'
 import { CiCirclePlus } from 'react-icons/ci'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { useStore } from '../../store/store'
+import SidebarActivity from './Activity'
+import { useState } from 'react'
+import { FaHeartbeat } from 'react-icons/fa'
+import { TbHistory } from 'react-icons/tb'
+import { MdLibraryMusic } from 'react-icons/md'
+import { IoLibrary } from 'react-icons/io5'
+import { BiSolidPlaylist } from 'react-icons/bi'
 
 const Sidebar = () => {
-    const style = { fontSize: '1.2rem' }
+    const style = { fontSize: '1.5rem' }
     const { queueToggle } = useStore(state => ({
         queueToggle: state.queueToggle,
     }))
+
+    const [viewType, setViewType] = useState('')
+
     return (
         <>
             <div className="flex-col   m-1  flex  select-none h-full ">
-                <div className="  flex-col pt-5 pb-5  bg-black rounded-lg w-full mb-1 mx-auto border-b-2 border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
+                <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto border-b-2 border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}
                         title="Log out"
@@ -35,7 +45,7 @@ const Sidebar = () => {
                     </div>
                     <Link
                         to="/"
-                        className="flex w-fit mx-auto  px-3 hover:text-slate-100  select:none cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto  px-3 hover:text-slate-100  select:none cursor-pointer rounded-xl  justify-center items-center"
                     >
                         <IoHomeSharp />
                         <p className="p-2">Home</p>
@@ -43,14 +53,14 @@ const Sidebar = () => {
 
                     <Link
                         to="/search"
-                        className="flex w-fit mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
                     >
                         <FaSearch />
                         <p className="p-2">Search</p>
                     </Link>
                     <Link
                         to="/library"
-                        className="flex w-fit mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-pointer rounded-xl  justify-center items-center"
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
@@ -70,28 +80,64 @@ const Sidebar = () => {
                         <span className="p-2 ">Logout</span>
                     </div> */}
                 </div>
-                <div className="flex-col bg-black p-1 rounded-lg w-full border-b-2 py-5 border-slate-600    font-semibold text-slate-300  items-center mx-auto justify-start text-center">
-                    <p className=" flex items-center justify-left text-xl  w-full px-5 mx-auto pb-2 gap-2">
-                        Recent Activity:
-                    </p>
+                <div className="flex-col bg-black p-1 rounded-lg w-full border-b-2  border-slate-600    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
+                    <div className="div flex px-1 justify-around">
+                        {/* likes */}
+                        {/* activity */}
+                        {/* history */}
+                        <div
+                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'likes' ? 'bg-slate-700' : ''}`}
+                            onClick={() => setViewType('likes')}
+                            title="Likes"
+                        >
+                            <FaHeartbeat style={style} />
+                        </div>
+
+                        <div
+                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'history' ? 'bg-slate-700' : ''}`}
+                            onClick={() => setViewType('history')}
+                            title="History"
+                        >
+                            <TbHistory style={style} />
+                        </div>
+
+                        <div
+                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'library' ? 'bg-slate-700' : ''} `}
+                            onClick={() => setViewType('library')}
+                            title="Library"
+                        >
+                            <LuLibrary style={style} />
+                        </div>
+
+                        <div
+                            className={`flex w-1/4 justify-center hover:cursor-pointer rounded-t-md pt-1 gap-1 ${viewType === 'playlists' ? 'bg-slate-700' : ''}`}
+                            onClick={() => setViewType('playlists')}
+                            title="Playlists"
+                        >
+                            <BiSolidPlaylist style={style} />
+                        </div>
+                    </div>
+                    <SidebarSongHistory />
+                    <SidebarPlaylists />
                     <SidebarFavouriteSongs />
+                    <SidebarActivity type={viewType} />
                 </div>
                 {/* <div className="flex-col mx-5 bg-black p-1 rounded-lg w-full border-b-2 py-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">
                         Recently Liked Songs:
                     </p>
-                    <SidebarFavouriteSongs />
+                    
                 </div>
                 <div className="flex-col mx-5 bg-black w-full rounded-lg m-1 border-b-2 py-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">
                         <FaHistory /> History
                     </p>
                     <div>
-                        <SidebarSongHistory />
+                        
                     </div>
                 </div>
                 <div className="flex-col mx-5 m1 w-4/5 rounded-lg w-full bg-black flex py-5 font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
-                    <SidebarPlaylists />
+                    
                 </div> */}
             </div>
         </>

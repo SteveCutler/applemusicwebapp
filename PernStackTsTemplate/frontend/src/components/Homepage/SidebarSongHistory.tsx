@@ -18,7 +18,7 @@ const SidebarSongHistory = () => {
     console.log('recent history: ', recentHistory)
     return (
         <div className="">
-            {recentHistory && <CollapsibleList items={recentHistory} />}
+            {/* {recentHistory && <CollapsibleList items={recentHistory} />} */}
         </div>
     )
 }

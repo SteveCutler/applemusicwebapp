@@ -26,13 +26,19 @@ interface Song {
 }
 
 const SidebarFavouriteSongs = () => {
-    const { favouriteSongs, setFavouriteSongs, backendToken, appleMusicToken } =
-        useStore(state => ({
-            favouriteSongs: state.favouriteSongs,
-            setFavouriteSongs: state.setFavouriteSongs,
-            backendToken: state.backendToken,
-            appleMusicToken: state.appleMusicToken,
-        }))
+    const {
+        favouriteSongs,
+        libraryPlaylists,
+        setFavouriteSongs,
+        backendToken,
+        appleMusicToken,
+    } = useStore(state => ({
+        favouriteSongs: state.favouriteSongs,
+        libraryPlaylists: state.libraryPlaylists,
+        setFavouriteSongs: state.setFavouriteSongs,
+        backendToken: state.backendToken,
+        appleMusicToken: state.appleMusicToken,
+    }))
 
     const userId = backendToken
 
@@ -85,13 +91,13 @@ const SidebarFavouriteSongs = () => {
         if (!favouriteSongs) {
             fetchFavouriteSongs()
         }
+        // if(favouriteSongs && libraryPlaylists){
+        //     //check for favourite songs playlist
+        //     if()
+        // }
     }, [backendToken, favouriteSongs])
 
-    return (
-        <div>
-            {favouriteSongs && <CollapsibleListFavs items={favouriteSongs} />}
-        </div>
-    )
+    return <></>
 }
 
 export default SidebarFavouriteSongs

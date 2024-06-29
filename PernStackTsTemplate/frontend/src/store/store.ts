@@ -367,11 +367,12 @@ interface State {
     repeat: number
     queueToggle: boolean
     favouriteSongs: Array<Song> | null
+    recentActivity: Array<Song | playlist | Album | StationType> | null
 }
 
 interface Actions {
     authorizeBackend: () => Promise<void>
-    setBackendToken: (token: string) => void
+    setBackendToken: (token: string | null) => void
     setMusicKitInstance: (musicKitInstance: MusickitInstance) => void
     setCurrentElapsedTime: (elapsedTime: number | null) => void
     setAuthorized: (isAuthorized: boolean) => void
@@ -423,6 +424,9 @@ interface Actions {
     setShuffle: () => void
     setRepeat: () => void
     setQueueToggle: () => void
+    setRecentActivity: (
+        items: Array<Song | playlist | Album | StationType> | null
+    ) => void
     setFavouriteSongs: (songs: Array<Song>) => void
 }
 
@@ -467,6 +471,7 @@ export const useStore = create<Store>((set, get) => ({
     repeat: 0,
     queueToggle: false,
     favouriteSongs: null,
+    recentActivity: null,
 
     // Actions
     authorizeBackend: async () => {
@@ -502,6 +507,10 @@ export const useStore = create<Store>((set, get) => ({
 
         set({ muted })
     },
+
+    setRecentActivity: (
+        items: Array<Song | playlist | Album | StationType> | null
+    ) => set({ recentActivity: items }),
     setShuffle: () => {
         const { musicKitInstance, shuffle } = get()
 
@@ -610,7 +619,7 @@ export const useStore = create<Store>((set, get) => ({
         set({ recentlyPlayedAlbums: albums }),
 
     setAlbumData: (album: Song[]) => set({ albumData: album }),
-    setBackendToken: (token: string) => set({ backendToken: token }),
+    setBackendToken: (token: string | null) => set({ backendToken: token }),
     setAuthorized: (isAuthorized: boolean) => set({ isAuthorized }),
     setCurrentSongIndex: async (currentSongIndex: number) => {
         const { musicKitInstance, playlist } = get()

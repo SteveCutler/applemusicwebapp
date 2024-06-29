@@ -7,7 +7,7 @@ import { IoHeartCircleOutline } from 'react-icons/io5'
 
 interface OptionsProps {
     object: Song | AlbumType | playlist | Artist
-    footer?: boolean
+    small?: boolean
 }
 
 interface songDetailsObject {
@@ -98,7 +98,7 @@ type playlist = {
     type: string
 }
 
-const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
+const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
     const {
         musicKitInstance,
@@ -183,6 +183,8 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
         }
     }
 
+    const styleSmall = { fontSize: '1rem' }
+
     const addFavorite = async (e: React.MouseEvent) => {
         console.log('song: ', object)
         e.stopPropagation()
@@ -195,9 +197,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
             return
         }
 
-        const url = footer
-            ? `https://api.music.apple.com/v1/me/ratings/songs/${object.attributes.id}`
-            : `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`
+        const url = `https://api.music.apple.com/v1/me/ratings/${object.type}/${object.id}`
 
         try {
             const response = await fetch(url, {
@@ -355,7 +355,11 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
                     // handlePlayPause()
                 }}
             >
-                <SlOptions style={style} />
+                {small ? (
+                    <SlOptions style={styleSmall} />
+                ) : (
+                    <SlOptions style={style} />
+                )}
             </div>
             <ul
                 tabIndex={0}

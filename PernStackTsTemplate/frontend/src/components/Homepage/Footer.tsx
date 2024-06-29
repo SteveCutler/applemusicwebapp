@@ -12,6 +12,7 @@ import VolumeSlider from './VolumeSlider'
 import { Link } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import OptionsModal from './OptionsModal'
+import { useNavigate } from 'react-router-dom'
 
 function Footer() {
     // const { musicInstance } = useMusickitContext()
@@ -89,6 +90,23 @@ function Footer() {
         }
     }
 
+    const navigate = useNavigate()
+
+    const goToAlbum = async () => {
+        // console.log('item check: ', await musicKitInstance?.queue.items[0])
+        // navigate(
+        //     `/albums/id=${musicKitInstance?.queue.items[0].relationships.albums.data[0].id}`
+        // )
+    }
+
+    const goToArtist = async () => {
+        // console.log(
+        //     await musicKitInstance?.queue.items[0].relationships.albums.data[0]
+        //         .id
+        // )
+        // navigate(`/albums/${musicKitInstance?.nowPlayingItem.attributes.}`)
+    }
+
     const playPauseHandler = (e: any) => {
         e.preventDefault()
         isPlaying ? pauseSong() : playSong()
@@ -137,7 +155,7 @@ function Footer() {
                                     }
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <div>
+                                    <div onClick={goToAlbum}>
                                         {
                                             playlist[
                                                 musicKitInstance
@@ -149,6 +167,7 @@ function Footer() {
                                         {musicKitInstance?.queue &&
                                             musicKitInstance?.nowPlayingItem && (
                                                 <OptionsModal
+                                                    small={true}
                                                     object={createSongObject(
                                                         musicKitInstance.queue
                                                             .items[

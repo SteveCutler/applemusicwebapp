@@ -74,28 +74,29 @@ const SidebarPlaylists = () => {
     const style = { fontSize: '2rem' }
 
     return (
-        <div className="flex-col w-full">
-            <p className=" flex font-semibold text-2xl pb-2 w-full select-none border-slate-600 justify-center gap-2 items-center">
-                <PiPlaylistBold style={style} />
-                Playlists
-                <div
-                    className="hover:cursor-pointer  rounded-full hover:bg-slate-200 hover:text-slate-700 hover:scale-110 active:scale-95"
-                    onClick={() => {
-                        setIsModalOpen(true)
-                    }}
-                >
-                    <CiCirclePlus />
-                </div>
-            </p>
-            {libraryPlaylists && (
-                <CollapsibleListPlaylist items={libraryPlaylists} />
-            )}
+        <></>
+        // <div className="flex-col w-full">
+        //     <p className=" flex font-semibold text-2xl pb-2 w-full select-none border-slate-600 justify-center gap-2 items-center">
+        //         <PiPlaylistBold style={style} />
+        //         Playlists
+        //         <div
+        //             className="hover:cursor-pointer  rounded-full hover:bg-slate-200 hover:text-slate-700 hover:scale-110 active:scale-95"
+        //             onClick={() => {
+        //                 setIsModalOpen(true)
+        //             }}
+        //         >
+        //             <CiCirclePlus />
+        //         </div>
+        //     </p>
+        //     {libraryPlaylists && (
+        //         <CollapsibleListPlaylist items={libraryPlaylists} />
+        //     )}
 
-            <CreatePlaylistModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            />
-        </div>
+        //     <CreatePlaylistModal
+        //         isOpen={isModalOpen}
+        //         onClose={() => setIsModalOpen(false)}
+        //     />
+        // </div>
     )
 }
 
