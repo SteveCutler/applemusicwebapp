@@ -78,16 +78,13 @@ const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
     const [loading, setLoading] = useState<Boolean>(false)
 
     const playRadioStation = async () => {
-        try {
-            await musicKitInstance?.setQueue({ station: stationId })
-        } catch (error) {
-            console.error('Error playing radio station:', error)
-        }
-    }
+        if (musicKitInstance) {
+            console.log('container id: ', musicKitInstance?.nowPlayingItem)
+            console.log('stationItem.id: ', stationItem.id)
 
-    const playData = async () => {
-        await playRadioStation()
-        musicKitInstance?.play()
+            await musicKitInstance.setQueue({ station: stationItem.id })
+            musicKitInstance.play()
+        }
     }
 
     const style = { fontSize: '2rem', color: 'royalblue ' }
@@ -115,12 +112,12 @@ const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
 
-                        playData()
+                        await playRadioStation()
                     }}
                 >
                     {isPlaying &&
                     musicKitInstance?.nowPlayingItem &&
-                    playlist.includes(musicKitInstance?.nowPlayingItem) ? (
+                    musicKitInstance?.nowPlayingItem.id === stationItem.id ? (
                         <FaRegCirclePause style={style} />
                     ) : (
                         <FaCirclePlay style={style} />

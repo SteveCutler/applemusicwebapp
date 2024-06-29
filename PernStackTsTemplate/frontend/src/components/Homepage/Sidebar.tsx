@@ -20,7 +20,7 @@ const Sidebar = () => {
     }))
     return (
         <>
-            <div className="flex-col   m-1  flex px-1 select-none h-full ">
+            <div className="flex-col   m-1  flex  select-none h-full ">
                 <div className="  flex-col pt-5 pb-5  bg-black rounded-lg w-full mb-1 mx-auto border-b-2 border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}

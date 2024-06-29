@@ -154,8 +154,8 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex items-center my-5  w-full rounded-lg  ">
-            <h1 className="text-lg select-none flex gap-2 w-full  py-2 text-slate-800  items-end font-bold justify-start">
+        <div className="flex-col flex items-center mb-5  w-full rounded-lg  ">
+            <h1 className="text-lg select-none flex gap-2 w-full  pb-2 text-slate-800  items-end font-bold justify-start">
                 <div className="h-1/12 ">{url && <img src={url} />}</div>
                 {title}
             </h1>
