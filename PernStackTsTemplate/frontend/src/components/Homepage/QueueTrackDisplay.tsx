@@ -82,11 +82,6 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
     }
 
     const playPauseHandler = async () => {
-        if (playlist !== recentHistory) {
-            setPlaylist(recentHistory, index, true)
-        } else {
-        }
-
         if (song.id === currentSongId) {
             // console.log('songId is current song')
             isPlaying
@@ -98,7 +93,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
             // setCurrrentSongId()
         } else {
             // console.log('isnt playing: setting track')
-            await switchTrack(index)
+            await musicKitInstance?.changeToMediaItem(song)
             // setCurrrentSongId()
         }
     }
@@ -128,7 +123,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                 />
             )}
             <div
-                className="text-sm  flex-col overflow-hidden flex text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
+                className="text-sm  flex-col overflow-hidden flex justify-center text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
                 title={`${song.attributes.name} by ${song.attributes.artistName}`}
             >
                 <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-semibold">
@@ -151,7 +146,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     )}
             </div> */}
             <div
-                className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
+                className="transform hover:scale-110 items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
                 onClick={async e => {
                     e.preventDefault()
                     e.stopPropagation() // Prevents the link's default behavior
