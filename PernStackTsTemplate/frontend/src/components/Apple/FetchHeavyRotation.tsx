@@ -30,7 +30,9 @@ const FetchHeavyRotation = () => {
                         }
                     )
 
-                    const data = await res.data.data
+                    const data = await res.data.data.filter(
+                        item => item.attributes
+                    )
                     console.log('heavy rotation data: ', data)
                     {
                         data.length >= 1 && setHeavyRotation(data)

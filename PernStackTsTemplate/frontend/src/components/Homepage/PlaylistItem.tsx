@@ -194,11 +194,11 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} hover:cursor-pointer select-none flex-col  w-1/5 flex-grow  text-slate-800 hover:text-slate-200 rounded-3xl flex justify-between`}
+            className={`${carousel && 'carousel-item'} select-none  flex-col  w-1/5 text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${playlistItem.attributes.name}`}
         >
-            <div className="h-full relative shadow-lg w-full">
+            <div className="relative z-1 w-full shadow-lg">
                 {playlistItem.attributes.artwork?.url && (
                     <img
                         src={constructImageUrl(

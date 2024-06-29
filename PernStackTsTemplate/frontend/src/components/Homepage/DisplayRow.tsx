@@ -154,14 +154,14 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex items-center  my-5 mx-auto w-full rounded-lg  ">
+        <div className="flex-col flex items-center my-5 mx-auto w-full rounded-lg  ">
             <h1 className="text-5xl select-none flex gap-2 w-full px-6 py-2 text-slate-800  items-end font-bold justify-start">
                 <div className="h-1/12 ">{url && <img src={url} />}</div>
                 {title}
             </h1>
             <div className="flex justify-center  items-center">
                 <button
-                    className=" p-2 bg-gray-300 -translate-y-10 hover:text-slate-500 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 -translate-y-10 z-10 translate-x-6 hover:text-slate-500 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
                     onClick={scrollLeft}
                 >
                     <FaArrowCircleLeft style={style} />
@@ -205,7 +205,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
                         )}
                 </div>
                 <button
-                    className=" p-2 bg-gray-300 hover:text-slate-500 -translate-y-10 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 hover:text-slate-500 -translate-y-10 z-10 -translate-x-6 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
                     onClick={scrollRight}
                 >
                     <FaArrowCircleRight style={style} />

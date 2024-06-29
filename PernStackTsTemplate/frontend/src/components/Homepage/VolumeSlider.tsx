@@ -27,7 +27,7 @@ const VolumeSlider = () => {
         }
     }
     return (
-        <div className="flex items-end justify-between ">
+        <div className="flex items-center gap-2 justify-between ">
             <div
                 onClick={muteHandler}
                 className="hover: cursor-pointer hover:text-white w-1/5"
@@ -38,14 +38,14 @@ const VolumeSlider = () => {
                     <RiVolumeVibrateLine style={style} />
                 )}
             </div>
-            <div className="w-4/5 flex">
+            <div className="w-full flex">
                 <input
                     type="range"
                     min="0"
                     max="1"
                     step="0.01"
                     value={volume}
-                    className="range-xs range-info"
+                    className="range-xs range range-info"
                     onChange={handleChange}
                 />
             </div>

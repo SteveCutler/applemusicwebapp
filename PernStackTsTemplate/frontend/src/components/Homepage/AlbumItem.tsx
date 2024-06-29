@@ -5,6 +5,7 @@ import FetchAlbumCatalogId from '../../hooks/AlbumPage/FetchLibraryAlbumCatalogI
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
+import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 interface AlbumPropTypes {
     albumItem: AlbumType
@@ -213,13 +214,15 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             >
                 <div className=" relative z-1 w-fit shadow-lg">
-                    {albumItem.attributes.artwork?.url && (
+                    {albumItem.attributes.artwork?.url ? (
                         <img
                             src={constructImageUrl(
                                 albumItem.attributes.artwork?.url,
                                 600
                             )}
                         />
+                    ) : (
+                        <img src={defaultPlaylistArtwork} />
                     )}
                     <div className="absolute bottom-1 right-1">
                         <div

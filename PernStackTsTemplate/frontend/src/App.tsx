@@ -146,7 +146,7 @@ function App() {
                 )}
             </div>
             {backendToken && (
-                <div className="flex-shrink-0 sticky bottom-0">
+                <div className="flex-shrink-0 z-20 sticky bottom-0">
                     <Footer />
                 </div>
             )}

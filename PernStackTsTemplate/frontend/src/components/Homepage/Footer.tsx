@@ -114,7 +114,7 @@ function Footer() {
 
     return (
         <div className="footer px-5 flex  items-center justify-between  bg-gradient-to-b from-gray-900 to-black">
-            <div className="flex justify-between items-center mt-3 w-full">
+            <div className="flex justify-between items-center  mt-3 w-full">
                 <div
                     // to={`/album/${albumId}`}
 
@@ -136,31 +136,34 @@ function Footer() {
                                             .attributes.name
                                     }
                                 </div>
-                                <div>
-                                    {
-                                        playlist[
-                                            musicKitInstance
-                                                ?.nowPlayingItemIndex
-                                        ].attributes.albumName
-                                    }
+                                <div className="flex items-center gap-2">
+                                    <div>
+                                        {
+                                            playlist[
+                                                musicKitInstance
+                                                    ?.nowPlayingItemIndex
+                                            ].attributes.albumName
+                                        }
+                                    </div>
+                                    <div className="flex justify-start items-end">
+                                        {musicKitInstance?.queue &&
+                                            musicKitInstance?.nowPlayingItem && (
+                                                <OptionsModal
+                                                    object={createSongObject(
+                                                        musicKitInstance.queue
+                                                            .items[
+                                                            musicKitInstance
+                                                                ?.nowPlayingItemIndex
+                                                        ]
+                                                    )}
+                                                />
+                                            )}
+                                    </div>
                                 </div>
                             </>
                         ) : (
                             <span className="flex flex-grow w-full"></span>
                         )}
-                    </div>
-                    <div className="flex justify-start items-end">
-                        {musicKitInstance?.queue &&
-                            musicKitInstance?.nowPlayingItem && (
-                                <OptionsModal
-                                    object={createSongObject(
-                                        musicKitInstance.queue.items[
-                                            musicKitInstance
-                                                ?.nowPlayingItemIndex
-                                        ]
-                                    )}
-                                />
-                            )}
                     </div>
                 </div>
                 <div className="flex flex-col justify-between items-around gap-3  w-1/2 mx-auto ">
