@@ -31,6 +31,7 @@ fix if you click an artists name and they're library then it brings you to searc
 like/follow artist
 ACTIVITY Page, most recently followed artists, top release or recent releases from them, recent liked songs, recent liked albums
 up next queue songs don't play correct song when clicked
+get library to load while on the homepage to decrease load times, but only after everything else i loaded
 
 WHAT I NEED TO DO BEFORE I CAN LAUNCH
 can wait for podcasts until after

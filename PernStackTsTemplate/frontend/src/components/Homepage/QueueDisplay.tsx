@@ -33,7 +33,7 @@ const QueueDisplay = () => {
     return (
         <>
             <div className="flex-col flex select-none h-full ">
-                <div className="flex-col m-2 pt-10 pb-5 w-full  px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <div className="border-b-2 border-slate-600 pb-3">
                         {playlist && musicKitInstance?.nowPlayingItem && (
                             <>

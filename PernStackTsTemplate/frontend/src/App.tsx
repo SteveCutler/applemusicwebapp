@@ -138,7 +138,7 @@ function App() {
                     </Routes>
                 </div>
                 {queueToggle && (
-                    <div className="sidebar w-3/12  bg-black">
+                    <div className="sidebar w-3/12 rounded-lg m-1 h-fit bg-black">
                         <QueueDisplay />
                     </div>
                 )}
