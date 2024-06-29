@@ -33,6 +33,16 @@ ACTIVITY Page, most recently followed artists, top release or recent releases fr
 up next queue songs don't play correct song when clicked
 get library to load while on the homepage to decrease load times, but only after everything else i loaded
 
+sidebar inspiration rom spotify:
+fav songs list pinned to top
+then songs, albums, playlist listed in descending order 
+sorting options, filter options
+
+center column inspiration:
+a toggle that lets you click on a row and expand it to display all the items of the list
+more better recommendations
+
+things open up in the middle area
 WHAT I NEED TO DO BEFORE I CAN LAUNCH
 can wait for podcasts until after
 test with multiple computers & apple music accounts,

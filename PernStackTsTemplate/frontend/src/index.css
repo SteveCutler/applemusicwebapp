@@ -5,7 +5,7 @@
 main,
 body {
     /* background-image: linear-gradient(url('../public/bg.jpg')); */
-    background: linear-gradient(to bottom, rgb(225, 225, 225), rgb(50, 39, 39));
+    background: linear-gradient(to bottom, rgb(244, 244, 244), rgb(50, 39, 39));
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;

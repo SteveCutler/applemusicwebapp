@@ -140,13 +140,10 @@ const Artist = () => {
                             )}
                         </div>
 
-                        <div className="flex-col">
+                        <div className="flex-col w-1/2">
                             {topSongsData && (
                                 <div className=" justify-start">
                                     {' '}
-                                    <h2 className="text-4xl font-bold text-slate-800">
-                                        Top Songs:
-                                    </h2>
                                     <TrackDisplay albumTracks={topSongsData} />
                                 </div>
                             )}
@@ -168,7 +165,7 @@ const Artist = () => {
                     </div>
 
                     {topSongsData && (
-                        <div className="w-full gap-4 mx-3 px-3   ">
+                        <div className="w-full gap-4 mx-3 px-3 ">
                             <>
                                 <DisplayRow
                                     title={'Top Songs:'}

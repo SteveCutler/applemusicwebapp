@@ -54,11 +54,11 @@ function App() {
     return (
         <div className="flex-col justify-between flex min-h-screen ">
             <div className="flex flex-grow ">
-                <div className="sidebar overflow-y-auto w-2/12 h-1/2 ">
+                <div className="sidebar overflow-y-auto w-3/12 h-1/2 ">
                     <Sidebar />
                 </div>
                 <div
-                    className={`flex flex-col ${queueToggle ? 'w-6/12' : 'w-10/12'}  overflow-y-auto flex-grow items-center justify-start`}
+                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-9/12'}  overflow-y-auto flex-grow items-center justify-start`}
                 >
                     <Routes>
                         <Route

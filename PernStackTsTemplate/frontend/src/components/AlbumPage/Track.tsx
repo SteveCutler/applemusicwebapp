@@ -129,7 +129,7 @@ const Track: React.FC<TrackPropTypes> = ({
         return `${formattedMinutes}:${formattedSeconds}`
     }
 
-    const style = { color: 'black', fontSize: '1.3rem' }
+    const style = { color: 'white', fontSize: '1.3rem' }
     const styleBlue = { color: 'royalblue', fontSize: '1.3rem' }
 
     const timeLeft = () => {
@@ -196,34 +196,38 @@ const Track: React.FC<TrackPropTypes> = ({
     return (
         <div
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-4  text-slate-600 rounded-lg bg-slate-300 my-2 px-3 justify-between items-center border-slate-${isPlaying && songId === currentSongId ? '700' : '500'}`}
+            className={`flex border-2 w-full text-slate-300 rounded-lg ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  my-2 p-2 justify-between items-center border-slate-${isPlaying && songId === currentSongId ? '900' : '700'}`}
         >
             <div
                 className={
                     isPlaying && songId === currentSongId
-                        ? 'font-bold text-slate-800'
-                        : 'font-bold text-slate-600'
+                        ? 'font-bold text-slate-200'
+                        : 'font-bold text-slate-500'
                 }
             >
                 {timeLeft()}
             </div>
-            <div className="flex justify-center gap-3">
+            <div className="flex justify-center w-2/3 gap-3">
                 <div
-                    className={
-                        isPlaying && songId === currentSongId
-                            ? 'font-bold text-slate-900'
-                            : 'font-semibold'
-                    }
+                    className={`truncate 
+                        ${
+                            isPlaying && songId === currentSongId
+                                ? 'font-bold text-slate-300'
+                                : 'font-semibold'
+                        }
+                    `}
                 >
                     {trackName}
                 </div>
                 <p className="text-slate-100"> / </p>
                 <div
-                    className={
-                        isPlaying && songId === currentSongId
-                            ? 'font-bold text-slate-900'
-                            : 'font-semibold text-slate-600'
-                    }
+                    className={`truncate 
+                        ${
+                            isPlaying && songId === currentSongId
+                                ? 'font-bold text-slate-200'
+                                : 'font-semibold text-slate-500'
+                        }
+                    `}
                 >
                     {artistName}
                 </div>
