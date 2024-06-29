@@ -202,7 +202,6 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
         try {
             const response = await fetch(url, {
                 method: 'PUT',
-
                 headers: {
                     Authorization: `Bearer ${
                         import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
@@ -367,6 +366,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, footer }) => {
                         className=" justify-center items-center w-full"
                         onClick={async e => {
                             addFavorite(e)
+                            addToLibrary(e)
                         }}
                     >
                         Like <IoHeartCircleOutline style={style} />

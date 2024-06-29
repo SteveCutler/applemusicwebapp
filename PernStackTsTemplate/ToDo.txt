@@ -24,6 +24,14 @@ investigate podcasts?
 investigate adding friends?
 search based on choice (album, song, artist, playlist, podcast?)
 
+player buttons break if you touch them and nothing playing
+fix back functionality to actually go back, there might be a global variable for this
+fix if you go to an album and theres no itunes page for it nothing happens?
+fix if you click an artists name and they're library then it brings you to search instead of seeking their id and presenting that result instead
+like/follow artist
+ACTIVITY Page, most recently followed artists, top release or recent releases from them, recent liked songs, recent liked albums
+up next queue songs don't play correct song when clicked
+
 WHAT I NEED TO DO BEFORE I CAN LAUNCH
 can wait for podcasts until after
 test with multiple computers & apple music accounts,

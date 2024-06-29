@@ -350,9 +350,9 @@ interface State {
     libraryPlaylists: Array<playlist> | null
     scrubTime: number | null
     muted: boolean
-    heavyRotation: AlbumType[]
-    recentlyPlayed: AlbumType[]
-    recommendations: AlbumType[]
+    heavyRotation: AlbumType[] | null
+    recentlyPlayed: AlbumType[] | null
+    recommendations: AlbumType[] | null
     recentlyPlayedAlbums: RecommendationType | null
     albumArtUrl: string | null
     personalizedPlaylists: RecommendationType | null
@@ -403,9 +403,9 @@ interface Actions {
     setMuted: (muted: boolean) => void
     setAlbums: (albums: Array<Album> | null) => void
     setSearchResults: (results: SearchResults) => void
-    setHeavyRotation: (albums: AlbumType[]) => void
-    setRecentlyPlayed: (albums: AlbumType[]) => void
-    setRecommendations: (albums: AlbumType[]) => void
+    setHeavyRotation: (albums: AlbumType[] | null) => void
+    setRecentlyPlayed: (albums: AlbumType[] | null) => void
+    setRecommendations: (albums: AlbumType[] | null) => void
     setThemedRecommendations: (items: RecommendationType | null) => void
     setPersonalizedPlaylists: (playlists: RecommendationType | null) => void
     setRecentlyPlayedAlbums: (albums: RecommendationType | null) => void
@@ -443,8 +443,8 @@ export const useStore = create<Store>((set, get) => ({
     searchResults: {},
     searchTerm: '',
     playlist: [],
-    recentlyPlayed: [],
-    heavyRotation: [],
+    recentlyPlayed: null,
+    heavyRotation: null,
     libraryPlaylists: null,
     currentSongIndex: 0,
     currentSongDuration: null,
@@ -453,7 +453,7 @@ export const useStore = create<Store>((set, get) => ({
     muted: false,
     gridDisplay: true,
     isPlaying: false,
-    recommendations: [],
+    recommendations: null,
     themedRecommendations: null,
     personalizedPlaylists: null,
     recentlyPlayedAlbums: null,
@@ -555,10 +555,12 @@ export const useStore = create<Store>((set, get) => ({
         set({ stationsForYou: stations }),
     setThemedRecommendations: (items: RecommendationType | null) =>
         set({ themedRecommendations: items }),
-    setHeavyRotation: (albums: AlbumType[]) => set({ heavyRotation: albums }),
-    setRecommendations: (albums: AlbumType[]) =>
+    setHeavyRotation: (albums: AlbumType[] | null) =>
+        set({ heavyRotation: albums }),
+    setRecommendations: (albums: AlbumType[] | null) =>
         set({ recommendations: albums }),
-    setRecentlyPlayed: (albums: AlbumType[]) => set({ recentlyPlayed: albums }),
+    setRecentlyPlayed: (albums: AlbumType[] | null) =>
+        set({ recentlyPlayed: albums }),
     setRecentlyAddedToLib: items =>
         set(state => ({
             recentlyAddedToLib:

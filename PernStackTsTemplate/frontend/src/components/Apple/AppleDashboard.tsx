@@ -61,25 +61,83 @@ const AppleDashboard = () => {
         recentlyPlayed: state.recentlyPlayed,
         stationsForYou: state.stationsForYou,
     }))
+
+    const constructImageUrl = (url: String, size: Number) => {
+        return url
+            .replace('{w}', size.toString())
+            .replace('{h}', size.toString())
+    }
+    const [moreLikeAlbumImage, setMoreLikeAlbumImage] = useState<string | null>(
+        null
+    )
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
     // )
+    console.log('more like recommendations: ', moreLikeRecommendations)
 
     useEffect(() => {
-        authorizeMusicKit
-    }, [])
+        if (!musicKitInstance) {
+            authorizeMusicKit()
+        }
+
+        const retrieveMoreLikeImage = async () => {
+            try {
+                if (
+                    moreLikeRecommendations.attributes.title.contentIds[0].startsWith(
+                        'l'
+                    )
+                ) {
+                    try {
+                        const res = await musicKitInstance.api.music(
+                            `/v1/me/library/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`
+                        )
+
+                        const data =
+                            await res.data.data[0].attributes.artwork.url
+
+                        console.log('data1: ', data)
+                        {
+                            data && setMoreLikeAlbumImage(data)
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                    }
+                } else {
+                    try {
+                        const queryParameters = { l: 'en-us' }
+                        const res = await musicKitInstance.api.music(
+                            `/v1/catalog/us/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`,
+
+                            queryParameters
+                        )
+
+                        const data =
+                            await res.data.data[0].attributes.artwork.url
+
+                        console.log('data2: ', data)
+
+                        {
+                            data && setMoreLikeAlbumImage(data)
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                    }
+                }
+            } catch (error: any) {
+                console.error(error)
+            }
+        }
+
+        if (!moreLikeAlbumImage && moreLikeRecommendations) {
+            console.log('running image retrieval')
+            retrieveMoreLikeImage()
+        }
+    }, [musicKitInstance, moreLikeRecommendations])
+
     fetchHeavyRotation()
     FetchRecentlyPlayed()
     FetchRecommendations()
     FetchRecentlyAddedToLib()
-
-    // console.log('heavy rotation: ', heavyRotation)
-    // console.log('recently played: ', recentlyPlayed)
-    // console.log('recommendations: ', reco    mmendations)
-    // console.log('recentlyplayedalbums', recentlyPlayedAlbums)
-    // console.log('personalizedPlaylists: ', personalizedPlaylists)
-    // console.log('themed recos: ', themedRecommendations)
-    console.log('recently adde to lib: ', recentlyAddedToLib)
 
     // const { recommendations } = FetchRecommendations()
 
@@ -138,7 +196,10 @@ const AppleDashboard = () => {
                         moreLikeRecommendations.attributes.title
                             .stringForDisplay
                     }
-                    id={moreLikeRecommendations.attributes.title.contentIds[0]}
+                    url={
+                        moreLikeAlbumImage &&
+                        constructImageUrl(moreLikeAlbumImage, 100)
+                    }
                     albums={moreLikeRecommendations.relationships.contents.data}
                 />
             )}

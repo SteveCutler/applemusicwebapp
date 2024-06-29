@@ -17,7 +17,7 @@ const VolumeSlider = () => {
     const handleChange = (e: any) => {
         setCurrrentVolume(e.target.value)
     }
-    const style = { fontSize: '2rem' }
+    const style = { fontSize: '1.5rem' }
 
     const muteHandler = () => {
         if (muted) {
@@ -38,7 +38,7 @@ const VolumeSlider = () => {
                     <RiVolumeVibrateLine style={style} />
                 )}
             </div>
-            <div className="w-4/5">
+            <div className="w-4/5 flex">
                 <input
                     type="range"
                     min="0"

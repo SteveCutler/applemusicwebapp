@@ -9,12 +9,13 @@ import { LogOut } from 'lucide-react'
 import LogoutButton from './LogoutButton'
 import SidebarSongHistory from './SidebarSongHistory'
 import SidebarFavouriteSongs from './SidebarFavouriteSongs'
+import { CiCirclePlus } from 'react-icons/ci'
 
 const Sidebar = () => {
     return (
         <>
-            <div className="flex-col flex select-none h-full ">
-                <div className="flex-col m-5 pt-5 pb-5 w-4/5  px-3 border-b-2 border-slate-600 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+            <div className="flex-col rounded-lg  m-1  flex bg-black px-1 select-none h-full ">
+                <div className="  flex-col pt-5 pb-5 w-4/5   border-b-2 border-slate-600 font-semibold text-slate-200 text-2xl items-center  justify-start text-center">
                     <Link
                         to="/"
                         className="flex w-full  px-3 hover: select:none cursor-pointer rounded-xl hover:bg-slate-600 justify-center items-center"
@@ -51,7 +52,7 @@ const Sidebar = () => {
                         <span className="p-2 ">Logout</span>
                     </div>
                 </div>
-                <div className="flex-col mx-5  w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                <div className="flex-col mx-5 bg-black p-1 rounded-lg w-full border-b-2 pb-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">
                         Recently Liked Songs:
                     </p>

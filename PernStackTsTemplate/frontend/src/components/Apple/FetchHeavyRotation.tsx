@@ -30,10 +30,11 @@ const FetchHeavyRotation = () => {
                         }
                     )
 
-                    console.log(res)
-
                     const data = await res.data.data
-                    setHeavyRotation(data)
+                    console.log('heavy rotation data: ', data)
+                    {
+                        data.length >= 1 && setHeavyRotation(data)
+                    }
                 } catch (error: any) {
                     console.error(error)
                     setError(error)

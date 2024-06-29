@@ -109,10 +109,11 @@ function Footer() {
     const albumId =
         musicKitInstance?.nowPlayingItem?.relationships?.albums?.data[0]?.id
 
-    const style = { fontSize: '1.5em' }
+    const style = { fontSize: '3em' }
+    const styleSmall = { fontSize: '2em' }
 
     return (
-        <div className="footer px-5 flex  items-center justify-between  bg-slate-900">
+        <div className="footer px-5 flex  items-center justify-between  bg-gradient-to-b from-gray-900 to-black">
             <div className="flex justify-between items-center mt-3 w-full">
                 <div
                     // to={`/album/${albumId}`}
@@ -165,22 +166,22 @@ function Footer() {
                 <div className="flex flex-col justify-between items-around gap-3  w-1/2 mx-auto ">
                     <div className="flex gap-1 mx-auto w-1/4 justify-center mx-10">
                         <button
-                            className={` ${shuffle && 'bg-slate-300'} btn flex rounded-full mx-2 items-center justify-center btn-primary`}
+                            className={` ${shuffle && 'text-blue-600'}  flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {
                                 e.preventDefault()
                                 setShuffle()
                             }}
                         >
-                            <LuShuffle style={style} />
+                            <LuShuffle style={styleSmall} />
                         </button>
                         <button
-                            className="btn flex rounded-full items-center justify-center btn-primary"
+                            className={` flex rounded-full items-center justify-center  hover:text-white active:scale-95`}
                             onClick={e => playPrev(e)}
                         >
                             <IoPlayBackCircleSharp style={style} />
                         </button>
                         <button
-                            className="btn flex items-center rounded-full justify-center btn-primary"
+                            className={` flex items-center rounded-full justify-center ${isPlaying && `text-blue-600`} hover:text-white active:scale-95`}
                             onClick={e => playPauseHandler(e)}
                         >
                             {isPlaying ? (
@@ -190,22 +191,22 @@ function Footer() {
                             )}
                         </button>
                         <button
-                            className="btn flex rounded-full items-center justify-center btn-primary"
+                            className=" flex rounded-full items-center justify-center hover:text-white active:scale-95"
                             onClick={e => playNext(e)}
                         >
                             <IoPlayForwardCircleSharp style={style} />
                         </button>
                         <button
-                            className={` ${repeat && 'bg-slate-300'} btn flex rounded-full mx-2 items-center justify-center btn-primary`}
+                            className={` ${repeat && 'text-blue-600'}  flex rounded-full mx-2 items-center justify-center active:scale-95 `}
                             onClick={e => {
                                 e.preventDefault()
                                 setRepeat()
                             }}
                         >
                             {repeat === 2 ? (
-                                <LuRepeat1 style={style} />
+                                <LuRepeat1 style={styleSmall} />
                             ) : (
-                                <LuRepeat style={style} />
+                                <LuRepeat style={styleSmall} />
                             )}
                         </button>
                     </div>
@@ -214,16 +215,16 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="w-1/4 flex items-center justify-end mx-5">
+            <div className=" flex items-center justify-end mx-5">
                 <button
-                    className={` ${queueToggle && 'bg-slate-300'} btn flex rounded-full items-center justify-end btn-primary`}
+                    className={` ${queueToggle && 'text-blue-600'}  flex rounded-full items-center pe-10 justify-end  active:scale-95`}
                     title="Display Queue"
                     onClick={e => {
                         e.preventDefault()
                         handleQueueToggle(e)
                     }}
                 >
-                    <FaListOl style={style} />
+                    <FaListOl style={styleSmall} />
                 </button>{' '}
                 <VolumeSlider />
             </div>

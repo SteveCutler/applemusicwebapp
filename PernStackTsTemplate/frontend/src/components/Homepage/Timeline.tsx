@@ -49,7 +49,7 @@ const Timeline = () => {
                           : '0'
                 }
                 // value={currentElapsedTime ? String(currentElapsedTime) : '0'}
-                className="range range-info flex"
+                className="range range-sm mb-5 range-info flex"
                 onChange={handleScrub}
                 onMouseUp={handleScrubEnd}
                 onTouchEnd={handleScrubEnd}
