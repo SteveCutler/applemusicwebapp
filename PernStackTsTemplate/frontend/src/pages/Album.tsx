@@ -208,12 +208,12 @@ const Album = () => {
         return (
             <div className="flex-col w-11/12 mx-auto text-slate-900 h-full">
                 <ScrollToTop />
-                <Link to="/">
+                {/* <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
                         {' '}
                         <MdArrowBackIosNew style={style} />
                     </div>
-                </Link>
+                </Link> */}
                 <div className="flex-col ">
                     <h1 className="text-5xl font-bold">
                         {albumData.attributes.name}

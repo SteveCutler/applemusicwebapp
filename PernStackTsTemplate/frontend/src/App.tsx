@@ -17,6 +17,7 @@ import Artist from './pages/Artist'
 import Song from './pages/Song'
 import Station from './pages/Station'
 import QueueDisplay from './components/Homepage/QueueDisplay'
+import Header from './components/Homepage/Header'
 
 function App() {
     const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
@@ -59,8 +60,11 @@ function App() {
                         <Sidebar />
                     </div>
                 )}
+                <div className="">
+                    <Header />
+                </div>
                 <div
-                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-9/12'}  overflow-y-auto flex-grow items-center justify-start`}
+                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-9/12'}  overflow-y-auto flex-grow items-center pt-20 justify-start`}
                 >
                     <Routes>
                         <Route

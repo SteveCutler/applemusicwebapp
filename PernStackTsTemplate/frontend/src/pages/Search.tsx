@@ -120,7 +120,7 @@ const Search = () => {
     }, [searchTerm, musicKitInstance])
 
     return (
-        <div className="w-full  flex-col h-full pt-7 px-9 justify-center items-center mx-auto">
+        <div className="w-full  flex-col h-full px-9 justify-center items-center mx-auto">
             {/* <div className="text-3xl m-3 px-3">SEARCH</div> */}
             <form className="m-3 p-3 w-full" action="">
                 <input

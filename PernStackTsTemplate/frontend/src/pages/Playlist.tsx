@@ -92,26 +92,26 @@ const Playlist = () => {
 
     if (playlistData && playlistTrackData) {
         return (
-            <div className="flex-col flex text-slate-900 flex-grow mt-10 mx-auto w-4/5 ">
+            <div className="flex-col flex text-slate-900 flex-grow mt-10 mx-auto w-11/12 ">
                 <ScrollToTop />
-                <Link to="/">
+                {/* <Link to="/">
                     <div className="sticky mb-10 top-1 left-1">
                         {' '}
                         <MdArrowBackIosNew style={style} />
                     </div>
-                </Link>
+                </Link> */}
                 <div className="flex-col">
                     <h1 className="text-5xl font-bold">
                         {playlistData.attributes.name}
                     </h1>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
-                    <div className="">
+                    <div className="w-full">
                         <img
                             src={constructImageUrl(
                                 playlistData.attributes.artwork?.url ??
                                     defaultPlaylistArtwork,
-                                500
+                                1000
                             )}
                             alt=""
                         />

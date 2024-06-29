@@ -271,7 +271,7 @@ const Library = () => {
 
     return (
         <div className="flex-col w-11/12  mx-auto h-full">
-            <div className=" flex justify-between my-5 pt-5  mx-auto items-center gap-2">
+            <div className=" flex justify-between   mx-auto items-center gap-2">
                 <form className=" p-3 w-full" action="">
                     <input
                         type="text"

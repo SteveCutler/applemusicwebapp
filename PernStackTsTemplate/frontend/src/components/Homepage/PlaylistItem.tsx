@@ -194,7 +194,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  flex-col  w-1/5 text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between w-1/5 text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${playlistItem.attributes.name}`}
         >
@@ -235,8 +235,8 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
                     <OptionsModal object={playlistItem} />
                 </div>
             </div>
-            <div className="flex justify-between h-full ">
-                <div className="flex-col h-full overflow-hidden">
+            <div className="flex  h-full ">
+                <div className="flex-col justify-between h-full overflow-hidden">
                     <h2 className="text-md truncate font-bold">
                         {playlistItem.attributes.name}
                     </h2>

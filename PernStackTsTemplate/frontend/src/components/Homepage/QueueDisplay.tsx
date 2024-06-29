@@ -30,7 +30,7 @@ const QueueDisplay = () => {
 
     // }
     console.log('current queue: ', musicKitInstance?.queue)
-    if (musicKitInstance?.queue.items.length >= 1) {
+    if (musicKitInstance?.nowPlayingItem) {
         return (
             <div className="flex-col flex select-none h-full ">
                 <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
@@ -79,7 +79,7 @@ const QueueDisplay = () => {
     } else {
         return (
             <div className="flex-col flex select-none h-full ">
-                <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-md items-center mx-auto justify-start ps-6">
                     No items in queue...
                 </div>
             </div>
