@@ -195,7 +195,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
         case 'library-songs':
             return (
                 <div
-                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                    className="flex border-b border-slate-800 w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  justify-between"
                     onClick={() => navigateTo(item.id)}
                 >
                     <div className="w-10/12 truncate gap-1 flex">
@@ -273,7 +273,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
         case 'library-albums':
             return (
                 <div
-                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
                     onClick={() => navigateTo(item.id)}
                 >
                     <div className="w-10/12 truncate gap-1 flex">
@@ -352,7 +352,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             return (
                 <div
                     onClick={() => navigateTo(item.id)}
-                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
                 >
                     <div className="w-10/12 truncate gap-1 flex">
                         {item.attributes.artwork?.url ? (
@@ -428,7 +428,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             return (
                 <div
                     onClick={() => navigateTo(item.id)}
-                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs border-slate-500 justify-between"
+                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
                 >
                     <div className="w-10/12 truncate gap-1 flex">
                         {item.attributes.artwork?.url ? (

@@ -61,7 +61,7 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
     }
 
     return (
-        <div className="flex-col w-full justify-between items-between ">
+        <div className="flex-col  w-full justify-between items-between ">
             {albumTracks.map((song, index: number) => (
                 <>
                     <Track
@@ -75,6 +75,8 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
                         songId={song.id}
                         albumTracks={albumTracks}
                         trackNumber={song.attributes.trackNumber}
+                        first={index === 0}
+                        last={index === albumTracks.length - 1}
                     />
                     <p>
                         {/* {convertToDuration(track.attributes.durationInMillis)} */}

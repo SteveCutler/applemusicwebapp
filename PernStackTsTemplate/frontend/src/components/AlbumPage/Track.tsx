@@ -15,6 +15,8 @@ type TrackPropTypes = {
     trackNumber: number
     index: number
     artistName: string
+    first?: boolean
+    last?: boolean
 }
 
 interface Song {
@@ -53,6 +55,8 @@ const Track: React.FC<TrackPropTypes> = ({
     index,
     trackNumber,
     artistName,
+    first,
+    last,
 }) => {
     //const albumSongs = albumTracks.data
     // const {
@@ -196,7 +200,7 @@ const Track: React.FC<TrackPropTypes> = ({
     return (
         <div
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-2 w-full text-slate-300 rounded-lg ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  my-1 p-2 justify-between items-center border-slate-${isPlaying && songId === currentSongId ? '900' : '700'}`}
+            className={`flex border-b-2 w-full ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
         >
             <div
                 className={

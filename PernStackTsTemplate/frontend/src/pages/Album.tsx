@@ -215,7 +215,7 @@ const Album = () => {
                     </div>
                 </Link> */}
                 <div className="flex-col ">
-                    <h1 className="text-5xl font-bold">
+                    <h1 className="text-3xl w-1/2 font-bold">
                         {albumData.attributes.name}
                     </h1>
                     <Link
@@ -227,15 +227,15 @@ const Album = () => {
                         onClick={
                             type === 'library-albums' ? setTerm : undefined
                         }
-                        className="text-2xl hover:text-blue-200 hover:cursor-pointer font-bold"
+                        className="text-2xl hover:text-blue-200 text-slate-800  hover:cursor-pointer font-bold"
                     >
                         {albumData.attributes.artistName}
                     </Link>
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
-                    <div className="relative w-full">
+                    <div className="relative h-fit w-fit">
                         <img
-                            className="w-full"
+                            className=""
                             src={constructImageUrl(
                                 albumData.attributes.artwork.url,
                                 500
@@ -253,15 +253,7 @@ const Album = () => {
                                 await loadPlayer()
                             }}
                         >
-                            {isPlaying &&
-                            musicKitInstance?.nowPlayingItem &&
-                            playlist.includes(
-                                musicKitInstance?.nowPlayingItem
-                            ) ? (
-                                <FaRegCirclePause style={styleButton} />
-                            ) : (
-                                <FaCirclePlay style={styleButton} />
-                            )}
+                            <FaCirclePlay style={styleButton} />
                         </div>
                     </div>
                     <div className=" w-1/2">
@@ -273,7 +265,7 @@ const Album = () => {
                 </div>
 
                 {relatedAlbums && (
-                    <div>
+                    <div className="w-full flex  mx-auto overflow-auto">
                         <DisplayRow
                             title={'Similar Albums:'}
                             albums={relatedAlbums}
@@ -285,6 +277,7 @@ const Album = () => {
                         <DisplayRow
                             title={`More by ${albumData.attributes.artistName}`}
                             albums={featuredAlbumsData}
+                            width={'w-full'}
                         />
                     </div>
                 )}

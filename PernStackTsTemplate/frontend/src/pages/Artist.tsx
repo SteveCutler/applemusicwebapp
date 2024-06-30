@@ -94,13 +94,13 @@ const Artist = () => {
             {artistData && (
                 <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-full w-full">
                     <ScrollToTop />
-                    <h1 className="text-6xl font-semibold m-3 p-3 text-slate-900">
+                    <h1 className="text-5xl w-1/2 font-bold text-black">
                         {artistData.attributes.name}
                     </h1>
                     <div className="flex justify-around gap-2 items-start">
-                        <div className="flex-col relative w-1/2">
+                        <div className="flex-col flex  relative  ">
                             <img
-                                className="pb-5"
+                                className="pb-5 "
                                 src={constructImageUrl(
                                     artistData.attributes.artwork.url,
                                     600
@@ -187,7 +187,7 @@ const Artist = () => {
                     )}
 
                     {artistAlbumData && (
-                        <h2 className="mx-3 px-3 text-5xl text-slate-800 font-bold">
+                        <h2 className="mx-3 px-3 text-xl text-slate-800 font-bold">
                             Albums:
                         </h2>
                     )}

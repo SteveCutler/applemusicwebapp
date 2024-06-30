@@ -35,11 +35,15 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
         favouriteSongs,
         libraryPlaylists,
         recentlyAddedToLib,
+        recentlyPlayed,
         backendToken,
         recentActivity,
         setRecentActivity,
+        recentHistory,
         musicKitInstance,
     } = useStore(state => ({
+        recentlyPlayed: state.recentlyPlayed,
+        recentHistory: state.recentHistory,
         favouriteSongs: state.favouriteSongs,
         recentlyAddedToLib: state.recentlyAddedToLib,
         libraryPlaylists: state.libraryPlaylists,
@@ -119,6 +123,17 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
             }
             break
 
+        // case 'history':
+        //     if (recentHistory) {
+        //         return (
+        //             <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
+        //                 {recentHistory.map(item => (
+        //                     <ActivityRow item={item} />
+        //                 ))}
+        //                 {/* {recentActivity && <CollapsibleListFavs items={recentActivity} />} */}
+        //             </div>
+        //         )
+        //     }
         case 'history':
             if (recentActivity) {
                 return (

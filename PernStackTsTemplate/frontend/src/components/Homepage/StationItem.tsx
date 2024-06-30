@@ -53,15 +53,12 @@ const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
 
     const {
         isPlaying,
-        authorizeMusicKit,
-        playlistData,
-        setPlaylistData,
-        setPlaylist,
-        playSong,
-        pause,
-        playlist,
+
+        queueToggle,
+
         musicKitInstance,
     } = useStore(state => ({
+        queueToggle: state.queueToggle,
         playlistData: state.playlistData,
         setPlaylistData: state.setPlaylistData,
         isPlaying: state.isPlaying,
@@ -91,7 +88,7 @@ const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col w-1/5 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
             to={`/station/${stationItem.id}`}
             title={`${stationItem.attributes.name}`}
         >

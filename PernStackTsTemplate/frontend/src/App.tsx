@@ -64,7 +64,7 @@ function App() {
                     <Header />
                 </div>
                 <div
-                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-9/12'}  overflow-y-auto flex-grow items-center pt-20 justify-start`}
+                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-8/12'}   flex-grow items-center pt-20 justify-start`}
                 >
                     <Routes>
                         <Route

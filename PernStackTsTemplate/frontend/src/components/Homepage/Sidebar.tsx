@@ -6,6 +6,7 @@ import { FaHistory } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import SidebarPlaylists from './SidebarPlaylists'
 import { LogOut } from 'lucide-react'
+import FetchRecentHistory from '../Apple/FetchRecentHistory'
 import LogoutButton from './LogoutButton'
 import SidebarSongHistory from './SidebarSongHistory'
 import SidebarFavouriteSongs from './SidebarFavouriteSongs'
@@ -23,6 +24,8 @@ import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
 
 const Sidebar = () => {
     FetchRecentlyAddedToLib()
+    FetchRecentHistory()
+
     const style = { fontSize: '1.5rem' }
     const { queueToggle } = useStore(state => ({
         queueToggle: state.queueToggle,
@@ -32,7 +35,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <div className="flex-col   m-1  flex  select-none h-full ">
+            <div className="flex-col m-1 flex  select-none h-full ">
                 <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto border-b-2 border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}

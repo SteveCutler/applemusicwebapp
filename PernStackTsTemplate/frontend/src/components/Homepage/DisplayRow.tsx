@@ -135,8 +135,9 @@ type ArtworkObject = {
 
 const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const carouselRef = useRef<HTMLDivElement>(null)
-    const { queueToggle } = useStore(state => ({
+    const { queueToggle, musicKitInstance } = useStore(state => ({
         queueToggle: state.queueToggle,
+        musicKitInstance: state.musicKitInstance,
     }))
 
     console.log('url: ', url)
@@ -154,14 +155,16 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex items-center mb-5  w-full rounded-lg  ">
-            <h1 className="text-lg select-none flex gap-2 w-full  pb-2 text-slate-800  items-end font-bold justify-start">
-                <div className="h-1/12 ">{url && <img src={url} />}</div>
+        <div className="flex-col flex items-center mb-5 flex-grow overflow-x-hidden    ">
+            <h1 className="text-lg select-none flex gap-2 w-full  pb-2 text-slate-800  font-bold justify-start">
+                <div className="h-1/12 ">
+                    {url && <img src={url} width="70px" />}
+                </div>
                 {title}
             </h1>
-            <div className="flex justify-center  items-center">
+            <div className="flex justify-center w-fit items-center">
                 <button
-                    className=" p-2 bg-gray-300 -translate-y-10 z-10 translate-x-6 hover:text-slate-500 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 -translate-y-10 z-10 translate-x-10 hover:text-slate-500 hover:scale-110 active:scale-95 shadow-lg transform rounded-full "
                     onClick={scrollLeft}
                 >
                     <FaArrowCircleLeft style={style} />
@@ -169,7 +172,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className={`carousel flex carousel-center ${queueToggle ? 'max-w-3xl' : 'max-w-5xl'} overflow-x-auto h-full p-2 space-x-2  rounded-box`}
+                    className={`carousel flex carousel-center   ${queueToggle ? 'max-w-2xl' : 'max-w-5xl'}  overflow-x-hidden  py-2 space-x-1`}
                     ref={carouselRef}
                 >
                     {albums &&
@@ -205,7 +208,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
                         )}
                 </div>
                 <button
-                    className=" p-2 bg-gray-300 hover:text-slate-500 -translate-y-10 z-10 -translate-x-6 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
+                    className=" p-2 bg-gray-300 hover:text-slate-500 -translate-y-10 z-10 -translate-x-10 hover:scale-110 active:scale-95 rounded-full shadow-lg transform  "
                     onClick={scrollRight}
                 >
                     <FaArrowCircleRight style={style} />

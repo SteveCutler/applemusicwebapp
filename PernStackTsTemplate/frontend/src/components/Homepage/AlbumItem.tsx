@@ -6,6 +6,7 @@ import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import QueueDisplay from './QueueDisplay'
 
 interface AlbumPropTypes {
     albumItem: AlbumType
@@ -74,7 +75,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     const {
         isPlaying,
         authorizeMusicKit,
-
+        queueToggle,
         setPlaylist,
         playSong,
         pause,
@@ -83,6 +84,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     } = useStore(state => ({
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
+        queueToggle: state.queueToggle,
         playSong: state.playSong,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -209,7 +211,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     if (albumItem) {
         return (
             <div
-                className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : 'w-1/5'}  text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+                className={`${carousel && 'carousel-item'} select-none  flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'}  text-slate-800 hover:text-slate-200  rounded-3xl flex `}
                 onClick={handleNavigation}
                 title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             >
