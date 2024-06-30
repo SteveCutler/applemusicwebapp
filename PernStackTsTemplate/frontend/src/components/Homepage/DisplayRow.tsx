@@ -172,7 +172,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className={`carousel flex carousel-center   ${queueToggle ? 'max-w-2xl' : 'max-w-5xl'}  overflow-x-hidden  py-2 space-x-1`}
+                    className={`carousel flex carousel-center   ${queueToggle ? 'max-w-2xl' : 'max-w-5xl'}  overflow-x-auto  py-2 space-x-1`}
                     ref={carouselRef}
                 >
                     {albums &&

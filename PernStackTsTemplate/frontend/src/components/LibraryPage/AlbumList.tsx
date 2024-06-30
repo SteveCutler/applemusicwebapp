@@ -36,19 +36,22 @@ interface AlbumListProps {
 }
 
 const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
-    const { gridDisplay } = useStore(state => ({
+    const { gridDisplay, queueToggle } = useStore(state => ({
         gridDisplay: state.gridDisplay,
+        queueToggle: state.queueToggle,
     }))
 
-    console.log('albums: ', albums)
+    const width = queueToggle ? 'w-1/5 ' : 'w-1/6'
+
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap w-full mx-auto gap-2  justify-center  ">
+            <div className="flex flex-wrap w-full gap-1 justify-around  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (
                         <AlbumItem
                             albumItem={album}
+                            width={width}
                             // trackCount={album.trackCount}
                         />
                         // <AlbumGrid

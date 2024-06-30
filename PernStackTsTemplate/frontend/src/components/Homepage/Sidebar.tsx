@@ -3,7 +3,7 @@ import { FaSearch } from 'react-icons/fa'
 import { LuLibrary } from 'react-icons/lu'
 import { ImStack } from 'react-icons/im'
 import { FaHistory } from 'react-icons/fa'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import SidebarPlaylists from './SidebarPlaylists'
 import { LogOut } from 'lucide-react'
 import FetchRecentHistory from '../Apple/FetchRecentHistory'
@@ -48,28 +48,64 @@ const Sidebar = () => {
                             <LogoutButton />
                         </div>
                     </div>
-                    <Link
+                    <NavLink
                         to="/"
-                        className="flex w-full mx-auto  px-3 hover:text-slate-100  select:none cursor-default rounded-xl  justify-center items-center"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
                     >
                         <IoHomeSharp />
                         <p className="p-2">Home</p>
-                    </Link>
+                    </NavLink>
 
-                    <Link
+                    <NavLink
                         to="/search"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
                     >
                         <FaSearch />
                         <p className="p-2">Search</p>
-                    </Link>
-                    <Link
+                    </NavLink>
+                    <NavLink
                         to="/library"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
-                    </Link>
+                    </NavLink>
+
+                    <NavLink
+                        to="/"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                    >
+                        <FaHeartbeat />
+                        <p className="p-2">Likes</p>
+                    </NavLink>
+
+                    <NavLink
+                        to="/"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                    >
+                        <BiSolidPlaylist />
+                        <p className="p-2">Playlists</p>
+                    </NavLink>
+
+                    <NavLink
+                        to="/"
+                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                    >
+                        <TbHistory />
+                        <p className="p-2">History</p>
+                    </NavLink>
 
                     {/* <Link
                         to="/stacks"

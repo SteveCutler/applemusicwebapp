@@ -148,13 +148,9 @@ const AlbumGrid: React.FC<AlbumProps> = ({
             {/* <div className="grid-cols-1"> */}
             <Link
                 to={`/album/${albumId}`}
-                className="flex-col bg-slate-900  p-3 w-1/5 h-full border-slate-400 hover:border-slate-300 hover:scale{1.01} hover:text-slate-200 my-3 rounded-lg px-3 items-between justify-between h-10"
+                className="flex-col  w-1/6 flex h-full border-slate-400 hover:border-slate-300 hover:scale{1.01} hover:text-slate-200 my-3 rounded-lg  items-between justify-between "
             >
-                {artworkUrl ? (
-                    <img src={artworkUrl} width="300" height="300" />
-                ) : (
-                    <span></span>
-                )}
+                {artworkUrl ? <img src={artworkUrl} /> : <span></span>}
                 <div className="flex items-center justify-between py-3">
                     <div className="">
                         <span className="">{artistName}</span>
