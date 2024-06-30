@@ -193,7 +193,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${queueToggle ? 'w-3/12' : ' w-2/12'} text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${queueToggle ? 'w-1/4' : ' w-1/6'} text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${playlistItem.attributes.name}`}
         >

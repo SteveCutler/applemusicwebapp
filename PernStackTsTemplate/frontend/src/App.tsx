@@ -60,9 +60,11 @@ function App() {
                         <Sidebar />
                     </div>
                 )}
-                <div className="">
-                    <Header />
-                </div>
+                {backendToken && (
+                    <div className="">
+                        <Header />
+                    </div>
+                )}
                 <div
                     className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-8/12'}   flex-grow items-center pt-20 justify-start`}
                 >

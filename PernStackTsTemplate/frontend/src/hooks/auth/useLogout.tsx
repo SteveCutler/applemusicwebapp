@@ -7,8 +7,9 @@ import { useStore } from '../../store/store'
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
     // const { setAuthUser } = useAuthContext()
-    const { setBackendToken } = useStore(state => ({
+    const { setBackendToken, musicKitInstance } = useStore(state => ({
         setBackendToken: state.setBackendToken,
+        musicKitInstance: state.musicKitInstance,
     }))
     const navigate = useNavigate()
 
@@ -23,6 +24,7 @@ const useLogout = () => {
             if (!res.ok) throw new Error(data.error)
             toast.success('Logged out succesfully')
             // setAuthUser(null)
+            await musicKitInstance?.stop()
             setBackendToken(null)
             navigate('/login')
         } catch (error: any) {

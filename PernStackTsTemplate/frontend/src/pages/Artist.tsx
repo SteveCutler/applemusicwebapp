@@ -147,24 +147,10 @@ const Artist = () => {
                                     <TrackDisplay albumTracks={topSongsData} />
                                 </div>
                             )}
-
-                            {latestReleaseData && (
-                                <div className="flex-col mx-auto justify-center ">
-                                    <h2 className="text-4xl text-center pt-3 pb-3 font-bold text-slate-800">
-                                        Latest Release:
-                                    </h2>
-                                    <div className="flex w-1/2 items-center mx-auto justify-center">
-                                        <AlbumItem
-                                            albumItem={latestReleaseData[0]}
-                                            width="w-1/2"
-                                        />
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </div>
 
-                    {topSongsData && (
+                    {/* {topSongsData && (
                         <div className="w-full gap-4 mx-3 px-3 ">
                             <>
                                 <DisplayRow
@@ -173,9 +159,9 @@ const Artist = () => {
                                 />
                             </>
                         </div>
-                    )}
+                    )} */}
 
-                    {featuredAlbumsData && (
+                    {/* {featuredAlbumsData && (
                         <div className="w-full gap-4 mx-3 px-3   ">
                             <>
                                 <DisplayRow
@@ -183,6 +169,22 @@ const Artist = () => {
                                     albums={featuredAlbumsData}
                                 />
                             </>
+                        </div>
+                    )} */}
+
+                    {latestReleaseData && (
+                        <div className="w-full flex-col flex mx-20 justify-center">
+                            <h2 className="pb-3  text-xl text-slate-800 font-bold">
+                                Latest Release:
+                            </h2>
+                            <div className=" gap-1 justify-left  flex flex-wrap">
+                                {latestReleaseData.map(album => (
+                                    <>
+                                        <AlbumItem albumItem={album} />
+                                    </>
+                                    // <p className="">{album.attributes.name}</p>
+                                ))}
+                            </div>
                         </div>
                     )}
 
@@ -192,7 +194,7 @@ const Artist = () => {
                         </h2>
                     )}
                     {artistAlbumData && (
-                        <div className="w-full gap-4 mx-3 px-3 flex flex-wrap">
+                        <div className="w-full gap-1 justify-center flex flex-wrap">
                             {artistAlbumData.map(album => (
                                 <>
                                     <AlbumItem albumItem={album} />
@@ -203,7 +205,7 @@ const Artist = () => {
                     )}
 
                     {similarArtistsData && (
-                        <div className="w-full gap-4 mx-3 px-3   ">
+                        <div className="w-full gap-1 justify-center flex    ">
                             <>
                                 <DisplayRow
                                     title={'Similar Artists:'}
@@ -213,7 +215,7 @@ const Artist = () => {
                         </div>
                     )}
 
-                    <div className=" w-full flex mx-auto ">
+                    <div className=" w-full gap-1 justify-center flex ">
                         {featuredPlaylistsData && (
                             <DisplayRow
                                 title="Featured Playlists:"
