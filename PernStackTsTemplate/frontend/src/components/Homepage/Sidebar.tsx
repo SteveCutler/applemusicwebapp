@@ -83,7 +83,7 @@ const Sidebar = () => {
                         <p className="p-2">Library</p>
                     </NavLink>
 
-                    <NavLink
+                    {/* <NavLink
                         to="/"
                         className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
                     >
@@ -105,7 +105,7 @@ const Sidebar = () => {
                     >
                         <TbHistory />
                         <p className="p-2">History</p>
-                    </NavLink>
+                    </NavLink> */}
 
                     {/* <Link
                         to="/stacks"

@@ -94,9 +94,17 @@ const Artist = () => {
             {artistData && (
                 <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-full w-full">
                     <ScrollToTop />
-                    <h1 className="text-5xl w-1/2 font-bold text-black">
-                        {artistData.attributes.name}
-                    </h1>
+                    <div className="flex justify-between w-full ">
+                        <div className=" w-1/2 flex">
+                            <h1 className="text-5xl font-bold text-black">
+                                {artistData.attributes.name}
+                            </h1>
+                        </div>
+                        <div className=" translate-y-4 w-1/2 text-black text-lg font-bold flex justify-end  items-end">
+                            {' '}
+                            Top songs:
+                        </div>
+                    </div>
                     <div className="flex justify-around gap-2 items-start">
                         <div className="flex-col flex  relative  ">
                             <img
