@@ -103,12 +103,12 @@ const FetchSongData = (songId: string | undefined) => {
                 } else {
                     try {
                         console.log('fetching song data')
-                        const queryParameters = { l: 'en-us' }
-                        const res = await musicKitInstance.api.music(
-                            `/v1/catalog/us/songs/${songId}`,
+                        // const queryParameters = { l: 'en-us' }
+                        // const res = await musicKitInstance.api.music(
+                        //     `/v1/catalog/us/songs/${songId}`,
 
-                            queryParameters
-                        )
+                        //     queryParameters
+                        // )
 
                         const resAlbum = await musicKitInstance.api.music(
                             `/v1/catalog/us/songs/${songId}/albums`
@@ -121,14 +121,14 @@ const FetchSongData = (songId: string | undefined) => {
                         const trackAlbumData = await resAlbum.data.data[0]
                         const trackArtistData = await resArtist.data.data[0]
 
-                        const data: Song = await res.data.data[0]
+                        // const data: Song = await res.data.data[0]
 
-                        console.log('song data: ', data)
+                        // console.log('song data: ', data)
                         // return { data, trackAlbumData }
                         setTrackAlbumData(trackAlbumData)
                         setTrackArtistData(trackArtistData)
 
-                        setSongData(data)
+                        // setSongData(data)
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -146,7 +146,7 @@ const FetchSongData = (songId: string | undefined) => {
         fetchSongData()
     }, [musicKitInstance, songId, authorizeMusicKit])
 
-    return { songData, trackAlbumData, trackArtistData, loading, error }
+    return { trackAlbumData, trackArtistData, loading, error }
 }
 
 export default FetchSongData

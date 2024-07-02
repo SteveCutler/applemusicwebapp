@@ -5,6 +5,7 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
 interface StationItemTypes {
     stationItem: StationType
+    width?: string
     carousel?: boolean
 }
 
@@ -44,7 +45,11 @@ interface Song {
     }
 }
 
-const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
+const StationItem: React.FC<StationItemTypes> = ({
+    stationItem,
+    carousel,
+    width,
+}) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -88,7 +93,7 @@ const StationItem: React.FC<StationItemTypes> = ({ stationItem, carousel }) => {
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
             to={`/station/${stationItem.id}`}
             title={`${stationItem.attributes.name}`}
         >

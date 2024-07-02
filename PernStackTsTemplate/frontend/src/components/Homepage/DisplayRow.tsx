@@ -155,14 +155,14 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex items-center mb-5 flex-grow overflow-x-hidden    ">
+        <div className="flex-col flex w-full items-center mb-5    ">
             <h1 className="text-lg select-none flex gap-2 w-full  pb-2 text-slate-800  font-bold justify-start">
                 <div className="h-1/12 ">
                     {url && <img src={url} width="70px" />}
                 </div>
                 {title}
             </h1>
-            <div className="flex justify-center w-fit items-center">
+            <div className="flex justify-center w-full items-center">
                 <button
                     className=" p-2 bg-gray-300 -translate-y-10 z-10 translate-x-10 hover:text-slate-500 hover:scale-110 active:scale-95 shadow-lg transform rounded-full "
                     onClick={scrollLeft}
@@ -172,7 +172,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
 
                 {/* <div className="flex-grid flex grid-cols-5 m-1 px-5  pb-6  grid-rows-1 justify-center my-auto gap-3 "> */}
                 <div
-                    className={`carousel flex carousel-center   ${queueToggle ? 'max-w-2xl' : 'max-w-5xl'}  overflow-x-auto  py-2 space-x-1`}
+                    className={`carousel flex carousel-start   ${queueToggle ? 'max-w-2xl xl:max-w-fit' : 'max-w-5xl xl:max-w-fit'}  overflow-x-auto  py-2 space-x-1`}
                     ref={carouselRef}
                 >
                     {albums &&
@@ -182,11 +182,13 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
                                 <PlaylistItem
                                     playlistItem={album}
                                     carousel={true}
+                                    width={` ${queueToggle ? 'w-2/12 lg:w-3/12 2xl:w-2/12' : 'w-3/12 xl:w-2/12 2xl:w-1/12'} `}
                                 />
                             ) : album.type === 'stations' ? (
                                 <StationItem
                                     stationItem={album}
                                     carousel={true}
+                                    width={` ${queueToggle ? 'w-2/12 lg:w-3/12 2xl:w-2/12' : 'w-3/12 xl:w-2/12 2xl:w-1/12'} `}
                                 />
                             ) : album.type === 'songs' ||
                               album.type === 'library-songs' ? (
@@ -202,6 +204,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
                                         releaseDate={
                                             album.attributes.releaseDate
                                         }
+                                        width={` ${queueToggle ? 'w-2/12 lg:w-3/12 2xl:w-2/12' : 'w-3/12 xl:w-2/12 2xl:w-1/12'} `}
                                     />
                                 )
                             )

@@ -56,7 +56,7 @@ function App() {
         <div className="flex-col justify-between flex min-h-screen ">
             <div className="flex flex-grow ">
                 {backendToken && (
-                    <div className="sidebar overflow-y-auto w-3/12 h-1/2 ">
+                    <div className="sidebar overflow-y-auto w-3/12 2xl:w-2/12  h-1/2 ">
                         <Sidebar />
                     </div>
                 )}
@@ -66,7 +66,7 @@ function App() {
                     </div>
                 )}
                 <div
-                    className={`flex flex-col ${queueToggle ? 'w-5/12' : 'w-8/12'}   flex-grow items-center pt-20 justify-start`}
+                    className={`flex flex-col ${queueToggle ? 'w-5/12 2xl:6/12' : 'w-8/12 2xl:w-8/12 '}  flex-grow items-center pt-20 justify-start`}
                 >
                     <Routes>
                         <Route
@@ -139,6 +139,7 @@ function App() {
                             element={<Station />}
                         />
                         <Route path="/song/:songId/:type?" element={<Song />} />
+
                         <Route
                             path="/playlist/:playlistId"
                             element={<Playlist />}
@@ -146,13 +147,13 @@ function App() {
                     </Routes>
                 </div>
                 {queueToggle && backendToken && (
-                    <div className="sidebar w-3/12 rounded-lg m-1 h-fit bg-black">
+                    <div className="sidebar w-3/12 2xl:w-2/12  rounded-lg m-1 h-fit bg-black">
                         <QueueDisplay />
                     </div>
                 )}
             </div>
             {backendToken && (
-                <div className="flex-shrink-0 z-20 sticky bottom-0">
+                <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
                     <Footer />
                 </div>
             )}

@@ -7,7 +7,7 @@ import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.p
 
 interface AlbumPropTypes {
     playlistItem: playlist
-
+    width?: string
     carousel?: boolean
 }
 
@@ -73,7 +73,11 @@ interface Song {
     }
 }
 
-const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
+const PlaylistItem: React.FC<AlbumPropTypes> = ({
+    playlistItem,
+    carousel,
+    width,
+}) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -194,7 +198,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${queueToggle ? 'w-1/4' : ' w-1/6'} text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} text-slate-800 hover:text-slate-200  rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${playlistItem.attributes.name}`}
         >
@@ -249,6 +253,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
                             <span>Library</span>
                         </div>
                     )}
+                    <span></span>
                 </div>
             </div>
         </div>

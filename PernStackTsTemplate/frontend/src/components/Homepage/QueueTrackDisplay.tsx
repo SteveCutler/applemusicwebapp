@@ -40,7 +40,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         isPlaying,
         currentSongId,
         playlist,
-        recentHistory,
+
         switchTrack,
         setPlaylist,
         pause,
@@ -52,7 +52,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         musicKitInstance: state.musicKitInstance,
         setPlaylist: state.setPlaylist,
         playlist: state.playlist,
-        recentHistory: state.recentHistory,
+
         pause: state.pauseSong,
         play: state.playSong,
         switchTrack: state.switchTrack,
@@ -81,6 +81,28 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         }
     }
 
+    const makeSong = (songObject: any) => {
+        return {
+            id: songObject.id,
+            href: songObject.attributes.url,
+            type: 'songs',
+            attributes: {
+                id: songObject.id,
+                name: songObject.attributes.name,
+                trackNumber: songObject.attributes.trackNumber,
+                artistName: songObject.attributes.artistName,
+                albumName: songObject.attributes.albumName,
+                durationInMillis: songObject.attributes.durationInMillis,
+
+                artwork: {
+                    bgColor: songObject.attributes.artwork.bgColor,
+                    url: songObject.attributes.artwork.url,
+                },
+            },
+        }
+    }
+
+    const songObject = makeSong(song)
     const playPauseHandler = async () => {
         if (song.id === currentSongId) {
             // console.log('songId is current song')
@@ -105,9 +127,31 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
     }
 
     const style = { fontSize: '1.5rem', color: 'royalblue' }
+    console.log('song sending: ', makeSong(song))
+
     return (
         <Link
             to={`/song/${song.id}`}
+            state={{
+                song: {
+                    id: song.id,
+                    href: song.attributes.url,
+                    type: 'songs',
+                    attributes: {
+                        id: song.id,
+                        name: song.attributes.name,
+                        trackNumber: song.attributes.trackNumber,
+                        artistName: song.attributes.artistName,
+                        albumName: song.attributes.albumName,
+                        durationInMillis: song.attributes.durationInMillis,
+
+                        artwork: {
+                            bgColor: song.attributes.artwork?.bgColor,
+                            url: song.attributes.artwork?.url,
+                        },
+                    },
+                },
+            }}
             className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
         >
             {song.attributes.artwork?.url ? (

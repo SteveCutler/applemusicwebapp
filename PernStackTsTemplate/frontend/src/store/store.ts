@@ -18,7 +18,7 @@ interface Song {
     href?: string
     type: string
     attributes: {
-        id: string
+        id?: string
         name: string
         trackNumber: number
         artistName: string

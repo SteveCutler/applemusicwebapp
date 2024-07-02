@@ -45,9 +45,7 @@ const Home = () => {
     }
 
     return (
-        <div className="flex-col h-full mx-auto flex pt-5 flex-grow w-full md:max-w-screen-lg mb-40 rounded-lg ">
-            {/* <AppleMusicLogin /> */}
-
+        <div className="flex-col h-full mx-auto flex pt-5 flex-grow w-full  mb-40 rounded-lg ">
             {appleMusicToken && musicKitInstance && <AppleDashboard />}
         </div>
     )

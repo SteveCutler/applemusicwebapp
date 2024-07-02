@@ -8,7 +8,7 @@ import SidebarPlaylists from './SidebarPlaylists'
 import { LogOut } from 'lucide-react'
 import FetchRecentHistory from '../Apple/FetchRecentHistory'
 import LogoutButton from './LogoutButton'
-import SidebarSongHistory from './SidebarSongHistory'
+// import SidebarSongHistory from './SidebarSongHistory'
 import SidebarFavouriteSongs from './SidebarFavouriteSongs'
 import { CiCirclePlus } from 'react-icons/ci'
 import { IoSettingsSharp } from 'react-icons/io5'
@@ -158,7 +158,7 @@ const Sidebar = () => {
                             <BiSolidPlaylist style={style} />
                         </div>
                     </div>
-                    <SidebarSongHistory />
+                    {/* <SidebarSongHistory /> */}
                     <SidebarPlaylists />
                     <SidebarFavouriteSongs />
                     <SidebarActivity type={viewType} />

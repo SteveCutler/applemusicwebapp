@@ -266,10 +266,12 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         <h3 className="truncate">
                             {albumItem.attributes.artistName}
                         </h3>
-                        {releaseDate && (
+                        {releaseDate ? (
                             <h3 className="text-sm font-bold ">
                                 {releaseDate.split('-')[0]}
                             </h3>
+                        ) : (
+                            <h1></h1>
                         )}
                     </div>
 
