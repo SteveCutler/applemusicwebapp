@@ -211,9 +211,9 @@ const Track: React.FC<TrackPropTypes> = ({
             >
                 {timeLeft()}
             </div>
-            <div className="flex justify-center w-2/3 gap-3">
+            <div className="flex justify-center w-2/3 gap-1">
                 <div
-                    className={`truncate 
+                    className={`truncate w-fit
                         ${
                             isPlaying && songId === currentSongId
                                 ? 'font-bold text-slate-300'
@@ -223,9 +223,9 @@ const Track: React.FC<TrackPropTypes> = ({
                 >
                     {trackName}
                 </div>
-                <p className="text-slate-100"> / </p>
+                {/* <p className="text-slate-100"> / </p> */}
                 <div
-                    className={`truncate 
+                    className={`truncate w-1/2
                         ${
                             isPlaying && songId === currentSongId
                                 ? 'font-bold text-slate-200'

@@ -1,10 +1,3 @@
-inspired by Spotify layout?
-
-Settings menu
-
-Design a layout and create the tailwind
-Keep on with context API but later migrate it over the Zustand
-
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
 
@@ -32,6 +25,8 @@ like/follow artist
 ACTIVITY Page, most recently followed artists, top release or recent releases from them, recent liked songs, recent liked albums
 up next queue songs don't play correct song when clicked
 get library to load while on the homepage to decrease load times, but only after everything else i loaded
+
+remove name and username from signup form and user table
 
 sidebar inspiration rom spotify:
 fav songs list pinned to top

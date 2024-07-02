@@ -109,13 +109,14 @@ const FetchRecentlyAddedToLib = () => {
 
     // const musicKitLoaded = useMusicKit()
     const { musicInstance: music } = useMusickitContext()
+    const recent: RecentlyAddedItem[] = []
 
     useEffect(() => {
         const fetchRecentlyAddedToLib = async (url: string) => {
             if (musicKitInstance) {
                 try {
                     console.log(music)
-                    const queryParameters = { l: 'en-us', limit: 5 }
+                    const queryParameters = { l: 'en-us', limit: 10 }
                     const res = await musicKitInstance.api.music(
                         url,
                         queryParameters
@@ -127,16 +128,20 @@ const FetchRecentlyAddedToLib = () => {
                     // console.log(res)
 
                     const data: RecentlyAddedItem[] = await res.data.data
-                    setRecentlyAddedToLib(
-                        (prevData: RecentlyAddedItem[] = []) => {
-                            const updatedData = [...prevData, ...data]
-                            return updatedData.slice(0, 30) // Limit to 30 items
-                        }
-                    )
+                    recent.push(...data)
+
+                    console.log('recent lib: ', recent)
+                    // setRecentlyAddedToLib((prevData: RecentlyAddedItem[]) => {
+                    //     const updatedData = [...prevData, ...data]
+                    //     console.log('updated data: ', updatedData)
+                    //     return updatedData.slice(0, 30) // Limit to 30 items
+                    // })
 
                     // Check if there is a next URL for pagination and the current data length is less than 30
-                    if (res.data.next && recentlyAddedToLib.length < 30) {
+                    if (res.data.next && recent.length <= 20) {
                         await fetchRecentlyAddedToLib(res.data.next)
+                    } else {
+                        setRecentlyAddedToLib(recent)
                     }
                 } catch (error: any) {
                     console.error(error)
@@ -150,7 +155,7 @@ const FetchRecentlyAddedToLib = () => {
         if (musicKitInstance) {
             fetchRecentlyAddedToLib('/v1/me/library/recently-added')
         }
-    }, [musicKitInstance, setRecentlyAddedToLib])
+    }, [musicKitInstance])
 
     return { loading, error }
 }

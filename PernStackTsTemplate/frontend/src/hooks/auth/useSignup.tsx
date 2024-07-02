@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useAuthContext } from '../../context/AuthContext'
 import toast from 'react-hot-toast'
+import { useNavigate } from 'react-router-dom'
+import { useStore } from '../../store/store'
 
 type SignupInputs = {
     fullName: string
@@ -12,7 +14,11 @@ type SignupInputs = {
 
 const useSignup = () => {
     const [loading, setLoading] = useState(false)
-    const { setAuthUser } = useAuthContext()
+    const { authorizeBackend } = useStore(state => ({
+        authorizeBackend: state.authorizeBackend,
+    }))
+    // const { setAuthUser } = useAuthContext()
+    const navigate = useNavigate()
 
     const signup = async (inputs: SignupInputs) => {
         try {
@@ -28,7 +34,9 @@ const useSignup = () => {
 
             if (!res.ok) throw new Error(data.error)
             toast.success('New account created!')
-            setAuthUser(data)
+            await authorizeBackend()
+            navigate('/')
+            // setAuthUser(data)
         } catch (error: any) {
             console.error(error.message)
             toast.error('Please fill in all fields')
