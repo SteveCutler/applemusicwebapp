@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
+import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 interface AlbumPropTypes {
     playlistItem: playlist
@@ -198,13 +199,15 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({ playlistItem, carousel }) => {
             title={`${playlistItem.attributes.name}`}
         >
             <div className="relative z-1 w-full shadow-lg">
-                {playlistItem.attributes.artwork?.url && (
+                {playlistItem.attributes.artwork?.url ? (
                     <img
                         src={constructImageUrl(
                             playlistItem.attributes.artwork?.url,
                             600
                         )}
                     />
+                ) : (
+                    <img src={defaultPlaylistArtwork} />
                 )}
 
                 <div
