@@ -14,7 +14,7 @@ import { CiCirclePlus } from 'react-icons/ci'
 import { IoSettingsSharp } from 'react-icons/io5'
 import { useStore } from '../../store/store'
 import SidebarActivity from './Activity'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { FaHeartbeat } from 'react-icons/fa'
 import { TbHistory } from 'react-icons/tb'
 import { MdLibraryMusic } from 'react-icons/md'
@@ -27,9 +27,51 @@ const Sidebar = () => {
     FetchRecentHistory()
 
     const style = { fontSize: '1.5rem' }
-    const { queueToggle } = useStore(state => ({
-        queueToggle: state.queueToggle,
-    }))
+    const { queueToggle, albums, backendToken, setAlbums, appleMusicToken } =
+        useStore(state => ({
+            queueToggle: state.queueToggle,
+            backendToken: state.backendToken,
+            setAlbums: state.setAlbums,
+            albums: state.albums,
+            appleMusicToken: state.appleMusicToken,
+        }))
+
+    const userId = backendToken
+
+    const fetchLibrary = async () => {
+        console.log('fetching library...')
+        // setLoading(true)
+        try {
+            const res = await fetch(
+                'http://localhost:5000/api/apple/get-library',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                    }),
+                    credentials: 'include',
+                }
+            )
+            console.log(res)
+
+            const data = await res.json()
+            // console.log(data)
+            setAlbums(data.albums)
+
+            // setLoading(false)
+        } catch (error) {
+            // setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        if (!albums && appleMusicToken) {
+            fetchLibrary()
+        }
+    }, [appleMusicToken])
 
     const [viewType, setViewType] = useState('likes')
 

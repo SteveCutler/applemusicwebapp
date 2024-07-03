@@ -105,9 +105,7 @@ const Library = () => {
             initialize()
         }
 
-        if (!albums && appleMusicToken) {
-            fetchLibrary()
-        } else {
+        if (albums && appleMusicToken) {
             setLibrarySearchResults(albums)
         }
 
@@ -127,7 +125,7 @@ const Library = () => {
                 : null
             setLibrarySearchResults(searchResults)
         }
-    }, [musicKitInstance, appleMusicToken, librarySearchTerm])
+    }, [musicKitInstance, appleMusicToken, albums, librarySearchTerm])
 
     const updateLibrary = async () => {
         setLoading(true)

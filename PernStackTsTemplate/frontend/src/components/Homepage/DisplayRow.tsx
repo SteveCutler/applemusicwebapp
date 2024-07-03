@@ -156,7 +156,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
 
     return (
         <div className="flex-col flex w-full items-center mb-5    ">
-            <h1 className="text-lg select-none flex gap-2 w-full  pb-2 text-slate-800  font-bold justify-start">
+            <h1 className="text-lg select-none flex gap-2 w-full  text-slate-800  font-bold justify-start">
                 <div className="h-1/12 ">
                     {url && <img src={url} width="70px" />}
                 </div>
