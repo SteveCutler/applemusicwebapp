@@ -81,7 +81,12 @@ const Song = () => {
         // await retrieveAlbumTracks()
     }
 
-    const styleButton = { fontSize: '3rem', color: 'royalblue ' }
+    const styleButton = {
+        fontSize: '3rem',
+        color: 'royalblue ',
+        // backgroundColor: 'black',
+        // borderRadius: '9999xp',
+    }
 
     const style = { fontSize: '1.5em' }
     if (loading) {
@@ -116,7 +121,7 @@ const Song = () => {
                             // onClick={
                             //     type === 'library-albums' ? setTerm : undefined
                             // }
-                            className="text-2xl hover:text-blue-200 hover:cursor-pointer font-normal"
+                            className="text-2xl  hover:text-blue-200 hover:cursor-pointer font-normal"
                         >
                             {song.attributes.albumName}
                         </Link>
@@ -158,15 +163,7 @@ const Song = () => {
                                 await loadPlayer()
                             }}
                         >
-                            {isPlaying &&
-                            musicKitInstance?.nowPlayingItem &&
-                            playlist.includes(
-                                musicKitInstance?.nowPlayingItem
-                            ) ? (
-                                <FaRegCirclePause style={styleButton} />
-                            ) : (
-                                <FaCirclePlay style={styleButton} />
-                            )}
+                            <FaCirclePlay style={styleButton} />
                         </div>
                     </div>
                     <div className=" w-1/2">

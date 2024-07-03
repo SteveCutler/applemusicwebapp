@@ -184,7 +184,7 @@ const FetchArtistData = (id: string | undefined) => {
                 } else {
                     try {
                         const singles = await musicKitInstance.api.music(
-                            `/v1/catalog/us/artists/${id}/view/singles`
+                            `/v1/catalog/ca/artists/${id}/view/singles`
                         )
 
                         const singlesData: Array<Song> = await singles.data.data

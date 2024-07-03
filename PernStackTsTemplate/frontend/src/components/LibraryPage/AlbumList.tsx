@@ -45,7 +45,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
 
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap w-full gap-1 justify-around  ">
+            <div className="flex flex-wrap w-full gap-y-10 gap-x-1 pb-2 justify-around  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (
@@ -70,8 +70,11 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
             <div>
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
-                    albums.map(album => (
+                    albums.map((album, index) => (
                         <AlbumRow
+                            key={index}
+                            first={index === 0}
+                            last={index === albums.length}
                             albumId={album.id}
                             name={album.attributes.name}
                             artistName={album.attributes.artistName}

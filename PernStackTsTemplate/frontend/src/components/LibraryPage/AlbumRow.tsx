@@ -9,6 +9,9 @@ import FetchAlbumTracks from '../Apple/FetchAlbumTracks'
 interface AlbumProps {
     // id: string
     albumId: string
+    index: number
+    first: boolean
+    last: boolean
     // href: string
     // type: string
     name: string
@@ -37,6 +40,9 @@ const AlbumRow: React.FC<AlbumProps> = ({
     albumId,
     // href,
     // type,
+    index,
+    first,
+    last,
     name,
     artistName,
     artworkUrl,
@@ -105,7 +111,7 @@ const AlbumRow: React.FC<AlbumProps> = ({
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/{{storefrontId}}/albums/${albumId}/tracks`,
+                        `/v1/catalog//ca/albums/${albumId}/tracks`,
 
                         queryParameters
                     )
@@ -146,7 +152,9 @@ const AlbumRow: React.FC<AlbumProps> = ({
         <>
             <Link
                 to={`/album/${albumId}`}
-                className="flex border-2 border-slate-400 hover:border-slate-300 hover:scale{1.01} hover:text-slate-200 my-3 rounded-lg px-3 items-center justify-between h-10"
+                className={`flex border-b-2 w-11/12 mx-auto ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 bg-black  p-2 justify-between items-center border-slate-700`}
+
+                // className="flex border-2 border-slate-400 hover:border-slate-300 hover:scale{1.01} hover:text-slate-200 my-3 rounded-lg px-3 items-center justify-between h-10"
             >
                 {artworkUrl ? (
                     <img src={artworkUrl} width="25" height="25" />

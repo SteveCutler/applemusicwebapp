@@ -106,7 +106,7 @@ const AppleDashboard = () => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/us/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`,
+                            `/v1/catalog/ca/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`,
 
                             queryParameters
                         )

@@ -188,7 +188,7 @@ const FetchArtistData = (id: string | undefined) => {
                     try {
                         const appearsOnAlbums =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/us/artists/${id}/view/appears-on-albums`
+                                `/v1/catalog/ca/artists/${id}/view/appears-on-albums`
                             )
 
                         const appearsOnAlbumsData: Array<AlbumData> =

@@ -186,7 +186,7 @@ const FetchArtistData = (id: string | undefined) => {
                 } else {
                     try {
                         const latestRelease = await musicKitInstance.api.music(
-                            `/v1/catalog/us/artists/${id}/view/latest-release`
+                            `/v1/catalog/ca/artists/${id}/view/latest-release`
                         )
 
                         const latestReleaseData: Array<AlbumData> =

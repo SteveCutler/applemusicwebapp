@@ -94,7 +94,7 @@ const Search = () => {
                     }
 
                     const response = await musicKitInstance.api.music(
-                        `/v1/catalog/us/search`,
+                        `/v1/catalog/ca/search`,
                         queryParameters
                     )
                     // console.log(response)

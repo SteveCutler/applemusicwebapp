@@ -105,16 +105,16 @@ const FetchSongData = (songId: string | undefined) => {
                         console.log('fetching song data')
                         // const queryParameters = { l: 'en-us' }
                         // const res = await musicKitInstance.api.music(
-                        //     `/v1/catalog/us/songs/${songId}`,
+                        //     `/v1/catalog/ca/songs/${songId}`,
 
                         //     queryParameters
                         // )
 
                         const resAlbum = await musicKitInstance.api.music(
-                            `/v1/catalog/us/songs/${songId}/albums`
+                            `/v1/catalog/ca/songs/${songId}/albums`
                         )
                         const resArtist = await musicKitInstance.api.music(
-                            `/v1/catalog/us/songs/${songId}/artists`
+                            `/v1/catalog/ca/songs/${songId}/artists`
                         )
 
                         // console.log('track album: ', await resAlbum)

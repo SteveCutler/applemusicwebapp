@@ -71,12 +71,12 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const trackRes = await musicKitInstance.api.music(
-                            `/v1/catalog/us/playlists/${playlistId}/tracks`,
+                            `/v1/catalog/ca/playlists/${playlistId}/tracks`,
 
                             queryParameters
                         )
                         const playlistRes = await musicKitInstance.api.music(
-                            `/v1/catalog/us/playlists/${playlistId}/`,
+                            `/v1/catalog/ca/playlists/${playlistId}/`,
 
                             queryParameters
                         )

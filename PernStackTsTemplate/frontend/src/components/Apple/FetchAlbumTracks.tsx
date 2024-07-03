@@ -93,7 +93,7 @@ const FetchAlbumTracks = async (albumId: string | undefined) => {
             try {
                 const queryParameters = { l: 'en-us' }
                 const res = await musicKitInstance.api.music(
-                    `/v1/catalog/{{storefrontId}}/albums/${albumId}/tracks`,
+                    `/v1/catalog//ca/albums/${albumId}/tracks`,
 
                     queryParameters
                 )

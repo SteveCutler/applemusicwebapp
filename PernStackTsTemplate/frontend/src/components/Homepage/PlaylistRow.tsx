@@ -76,7 +76,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                 try {
                     const queryParameters = { l: 'en-us' }
                     const trackRes = await musicKitInstance?.api.music(
-                        `/v1/catalog/us/playlists/${id}/tracks`,
+                        `/v1/catalog/ca/playlists/${id}/tracks`,
 
                         queryParameters
                     )

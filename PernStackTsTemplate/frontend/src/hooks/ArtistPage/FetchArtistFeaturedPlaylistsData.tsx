@@ -188,7 +188,7 @@ const FetchArtistData = (id: string | undefined) => {
                     try {
                         const featuredPlaylists =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/us/artists/${id}/view/featured-playlists`
+                                `/v1/catalog/ca/artists/${id}/view/featured-playlists`
                             )
 
                         const featuredPlaylistsData: Array<playlist> =

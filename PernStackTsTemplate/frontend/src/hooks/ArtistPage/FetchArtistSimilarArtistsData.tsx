@@ -186,7 +186,7 @@ const FetchArtistData = (id: string | undefined) => {
                 } else {
                     try {
                         const similarArtists = await musicKitInstance.api.music(
-                            `/v1/catalog/us/artists/${id}/view/similar-artists`
+                            `/v1/catalog/ca/artists/${id}/view/similar-artists`
                         )
 
                         const similarArtistsData: Array<Artist> =

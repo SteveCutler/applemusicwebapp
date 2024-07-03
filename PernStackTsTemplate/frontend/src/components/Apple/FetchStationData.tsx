@@ -99,7 +99,7 @@ const FetchStationData = (stationId: string | undefined) => {
                 if (stationId.startsWith('ra.u')) {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/us/stations/${stationId}`
+                            `/v1/catalog/ca/stations/${stationId}`
                         )
 
                         const data = await res.data.data
@@ -115,7 +115,7 @@ const FetchStationData = (stationId: string | undefined) => {
                 } else {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/us/stations/${stationId}`
+                            `/v1/catalog/ca/stations/${stationId}`
                         )
 
                         // console.log(res)

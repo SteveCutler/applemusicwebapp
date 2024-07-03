@@ -130,7 +130,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/{{storefrontId}}/albums/${albumItem.id}/tracks`,
+                        `/v1/catalog//ca/albums/${albumItem.id}/tracks`,
 
                         queryParameters
                     )

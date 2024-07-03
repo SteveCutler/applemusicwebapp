@@ -130,7 +130,7 @@ const Album = () => {
 
             try {
                 const featuredAlbums = await musicKitInstance.api.music(
-                    `/v1/catalog/us/artists/${artistId}/view/featured-albums`
+                    `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
                 )
 
                 const featuredAlbumsData: Array<AlbumType> =
@@ -152,7 +152,7 @@ const Album = () => {
 
             try {
                 const similarArtists = await musicKitInstance.api.music(
-                    `/v1/catalog/us/artists/${artistId}/view/similar-artists`
+                    `/v1/catalog/ca/artists/${artistId}/view/similar-artists`
                 )
                 console.log('similarArtist: ', similarArtists)
 

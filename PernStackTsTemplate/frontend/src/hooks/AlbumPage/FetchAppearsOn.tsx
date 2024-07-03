@@ -76,7 +76,7 @@ const FetchAppearsOn = (albumId: string | undefined) => {
 
         try {
             const res = await musicKitInstance?.api.music(
-                `v1/catalog/us/albums/${albumId}/view/appears-on`
+                `v1/catalog/ca/albums/${albumId}/view/appears-on`
             )
 
             const data = await res.data.data

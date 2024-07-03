@@ -256,7 +256,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
                         try {
                             const queryParameters = { l: 'en-us' }
                             const res = await musicKitInstance.api.music(
-                                `/v1/catalog/{{storefrontId}}/albums/${object.id}/tracks`,
+                                `/v1/catalog//ca/albums/${object.id}/tracks`,
 
                                 queryParameters
                             )

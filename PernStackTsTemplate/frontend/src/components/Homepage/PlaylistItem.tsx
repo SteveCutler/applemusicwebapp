@@ -127,7 +127,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                 try {
                     // const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/us/playlists/${playlistItem.id}/tracks`
+                        `/v1/catalog/ca/playlists/${playlistItem.id}/tracks`
                     )
 
                     const data: Song[] = await res.data.data

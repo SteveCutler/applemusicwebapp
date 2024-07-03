@@ -109,12 +109,12 @@ const FetchAlbumData = (albumId: string | undefined) => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/us/albums/${albumId}`,
+                            `/v1/catalog/ca/albums/${albumId}`,
 
                             queryParameters
                         )
                         const artistRes = await musicKitInstance.api.music(
-                            `/v1/catalog/us/albums/${albumId}/artists`,
+                            `/v1/catalog/ca/albums/${albumId}/artists`,
 
                             queryParameters
                         )

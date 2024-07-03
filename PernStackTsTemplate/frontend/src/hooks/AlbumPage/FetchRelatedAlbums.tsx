@@ -76,7 +76,7 @@ const FetchRelatedAlbums = (albumId: string | undefined) => {
 
         try {
             const res = await musicKitInstance?.api.music(
-                `v1/catalog/us/albums/${albumId}/view/related-albums`
+                `v1/catalog/ca/albums/${albumId}/view/related-albums`
             )
 
             const catalogId = await res.data.data
