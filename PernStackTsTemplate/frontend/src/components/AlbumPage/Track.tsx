@@ -215,7 +215,7 @@ const Track: React.FC<TrackPropTypes> = ({
                 },
             }}
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-b-2 w-full  ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
+            className={`flex border-b-2 w-full  ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && song.id === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
         >
             <div
                 className={

@@ -69,16 +69,25 @@ const FetchSongData = (songId: string | undefined) => {
                     try {
                         //track data api call
                         const res = await musicKitInstance.api.music(
-                            `/v1/me/library/songs/${songId}`
+                            `/v1/me/library/songs/${songId}/catalog`
                         )
                         // track album data api call
+
+                        const catSongId = await res.data.data[0].id
+
                         const resAlbum = await musicKitInstance.api.music(
-                            `/v1/me/library/songs/${songId}/albums`
+                            `/v1/catalog/ca/songs/${catSongId}/albums`
                         )
-                        // track artist data api call
                         const resArtist = await musicKitInstance.api.music(
-                            `/v1/me/library/songs/${songId}/artists`
+                            `/v1/catalog/ca/songs/${catSongId}/artists`
                         )
+
+                        // const resAlbum = await musicKitInstance.api.music(
+                        //     `/v1/me/library/songs/${songId}/albums`
+                        // )
+                        // const resArtist = await musicKitInstance.api.music(
+                        //     `/v1/me/library/songs/${songId}/artists`
+                        // )
 
                         // console.log('track album: ', await resAlbum)
 

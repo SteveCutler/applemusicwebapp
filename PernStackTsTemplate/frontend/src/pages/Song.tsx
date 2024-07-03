@@ -139,8 +139,8 @@ const Song = () => {
                         </Link>
                     )}
                 </div>
-                <div className="lg:flex flex-col w-full justify-between gap-4 py-3  ">
-                    <div className="relative h-fit w-fit">
+                <div className="lg:flex  w-full justify-between gap-4 py-3  ">
+                    <div className="relative w-1/2">
                         {song.attributes.artwork?.url ? (
                             <img
                                 src={constructImageUrl(
@@ -148,6 +148,7 @@ const Song = () => {
                                     500
                                 )}
                                 alt=""
+                                className="w-full"
                             />
                         ) : (
                             <img src={defaultPlaylistArtwork} />
