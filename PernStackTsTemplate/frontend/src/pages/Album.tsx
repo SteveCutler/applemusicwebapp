@@ -12,6 +12,7 @@ import { useStore } from '../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import DisplayRow from '../components/Homepage/DisplayRow'
+import AlbumItem from '../components/Homepage/AlbumItem'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -106,11 +107,13 @@ const Album = () => {
         setSearchTerm,
         musicKitInstance,
         authorizeMusicKit,
+        queueToggle,
         isPlaying,
         playlist,
         setPlaylist,
     } = useStore(state => ({
         setSearchTerm: state.setSearchTerm,
+        queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
         musicKitInstance: state.musicKitInstance,
         isPlaying: state.isPlaying,
@@ -172,7 +175,7 @@ const Album = () => {
         }
     }, [artistId, musicKitInstance])
 
-    // console.log('album data: ', albumData)
+    console.log('album data: ', albumData)
     const constructImageUrl = (url: string, size: number) => {
         return url
             .replace('{w}', size.toString())
@@ -221,7 +224,7 @@ const Album = () => {
                     <Link
                         to={
                             type === 'library-albums'
-                                ? `/search/`
+                                ? `/artist/${albumData[0].relationships.artists[0].id}`
                                 : `/artist/${artistId}`
                         }
                         onClick={
@@ -232,7 +235,7 @@ const Album = () => {
                         {albumData.attributes.artistName}
                     </Link>
                 </div>
-                <div className="flex w-full justify-between gap-4 py-3  ">
+                <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">
                     <div className="relative h-fit w-fit">
                         <img
                             className=""
@@ -243,7 +246,20 @@ const Album = () => {
                             alt=""
                         />
                         <div
-                            className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className=" absolute bottom-5 left-5 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            onClick={async e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                                // await FetchAlbumData(albumId)
+                                // handlePlayPause()
+
+                                await loadPlayer()
+                            }}
+                        >
+                            <FaCirclePlay style={styleButton} />
+                        </div>
+                        <div
+                            className=" absolute bottom-5 right-5- hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior
@@ -256,7 +272,7 @@ const Album = () => {
                             <FaCirclePlay style={styleButton} />
                         </div>
                     </div>
-                    <div className=" w-1/2">
+                    <div className=" w-full max-h-96 overflow-y-auto lg:w-1/2 ">
                         <TrackDisplay
                             albumTracks={albumData.relationships.tracks.data}
                         />
@@ -265,34 +281,103 @@ const Album = () => {
                 </div>
 
                 {relatedAlbums && (
+                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                        Check out these similar albums:
+                    </h2>
+                )}
+                {relatedAlbums && (
+                    <div className="w-full justify-left flex flex-wrap">
+                        {relatedAlbums.map(album => (
+                            <>
+                                <AlbumItem
+                                    albumItem={album}
+                                    width={
+                                        queueToggle
+                                            ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                            : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                    }
+                                />
+                            </>
+                            // <p className="">{album.attributes.name}</p>
+                        ))}
+                    </div>
+                )}
+
+                {/* {relatedAlbums && (
                     <div className="w-full flex  mx-auto overflow-auto">
                         <DisplayRow
                             title={'Similar Albums:'}
                             albums={relatedAlbums}
                         />
                     </div>
+                )} */}
+
+                {featuredAlbumsData && (
+                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                        Featured albums:
+                    </h2>
                 )}
                 {featuredAlbumsData && (
-                    <div>
-                        <DisplayRow
-                            title={`More by ${albumData.attributes.artistName}`}
-                            albums={featuredAlbumsData}
-                            width={'w-full'}
-                        />
+                    <div className="w-full justify-left flex flex-wrap">
+                        {featuredAlbumsData.map(album => (
+                            <>
+                                <AlbumItem
+                                    albumItem={album}
+                                    width={
+                                        queueToggle
+                                            ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                            : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                    }
+                                />
+                            </>
+                            // <p className="">{album.attributes.name}</p>
+                        ))}
                     </div>
                 )}
 
                 {similarArtistsData && (
-                    <div>
-                        <DisplayRow
-                            title={'Similar Artists:'}
-                            albums={similarArtistsData}
-                        />
+                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                        Similar artists:
+                    </h2>
+                )}
+                {similarArtistsData && (
+                    <div className="w-full justify-left flex flex-wrap">
+                        {similarArtistsData.map(album => (
+                            <>
+                                <AlbumItem
+                                    albumItem={album}
+                                    width={
+                                        queueToggle
+                                            ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                            : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                    }
+                                />
+                            </>
+                            // <p className="">{album.attributes.name}</p>
+                        ))}
                     </div>
                 )}
+
                 {appearsOn && (
-                    <div>
-                        <DisplayRow title={'Appears On:'} albums={appearsOn} />
+                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                        Appears on these playlists:
+                    </h2>
+                )}
+                {appearsOn && (
+                    <div className="w-full justify-left flex flex-wrap">
+                        {appearsOn.map(album => (
+                            <>
+                                <AlbumItem
+                                    albumItem={album}
+                                    width={
+                                        queueToggle
+                                            ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                            : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                    }
+                                />
+                            </>
+                            // <p className="">{album.attributes.name}</p>
+                        ))}
                     </div>
                 )}
             </div>

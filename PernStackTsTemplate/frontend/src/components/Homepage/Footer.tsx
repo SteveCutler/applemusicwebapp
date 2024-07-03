@@ -79,9 +79,9 @@ function Footer() {
                 artistName: item.attributes.artistName,
                 albumName: item.attributes.albumName,
                 durationInMillis: item.attributes.durationInMillis,
-                playParams: {
-                    catalogId: item.attributes.playParams.catalogId ?? item.id,
-                },
+                // playParams: {
+                //     catalogId: item.attributes.playParams.catalogId ?? '',
+                // },
                 artwork: {
                     bgColor: item.attributes.artwork.bgColor ?? '',
                     url: item.attributes.artwork.url ?? '',
