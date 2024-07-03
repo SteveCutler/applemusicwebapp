@@ -3,7 +3,7 @@ import { FaSearch } from 'react-icons/fa'
 import { LuLibrary } from 'react-icons/lu'
 import { ImStack } from 'react-icons/im'
 import { FaHistory } from 'react-icons/fa'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import SidebarPlaylists from './SidebarPlaylists'
 import { LogOut } from 'lucide-react'
 import FetchRecentHistory from '../Apple/FetchRecentHistory'
@@ -19,7 +19,7 @@ import { FaHeartbeat } from 'react-icons/fa'
 import { TbHistory } from 'react-icons/tb'
 import { MdLibraryMusic } from 'react-icons/md'
 import { IoLibrary } from 'react-icons/io5'
-import { BiSolidPlaylist } from 'react-icons/bi'
+import { RiPlayListFill, RiPlayListAddLine } from 'react-icons/ri'
 import { MdOutlineDarkMode } from 'react-icons/md'
 import { MdDarkMode } from 'react-icons/md'
 import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
@@ -27,8 +27,13 @@ import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
 const Sidebar = () => {
     FetchRecentlyAddedToLib()
     FetchRecentHistory()
+    const [isHovered, setIsHovered] = useState(false)
 
     const style = { fontSize: '1.5rem' }
+    const stylePlaylist = {
+        fontSize: '1.5rem',
+        color: 'white',
+    }
     const { queueToggle, albums, backendToken, setAlbums, appleMusicToken } =
         useStore(state => ({
             queueToggle: state.queueToggle,
@@ -39,6 +44,7 @@ const Sidebar = () => {
         }))
 
     const userId = backendToken
+    const navigate = useNavigate()
 
     const fetchLibrary = async () => {
         console.log('fetching library...')
@@ -67,6 +73,14 @@ const Sidebar = () => {
         } catch (error) {
             // setLoading(false)
         }
+    }
+
+    const handleMouseEnter = () => {
+        setIsHovered(true)
+    }
+
+    const handleMouseLeave = () => {
+        setIsHovered(false)
     }
 
     useEffect(() => {
@@ -198,11 +212,22 @@ const Sidebar = () => {
                         </div>
 
                         <div
-                            className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'playlists' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
-                            onClick={() => setViewType('playlists')}
-                            title="Playlists"
+                            onClick={() => {
+                                if (viewType === 'playlists') {
+                                    navigate('/new-playlist/')
+                                }
+                                setViewType('playlists')
+                            }}
+                            className={`flex w-1/4 justify-center ${viewType == 'playlists' && 'cursor-pointer active:scale-95'}  rounded-t-md py-1 gap-1 ${viewType === 'playlists' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
+                            title={`${viewType == 'playlists' ? 'Create Playlist' : 'Playlists'}`}
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
                         >
-                            <BiSolidPlaylist style={style} />
+                            {isHovered && viewType === 'playlists' ? (
+                                <RiPlayListAddLine style={stylePlaylist} />
+                            ) : (
+                                <RiPlayListFill style={style} />
+                            )}{' '}
                         </div>
                     </div>
                     {/* <SidebarSongHistory /> */}

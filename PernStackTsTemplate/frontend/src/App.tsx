@@ -18,6 +18,7 @@ import Song from './pages/Song'
 import Station from './pages/Station'
 import QueueDisplay from './components/Homepage/QueueDisplay'
 import Header from './components/Homepage/Header'
+import NewPlaylist from './pages/NewPlaylist'
 
 function App() {
     const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
@@ -94,6 +95,16 @@ function App() {
                             element={
                                 backendToken || authToken ? (
                                     <Search />
+                                ) : (
+                                    <Login />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/new-playlist/"
+                            element={
+                                backendToken || authToken ? (
+                                    <NewPlaylist />
                                 ) : (
                                     <Login />
                                 )

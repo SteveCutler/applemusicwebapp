@@ -285,7 +285,10 @@ const Album = () => {
                             </div>
                         </div>
                     </div>
-                    <div className=" w-full max-h-96 overflow-y-auto lg:w-1/2 ">
+                    <div
+                        className=" w-full  overflow-y-auto lg:w-1/2 "
+                        style={{ maxHeight: '600px' }}
+                    >
                         <TrackDisplay
                             albumTracks={albumData.relationships.tracks.data}
                         />
