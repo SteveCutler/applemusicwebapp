@@ -13,10 +13,11 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import DisplayRow from '../components/Homepage/DisplayRow'
 import AlbumItem from '../components/Homepage/AlbumItem'
+import OptionsModal from '../components/Homepage/OptionsModal'
 
 type AlbumType = {
     attributes: AttributeObject
-    relationships: RelationshipObject
+    relationships?: RelationshipObject
     id: string
 }
 
@@ -31,6 +32,11 @@ type AttributeObject = {
 }
 type RelationshipObject = {
     tracks: TracksObject
+    artists?: Array<ArtistObject>
+}
+
+type ArtistObject = {
+    id: string
 }
 
 type TracksObject = {
@@ -187,8 +193,15 @@ const Album = () => {
     }
 
     const loadPlayer = async () => {
-        console.log('track data: ', albumData.relationships.tracks.data)
-        setPlaylist(albumData.relationships.tracks.data, 0, true)
+        // console.log('track data: ', albumData.relationships.tracks.data)
+        if (musicKitInstance) {
+            console.log('setting playlist and start position')
+            await musicKitInstance.setQueue({
+                album: albumData.id,
+                startWith: 0,
+                startPlaying: true,
+            })
+        }
         // await retrieveAlbumTracks()
     }
 
@@ -221,22 +234,24 @@ const Album = () => {
                     <h1 className="text-3xl w-1/2 font-bold">
                         {albumData.attributes.name}
                     </h1>
-                    <Link
-                        to={
-                            type === 'library-albums'
-                                ? `/artist/${albumData[0].relationships.artists[0].id}`
-                                : `/artist/${artistId}`
-                        }
-                        onClick={
-                            type === 'library-albums' ? setTerm : undefined
-                        }
-                        className="text-2xl hover:text-blue-200 text-slate-800  hover:cursor-pointer font-bold"
-                    >
-                        {albumData.attributes.artistName}
-                    </Link>
+                    {albumData.relationships.artists.data[0].id && (
+                        <Link
+                            to={
+                                type === 'library-albums'
+                                    ? `/artist/${albumData.relationships.artists.data[0].id}`
+                                    : `/artist/${artistId}`
+                            }
+                            onClick={
+                                type === 'library-albums' ? setTerm : undefined
+                            }
+                            className="text-2xl hover:text-blue-200 text-slate-800  hover:cursor-pointer font-bold"
+                        >
+                            {albumData.attributes.artistName}
+                        </Link>
+                    )}
                 </div>
                 <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">
-                    <div className="relative h-fit w-fit">
+                    <div className="relative lg:w-1/2 w-full h-fit ">
                         <img
                             className=""
                             src={constructImageUrl(
@@ -258,18 +273,16 @@ const Album = () => {
                         >
                             <FaCirclePlay style={styleButton} />
                         </div>
-                        <div
-                            className=" absolute bottom-5 right-5- hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
-                            onClick={async e => {
-                                e.preventDefault()
-                                e.stopPropagation() // Prevents the link's default behavior
-                                // await FetchAlbumData(albumId)
-                                // handlePlayPause()
-
-                                await loadPlayer()
-                            }}
-                        >
-                            <FaCirclePlay style={styleButton} />
+                        <div className="absolute bottom-4 right-4">
+                            <div
+                                onClick={e => {
+                                    e.preventDefault()
+                                    e.stopPropagation() // Prevents the link's default behavior
+                                }}
+                                className=""
+                            >
+                                <OptionsModal big={true} object={albumData} />
+                            </div>
                         </div>
                     </div>
                     <div className=" w-full max-h-96 overflow-y-auto lg:w-1/2 ">

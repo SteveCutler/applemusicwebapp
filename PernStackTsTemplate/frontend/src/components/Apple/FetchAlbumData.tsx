@@ -3,23 +3,33 @@ import useMusicKit from './LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 
-type AlbumType = {
+type AlbumTypeObject = {
     attributes?: AttributeObject
-    relationships: RelationshipObject
+    relationships?: RelationshipObject
     id: string
 }
 
 type AttributeObject = {
     artistName: string
-    artwork: ArtworkObject
+    artwork: {
+        height: Number
+        width: Number
+        url: string
+    }
     dateAdded: string
     genreNames: Array<string>
     name: string
     releaseDate: string
     trackCount: Number
 }
+
 type RelationshipObject = {
     tracks: TracksObject
+    artists?: ArtistObject[]
+}
+
+type ArtistObject = {
+    id: string
 }
 
 type TracksObject = {
@@ -31,27 +41,23 @@ type Track = {
 
 type TrackAttributeObject = {
     artistName: string
-    artwork: ArtworkObject
+    artwork: {
+        height: Number
+        width: Number
+        url: string
+    }
     dateAdded: string
     genreNames: Array<string>
     durationInMillis: Number
     name: string
     releasedDate: string
     trackCount: Number
-    playParams: PlayParameterObject
-}
-
-type PlayParameterObject = {
-    catalogId: string
-    id: string
-    isLibrary: Boolean
-    kind: string
-}
-
-type ArtworkObject = {
-    height: Number
-    width: Number
-    url: string
+    playParams: {
+        catalogId: string
+        id: string
+        isLibrary: Boolean
+        kind: string
+    }
 }
 
 const FetchAlbumData = (albumId: string | undefined) => {
@@ -96,7 +102,7 @@ const FetchAlbumData = (albumId: string | undefined) => {
 
                         const artistId = await artistRes.data.data[0].id
 
-                        const data = await res.data.data
+                        const data: AlbumTypeObject[] = await res.data.data
                         setAlbumData(data[0])
                         setArtistId(artistId)
                     } catch (error: any) {

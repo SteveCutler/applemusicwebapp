@@ -8,6 +8,7 @@ import { IoHeartCircleOutline } from 'react-icons/io5'
 interface OptionsProps {
     object: Song | AlbumType | playlist | Artist
     small?: boolean
+    big?: boolean
 }
 
 interface songDetailsObject {
@@ -98,7 +99,7 @@ type playlist = {
     type: string
 }
 
-const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
+const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
     const {
         musicKitInstance,
@@ -113,6 +114,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
     }))
 
     const userId = backendToken
+    console.log('album', object)
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -184,6 +186,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
     }
 
     const styleSmall = { fontSize: '1rem' }
+    const styleBig = { fontSize: '2.3rem' }
 
     const addFavorite = async (e: React.MouseEvent) => {
         console.log('song: ', object)
@@ -357,6 +360,8 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small }) => {
             >
                 {small ? (
                     <SlOptions style={styleSmall} />
+                ) : big ? (
+                    <SlOptions style={styleBig} />
                 ) : (
                     <SlOptions style={style} />
                 )}

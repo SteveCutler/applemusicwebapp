@@ -161,12 +161,6 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     const playData = async () => {
         if (musicKitInstance) {
-            const albumDescriptor = [
-                {
-                    id: albumItem.id,
-                    type: 'album',
-                },
-            ]
             console.log('setting playlist and start position')
             await musicKitInstance.setQueue({
                 album: albumItem.id,
