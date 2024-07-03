@@ -200,7 +200,7 @@ const Track: React.FC<TrackPropTypes> = ({
     return (
         <div
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-b-2 w-full ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
+            className={`flex border-b-2 w-full  ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
         >
             <div
                 className={
@@ -211,9 +211,9 @@ const Track: React.FC<TrackPropTypes> = ({
             >
                 {timeLeft()}
             </div>
-            <div className="flex justify-center w-2/3 gap-1">
+            <div className="flex justify-center truncate max-w-3/5 gap-1">
                 <div
-                    className={`truncate w-fit
+                    className={` truncate
                         ${
                             isPlaying && songId === currentSongId
                                 ? 'font-bold text-slate-300'
@@ -225,7 +225,7 @@ const Track: React.FC<TrackPropTypes> = ({
                 </div>
                 {/* <p className="text-slate-100"> / </p> */}
                 <div
-                    className={`truncate w-1/2
+                    className={`truncate max-w-1/5
                         ${
                             isPlaying && songId === currentSongId
                                 ? 'font-bold text-slate-200'

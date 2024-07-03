@@ -139,7 +139,7 @@ const Song = () => {
                         </Link>
                     )}
                 </div>
-                <div className="flex w-full justify-between gap-4 py-3  ">
+                <div className="lg:flex flex-col w-full justify-between gap-4 py-3  ">
                     <div className="relative h-fit w-fit">
                         {song.attributes.artwork?.url ? (
                             <img

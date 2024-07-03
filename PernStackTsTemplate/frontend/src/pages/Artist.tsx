@@ -25,12 +25,14 @@ const Artist = () => {
         fetchAppleToken,
         appleMusicToken,
         setPlaylist,
+        queueToggle,
         isPlaying,
         playlist,
         pauseSong,
         playSong,
     } = useStore(state => ({
         setPlaylist: state.setPlaylist,
+        queueToggle: state.queueToggle,
         pauseSong: state.pauseSong,
         playSong: state.playSong,
         isPlaying: state.isPlaying,
@@ -100,12 +102,8 @@ const Artist = () => {
                                 {artistData.attributes.name}
                             </h1>
                         </div>
-                        <div className=" translate-y-4 w-1/2 text-black text-lg font-bold flex justify-end  items-end">
-                            {' '}
-                            Top songs:
-                        </div>
                     </div>
-                    <div className="flex justify-around gap-2 items-start">
+                    <div className="md:flex-row  gap-4 flex flex-col justify-around  items-start">
                         <div className="flex-col flex  relative  ">
                             <img
                                 className="pb-5 "
@@ -148,7 +146,11 @@ const Artist = () => {
                             )}
                         </div>
 
-                        <div className="flex-col w-1/2">
+                        <div className="flex-col w-full md:w-1/2">
+                            <div className=" w-full text-black text-lg font-bold flex justify-start md:justify-end  items-end">
+                                {' '}
+                                TOP SONGS
+                            </div>
                             {topSongsData && (
                                 <div className=" justify-start">
                                     {' '}
@@ -181,17 +183,33 @@ const Artist = () => {
                     )} */}
 
                     {latestReleaseData && (
-                        <div className="w-full flex-col flex mx-20 justify-center">
+                        <div className="w-full flex-col flex  justify-center">
                             <h2 className="pb-3  text-xl text-slate-800 font-bold">
                                 Latest Release:
                             </h2>
                             <div className=" gap-1 justify-left  flex flex-wrap">
                                 {latestReleaseData.map(album => (
                                     <>
-                                        <AlbumItem albumItem={album} />
+                                        <AlbumItem
+                                            albumItem={album}
+                                            width={
+                                                queueToggle
+                                                    ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                                    : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                            }
+                                        />
                                     </>
                                     // <p className="">{album.attributes.name}</p>
                                 ))}
+                                <div className="w-1/2 flex">
+                                    {latestReleaseData[0].attributes
+                                        .editorialNotes
+                                        ? latestReleaseData[0].attributes
+                                              .editorialNotes.standard ??
+                                          latestReleaseData[0].attributes
+                                              .editorialNotes.short
+                                        : ''}
+                                </div>
                             </div>
                         </div>
                     )}
@@ -202,10 +220,17 @@ const Artist = () => {
                         </h2>
                     )}
                     {artistAlbumData && (
-                        <div className="w-full gap-1 justify-center flex flex-wrap">
+                        <div className="w-full justify-left flex flex-wrap">
                             {artistAlbumData.map(album => (
                                 <>
-                                    <AlbumItem albumItem={album} />
+                                    <AlbumItem
+                                        albumItem={album}
+                                        width={
+                                            queueToggle
+                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                        }
+                                    />
                                 </>
                                 // <p className="">{album.attributes.name}</p>
                             ))}
@@ -213,24 +238,66 @@ const Artist = () => {
                     )}
 
                     {similarArtistsData && (
-                        <div className="w-full gap-1 justify-center flex    ">
-                            <>
-                                <DisplayRow
-                                    title={'Similar Artists:'}
-                                    albums={similarArtistsData}
-                                />
-                            </>
+                        <h2 className="p-1 pb-0 text-xl text-slate-800 font-bold">
+                            Similar Artists:
+                        </h2>
+                    )}
+
+                    {similarArtistsData && (
+                        <div className="w-full justify-left flex flex-wrap">
+                            {similarArtistsData.map(album => (
+                                <>
+                                    <AlbumItem
+                                        albumItem={album}
+                                        width={
+                                            queueToggle
+                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                        }
+                                    />
+                                </>
+                            ))}
+                        </div>
+                        // <div className="w-full gap-1 justify-center flex    ">
+                        //     <>
+                        //         <DisplayRow
+                        //             title={'Similar Artists:'}
+                        //             albums={similarArtistsData}
+
+                        //         />
+                        //     </>
+                        // </div>
+                    )}
+                    {featuredPlaylistsData && (
+                        <h2 className="p-1 pb-0 text-xl text-slate-800 font-bold">
+                            Featured Playlists:
+                        </h2>
+                    )}
+                    {featuredPlaylistsData && (
+                        <div className="w-full justify-left flex flex-wrap">
+                            {featuredPlaylistsData.map(album => (
+                                <>
+                                    <AlbumItem
+                                        albumItem={album}
+                                        width={
+                                            queueToggle
+                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                        }
+                                    />
+                                </>
+                            ))}
                         </div>
                     )}
 
-                    <div className=" w-full gap-1 justify-center flex ">
+                    {/* <div className=" w-full gap-1 justify-center flex ">
                         {featuredPlaylistsData && (
                             <DisplayRow
                                 title="Featured Playlists:"
                                 albums={featuredPlaylistsData}
                             />
                         )}
-                    </div>
+                    </div> */}
                 </div>
             )}
         </>
