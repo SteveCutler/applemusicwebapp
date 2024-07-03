@@ -1,7 +1,16 @@
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
 
+Major problems:
+album art issue with library
+storefront selection, storage, retrieval and insertion in calls 
+create a settings page where this and certain music kit settings can be changed, autofade, bitrate, explicit songs, etc.
+Song page api calls?
+better home page suggestions & recommendations
+so many refreshes
 
+add drag and drop feature to playlist creation/edit
+creation playlist edit page
 
 THINGS TO FOCUS ON
 add feature for users to follow artist - checks if they have anything new and displays on homepage

@@ -19,6 +19,8 @@ import Station from './pages/Station'
 import QueueDisplay from './components/Homepage/QueueDisplay'
 import Header from './components/Homepage/Header'
 import NewPlaylist from './pages/NewPlaylist'
+import PlaylistDisplay from './pages/PlaylistDisplay'
+import EditPlaylist from './pages/EditPlaylist'
 
 function App() {
     const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
@@ -135,6 +137,26 @@ function App() {
                             element={
                                 backendToken || authToken ? (
                                     <Library />
+                                ) : (
+                                    <Login />
+                                )
+                            }
+                        />
+                        {/* <Route
+                            path="/playlist-edit/:playlistId"
+                            element={
+                                backendToken || authToken ? (
+                                    <EditPlaylist />
+                                ) : (
+                                    <Login />
+                                )
+                            }
+                        /> */}
+                        <Route
+                            path="/playlist-display"
+                            element={
+                                backendToken || authToken ? (
+                                    <PlaylistDisplay />
                                 ) : (
                                     <Login />
                                 )

@@ -13,6 +13,36 @@ type AuthUserType = {
     message?: string
 }
 
+type AlbumTypeObject = {
+    attributes?: {
+        artistName: string
+        artwork: ArtworkObject
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: Number
+    }
+    relationships?: RelationshipObject
+    id: string
+}
+
+type TracksObject = {
+    data: Array<Track>
+}
+type Track = {
+    attributes: TrackAttributeObject
+}
+
+type RelationshipObject = {
+    tracks: TracksObject
+    artists?: ArtistObject[]
+}
+
+type ArtistObject = {
+    id: string
+}
+
 interface Song {
     id: string
     href?: string
@@ -46,6 +76,7 @@ interface MusicKit {
         }
     }
 }
+
 interface MusickitInstance {
     api: {
         music: (endpoint: string, options?: object) => Promise<any>

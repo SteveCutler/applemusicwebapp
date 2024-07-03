@@ -88,7 +88,7 @@ const AppleDashboard = () => {
                     )
                 ) {
                     try {
-                        const res = await musicKitInstance.api.music(
+                        const res = await musicKitInstance?.api.music(
                             `/v1/me/library/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`
                         )
 
@@ -105,7 +105,7 @@ const AppleDashboard = () => {
                 } else {
                     try {
                         const queryParameters = { l: 'en-us' }
-                        const res = await musicKitInstance.api.music(
+                        const res = await musicKitInstance?.api.music(
                             `/v1/catalog/ca/albums/${moreLikeRecommendations.attributes.title.contentIds[0]}`,
 
                             queryParameters

@@ -150,17 +150,17 @@ const Sidebar = () => {
                     >
                         <FaHeartbeat />
                         <p className="p-2">Likes</p>
-                    </NavLink>
+                    </NavLink> */}
 
                     <NavLink
-                        to="/"
+                        to="/playlist-display"
                         className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
                     >
-                        <BiSolidPlaylist />
+                        <RiPlayListFill />
                         <p className="p-2">Playlists</p>
                     </NavLink>
 
-                    <NavLink
+                    {/* <NavLink
                         to="/"
                         className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
                     >

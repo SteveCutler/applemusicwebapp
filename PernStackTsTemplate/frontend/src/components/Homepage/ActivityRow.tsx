@@ -352,7 +352,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             return (
                 <div
                     onClick={() => navigateTo(item.id)}
-                    className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
+                    className="flex  w-full  p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
                 >
                     <div className="w-10/12 truncate gap-1 flex">
                         {item.attributes.artwork?.url ? (
@@ -361,9 +361,10 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                     item.attributes.artwork?.url,
                                     50
                                 )}
+                                style={{ width: '50px' }}
                             />
                         ) : (
-                            <img src={defaultPic} width="50px" />
+                            <img src={defaultPic} style={{ width: '50px' }} />
                         )}
                         <div className="flex flex-col justify-center  items-start  ">
                             <div

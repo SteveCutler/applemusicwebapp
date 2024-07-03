@@ -87,7 +87,7 @@ export const fetchLibraryPlaylists = async () => {
     try {
         try {
             const res = await musicKitInstance.api.music(
-                '/v1/me/library/playlists'
+                '/v1/me/library/playlists/'
             )
             const playlists = res.data.data
             console.log('User Playlists:', playlists)
