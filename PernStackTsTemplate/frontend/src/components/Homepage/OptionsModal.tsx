@@ -114,7 +114,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     }))
 
     const userId = backendToken
-    console.log('album', object)
+    // console.log('album', object)
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()

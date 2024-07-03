@@ -173,10 +173,11 @@ const FetchArtistData = (id: string | undefined) => {
                         const latestRelease = await musicKitInstance.api.music(
                             `/v1/me/library/artists/${id}/view/latest-release`
                         )
-
-                        const latestReleaseData: Array<AlbumData> =
-                            await latestRelease.data.data
-                        setLatestReleaseData(latestReleaseData)
+                        if (latestRelease.status === 200) {
+                            const latestReleaseData: Array<AlbumData> =
+                                await latestRelease.data.data
+                            setLatestReleaseData(latestReleaseData)
+                        }
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -189,9 +190,11 @@ const FetchArtistData = (id: string | undefined) => {
                             `/v1/catalog/ca/artists/${id}/view/latest-release`
                         )
 
-                        const latestReleaseData: Array<AlbumData> =
-                            await latestRelease.data.data
-                        setLatestReleaseData(latestReleaseData)
+                        if (latestRelease.status === 200) {
+                            const latestReleaseData: Array<AlbumData> =
+                                await latestRelease.data.data
+                            setLatestReleaseData(latestReleaseData)
+                        }
                     } catch (error: any) {
                         console.error(error)
                         setError(error)

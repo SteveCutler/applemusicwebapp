@@ -102,7 +102,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
         appleMusicToken: state.appleMusicToken,
     }))
 
-    console.log('item: ', item)
+    // console.log('item: ', item)
 
     const userId = backendToken
 

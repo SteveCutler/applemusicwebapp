@@ -20,6 +20,8 @@ import { TbHistory } from 'react-icons/tb'
 import { MdLibraryMusic } from 'react-icons/md'
 import { IoLibrary } from 'react-icons/io5'
 import { BiSolidPlaylist } from 'react-icons/bi'
+import { MdOutlineDarkMode } from 'react-icons/md'
+import { MdDarkMode } from 'react-icons/md'
 import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
 
 const Sidebar = () => {
@@ -83,6 +85,9 @@ const Sidebar = () => {
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}
                         title="Log out"
                     >
+                        <div className=" hover:cursor-pointer hover:text-slate-500">
+                            <MdOutlineDarkMode />
+                        </div>
                         <div className=" hover:cursor-pointer hover:text-slate-500">
                             <IoSettingsSharp />
                         </div>

@@ -35,9 +35,12 @@ const FetchRecommendations = () => {
             if (musicKitInstance) {
                 try {
                     console.log(music)
-                    const queryParameters = { l: 'en-us', limit: 5 }
+                    const queryParameters = {
+                        l: 'en-us',
+                        limit: 5,
+                    }
                     const res = await musicKitInstance.api.music(
-                        '/v1/me/recommendations',
+                        '/v1/me/recommendations/',
                         queryParameters
                     )
 
@@ -47,6 +50,7 @@ const FetchRecommendations = () => {
                     // console.log(res)
 
                     const data = await res.data.data
+                    console.log('recommendations: ', data)
                     // console.log(
                     //     'first group: ',
                     //     data[0].relationships.contents.data
