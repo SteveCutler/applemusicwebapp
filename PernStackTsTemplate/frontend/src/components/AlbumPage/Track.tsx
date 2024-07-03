@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import { MdArrowBackIosNew } from 'react-icons/md'
+import { Link } from 'react-router-dom'
 // import PlaySong from '../Apple/PlaySong'
 // import { usePlayerContext } from '../../context/PlayerContext'
 import { useState } from 'react'
@@ -8,13 +9,9 @@ import { useState } from 'react'
 import { useStore } from '../../store/store'
 
 type TrackPropTypes = {
-    trackName: string
-    trackDuration: string
-    songId: string
-    albumTracks: Array<Song>
-    trackNumber: number
+    song: Song
+    trackDuration: number
     index: number
-    artistName: string
     first?: boolean
     last?: boolean
 }
@@ -43,19 +40,16 @@ interface Song {
 type PlayParameterObject = {
     catalogId: String
     id: String
+
     isLibrary: Boolean
     kind: String
 }
 
 const Track: React.FC<TrackPropTypes> = ({
-    trackName,
-    trackDuration,
-    songId,
-    albumTracks,
+    song,
     index,
-    trackNumber,
-    artistName,
     first,
+    trackDuration,
     last,
 }) => {
     //const albumSongs = albumTracks.data
@@ -163,7 +157,7 @@ const Track: React.FC<TrackPropTypes> = ({
             )
             return trackDuration
         }
-        if (isPlaying && songId === currentSongId) {
+        if (isPlaying && song.id === currentSongId) {
             const safeElapsedTime = Math.max(currentElapsedTime, 0)
             return convertToDuration(currentSongDuration - safeElapsedTime)
         }
@@ -180,7 +174,7 @@ const Track: React.FC<TrackPropTypes> = ({
             return
         }
 
-        if (songId === currentSongId) {
+        if (song.id === currentSongId) {
             // console.log('songId is current song')
             if (isPlaying) {
                 // console.log('is playing: pausing')
@@ -198,13 +192,34 @@ const Track: React.FC<TrackPropTypes> = ({
     }
 
     return (
-        <div
+        <Link
+            to={`/song/${song.id}`}
+            state={{
+                song: {
+                    id: song.id,
+                    href: song.attributes.url,
+                    type: 'songs',
+                    attributes: {
+                        id: song.id,
+                        name: song.attributes.name,
+                        trackNumber: song.attributes.trackNumber,
+                        artistName: song.attributes.artistName,
+                        albumName: song.attributes.albumName,
+                        durationInMillis: song.attributes.durationInMillis,
+
+                        artwork: {
+                            bgColor: song.attributes.artwork?.bgColor,
+                            url: song.attributes.artwork?.url,
+                        },
+                    },
+                },
+            }}
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
             className={`flex border-b-2 w-full  ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && songId === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
         >
             <div
                 className={
-                    isPlaying && songId === currentSongId
+                    isPlaying && song.id === currentSongId
                         ? 'font-bold text-slate-200'
                         : 'font-bold text-slate-500'
                 }
@@ -215,38 +230,38 @@ const Track: React.FC<TrackPropTypes> = ({
                 <div
                     className={` truncate
                         ${
-                            isPlaying && songId === currentSongId
+                            isPlaying && song.id === currentSongId
                                 ? 'font-bold text-slate-300'
                                 : 'font-semibold'
                         }
                     `}
                 >
-                    {trackName}
+                    {song.attributes.name}
                 </div>
                 {/* <p className="text-slate-100"> / </p> */}
                 <div
                     className={`truncate max-w-1/5
                         ${
-                            isPlaying && songId === currentSongId
+                            isPlaying && song.id === currentSongId
                                 ? 'font-bold text-slate-200'
                                 : 'font-semibold text-slate-500'
                         }
                     `}
                 >
-                    {artistName}
+                    {song.attributes.artistName}
                 </div>
             </div>
             <button
                 onClick={playPauseHandler}
                 className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
             >
-                {isPlaying && songId === currentSongId ? (
+                {isPlaying && song.id === currentSongId ? (
                     <FaRegCirclePause style={style} />
                 ) : (
                     <FaCirclePlay style={styleBlue} />
                 )}
             </button>
-        </div>
+        </Link>
     )
 }
 

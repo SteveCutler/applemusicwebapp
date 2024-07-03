@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { IoMdAddCircleOutline } from 'react-icons/io'
 import toast from 'react-hot-toast'
+import { FaCirclePlay } from 'react-icons/fa6'
 
 const PlaylistDisplay = () => {
     const {
@@ -28,6 +29,15 @@ const PlaylistDisplay = () => {
 
     const style = { fontSize: '1.8rem', fontWeight: 'bold' }
     const navigate = useNavigate()
+    const playPauseHandler = async (id: string) => {
+        if (musicKitInstance) {
+            await musicKitInstance.setQueue({
+                playlist: id,
+                startWith: 0,
+                startPlaying: true,
+            })
+        }
+    }
 
     const removePlaylist = async (playlistId: string) => {
         if (!musicKitInstance) {
@@ -72,6 +82,9 @@ const PlaylistDisplay = () => {
             await deletePlaylist()
         }
     }
+
+    const styleBlue = { color: 'royalblue', fontSize: '2.5rem' }
+
     return (
         <>
             <h1 className="text-center text-5xl  text-black p-4 font-bold mx-auto">
@@ -98,7 +111,7 @@ const PlaylistDisplay = () => {
                                 to={`/playlist/${playlist.id}`}
                                 className={`w-4/5 flex bg-slate-900 text-xl justify-between text-white p-3 hover:bg-slate-700 ${index === libraryPlaylists.length - 1 && 'rounded-b-lg'} ${index === 0 && 'rounded-t-lg'}`}
                             >
-                                <div className="flex gap-2 items-center ">
+                                <div className="flex gap-6 items-center ">
                                     <div className=" flex ">
                                         {playlist.attributes.artwork?.url ? (
                                             <img
@@ -120,14 +133,22 @@ const PlaylistDisplay = () => {
                                         {playlist.attributes.name}
                                     </div>
                                 </div>
-                                <div className="flex gap-2">
-                                    <Link
+                                <button
+                                    className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
+                                    onClick={async e => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        await playPauseHandler(playlist.id)
+                                    }}
+                                >
+                                    <FaCirclePlay style={styleBlue} />
+                                    {/* <Link
                                         to={`/playlist-edit/${playlist.id}`}
                                         state={{ playlist }}
                                         className="btn btn-primary bg-blue-500 border-none hover:cursor-pointer  hover:bg-blue-600"
                                     >
                                         Edit
-                                    </Link>
+                                    </Link> */}
                                     {/* <button
                                         className="btn btn-primary bg-red-500 border-none hover:cursor-pointer  hover:bg-red-600"
                                         onClick={async e => {
@@ -137,7 +158,7 @@ const PlaylistDisplay = () => {
                                     >
                                         Delete
                                     </button> */}
-                                </div>
+                                </button>
                             </Link>
                         </>
                     ))}

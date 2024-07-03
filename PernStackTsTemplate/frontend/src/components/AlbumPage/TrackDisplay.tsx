@@ -67,14 +67,10 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
                     <Track
                         key={index}
                         index={index}
-                        trackName={song.attributes.name}
                         trackDuration={convertToDuration(
                             song.attributes.durationInMillis
                         )}
-                        artistName={song.attributes.artistName}
-                        songId={song.id}
-                        albumTracks={albumTracks}
-                        trackNumber={song.attributes.trackNumber}
+                        song={song}
                         first={index === 0}
                         last={index === albumTracks.length - 1}
                     />
