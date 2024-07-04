@@ -65,7 +65,8 @@ const Playlist = () => {
     const { playlistData, playlistTrackData, loading, error } =
         useFetchPlaylistData(playlistId)
 
-    const { musicKitInstance } = useStore(state => ({
+    const { musicKitInstance, darkMode } = useStore(state => ({
+        darkMode: state.darkMode,
         musicKitInstance: state.musicKitInstance,
     }))
 
@@ -101,7 +102,9 @@ const Playlist = () => {
 
     if (!playlistData || !playlistTrackData) {
         return (
-            <div className="flex text-3xl m-5 p-5 text-slate-800">
+            <div
+                className={`flex text-3xl select-none font-bold m-5 p-5 ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '}`}
+            >
                 No playlist data available
             </div>
         )
@@ -109,7 +112,9 @@ const Playlist = () => {
 
     if (playlistData && playlistTrackData) {
         return (
-            <div className="flex-col flex text-slate-900 flex-grow mt-10 mx-auto w-11/12 ">
+            <div
+                className={`flex-col flex ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} flex-grow mt-10 mx-auto w-11/12 `}
+            >
                 <ScrollToTop />
                 {/* <Link to="/">
                     <div className="sticky mb-10 top-1 left-1">

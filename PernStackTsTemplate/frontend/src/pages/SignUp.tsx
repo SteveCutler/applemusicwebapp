@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import spiralFavicon from '/spiralFavicon.svg'
 
 import { useState } from 'react'
 import useSignup from '../hooks/auth/useSignup'
@@ -21,8 +22,9 @@ const SignUp = () => {
     return (
         <div className="flex flex-col rounded-lg  items-center justify-center  min-w-96 mt-5 mx-auto">
             <div className="w-full rounded-lg   p-6 shadow-md bg-slate-300  ">
-                <h1 className="text-3xl font-bold text-center text-black ">
-                    Sign Up <span className="text-blue-500"> ChatApp</span>
+                <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
+                    <span className="text-blue-500"> Sign Up</span>{' '}
+                    <img src={spiralFavicon} style={{ width: '40px' }} />
                 </h1>
 
                 <form className="font-bold" onSubmit={handleSubmitForm}>

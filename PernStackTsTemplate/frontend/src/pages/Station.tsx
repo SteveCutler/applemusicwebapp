@@ -68,8 +68,10 @@ const Station = () => {
         musicKitInstance,
         isPlaying,
         playlist,
+        darkMode,
         setPlaylist,
     } = useStore(state => ({
+        darkMode: state.darkMode,
         setSearchTerm: state.setSearchTerm,
         musicKitInstance: state.musicKitInstance,
         isPlaying: state.isPlaying,
@@ -118,7 +120,9 @@ const Station = () => {
 
     if (stationData) {
         return (
-            <div className="flex-col w-4/5 text-slate-800 mx-auto h-full">
+            <div
+                className={`flex-col w-4/5 ${darkMode ? 'text-slate-200' : 'text-slate-800'} mx-auto h-full`}
+            >
                 <ScrollToTop />
                 {/* <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">

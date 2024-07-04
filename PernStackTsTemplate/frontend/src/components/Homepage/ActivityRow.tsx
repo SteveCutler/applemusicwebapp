@@ -108,6 +108,25 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
 
     const navigate = useNavigate()
 
+    const handleNavigation = async (album: Album) => {
+        if (album.id.startsWith('l')) {
+            try {
+                const res = await musicKitInstance?.api.music(
+                    `v1/me/library/albums/${album.id}/catalog`
+                )
+
+                const catalogId = await res.data.data[0].id
+
+                console.log(catalogId)
+                navigate(`/album/${catalogId}/${album.type}`)
+            } catch (error: any) {
+                console.error(error)
+            }
+        } else {
+            navigate(`/album/${album.id}/${album.type}`)
+        }
+    }
+
     const navigateTo = (id: string) => {
         switch (item.type) {
             case 'songs':
@@ -151,7 +170,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                 case 'library-songs':
                 case 'song':
                     await musicKitInstance.setQueue({
-                        playlist: item.id,
+                        song: item.id,
                         startWith: 0,
                         startPlaying: true,
                     })
@@ -169,11 +188,33 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                 case 'albums':
                 case 'library-albums':
                     if (musicKitInstance) {
-                        await musicKitInstance.setQueue({
-                            album: item.id,
-                            startWith: 0,
-                            startPlaying: true,
-                        })
+                        if (item.id.startsWith('l')) {
+                            try {
+                                const res = await musicKitInstance?.api.music(
+                                    `v1/me/library/items/${item.id}/catalog`
+                                )
+
+                                const catalogId = await res.data.data[0].id
+
+                                await musicKitInstance.setQueue({
+                                    album: catalogId,
+                                    startWith: 0,
+                                    startPlaying: true,
+                                })
+                            } catch (error: any) {
+                                console.error(error)
+                            }
+                        } else {
+                            try {
+                                await musicKitInstance.setQueue({
+                                    album: item.id,
+                                    startWith: 0,
+                                    startPlaying: true,
+                                })
+                            } catch (error: any) {
+                                console.error(error)
+                            }
+                        }
                     }
                     break
                 case 'stations':
@@ -274,7 +315,10 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             return (
                 <div
                     className="flex  w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  border-b border-slate-800 justify-between"
-                    onClick={() => navigateTo(item.id)}
+                    onClick={async () => {
+                        handleNavigation(item)
+                        // navigateTo(item.id)
+                    }}
                 >
                     <div className="w-10/12 truncate gap-1 flex">
                         {item.attributes.artwork?.url ? (

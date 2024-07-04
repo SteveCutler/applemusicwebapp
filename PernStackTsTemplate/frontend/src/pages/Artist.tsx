@@ -26,12 +26,14 @@ const Artist = () => {
         appleMusicToken,
         setPlaylist,
         queueToggle,
+        darkMode,
         isPlaying,
         playlist,
         pauseSong,
         playSong,
     } = useStore(state => ({
         setPlaylist: state.setPlaylist,
+        darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         pauseSong: state.pauseSong,
         playSong: state.playSong,
@@ -98,7 +100,9 @@ const Artist = () => {
                     <ScrollToTop />
                     <div className="flex justify-between w-full ">
                         <div className=" w-1/2 flex">
-                            <h1 className="text-5xl font-bold text-black">
+                            <h1
+                                className={`text-5xl font-bold ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}
+                            >
                                 {artistData.attributes.name}
                             </h1>
                         </div>
@@ -135,7 +139,9 @@ const Artist = () => {
                             )}
 
                             {artistData.attributes.editorialNotes && (
-                                <div className="flex w-full mx-3 px-3 pb-5 text-3xl  text-slate-800">
+                                <div
+                                    className={`flex w-full mx-3 px-3 pb-5 text-3xl ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}
+                                >
                                     {artistData.attributes.editorialNotes
                                         .standard
                                         ? artistData.attributes.editorialNotes
@@ -147,7 +153,9 @@ const Artist = () => {
                         </div>
 
                         <div className="flex-col w-full md:w-1/2">
-                            <div className=" w-full text-black text-lg font-bold flex justify-start md:justify-end  items-end">
+                            <div
+                                className={` w-full ${darkMode ? 'text-slate-200' : 'text-slate-800'} text-lg font-bold flex justify-start md:justify-end  items-end`}
+                            >
                                 {' '}
                                 TOP SONGS
                             </div>
@@ -184,7 +192,9 @@ const Artist = () => {
 
                     {latestReleaseData && (
                         <div className="w-full flex-col flex  justify-center">
-                            <h2 className="pb-3  text-xl text-slate-800 font-bold">
+                            <h2
+                                className={`pb-3  text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                            >
                                 Latest Release:
                             </h2>
                             <div className=" gap-1 justify-left  flex flex-wrap">
@@ -215,7 +225,9 @@ const Artist = () => {
                     )}
 
                     {artistAlbumData && (
-                        <h2 className="mx-3 px-3 text-xl text-slate-800 font-bold">
+                        <h2
+                            className={`mx-3 px-3 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                        >
                             Albums:
                         </h2>
                     )}
@@ -238,7 +250,9 @@ const Artist = () => {
                     )}
 
                     {similarArtistsData && (
-                        <h2 className="p-1 pb-0 text-xl text-slate-800 font-bold">
+                        <h2
+                            className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                        >
                             Similar Artists:
                         </h2>
                     )}
@@ -269,7 +283,9 @@ const Artist = () => {
                         // </div>
                     )}
                     {featuredPlaylistsData && (
-                        <h2 className="p-1 pb-0 text-xl text-slate-800 font-bold">
+                        <h2
+                            className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                        >
                             Featured Playlists:
                         </h2>
                     )}

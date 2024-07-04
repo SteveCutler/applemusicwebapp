@@ -3,7 +3,7 @@ import { useAuthContext } from '../../context/AuthContext'
 import { IoArrowBackCircle, IoArrowForwardCircle } from 'react-icons/io5'
 import { useNavigate, useLocation, useNavigationType } from 'react-router-dom'
 import { useEffect, useState } from 'react'
-
+import { useStore } from '../../store/store'
 function Header() {
     const [canGoBack, setCanGoBack] = useState(false)
     const [canGoForward, setCanGoForward] = useState(false)
@@ -11,6 +11,9 @@ function Header() {
     const location = useLocation()
     const navigationType = useNavigationType()
     const style = { fontSize: '2rem' }
+    const { darkMode } = useStore(state => ({
+        darkMode: state.darkMode,
+    }))
     const navigate = useNavigate()
     const navigateBack = () => {
         navigate(-1)
@@ -37,7 +40,9 @@ function Header() {
     }, [location])
 
     return (
-        <div className=" top-0  flex items-start w-3/5 absolute justify-between h-20 pt-2 text-black">
+        <div
+            className={` top-0  flex items-start w-3/5 absolute justify-between h-20 pt-2 ${darkMode ? 'text-white' : 'text-black'} `}
+        >
             <div className="flex gap-2 ">
                 <button
                     className={`cursor-default ${canGoBack ? 'hover:text-slate-500 ' : ' disabled hover:text-black '} `}

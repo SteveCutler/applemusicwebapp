@@ -112,6 +112,7 @@ const Album = () => {
     const {
         setSearchTerm,
         musicKitInstance,
+        darkMode,
         authorizeMusicKit,
         queueToggle,
         isPlaying,
@@ -119,6 +120,7 @@ const Album = () => {
         setPlaylist,
     } = useStore(state => ({
         setSearchTerm: state.setSearchTerm,
+        darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
         musicKitInstance: state.musicKitInstance,
@@ -188,16 +190,16 @@ const Album = () => {
             .replace('{h}', size.toString())
     }
 
-    const setTerm = () => {
-        setSearchTerm(albumData.attributes.artistName)
-    }
+    // const setTerm = () => {
+    //     setSearchTerm(albumData.attributes.artistName)
+    // }
 
     const loadPlayer = async () => {
         // console.log('track data: ', albumData.relationships.tracks.data)
         if (musicKitInstance) {
             console.log('setting playlist and start position')
             await musicKitInstance.setQueue({
-                album: albumData.id,
+                album: albumData?.id,
                 startWith: 0,
                 startPlaying: true,
             })
@@ -222,7 +224,9 @@ const Album = () => {
 
     if (albumData) {
         return (
-            <div className="flex-col w-11/12 mx-auto text-slate-900 h-full">
+            <div
+                className={`flex-col w-11/12 mx-auto ${darkMode ? 'text-slate-200' : 'text-slate-800'} h-full`}
+            >
                 <ScrollToTop />
                 {/* <Link to="/">
                     <div className="sticky mb-10 mt-5 top-1 left-1">
@@ -232,21 +236,21 @@ const Album = () => {
                 </Link> */}
                 <div className="flex-col ">
                     <h1 className="text-3xl w-1/2 font-bold">
-                        {albumData.attributes.name}
+                        {albumData.attributes?.name}
                     </h1>
-                    {albumData.relationships.artists.data[0].id && (
+                    {albumData.relationships?.artists?.data[0].id && (
                         <Link
                             to={
                                 type === 'library-albums'
                                     ? `/artist/${albumData.relationships.artists.data[0].id}`
                                     : `/artist/${artistId}`
                             }
-                            onClick={
-                                type === 'library-albums' ? setTerm : undefined
-                            }
-                            className="text-2xl hover:text-blue-200 text-slate-800  hover:cursor-pointer font-bold"
+                            // onClick={
+                            //     type === 'library-albums' ? setTerm : undefined
+                            // }
+                            className={`text-2xl ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-700 hover:text-slate-500'}  hover:cursor-pointer font-bold`}
                         >
-                            {albumData.attributes.artistName}
+                            {albumData.attributes?.artistName}
                         </Link>
                     )}
                 </div>
@@ -297,7 +301,9 @@ const Album = () => {
                 </div>
 
                 {relatedAlbums && (
-                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                    <h2
+                        className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                    >
                         Check out these similar albums:
                     </h2>
                 )}
@@ -329,7 +335,9 @@ const Album = () => {
                 )} */}
 
                 {featuredAlbumsData && (
-                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                    <h2
+                        className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                    >
                         Featured albums:
                     </h2>
                 )}
@@ -352,7 +360,9 @@ const Album = () => {
                 )}
 
                 {similarArtistsData && (
-                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                    <h2
+                        className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                    >
                         Similar artists:
                     </h2>
                 )}
@@ -375,7 +385,9 @@ const Album = () => {
                 )}
 
                 {appearsOn && (
-                    <h2 className="p-1 pt-5 pb-2 text-xl text-slate-800 font-bold">
+                    <h2
+                        className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                    >
                         Appears on these playlists:
                     </h2>
                 )}

@@ -51,9 +51,11 @@ const NewPlaylist = () => {
         musicKitInstance,
         authorizeMusicKit,
         libraryPlaylists,
+        darkMode,
     } = useStore(state => ({
         appleMusicToken: state.appleMusicToken,
         fetchAppleToken: state.fetchAppleToken,
+        darkMode: state.darkMode,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
         setLibraryPlaylists: state.setLibraryPlaylists,
@@ -267,7 +269,9 @@ const NewPlaylist = () => {
     }
 
     return (
-        <div className=" inset-0 flex text-black flex-col w-full items-center justify-center ">
+        <div
+            className={` inset-0 flex ${darkMode ? 'text-slate-200 ' : ' text-slate-800 '} flex-col w-full items-center justify-center `}
+        >
             <h2 className="text-5xl font-bold mb-10">Create New Playlist</h2>
             <form className="w-1/2 pb-10">
                 <div className="mb-4 gap-4 ">
@@ -312,7 +316,7 @@ const NewPlaylist = () => {
                 {/* Display playlist tracks */}
                 {playlistTracks.length >= 1 ? (
                     playlistTracks.map((song, index) => (
-                        <div className="flex select-none p-2 justify-between bg-slate-300 my-2 rounded-lg  w-full">
+                        <div className="flex select-none p-2 justify-between bg-slate-300 text-slate-800 my-2 rounded-lg  w-full">
                             <div className="flex gap-2 ">
                                 <div className="flex items-center font-bold">
                                     #{index + 1}
@@ -404,7 +408,7 @@ const NewPlaylist = () => {
                             {displayMode === 'songs'
                                 ? searchResults.songs &&
                                   searchResults.songs.map(song => (
-                                      <div className="flex my-2 p-2 justify-between bg-slate-200 w-full">
+                                      <div className="flex my-2 p-2 justify-between bg-slate-200 text-slate-800 w-full">
                                           <div className="flex gap-2">
                                               {song.attributes.artwork?.url ? (
                                                   <img
@@ -457,7 +461,7 @@ const NewPlaylist = () => {
                                   ))
                                 : searchResults.albums &&
                                   searchResults.albums?.map(album => (
-                                      <div className="flex my-2 p-2 select-none justify-between bg-slate-200 w-full">
+                                      <div className="flex my-2 p-2 select-none justify-between bg-slate-200 text-slate-800 w-full">
                                           <div className="flex gap-2">
                                               {album.attributes.artwork?.url ? (
                                                   <img

@@ -57,7 +57,8 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
             .replace('{h}', height.toString())
     }
 
-    const { isPlaying } = useStore(state => ({
+    const { isPlaying, darkMode } = useStore(state => ({
+        darkMode: state.darkMode,
         isPlaying: state.isPlaying,
     }))
 
@@ -67,7 +68,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col w-1/4 flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none flex-col w-1/4 flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-500'}   rounded-3xl flex`}
             to={`/artist/${artist.id}`}
         >
             {artist.attributes.artwork?.url && (

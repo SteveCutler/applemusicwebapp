@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import useLogin from '../hooks/auth/useLogin'
+import spiralFavicon from '/spiralFavicon.svg'
 
 const Login = () => {
     const [inputs, setInputs] = useState({
@@ -19,9 +20,10 @@ const Login = () => {
     return (
         <div className="flex flex-col h-full -translate-y-10 items-center justify-center min-w-96 mx-auto">
             <div className="w-full p-6 rounded-lg text-black shadow-xl bg-slate-300 bg-clip-padding ">
-                <h1 className="text-3xl font-bold text-center text-black">
+                <h1 className="text-3xl font-bold flex justify-center items-center text-center text-black">
                     Muse
                     <span className="text-blue-500">Login</span>
+                    <img src={spiralFavicon} style={{ width: '40px' }} />
                 </h1>
 
                 <form className="font-bold" onSubmit={handleSubmitForm}>

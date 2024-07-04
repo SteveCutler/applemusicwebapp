@@ -81,11 +81,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         authorizeMusicKit,
         queueToggle,
         setPlaylist,
+        darkMode,
         playSong,
         pause,
         playlist,
         musicKitInstance,
     } = useStore(state => ({
+        darkMode: state.darkMode,
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
         queueToggle: state.queueToggle,
@@ -243,7 +245,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     if (albumItem) {
         return (
             <div
-                className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  text-slate-800   rounded-3xl flex `}
+                className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
                 title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             >
                 <div
@@ -290,7 +292,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
                 <div className="flex-col h-full overflow-hidden">
                     <h2
-                        className="text-md truncate hover:text-slate-200 font-bold"
+                        className={`text-md truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}  font-bold`}
                         onClick={handleNavigation}
                     >
                         {albumItem.attributes.name}
@@ -299,7 +301,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         <div
                             onClick={navigateToArtist}
                             // to={`/artist/${albumItem.relationships.artists.data[0].id}`}
-                            className="truncate hover:text-slate-200"
+                            className={`truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}`}
                         >
                             {albumItem.attributes.artistName}
                         </div>

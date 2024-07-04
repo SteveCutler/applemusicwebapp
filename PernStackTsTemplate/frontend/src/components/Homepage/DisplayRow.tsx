@@ -135,8 +135,9 @@ type ArtworkObject = {
 
 const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const carouselRef = useRef<HTMLDivElement>(null)
-    const { queueToggle, musicKitInstance } = useStore(state => ({
+    const { queueToggle, musicKitInstance, darkMode } = useStore(state => ({
         queueToggle: state.queueToggle,
+        darkMode: state.darkMode,
         musicKitInstance: state.musicKitInstance,
     }))
 
@@ -156,7 +157,9 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
 
     return (
         <div className="flex-col flex w-full items-center mb-5    ">
-            <h1 className="text-lg select-none flex gap-2 w-full  text-slate-800  font-bold justify-start">
+            <h1
+                className={`text-lg select-none flex gap-2 w-full ${darkMode ? 'text-slate-200' : 'text-slate-800'}   font-bold justify-start`}
+            >
                 <div className="h-1/12 ">
                     {url && <img src={url} width="70px" />}
                 </div>

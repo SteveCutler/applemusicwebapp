@@ -87,9 +87,9 @@ const PlaylistDisplay = () => {
 
     return (
         <>
-            <h1 className="text-center text-5xl  text-black p-4 font-bold mx-auto">
+            {/* <h1 className="text-center text-5xl  text-black p-4 font-bold mx-auto">
                 Playlists
-            </h1>
+            </h1> */}
             <button
                 className="btn btn-primary my-5 mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
                 onClick={e => {

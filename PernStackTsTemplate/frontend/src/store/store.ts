@@ -36,7 +36,7 @@ type Track = {
 
 type RelationshipObject = {
     tracks: TracksObject
-    artists?: ArtistObject[]
+    artists?: { data: ArtistObject[] }
 }
 
 type ArtistObject = {
@@ -368,7 +368,7 @@ interface State {
     appleMusicToken: string | null
     searchTerm: string
     albums: Array<Album> | null
-    albumData: Song[]
+    albumData: AlbumTypeObject | null
     volume: number
     searchResults: SearchResults
     playlist: Song[]
@@ -399,6 +399,7 @@ interface State {
     queueToggle: boolean
     favouriteSongs: Array<Song> | null
     recentActivity: Array<Song | playlist | Album | StationType> | null
+    darkMode: boolean
 }
 
 interface Actions {
@@ -417,7 +418,7 @@ interface Actions {
     generateAppleToken: () => Promise<void>
     setAlbumArtUrl: (url: string | null) => void
     setSearchTerm: (term: string) => void
-    setAlbumData: (album: Song[]) => void
+    setAlbumData: (album: AlbumTypeObject | null) => void
     setPlaylist: (
         songs: Song[],
         index: number,
@@ -459,6 +460,7 @@ interface Actions {
         items: Array<Song | playlist | Album | StationType> | null
     ) => void
     setFavouriteSongs: (songs: Array<Song>) => void
+    setDarkMode: (toggle: boolean) => void
 }
 
 type Store = State & Actions
@@ -472,7 +474,7 @@ export const useStore = create<Store>((set, get) => ({
     volume: 0.75,
     backendToken: null,
     albums: null,
-    albumData: [],
+    albumData: null,
     musicKitInstance: null,
     appleMusicToken: '',
     searchResults: {},
@@ -503,6 +505,7 @@ export const useStore = create<Store>((set, get) => ({
     queueToggle: false,
     favouriteSongs: null,
     recentActivity: null,
+    darkMode: false,
 
     // Actions
     authorizeBackend: async () => {
@@ -539,6 +542,7 @@ export const useStore = create<Store>((set, get) => ({
         set({ muted })
     },
 
+    setDarkMode: (toggle: boolean) => set({ darkMode: toggle }),
     setRecentActivity: (
         items: Array<Song | playlist | Album | StationType> | null
     ) => set({ recentActivity: items }),
@@ -649,7 +653,7 @@ export const useStore = create<Store>((set, get) => ({
     setRecentlyPlayedAlbums: (albums: RecommendationType | null) =>
         set({ recentlyPlayedAlbums: albums }),
 
-    setAlbumData: (album: Song[]) => set({ albumData: album }),
+    setAlbumData: (album: AlbumTypeObject | null) => set({ albumData: album }),
     setBackendToken: (token: string | null) => set({ backendToken: token }),
     setAuthorized: (isAuthorized: boolean) => set({ isAuthorized }),
     setCurrentSongIndex: async (currentSongIndex: number) => {

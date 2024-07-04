@@ -39,6 +39,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
 
     const {
         isPlaying,
+        darkMode,
         authorizeMusicKit,
         queueToggle,
         playSong,
@@ -48,6 +49,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
         musicKitInstance,
     } = useStore(state => ({
         pause: state.pauseSong,
+        darkMode: state.darkMode,
         playSong: state.playSong,
         queueToggle: state.queueToggle,
         isPlaying: state.isPlaying,
@@ -87,7 +89,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
         <div
             // to={`/song/${song.id}`}
             onClick={handleNavigation}
-            className={`${carousel && 'carousel-item'}  select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow text-slate-800 hover:text-slate-200  rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'}  select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : ' text-slate-800 hover:text-slate-300'}   rounded-3xl flex`}
         >
             {song.attributes.artwork?.url && (
                 <div className=" relative flex-col h-full w-full flex flex-shrink  ">

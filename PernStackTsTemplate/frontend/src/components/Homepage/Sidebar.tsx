@@ -34,14 +34,23 @@ const Sidebar = () => {
         fontSize: '1.5rem',
         color: 'white',
     }
-    const { queueToggle, albums, backendToken, setAlbums, appleMusicToken } =
-        useStore(state => ({
-            queueToggle: state.queueToggle,
-            backendToken: state.backendToken,
-            setAlbums: state.setAlbums,
-            albums: state.albums,
-            appleMusicToken: state.appleMusicToken,
-        }))
+    const {
+        queueToggle,
+        albums,
+        darkMode,
+        setDarkMode,
+        backendToken,
+        setAlbums,
+        appleMusicToken,
+    } = useStore(state => ({
+        queueToggle: state.queueToggle,
+        darkMode: state.darkMode,
+        setDarkMode: state.setDarkMode,
+        backendToken: state.backendToken,
+        setAlbums: state.setAlbums,
+        albums: state.albums,
+        appleMusicToken: state.appleMusicToken,
+    }))
 
     const userId = backendToken
     const navigate = useNavigate()
@@ -94,12 +103,21 @@ const Sidebar = () => {
     return (
         <>
             <div className="flex-col m-1 flex  select-none h-full ">
-                <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto border-b-2 border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
+                <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto  border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
-                        className={`gap-2 pb-2 ${queueToggle ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}
+                        className={`gap-2 pb-2 ${queueToggle ? `text-white` : darkMode ? `text-white` : `text-black`} absolute top-4 right-4 flex items-center`}
                         title="Log out"
                     >
-                        <div className=" hover:cursor-pointer hover:text-slate-500">
+                        <div
+                            className=" hover:cursor-pointer hover:text-slate-500"
+                            onClick={() => {
+                                {
+                                    darkMode
+                                        ? setDarkMode(false)
+                                        : setDarkMode(true)
+                                }
+                            }}
+                        >
                             <MdOutlineDarkMode />
                         </div>
                         <div className=" hover:cursor-pointer hover:text-slate-500">
@@ -154,7 +172,11 @@ const Sidebar = () => {
 
                     <NavLink
                         to="/playlist-display"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
                     >
                         <RiPlayListFill />
                         <p className="p-2">Playlists</p>
@@ -182,7 +204,7 @@ const Sidebar = () => {
                         <span className="p-2 ">Logout</span>
                     </div> */}
                 </div>
-                <div className="flex-col bg-black p-1  rounded-lg w-full border-b-2  border-slate-700    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
+                <div className="flex-col bg-black p-1  rounded-lg w-full  border-slate-700    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
                     <div className="div flex px-1  justify-around">
                         {/* likes */}
                         {/* activity */}

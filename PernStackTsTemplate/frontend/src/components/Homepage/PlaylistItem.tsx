@@ -89,10 +89,12 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
         authorizeMusicKit,
 
         queueToggle,
+        darkMode,
         playlist,
         musicKitInstance,
     } = useStore(state => ({
         playlistData: state.playlistData,
+        darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         setPlaylistData: state.setPlaylistData,
         isPlaying: state.isPlaying,
@@ -198,7 +200,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} text-slate-800 hover:text-slate-200  rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
             onClick={handleNavigation}
             title={`${playlistItem.attributes.name}`}
         >

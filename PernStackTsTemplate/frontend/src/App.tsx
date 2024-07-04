@@ -23,13 +23,19 @@ import PlaylistDisplay from './pages/PlaylistDisplay'
 import EditPlaylist from './pages/EditPlaylist'
 
 function App() {
-    const { backendToken, authorizeBackend, setBackendToken, queueToggle } =
-        useStore(state => ({
-            backendToken: state.backendToken,
-            queueToggle: state.queueToggle,
-            authorizeBackend: state.authorizeBackend,
-            setBackendToken: state.setBackendToken,
-        }))
+    const {
+        backendToken,
+        authorizeBackend,
+        darkMode,
+        setBackendToken,
+        queueToggle,
+    } = useStore(state => ({
+        darkMode: state.darkMode,
+        backendToken: state.backendToken,
+        queueToggle: state.queueToggle,
+        authorizeBackend: state.authorizeBackend,
+        setBackendToken: state.setBackendToken,
+    }))
 
     const [isCheckingAuth, setIsCheckingAuth] = useState(true)
     const authToken = document.cookie
@@ -57,7 +63,7 @@ function App() {
 
     return (
         <div
-            className={`flex-col justify-between flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-gray-700 to-gray-900' : 'bg-gradient-to-b from-gray-200 to-gray-900'} `}
+            className={`flex-col justify-between bg-fixed flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-gray-700 to-gray-900' : darkMode ? 'bg-gradient-to-b from-gray-800 to-gray-900' : 'bg-gradient-to-b from-gray-300 to-gray-900'} `}
         >
             <div className="flex flex-grow ">
                 {backendToken && (

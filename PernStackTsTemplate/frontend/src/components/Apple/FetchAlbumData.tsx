@@ -25,7 +25,7 @@ type AttributeObject = {
 
 type RelationshipObject = {
     tracks: TracksObject
-    artists?: ArtistObject[]
+    artists?: { data: ArtistObject[] }
 }
 
 type ArtistObject = {
@@ -87,8 +87,6 @@ const FetchAlbumData = (albumId: string | undefined) => {
             }
 
             try {
-                console.log('music kit instance and album id')
-                console.log('music kit instance: ', musicKitInstance)
                 console.log('albumId: ', albumId)
 
                 if (albumId.startsWith('l')) {
