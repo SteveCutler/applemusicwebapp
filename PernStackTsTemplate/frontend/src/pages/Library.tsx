@@ -268,8 +268,8 @@ const Library = () => {
     const style = { fontSize: '2.5rem' }
 
     return (
-        <div className="flex-col w-full  mx-auto h-full">
-            <div className=" flex justify-between   mx-auto items-center gap-2">
+        <div className="flex-col w-fit   h-full">
+            <div className=" flex justify-between w-full  mx-auto items-center gap-2">
                 <form className=" p-3 w-full" action="">
                     <input
                         type="text"
@@ -286,7 +286,7 @@ const Library = () => {
                 </button> */}
                 <div className="flex  justify-center items-center pe-3 gap-1">
                     <span
-                        className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-500' : 'bg-slate-400'}`}
+                        className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
                         onClick={toggleGrid}
                     >
                         {gridDisplay ? (
@@ -331,7 +331,7 @@ const Library = () => {
                 </div>
             </div>
 
-            <div className="flex-col pt-10  justify-center px-x mx-0 border-t-2 border-slate-500 w-full ">
+            <div className="flex-col pt-10  justify-center w-full px-3 mx-0 border-t-2 border-slate-500  ">
                 {librarySearchResults ? (
                     <AlbumList albums={librarySearchResults.slice(0, 30)} />
                 ) : (

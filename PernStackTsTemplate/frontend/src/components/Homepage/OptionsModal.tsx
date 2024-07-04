@@ -129,7 +129,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     }))
 
     const userId = backendToken
-    console.log('object', object)
+    // console.log('object', object)
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -164,15 +164,20 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     }
 
     const prepareSongDetails = (songs: Array<Song>) => {
-        return songs.map(song => ({
-            songId: song.id,
-            songName: song.attributes.name,
-            artistName: song.attributes.artistName,
-            durationInMillis: song.attributes.durationInMillis,
-            albumName: song.attributes.albumName,
-            artworkUrl: song.attributes.artwork?.url,
-            catalogId: song.attributes.playParams.catalogId,
-        }))
+        console.log('preparing songs', songs)
+        try {
+            return songs.map(song => ({
+                songId: song.id,
+                songName: song.attributes.name,
+                artistName: song.attributes.artistName,
+                durationInMillis: song.attributes.durationInMillis,
+                albumName: song.attributes.albumName,
+                artworkUrl: song.attributes.artwork?.url,
+                catalogId: song.attributes.playParams.catalogId,
+            }))
+        } catch (error: any) {
+            console.error(error)
+        }
     }
 
     const addToFavourites = async (songDetails: Array<songDetailsObject>) => {
@@ -194,7 +199,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             )
 
             // const data = await res.json();
-            console.log(res)
+            console.log('response', res)
             // setAlbums(data.albums);
         } catch (error) {
             console.log(error)
@@ -390,7 +395,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     }
 
     const addFavorite = async (e: React.MouseEvent) => {
-        console.log('song: ', object)
+        console.log('object: ', object)
         e.stopPropagation()
         if (!musicKitInstance) {
             return
@@ -423,7 +428,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
 
             //api.music.apple.com/v1/me/ratings/albums/1138988512
 
-            console.log('response: ', response)
+            // console.log('response: ', response)
 
             if (response.status === 200) {
                 toast.success(`${name} added to favorites`)

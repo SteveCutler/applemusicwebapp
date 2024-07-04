@@ -79,12 +79,14 @@ function Footer() {
                 artistName: item.attributes.artistName,
                 albumName: item.attributes.albumName,
                 durationInMillis: item.attributes.durationInMillis,
-                // playParams: {
-                //     catalogId: item.attributes.playParams.catalogId ?? '',
-                // },
+                playParams: {
+                    catalogId: item.attributes.playParams.catalogId ?? '',
+                },
                 artwork: {
-                    bgColor: item.attributes.artwork.bgColor ?? '',
-                    url: item.attributes.artwork.url ?? '',
+                    bgColor:
+                        item.attributes.artwork?.bgColor ??
+                        defaultPlaylistArtwork,
+                    url: item.attributes.artwork?.url ?? defaultPlaylistArtwork,
                 },
             },
         }
@@ -138,12 +140,20 @@ function Footer() {
 
                     className="flex  gap-2 justify-start w-1/4"
                 >
-                    {albumArtUrl && (
+                    {albumArtUrl ? (
                         <img
                             src={albumArtUrl}
                             alt="album image"
-                            className="w-1/3"
+                            style={{ width: '70px' }}
                         />
+                    ) : (
+                        isPlaying && (
+                            <img
+                                src={defaultPlaylistArtwork}
+                                alt="album image"
+                                style={{ width: '70px' }}
+                            />
+                        )
                     )}
                     <div className="flex flex-col w-full justify-center items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
