@@ -76,19 +76,39 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
 
     const style = { fontSize: '2rem', color: 'royalblue ' }
 
-    const handleNavigation = (e: React.MouseEvent) => {
-        e.preventDefault()
-        e.stopPropagation()
+    // const handleNavigation = (e: React.MouseEvent) => {
+    //     e.preventDefault()
+    //     e.stopPropagation()
 
-        navigate(`/song/${song.id}`)
-    }
+    //     navigate(`/song/${song.id}`)
+    // }
 
     const navigate = useNavigate()
 
     return (
-        <div
-            // to={`/song/${song.id}`}
-            onClick={handleNavigation}
+        <Link
+            to={`/song/${song.id}`}
+            state={{
+                song: {
+                    id: song.id,
+                    href: song.attributes.url,
+                    type: 'songs',
+                    attributes: {
+                        id: song.id,
+                        name: song.attributes.name,
+                        trackNumber: song.attributes.trackNumber,
+                        artistName: song.attributes.artistName,
+                        albumName: song.attributes.albumName,
+                        durationInMillis: song.attributes.durationInMillis,
+
+                        artwork: {
+                            bgColor: song.attributes.artwork?.bgColor,
+                            url: song.attributes.artwork?.url,
+                        },
+                    },
+                },
+            }}
+            // onClick={handleNavigation}
             className={`${carousel && 'carousel-item'}  select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : ' text-slate-800 hover:text-slate-300'}   rounded-3xl flex`}
         >
             {song.attributes.artwork?.url && (
@@ -153,7 +173,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                     </div>
                 )}
             </div>
-        </div>
+        </Link>
     )
 }
 

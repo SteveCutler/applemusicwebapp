@@ -156,7 +156,7 @@ const DisplayRow: React.FC<DisplayRow> = ({ title, albums, url }) => {
     const style = { fontSize: '1.5rem' }
 
     return (
-        <div className="flex-col flex w-full items-center mb-5    ">
+        <div className="flex-col flex w-full items-center mb-5  relative  ">
             <h1
                 className={`text-lg select-none flex gap-2 w-full ${darkMode ? 'text-slate-200' : 'text-slate-800'}   font-bold justify-start`}
             >

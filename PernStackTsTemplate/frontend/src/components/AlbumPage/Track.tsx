@@ -11,6 +11,7 @@ import { useStore } from '../../store/store'
 type TrackPropTypes = {
     song: Song
     trackDuration: number
+    albumTracks?: Song[]
     index: number
     first?: boolean
     last?: boolean
@@ -47,6 +48,7 @@ type PlayParameterObject = {
 
 const Track: React.FC<TrackPropTypes> = ({
     song,
+    albumTracks,
     index,
     first,
     trackDuration,
@@ -62,6 +64,8 @@ const Track: React.FC<TrackPropTypes> = ({
     // } = usePlayerContext()
 
     // const [isPlaying, setIsPlaying] = useState(false)
+
+    // console.log('album tracks:', albumTracks)
     const {
         playSong,
         pauseSong,
@@ -73,6 +77,7 @@ const Track: React.FC<TrackPropTypes> = ({
         switchTrack,
         currentSongIndex,
         currentElapsedTime,
+
         currentSongDuration,
         currentSongId,
         playlist,
@@ -83,6 +88,7 @@ const Track: React.FC<TrackPropTypes> = ({
         switchTrack: state.switchTrack,
         currentElapsedTime: state.currentElapsedTime,
         pauseSong: state.pauseSong,
+
         currentSongDuration: state.currentSongDuration,
         nextSong: state.nextSong,
         previousSong: state.previousSong,
@@ -98,8 +104,11 @@ const Track: React.FC<TrackPropTypes> = ({
         setPlaylist: state.setPlaylist,
     }))
 
-    const initializeMusic = async () => {
-        await setPlaylist(albumTracks, index, true)
+    const initializeMusic = () => {
+        if (albumTracks) {
+            console.log('album tracks ', albumTracks)
+            setPlaylist(albumTracks, index, true)
+        }
     }
 
     const pause = async () => {
@@ -252,7 +261,11 @@ const Track: React.FC<TrackPropTypes> = ({
                 </div>
             </div>
             <button
-                onClick={playPauseHandler}
+                onClick={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    initializeMusic()
+                }}
                 className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
             >
                 {isPlaying && song.id === currentSongId ? (

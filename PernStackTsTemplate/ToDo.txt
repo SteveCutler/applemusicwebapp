@@ -9,7 +9,14 @@ Song page api calls?
 better home page suggestions & recommendations
 so many refreshes
 
-add drag and drop feature to playlist creation/edit
+
+add api calls to stations & songs pages 
+
+redesign toast
+
+add drag and drop feature to playlist creation
+'add to playlist' functionality to songs, albums
+favourite artists
 creation playlist edit page
 
 THINGS TO FOCUS ON

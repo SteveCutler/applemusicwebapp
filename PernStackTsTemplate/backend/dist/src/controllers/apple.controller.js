@@ -229,6 +229,7 @@ export const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
                         songId: ratingData.id,
                         value: ratingData.attributes.value,
                         userId: userId,
+                        durationInMillis: ratingData.attributes.durationInMillis,
                         ratedAt: ratingData.attributes.ratedAt ||
                             new Date().toISOString(),
                         songName: ratingData.attributes.name,
@@ -357,6 +358,7 @@ export const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => 
                             userId: userId,
                             ratedAt: new Date().toISOString(), // Mark the rating with current date
                             songName: track.attributes.name,
+                            durationInMillis: track.attributes.durationInMillis,
                             artistName: track.attributes.artistName,
                             albumName: track.attributes.albumName,
                             artworkUrl: track.attributes.artwork?.url,
@@ -471,6 +473,7 @@ export const addSongsToRatings = async (userId, songDetails, res) => {
         songId: song.songId,
         catalogId: song.catalogId,
         songName: song.songName,
+        durationInMillis: song.durationInMillis,
         artistName: song.artistName,
         albumName: song.albumName,
         artworkUrl: song.artworkUrl,
@@ -506,6 +509,7 @@ export const getRatings = async (req, res) => {
                 songId: true,
                 ratedAt: true,
                 songName: true,
+                durationInMillis: true,
                 catalogId: true,
                 artistName: true,
                 albumName: true,
@@ -519,6 +523,7 @@ export const getRatings = async (req, res) => {
                 ratedAt: song.ratedAt,
                 name: song.songName,
                 artistName: song.artistName,
+                durationInMillis: song.durationInMillis,
                 albumName: song.albumName,
                 playParams: {
                     catalogId: song.catalogId,

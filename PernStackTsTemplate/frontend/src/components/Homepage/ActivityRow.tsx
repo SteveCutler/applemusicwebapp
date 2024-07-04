@@ -4,7 +4,7 @@ import CollapsibleList from '../Apple/CollapsibleList'
 import CollapsibleListFavs from '../Apple/CollapsibleListFavs'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import defaultPic from '../../assets/images/defaultPlaylistArtwork.png'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 interface ActivityProp {
     item: Song | Album | playlist | StationType
@@ -235,9 +235,31 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
         case 'songs':
         case 'library-songs':
             return (
-                <div
+                <Link
+                    to={`/song/${item.id}`}
+                    state={{
+                        song: {
+                            id: item.id,
+                            href: item.attributes.url,
+                            type: 'items',
+                            attributes: {
+                                id: item.id,
+                                name: item.attributes.name,
+                                trackNumber: item.attributes.trackNumber,
+                                artistName: item.attributes.artistName,
+                                albumName: item.attributes.albumName,
+                                durationInMillis:
+                                    item.attributes.durationInMillis,
+
+                                artwork: {
+                                    bgColor: item.attributes.artwork?.bgColor,
+                                    url: item.attributes.artwork?.url,
+                                },
+                            },
+                        },
+                    }}
                     className="flex border-b border-slate-800 w-full h-fit p-1 hover:cursor-pointer hover:bg-slate-700 text-xs  justify-between"
-                    onClick={() => navigateTo(item.id)}
+                    // onClick={() => navigateTo(item.id)}
                 >
                     <div className="w-10/12 truncate gap-1 flex">
                         {item.attributes.artwork?.url ? (
@@ -307,7 +329,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <FaCirclePlay style={styleBlue} />
                         )}
                     </button>
-                </div>
+                </Link>
             )
             break
         case 'albums':

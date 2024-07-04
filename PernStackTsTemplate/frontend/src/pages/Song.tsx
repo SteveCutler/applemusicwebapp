@@ -8,6 +8,7 @@ import { useStore } from '../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
+import OptionsModal from '../components/Homepage/OptionsModal'
 
 interface songProp {
     song: Song
@@ -158,7 +159,7 @@ const Song = () => {
                             <img src={defaultPlaylistArtwork} />
                         )}
                         <div
-                            className=" absolute bottom-10 right-10 hover:cursor-pointer transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className=" absolute bottom-5 left-4 hover:cursor-pointer transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior
@@ -169,6 +170,18 @@ const Song = () => {
                             }}
                         >
                             <FaCirclePlay style={styleButton} />
+                        </div>
+
+                        <div className="absolute bottom-4 right-4">
+                            <div
+                                onClick={e => {
+                                    e.preventDefault()
+                                    e.stopPropagation() // Prevents the link's default behavior
+                                }}
+                                className=""
+                            >
+                                <OptionsModal big={true} object={song} />
+                            </div>
                         </div>
                     </div>
                     <div className=" w-1/2">

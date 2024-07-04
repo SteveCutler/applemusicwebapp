@@ -37,6 +37,7 @@ const AppleDashboard = () => {
     const {
         musicKitInstance,
         authorizeMusicKit,
+        darkMode,
         heavyRotation,
         themedRecommendations,
         setHeavyRotation,
@@ -50,6 +51,7 @@ const AppleDashboard = () => {
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
         recentlyAddedToLib: state.recentlyAddedToLib,
+        darkMode: state.darkMode,
         moreLikeRecommendations: state.moreLikeRecommendations,
         themedRecommendations: state.themedRecommendations,
         personalizedPlaylists: state.personalizedPlaylists,
@@ -145,7 +147,7 @@ const AppleDashboard = () => {
     // Get recommendation based on ID https://api.music.apple.com/v1/me/recommendations/{id}
 
     return (
-        <div className="h-100vh flex-col flex-grow flex justify-center ">
+        <div className="h-100vh flex-col flex-grow relative z-10 flex justify-center ">
             {/* MAIN DISPLAY */}
             {recentlyAddedToLib && (
                 <DisplayRow

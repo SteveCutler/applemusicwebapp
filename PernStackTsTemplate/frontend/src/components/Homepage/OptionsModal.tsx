@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { SlOptions } from 'react-icons/sl'
 import { useStore } from '../../store/store'
 import { toast } from 'react-hot-toast'
@@ -102,14 +102,21 @@ type playlist = {
 const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
     const styleDark = { fontSize: '1.5rem', color: 'black' }
+
+    const [isHovered, setIsHovered] = useState(false)
+
     const {
         musicKitInstance,
         authorizeMusicKit,
         darkMode,
+        fetchAppleToken,
+        libraryPlaylists,
         appleMusicToken,
         backendToken,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        fetchAppleToken: state.fetchAppleToken,
+        libraryPlaylists: state.libraryPlaylists,
         authorizeMusicKit: state.authorizeMusicKit,
         backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
@@ -190,6 +197,125 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
 
     const styleSmall = { fontSize: '1rem' }
     const styleBig = { fontSize: '2.3rem' }
+
+    const handleAddToPlaylist = async (id: string) => {
+        if (!musicKitInstance) {
+            await authorizeMusicKit()
+        }
+        if (!appleMusicToken) {
+            await fetchAppleToken()
+        }
+        if (musicKitInstance && appleMusicToken) {
+            try {
+                const response = await fetch(
+                    `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${
+                                import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                            }`,
+                            'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            data: [
+                                {
+                                    id: object.id, // The unique identifier of the song
+                                    type: 'songs', // The type of the resource
+                                },
+                            ],
+                        }),
+                    }
+                )
+                // credentials: 'include',
+
+                // const data = await response.json()
+                // console.log('data: ', data)
+                if (response.status === 201) {
+                    //check for success
+                    toast.success('Playlist created!')
+                    //update sidebar playlists before refresh
+                    // const newPlaylist = {
+                    //     attributes: {
+                    //         description: playlistDescription ?? '',
+
+                    //         canEdit: data.data[0].attributes.canEdit,
+
+                    //         dataAdded: data.data[0].attributes.dateAdded,
+                    //         isPublic: data.data[0].attributes.isPublic,
+                    //         lastModifiedDate:
+                    //             data.data[0].attributes.lastModifiedDate,
+                    //         name: playlistName,
+                    //     },
+                    //     href: data.data[0].href,
+                    //     id: data.data[0].id,
+                    //     type: 'library-playlists',
+                    // }
+                }
+            } catch (error: any) {
+                console.error(error)
+                toast.error('An error occurred..')
+            }
+        }
+    }
+
+    // const retrieveAlbumSongs = async (albumId: string) => {
+    //     setAlbumsAdded([...albumsAdded, albumId])
+
+    //     if (!musicKitInstance) {
+    //         await authorizeMusicKit()
+    //         return
+    //     }
+    //     if (!musicKitInstance || !albumId) {
+    //         return
+    //     }
+
+    //     try {
+    //         console.log('music kit instance and album id')
+    //         console.log('music kit instance: ', musicKitInstance)
+    //         console.log('albumId: ', albumId)
+
+    //         if (albumId.startsWith('l')) {
+    //             try {
+    //                 const catRes = await musicKitInstance?.api.music(
+    //                     `v1/me/library/albums/${albumId}/catalog`
+    //                 )
+
+    //                 const catalogId = await catRes.data.data[0].id
+
+    //                 const res = await musicKitInstance.api.music(
+    //                     `/v1/catalog//ca/albums/${catalogId}/tracks`
+    //                 )
+
+    //                 const data = await res.data.data
+
+    //                 return data
+    //             } catch (error: any) {
+    //                 console.error(error)
+    //             }
+    //         } else {
+    //             try {
+    //                 const queryParameters = { l: 'en-us' }
+    //                 const res = await musicKitInstance.api.music(
+    //                     `/v1/catalog//ca/albums/${albumId}/tracks`,
+
+    //                     queryParameters
+    //                 )
+
+    //                 console.log(res)
+
+    //                 const data = await res.data.data
+
+    //                 return data
+    //             } catch (error: any) {
+    //                 console.error(error)
+    //             }
+    //         }
+    //     } catch (error: any) {
+    //         console.error(error)
+    //     }
+    // }
 
     const addFavorite = async (e: React.MouseEvent) => {
         console.log('song: ', object)
@@ -348,30 +474,32 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                 // await FetchAlbumData(albumId)
                 // handlePlayPause()
             }}
-            className={`dropdown ${darkMode ? 'text-slate-900 ' : 'text-white '} `}
+            className={`dropdown ${darkMode ? 'text-slate-900 ' : 'text-white '} relative`}
         >
-            <div
-                tabIndex={0}
-                role="button"
-                className=" bg-slate-400 transform  rounded-full relative z-100 justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
-                onClick={async e => {
-                    e.preventDefault()
-                    e.stopPropagation() // Prevents the link's default behavior
-                    // await FetchAlbumData(albumId)
-                    // handlePlayPause()
-                }}
-            >
-                {small ? (
-                    <SlOptions style={styleSmall} />
-                ) : big ? (
-                    <SlOptions style={styleBig} />
-                ) : (
-                    <SlOptions style={style} />
-                )}
+            <div className="relative z-10">
+                <div
+                    tabIndex={0}
+                    role="button"
+                    className="bg-slate-400 transform rounded-full relative justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
+                    onClick={async e => {
+                        e.preventDefault()
+                        e.stopPropagation() // Prevents the link's default behavior
+                        // await FetchAlbumData(albumId)
+                        // handlePlayPause()
+                    }}
+                >
+                    {small ? (
+                        <SlOptions style={styleSmall} />
+                    ) : big ? (
+                        <SlOptions style={styleBig} />
+                    ) : (
+                        <SlOptions style={style} />
+                    )}
+                </div>
             </div>
             <ul
                 tabIndex={0}
-                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} relative z-20 font-bold right-4 -bottom-0 menu w-40  p-2 shadow   rounded-box`}
+                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
             >
                 <li className="w-full flex justify-between items-center">
                     <a
@@ -410,24 +538,39 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         Add to Library
                     </div>
                 </li>
+
                 <li
-                    onClick={async e => {
-                        e.preventDefault()
-                        e.stopPropagation() // Prevents the link's default behavior
-                        // await FetchAlbumData(albumId)
-                        // handlePlayPause()
-                        console.log('click')
-                    }}
-                    className=" justify-center items-center w-full"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    className="relative justify-center items-center w-full"
                 >
-                    <a
-                        onClick={() => {
-                            console.log('click')
-                        }}
-                        className="w-full flex justify-center text-center"
-                    >
+                    <a className="w-full flex justify-center text-center">
                         Add to Playlist
                     </a>
+                    {/* Sub list to add song/album to playlist */}
+
+                    {/* <ul
+                tabIndex={0}
+                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
+            > */}
+                    <ul
+                        className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
+                    >
+                        {libraryPlaylists &&
+                            libraryPlaylists.map(playlist => (
+                                <li
+                                    className="relative justify-center items-center w-full"
+                                    onClick={e => {
+                                        e.preventDefault()
+                                        handleAddToPlaylist(playlist.id)
+                                    }}
+                                >
+                                    <a className="w-full flex justify-center text-center">
+                                        {playlist.attributes.name}
+                                    </a>
+                                </li>
+                            ))}
+                    </ul>
                 </li>
             </ul>
         </div>

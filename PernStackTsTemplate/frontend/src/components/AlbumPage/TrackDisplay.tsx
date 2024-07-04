@@ -45,6 +45,7 @@ type PlayParameterObject = {
     kind: string
 }
 const TrackDisplay = ({ albumTracks }: TracksObject) => {
+    // console.log('album tracks', albumTracks)
     const convertToDuration = (milliseconds: Number) => {
         if (typeof milliseconds !== 'number' || milliseconds < 0) {
             throw new Error('Input must be a non-negative number')
@@ -70,6 +71,7 @@ const TrackDisplay = ({ albumTracks }: TracksObject) => {
                         trackDuration={convertToDuration(
                             song.attributes.durationInMillis
                         )}
+                        albumTracks={albumTracks}
                         song={song}
                         first={index === 0}
                         last={index === albumTracks.length - 1}

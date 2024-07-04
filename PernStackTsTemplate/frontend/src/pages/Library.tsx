@@ -304,7 +304,7 @@ const Library = () => {
                     >
                         <IoMdRefreshCircle style={style} />
                     </button>
-                    {/* <button
+                    <button
                         disabled={loading}
                         onClick={getRatedSongs}
                         className=" btn btn-primary rounded-full"
@@ -320,7 +320,7 @@ const Library = () => {
                     >
                         <GiLoveSong style={style} />
                     </button>
-                    <button
+                    {/* <button
                         disabled={loading}
                         onClick={getSongs}
                         className=" btn btn-primary rounded-full"

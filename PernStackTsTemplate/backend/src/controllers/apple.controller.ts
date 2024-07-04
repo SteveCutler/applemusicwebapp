@@ -69,6 +69,7 @@ type Rating = {
     userId: string
     ratedAt?: string
     songName?: string
+    durationInMillis: number
     artistName?: string
     albumName?: string
     artworkUrl?: string
@@ -355,6 +356,8 @@ export const fetchAndSaveRatings = async (
                         songId: ratingData.id,
                         value: ratingData.attributes.value,
                         userId: userId,
+                        durationInMillis:
+                            ratingData.attributes.durationInMillis,
                         ratedAt:
                             ratingData.attributes.ratedAt ||
                             new Date().toISOString(),
@@ -516,6 +519,7 @@ export const fetchAndSaveAlbumRatings = async (
                             userId: userId,
                             ratedAt: new Date().toISOString(), // Mark the rating with current date
                             songName: track.attributes.name,
+                            durationInMillis: track.attributes.durationInMillis,
                             artistName: track.attributes.artistName,
                             albumName: track.attributes.albumName,
                             artworkUrl: track.attributes.artwork?.url,
@@ -649,6 +653,7 @@ export const addSongsToRatings = async (
         songId: string
         songName?: string
         artistName?: string
+        durationInMillis: number
         albumName?: string
         artworkUrl?: string
         catalogId?: string
@@ -660,6 +665,7 @@ export const addSongsToRatings = async (
         songId: song.songId,
         catalogId: song.catalogId,
         songName: song.songName,
+        durationInMillis: song.durationInMillis,
         artistName: song.artistName,
         albumName: song.albumName,
         artworkUrl: song.artworkUrl,
@@ -698,6 +704,7 @@ export const getRatings = async (req: Request, res: Response) => {
                 songId: true,
                 ratedAt: true,
                 songName: true,
+                durationInMillis: true,
                 catalogId: true,
                 artistName: true,
                 albumName: true,
@@ -712,6 +719,7 @@ export const getRatings = async (req: Request, res: Response) => {
                 ratedAt: song.ratedAt,
                 name: song.songName,
                 artistName: song.artistName,
+                durationInMillis: song.durationInMillis,
                 albumName: song.albumName,
                 playParams: {
                     catalogId: song.catalogId,
