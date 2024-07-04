@@ -101,12 +101,15 @@ type playlist = {
 
 const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     const style = { fontSize: '1.5rem', color: 'white' }
+    const styleDark = { fontSize: '1.5rem', color: 'black' }
     const {
         musicKitInstance,
         authorizeMusicKit,
+        darkMode,
         appleMusicToken,
         backendToken,
     } = useStore(state => ({
+        darkMode: state.darkMode,
         authorizeMusicKit: state.authorizeMusicKit,
         backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
@@ -345,12 +348,12 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                 // await FetchAlbumData(albumId)
                 // handlePlayPause()
             }}
-            className=" dropdown text-white "
+            className={`dropdown ${darkMode ? 'text-slate-900 ' : 'text-white '} `}
         >
             <div
                 tabIndex={0}
                 role="button"
-                className=" bg-slate-400 transform  rounded-full relative z-1000 justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
+                className=" bg-slate-400 transform  rounded-full relative z-100 justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
                 onClick={async e => {
                     e.preventDefault()
                     e.stopPropagation() // Prevents the link's default behavior
@@ -368,7 +371,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             </div>
             <ul
                 tabIndex={0}
-                className="dropdown-content relative z-20 font-bold right-4 -bottom-0 menu w-40  p-2 shadow  bg-base-100 rounded-box"
+                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} relative z-20 font-bold right-4 -bottom-0 menu w-40  p-2 shadow   rounded-box`}
             >
                 <li className="w-full flex justify-between items-center">
                     <a
@@ -378,7 +381,10 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             addToLibrary(e)
                         }}
                     >
-                        Like <IoHeartCircleOutline style={style} />
+                        Like{' '}
+                        <IoHeartCircleOutline
+                            style={darkMode ? styleDark : style}
+                        />
                     </a>
                     <a
                         className=" justify-center items-center w-full"
@@ -386,7 +392,10 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             addDislike(e)
                         }}
                     >
-                        Dislike <IoHeartDislikeCircleOutline style={style} />
+                        Dislike{' '}
+                        <IoHeartDislikeCircleOutline
+                            style={darkMode ? styleDark : style}
+                        />
                     </a>
                 </li>
                 <li
@@ -395,7 +404,9 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     }}
                     className=" justify-center items-center "
                 >
-                    <div className="w-full flex justify-center text-center">
+                    <div
+                        className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                    >
                         Add to Library
                     </div>
                 </li>
