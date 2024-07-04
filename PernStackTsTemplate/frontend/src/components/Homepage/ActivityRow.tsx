@@ -268,9 +268,14 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                                     item.attributes.artwork?.url,
                                     50
                                 )}
+                                style={{ maxWidth: '50px' }}
                             />
                         ) : (
-                            <img src={defaultPic} width="50px" />
+                            <img
+                                src={defaultPic}
+                                width="50px"
+                                style={{ maxWidth: '50px' }}
+                            />
                         )}
                         <div className="flex flex-col justify-center  items-start  ">
                             <div

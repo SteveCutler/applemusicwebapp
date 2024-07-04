@@ -79,7 +79,7 @@ const SidebarFavouriteSongs = () => {
                     })
                     console.log('sorted favs', sortedFavs)
 
-                    setFavouriteSongs(sortedFavs.slice(0, 15))
+                    setFavouriteSongs(sortedFavs)
                     console.log('success')
                 }
             } catch (error) {

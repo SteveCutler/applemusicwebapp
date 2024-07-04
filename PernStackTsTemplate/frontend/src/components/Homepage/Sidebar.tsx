@@ -167,14 +167,6 @@ const Sidebar = () => {
                         <p className="p-2">Library</p>
                     </NavLink>
 
-                    {/* <NavLink
-                        to="/"
-                        className="flex w-full mx-auto px-3 hover:text-slate-100  cursor-default rounded-xl  justify-center items-center"
-                    >
-                        <FaHeartbeat />
-                        <p className="p-2">Likes</p>
-                    </NavLink> */}
-
                     <NavLink
                         to="/playlist-display"
                         className={({ isActive }) =>
@@ -185,6 +177,17 @@ const Sidebar = () => {
                     >
                         <RiPlayListFill />
                         <p className="p-2">Playlists</p>
+                    </NavLink>
+                    <NavLink
+                        to="/favourites"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
+                    >
+                        <FaHeartbeat />
+                        <p className="p-2">Favourites</p>
                     </NavLink>
 
                     {/* <NavLink

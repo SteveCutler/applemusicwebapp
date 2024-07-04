@@ -87,10 +87,10 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
 
     switch (type) {
         case 'likes':
-            if (recentActivity) {
+            if (favouriteSongs) {
                 return (
                     <div className="w-full  border-4 flex text-sm  font-normal flex-col text-white border-slate-700 h-full rounded-md bg-slate-900">
-                        {favouriteSongs?.map(item => (
+                        {favouriteSongs.slice(0, 20).map(item => (
                             <ActivityRow item={item} />
                         ))}
                         {/* {recentActivity && <CollapsibleListFavs items={recentActivity} />} */}

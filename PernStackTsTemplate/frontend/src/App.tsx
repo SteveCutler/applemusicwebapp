@@ -21,6 +21,7 @@ import Header from './components/Homepage/Header'
 import NewPlaylist from './pages/NewPlaylist'
 import PlaylistDisplay from './pages/PlaylistDisplay'
 import EditPlaylist from './pages/EditPlaylist'
+import Favourites from './pages/Favourites'
 
 function App() {
     const {
@@ -165,6 +166,16 @@ function App() {
                             element={
                                 backendToken || authToken ? (
                                     <PlaylistDisplay />
+                                ) : (
+                                    <Login />
+                                )
+                            }
+                        />
+                        <Route
+                            path="/favourites"
+                            element={
+                                backendToken || authToken ? (
+                                    <Favourites />
                                 ) : (
                                     <Login />
                                 )
