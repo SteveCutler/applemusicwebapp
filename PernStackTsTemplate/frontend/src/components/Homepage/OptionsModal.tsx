@@ -249,41 +249,141 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             object.type === 'albums' ||
             object.type === 'library-albums'
         ) {
-            try {
-                const tracks = object.relationships.tracks.data.map(
-                    (track: Song) => ({
-                        id: track.id, // The unique identifier of the song
-                        type: 'songs', // The type of the resource
-                    })
-                )
+            if (object.relationships) {
+                try {
+                    const tracks = object.relationships.tracks.data.map(
+                        (track: Song) => ({
+                            id: track.id, // The unique identifier of the song
+                            type: 'songs', // The type of the resource
+                        })
+                    )
 
-                console.log('tracks:', tracks)
+                    console.log('tracks:', tracks)
 
-                const response = await fetch(
-                    `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
-                    {
-                        method: 'POST',
-                        headers: {
-                            Authorization: `Bearer ${
-                                import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
-                            }`,
-                            'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            data: tracks,
-                        }),
+                    const response = await fetch(
+                        `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                Authorization: `Bearer ${
+                                    import.meta.env
+                                        .VITE_MUSICKIT_DEVELOPER_TOKEN
+                                }`,
+                                'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                data: tracks,
+                            }),
+                        }
+                    )
+
+                    console.log(response)
+
+                    if (response.status === 204) {
+                        toast.success(`Added to ${name}`)
                     }
-                )
-
-                console.log(response)
-
-                if (response.status === 204) {
-                    toast.success(`Added to ${name}`)
+                } catch (error: any) {
+                    console.error(error)
+                    toast.error('An error occurred..')
                 }
-            } catch (error: any) {
-                console.error(error)
-                toast.error('An error occurred..')
+            } else {
+                if (object.id.startsWith('l')) {
+                    try {
+                        const catRes = await musicKitInstance?.api.music(
+                            `v1/me/library/albums/${object.id}/catalog`
+                        )
+
+                        const catalogId = await catRes.data.data[0].id
+
+                        const res = await musicKitInstance?.api.music(
+                            `/v1/catalog//ca/albums/${catalogId}/tracks`
+                        )
+
+                        const trackData = await res.data.data
+
+                        const tracks = trackData.map((track: Song) => ({
+                            id: track.id, // The unique identifier of the song
+                            type: 'songs', // The type of the resource
+                        }))
+
+                        console.log('tracks:', tracks)
+
+                        const response = await fetch(
+                            `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
+                            {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: `Bearer ${
+                                        import.meta.env
+                                            .VITE_MUSICKIT_DEVELOPER_TOKEN
+                                    }`,
+                                    'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    data: tracks,
+                                }),
+                            }
+                        )
+
+                        console.log(response)
+
+                        if (response.status === 204) {
+                            toast.success(`Added to ${name}`)
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                        toast.error('An error occurred..')
+                    }
+                } else {
+                    try {
+                        const queryParameters = { l: 'en-us' }
+                        const res = await musicKitInstance?.api.music(
+                            `/v1/catalog//ca/albums/${object.id}/tracks`,
+
+                            queryParameters
+                        )
+
+                        console.log(res)
+
+                        const trackData = await res.data.data
+
+                        const tracks = trackData.map((track: Song) => ({
+                            id: track.id, // The unique identifier of the song
+                            type: 'songs', // The type of the resource
+                        }))
+
+                        console.log('tracks:', tracks)
+
+                        const response = await fetch(
+                            `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
+                            {
+                                method: 'POST',
+                                headers: {
+                                    Authorization: `Bearer ${
+                                        import.meta.env
+                                            .VITE_MUSICKIT_DEVELOPER_TOKEN
+                                    }`,
+                                    'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    data: tracks,
+                                }),
+                            }
+                        )
+
+                        console.log(response)
+
+                        if (response.status === 204) {
+                            toast.success(`Added to ${name}`)
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                        toast.error('An error occurred..')
+                    }
+                }
             }
         }
     }
@@ -511,57 +611,42 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     </div>
                 </li>
 
-                <li
-                    onMouseEnter={() => setIsHovered(true)}
-                    onMouseLeave={() => setIsHovered(false)}
-                    className="relative justify-center items-center w-full"
-                >
-                    <a className="w-full flex justify-center text-center">
-                        Add to Playlist
-                    </a>
-                    {/* Sub list to add song/album to playlist */}
+                {object.type !== 'playlists' &&
+                    object.type !== 'library-playlists' && (
+                        <li
+                            onMouseEnter={() => setIsHovered(true)}
+                            onMouseLeave={() => setIsHovered(false)}
+                            className="relative justify-center items-center w-full"
+                        >
+                            <a className="w-full flex justify-center text-center">
+                                Add to Playlist
+                            </a>
 
-                    {/* <ul
-                tabIndex={0}
-                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
-            > */}
-                    <ul
-                        className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
-                    >
-                        {libraryPlaylists &&
-                            libraryPlaylists.map(playlist => (
-                                <li
-                                    className="relative justify-center items-center w-full"
-                                    onClick={e => {
-                                        e.preventDefault()
-                                        handleAddToPlaylist(
-                                            playlist.id,
-                                            playlist.attributes.name
-                                        )
-                                    }}
-                                >
-                                    <a className="w-full flex justify-center text-center">
-                                        {playlist.attributes.name}
-                                    </a>
-                                </li>
-                            ))}
-                    </ul>
-                </li>
+                            <ul
+                                className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
+                            >
+                                {libraryPlaylists &&
+                                    libraryPlaylists.map(playlist => (
+                                        <li
+                                            className="relative justify-center items-center w-full"
+                                            onClick={e => {
+                                                e.preventDefault()
+                                                handleAddToPlaylist(
+                                                    playlist.id,
+                                                    playlist.attributes.name
+                                                )
+                                            }}
+                                        >
+                                            <a className="w-full flex justify-center text-center">
+                                                {playlist.attributes.name}
+                                            </a>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </li>
+                    )}
             </ul>
         </div>
-        // <details className="dropdown rounded-full p-1 bg-slate-400">
-        //     <summary>
-        //
-        //     </summary>
-        //     <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box w-52">
-        //         <li>
-        //             <a>Item 1</a>
-        //         </li>
-        //         <li>
-        //             <a>Item 2</a>
-        //         </li>
-        //     </ul>
-        // </details>
     )
 }
 
