@@ -56,7 +56,9 @@ function App() {
     }
 
     return (
-        <div className="flex-col justify-between flex min-h-screen ">
+        <div
+            className={`flex-col justify-between flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-gray-700 to-gray-900' : 'bg-gradient-to-b from-gray-200 to-gray-900'} `}
+        >
             <div className="flex flex-grow ">
                 {backendToken && (
                     <div className="sidebar overflow-y-auto  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12  h-1/2 ">
