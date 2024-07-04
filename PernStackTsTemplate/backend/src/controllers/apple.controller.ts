@@ -298,7 +298,7 @@ export const fetchAndSaveSongs = async (
             userId: userId,
             catalogId: song.attributes.playParams?.catalogId || '',
         }))
-        .filter(song => song.songId && song.name && song.artistName)
+    // .filter(song => song.songId && song.name && song.artistName)
 
     try {
         if (newSongs.length > 0) {
@@ -336,11 +336,11 @@ export const fetchAndSaveRatings = async (
     const ratings: Rating[] = []
     let responseSent = false
 
-    const fetchRatings = async (songIds: string[]) => {
-        for (const songId of songIds) {
-            const endpoint = songId.startsWith('i')
-                ? `https://api.music.apple.com/v1/me/ratings/library-songs/${songId}`
-                : `https://api.music.apple.com/v1/me/ratings/songs/${songId}`
+    const fetchRatings = async (songs: Song[]) => {
+        for (const song of songs) {
+            const endpoint = song.id.startsWith('i')
+                ? `https://api.music.apple.com/v1/me/ratings/library-songs/${song.id}`
+                : `https://api.music.apple.com/v1/me/ratings/songs/${song.id}`
 
             try {
                 const res = await axios.get(endpoint, {
@@ -353,18 +353,17 @@ export const fetchAndSaveRatings = async (
                 if (res.data && res.data.data) {
                     const ratingData = res.data.data[0]
                     ratings.push({
-                        songId: ratingData.id,
+                        songId: song.id,
                         value: ratingData.attributes.value,
                         userId: userId,
-                        durationInMillis:
-                            ratingData.attributes.durationInMillis,
+                        durationInMillis: song.attributes.durationInMillis,
                         ratedAt:
                             ratingData.attributes.ratedAt ||
                             new Date().toISOString(),
-                        songName: ratingData.attributes.name,
-                        artistName: ratingData.attributes.artistName,
-                        albumName: ratingData.attributes.albumName,
-                        artworkUrl: ratingData.attributes.artwork?.url,
+                        songName: song.attributes.name,
+                        artistName: song.attributes.artistName,
+                        albumName: song.attributes.albumName,
+                        artworkUrl: song.attributes.artwork?.url,
                     })
                 }
             } catch (error: any) {
@@ -375,16 +374,16 @@ export const fetchAndSaveRatings = async (
                 ) {
                     const errorMessage = error.response.data.errors[0]
                     if (errorMessage.status === '404') {
-                        console.log(`Song ID ${songId} not rated, skipping.`)
+                        console.log(`Song ID ${song.id} not rated, skipping.`)
                     } else {
                         console.error(
-                            `Failed to fetch rating for song: ${songId}`,
+                            `Failed to fetch rating for song: ${song.id}`,
                             errorMessage
                         )
                     }
                 } else {
                     console.error(
-                        `Unexpected error fetching rating for song: ${songId}`,
+                        `Unexpected error fetching rating for song: ${song.id}`,
                         error
                     )
                 }
@@ -435,11 +434,10 @@ export const fetchAndSaveRatings = async (
     if (responseSent) return
 
     // Filter out the songs that are already in the database
-    const newSongIds = songs
-        .map(song => song.id)
-        .filter(id => !songIdsInDb.includes(id))
+    const newSongIds = songs.map(song => song.id)
+    // .filter(id => !songIdsInDb.includes(id))
 
-    await fetchRatings(newSongIds)
+    await fetchRatings(songs)
 
     // Save ratings
     const ratingData = ratings.map(rating => ({
@@ -448,6 +446,7 @@ export const fetchAndSaveRatings = async (
         userId: userId,
         ratedAt: rating.ratedAt,
         songName: rating.songName,
+        durationInMillis: rating.durationInMillis,
         artistName: rating.artistName,
         albumName: rating.albumName,
         artworkUrl: rating.artworkUrl,
@@ -618,6 +617,7 @@ export const fetchAndSaveAlbumRatings = async (
         ratedAt: rating.ratedAt,
         songName: rating.songName,
         artistName: rating.artistName,
+        durationInMillis: rating.durationInMillis,
         albumName: rating.albumName,
         artworkUrl: rating.artworkUrl,
     }))

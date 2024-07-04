@@ -54,7 +54,7 @@ model Rating {
   catalogId String?
   userId    String
   value     Int
-  durationInMillis Int @default(0)
+  durationInMillis Int 
   ratedAt   DateTime @default(now())
   songName  String?  // Optional field for song name
   artistName String? // Optional field for artist name

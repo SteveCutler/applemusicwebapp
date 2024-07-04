@@ -49,6 +49,11 @@ type AlbumType = {
         releaseDate: String
         trackCount: Number
     }
+    relationships: {
+        tracks?: {
+            data: Array<Song>
+        }
+    }
     id: String
     type: string
 }
@@ -124,7 +129,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     }))
 
     const userId = backendToken
-    // console.log('album', object)
+    console.log('object', object)
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -198,14 +203,16 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
     const styleSmall = { fontSize: '1rem' }
     const styleBig = { fontSize: '2.3rem' }
 
-    const handleAddToPlaylist = async (id: string) => {
+    const handleAddToPlaylist = async (id: string, name: string) => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
         }
+
         if (!appleMusicToken) {
             await fetchAppleToken()
         }
-        if (musicKitInstance && appleMusicToken) {
+
+        if (object.type === 'songs' || object.type === 'library-songs') {
             try {
                 const response = await fetch(
                     `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
@@ -228,30 +235,51 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         }),
                     }
                 )
-                // credentials: 'include',
 
-                // const data = await response.json()
-                // console.log('data: ', data)
-                if (response.status === 201) {
-                    //check for success
-                    toast.success('Playlist created!')
-                    //update sidebar playlists before refresh
-                    // const newPlaylist = {
-                    //     attributes: {
-                    //         description: playlistDescription ?? '',
+                console.log(response)
 
-                    //         canEdit: data.data[0].attributes.canEdit,
+                if (response.status === 204) {
+                    toast.success(`Added to ${name}`)
+                }
+            } catch (error: any) {
+                console.error(error)
+                toast.error('An error occurred..')
+            }
+        } else if (
+            object.type === 'albums' ||
+            object.type === 'library-albums'
+        ) {
+            try {
+                const tracks = object.relationships.tracks.data.map(
+                    (track: Song) => ({
+                        id: track.id, // The unique identifier of the song
+                        type: 'songs', // The type of the resource
+                    })
+                )
 
-                    //         dataAdded: data.data[0].attributes.dateAdded,
-                    //         isPublic: data.data[0].attributes.isPublic,
-                    //         lastModifiedDate:
-                    //             data.data[0].attributes.lastModifiedDate,
-                    //         name: playlistName,
-                    //     },
-                    //     href: data.data[0].href,
-                    //     id: data.data[0].id,
-                    //     type: 'library-playlists',
-                    // }
+                console.log('tracks:', tracks)
+
+                const response = await fetch(
+                    `https://api.music.apple.com/v1/me/library/playlists/${id}/tracks`,
+                    {
+                        method: 'POST',
+                        headers: {
+                            Authorization: `Bearer ${
+                                import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                            }`,
+                            'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            data: tracks,
+                        }),
+                    }
+                )
+
+                console.log(response)
+
+                if (response.status === 204) {
+                    toast.success(`Added to ${name}`)
                 }
             } catch (error: any) {
                 console.error(error)
@@ -259,63 +287,6 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             }
         }
     }
-
-    // const retrieveAlbumSongs = async (albumId: string) => {
-    //     setAlbumsAdded([...albumsAdded, albumId])
-
-    //     if (!musicKitInstance) {
-    //         await authorizeMusicKit()
-    //         return
-    //     }
-    //     if (!musicKitInstance || !albumId) {
-    //         return
-    //     }
-
-    //     try {
-    //         console.log('music kit instance and album id')
-    //         console.log('music kit instance: ', musicKitInstance)
-    //         console.log('albumId: ', albumId)
-
-    //         if (albumId.startsWith('l')) {
-    //             try {
-    //                 const catRes = await musicKitInstance?.api.music(
-    //                     `v1/me/library/albums/${albumId}/catalog`
-    //                 )
-
-    //                 const catalogId = await catRes.data.data[0].id
-
-    //                 const res = await musicKitInstance.api.music(
-    //                     `/v1/catalog//ca/albums/${catalogId}/tracks`
-    //                 )
-
-    //                 const data = await res.data.data
-
-    //                 return data
-    //             } catch (error: any) {
-    //                 console.error(error)
-    //             }
-    //         } else {
-    //             try {
-    //                 const queryParameters = { l: 'en-us' }
-    //                 const res = await musicKitInstance.api.music(
-    //                     `/v1/catalog//ca/albums/${albumId}/tracks`,
-
-    //                     queryParameters
-    //                 )
-
-    //                 console.log(res)
-
-    //                 const data = await res.data.data
-
-    //                 return data
-    //             } catch (error: any) {
-    //                 console.error(error)
-    //             }
-    //         }
-    //     } catch (error: any) {
-    //         console.error(error)
-    //     }
-    // }
 
     const addFavorite = async (e: React.MouseEvent) => {
         console.log('song: ', object)
@@ -412,6 +383,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             toast.error(`Error adding ${name} to favorites...`)
         }
     }
+
     const addDislike = async (e: React.MouseEvent) => {
         e.stopPropagation()
         if (!musicKitInstance) {
@@ -562,7 +534,10 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                                     className="relative justify-center items-center w-full"
                                     onClick={e => {
                                         e.preventDefault()
-                                        handleAddToPlaylist(playlist.id)
+                                        handleAddToPlaylist(
+                                            playlist.id,
+                                            playlist.attributes.name
+                                        )
                                     }}
                                 >
                                     <a className="w-full flex justify-center text-center">
