@@ -103,10 +103,10 @@ const Artist = () => {
                             </h1>
                         </div>
                     </div>
-                    <div className="md:flex-row  gap-4 flex flex-col justify-around  items-start">
-                        <div className="flex-col flex  relative  ">
+                    <div className="md:flex-row w-full gap-4 flex flex-col justify-around  items-start">
+                        <div className="flex-col flex  w-full relative ">
                             <img
-                                className="pb-5 "
+                                className="pb-5 w-full"
                                 src={constructImageUrl(
                                     artistData.attributes.artwork.url,
                                     600
