@@ -168,6 +168,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             songId: song.id,
             songName: song.attributes.name,
             artistName: song.attributes.artistName,
+            durationInMillis: song.attributes.durationInMillis,
             albumName: song.attributes.albumName,
             artworkUrl: song.attributes.artwork?.url,
             catalogId: song.attributes.playParams.catalogId,

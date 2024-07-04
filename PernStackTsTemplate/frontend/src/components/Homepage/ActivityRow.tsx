@@ -241,7 +241,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         song: {
                             id: item.id,
                             href: item.attributes.url,
-                            type: 'items',
+                            type: 'library-songs',
                             attributes: {
                                 id: item.id,
                                 name: item.attributes.name,
