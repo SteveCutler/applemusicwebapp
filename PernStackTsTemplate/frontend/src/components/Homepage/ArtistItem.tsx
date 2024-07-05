@@ -86,7 +86,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
                 </div>
             ) : (
                 <div className="shadow-lg w-full">
-                    <img src={defaultPlaylistArtworktay} />
+                    <img src={defaultPlaylistArtwork} />
                 </div>
             )}
 

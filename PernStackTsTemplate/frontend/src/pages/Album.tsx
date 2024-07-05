@@ -257,7 +257,7 @@ const Album = () => {
                 <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">
                     <div className="relative lg:w-1/2 w-full h-fit ">
                         <img
-                            className=""
+                            className="w-full"
                             src={constructImageUrl(
                                 albumData.attributes.artwork.url,
                                 500
