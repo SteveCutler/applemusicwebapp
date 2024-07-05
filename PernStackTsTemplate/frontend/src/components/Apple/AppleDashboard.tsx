@@ -93,7 +93,7 @@ const AppleDashboard = () => {
     // const [heavyRotation, setHeavyRotation] = useState<Array<AlbumType> | null>(
     //     null
     // )
-    console.log('more like recommendations: ', moreLikeRecommendations)
+    // console.log('more like recommendations: ', moreLikeRecommendations)
 
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
@@ -103,9 +103,9 @@ const AppleDashboard = () => {
     let sliceNumber
 
     if (is2XLarge) {
-        sliceNumber = 11 // For 2xl screens and larger
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
     } else if (isXLarge) {
-        sliceNumber = 5 // For 2xl screens and larger
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
     } else if (isLarge) {
         sliceNumber = 3 // For xl screens and larger
     } else if (isMedium) {
@@ -189,7 +189,7 @@ const AppleDashboard = () => {
         >
             {/* MAIN DISPLAY */}
             {recentlyAddedToLib && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Recently Added to Library
                 </h2>
             )}
@@ -246,7 +246,7 @@ const AppleDashboard = () => {
                                     e.preventDefault()
                                     setMoreAddedToLib(!moreAddedToLib)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                             >
                                 {moreAddedToLib ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -274,7 +274,7 @@ const AppleDashboard = () => {
 
             {/* MAIN DISPLAY */}
             {recentlyPlayed && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Recently Played
                 </h2>
             )}
@@ -329,7 +329,7 @@ const AppleDashboard = () => {
                                 e.preventDefault()
                                 setMoreRecentlyPlayed(!moreRecentlyPlayed)
                             }}
-                            className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                            className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                         >
                             {moreRecentlyPlayed ? (
                                 <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -354,7 +354,7 @@ const AppleDashboard = () => {
             )} */}
 
             {heavyRotation && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Heavy Rotation
                 </h2>
             )}
@@ -402,13 +402,14 @@ const AppleDashboard = () => {
                                 )
                             )}
                     </div>
+
                     {heavyRotation && heavyRotation.length > sliceNumber && (
                         <button
                             onClick={e => {
                                 e.preventDefault()
                                 setMoreHeavyRotation(!moreHeavyRotation)
                             }}
-                            className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                            className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                         >
                             {moreHeavyRotation ? (
                                 <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -436,7 +437,7 @@ const AppleDashboard = () => {
             )} */}
 
             {personalizedPlaylists && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Your mixes
                 </h2>
             )}
@@ -493,7 +494,7 @@ const AppleDashboard = () => {
                                     e.preventDefault()
                                     setMoreMadeForYou(!moreMadeForYou)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                             >
                                 {moreMadeForYou ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -520,7 +521,7 @@ const AppleDashboard = () => {
             )} */}
 
             {themedRecommendations && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     {themedRecommendations.attributes.title.stringForDisplay}
                 </h2>
             )}
@@ -577,7 +578,7 @@ const AppleDashboard = () => {
                                     e.preventDefault()
                                     setMoreThemed(!moreThemed)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                             >
                                 {moreThemed ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -609,11 +610,11 @@ const AppleDashboard = () => {
             )} */}
 
             {moreLikeRecommendations && (
-                <div className="flex items-center pb-3  ">
+                <div className="flex text-2xl justify-center mx-auto w-10/12 pb-5 items-center   ">
                     {moreLikeAlbumImage && moreLikeAlbumImage && (
                         <img src={constructImageUrl(moreLikeAlbumImage, 75)} />
                     )}
-                    <h2 className="text-lg w-full  px-2 mx-auto font-bold">
+                    <h2 className="text-2xl w-full  px-2 mx-auto font-bold">
                         {
                             moreLikeRecommendations.attributes.title
                                 .stringForDisplay
@@ -674,7 +675,7 @@ const AppleDashboard = () => {
                                     e.preventDefault()
                                     setMoreMoreLike(!moreMoreLike)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                             >
                                 {moreMoreLike ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
@@ -699,7 +700,7 @@ const AppleDashboard = () => {
             )} */}
 
             {stationsForYou && (
-                <h2 className="text-lg w-full px-2 mx-auto font-bold">
+                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Stations
                 </h2>
             )}
@@ -756,7 +757,7 @@ const AppleDashboard = () => {
                                     e.preventDefault()
                                     setMoreStations(!moreStations)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-800 hover:bg-blue-700 active:bg-blue-600"
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
                             >
                                 {moreStations ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">

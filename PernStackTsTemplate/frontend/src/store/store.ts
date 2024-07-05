@@ -16,15 +16,22 @@ type AuthUserType = {
 type AlbumTypeObject = {
     attributes?: {
         artistName: string
-        artwork: ArtworkObject
+        artwork?: {
+            url: string
+            bgColor: string
+        }
         dateAdded: string
         genreNames: Array<string>
         name: string
         releaseDate: string
-        trackCount: Number
+        trackCount: number
     }
     relationships?: RelationshipObject
     id: string
+}
+type RelationshipObject = {
+    tracks: TracksObject
+    artists?: { data: ArtistObject[] }
 }
 
 type TracksObject = {
@@ -32,11 +39,6 @@ type TracksObject = {
 }
 type Track = {
     attributes: TrackAttributeObject
-}
-
-type RelationshipObject = {
-    tracks: TracksObject
-    artists?: { data: ArtistObject[] }
 }
 
 type ArtistObject = {
@@ -733,7 +735,7 @@ export const useStore = create<Store>((set, get) => ({
                         credentials: 'include',
                     }
                 )
-                console.log(res)
+                // console.log(res)
 
                 if (!res.ok) {
                     console.log(res.body)
@@ -748,7 +750,7 @@ export const useStore = create<Store>((set, get) => ({
                 const now = new Date()
 
                 if (now < new Date(tokenExpiryDate)) {
-                    console.log('setting apple music token')
+                    // console.log('setting apple music token')
                     set({ appleMusicToken: appleMusicToken })
                 } else {
                     console.log('Token expired')

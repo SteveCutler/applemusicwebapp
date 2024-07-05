@@ -78,7 +78,7 @@ const Sidebar = () => {
 
             const data = await res.json()
             // console.log(data)
-            setAlbums(data.albums)
+            setAlbums(data.albums.slice(0, 400))
 
             // setLoading(false)
         } catch (error) {

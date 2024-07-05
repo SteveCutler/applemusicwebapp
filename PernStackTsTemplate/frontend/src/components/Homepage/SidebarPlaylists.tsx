@@ -49,7 +49,7 @@ const SidebarPlaylists = () => {
                     '/v1/me/library/playlists'
                 )
                 const playlists: Array<playlist> = res.data.data
-                console.log('User Playlists:', playlists)
+                // console.log('User Playlists:', playlists)
 
                 setLibraryPlaylists(playlists)
             } catch (error: any) {

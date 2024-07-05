@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import spiralFavicon from '/spiralFavicon.svg'
-
+import MusLogo from '/MusLogo.png'
 import { useState } from 'react'
 import useSignup from '../hooks/auth/useSignup'
 
@@ -20,7 +20,12 @@ const SignUp = () => {
         signup(inputs)
     }
     return (
-        <div className="flex flex-col rounded-lg  items-center justify-center  min-w-96 mt-5 mx-auto">
+        <div className="flex flex-col rounded-lg  items-start justify-start    min-w-96  mx-auto">
+            {/* <img
+                src={MusLogo}
+                width="200"
+                className="flex select-none  mx-auto justify-center"
+            /> */}
             <div className="w-full rounded-lg   p-6 shadow-md bg-slate-300  ">
                 <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
                     <span className="text-blue-500"> Sign Up</span>{' '}

@@ -13,6 +13,7 @@ import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import DisplayRow from '../components/Homepage/DisplayRow'
 import AlbumItem from '../components/Homepage/AlbumItem'
+import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import OptionsModal from '../components/Homepage/OptionsModal'
 
 type AlbumType = {
@@ -183,7 +184,6 @@ const Album = () => {
         }
     }, [artistId, musicKitInstance])
 
-    console.log('album data: ', albumData)
     const constructImageUrl = (url: string, size: number) => {
         return url
             .replace('{w}', size.toString())
@@ -256,14 +256,22 @@ const Album = () => {
                 </div>
                 <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">
                     <div className="relative lg:w-1/2 w-full h-fit ">
-                        <img
-                            className="w-full"
-                            src={constructImageUrl(
-                                albumData.attributes.artwork.url,
-                                500
-                            )}
-                            alt=""
-                        />
+                        {albumData.attributes?.artwork?.url ? (
+                            <img
+                                className="w-full"
+                                src={constructImageUrl(
+                                    albumData.attributes.artwork.url,
+                                    500
+                                )}
+                                alt=""
+                            />
+                        ) : (
+                            <img
+                                className="w-full"
+                                src={defaultPlaylistArtwork}
+                                alt=""
+                            />
+                        )}
                         <div
                             className=" absolute bottom-5 left-5 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {

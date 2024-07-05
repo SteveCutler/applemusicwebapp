@@ -59,14 +59,14 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
 
     useEffect(() => {
         const fetchRecentActivity = async () => {
-            console.log(' history test')
+            // console.log(' history test')
             try {
                 const res = await musicKitInstance?.api.music(
                     '/v1/me/recent/played'
                 )
 
                 // const data = await res.json()
-                console.log('response activity: ', res.data.data)
+                // console.log('response activity: ', res.data.data)
 
                 setRecentActivity(res.data.data)
 

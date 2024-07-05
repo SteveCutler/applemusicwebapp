@@ -45,17 +45,17 @@ const FetchRecentHistory = () => {
         const fetchRecentHistory = async (url: string) => {
             if (musicKitInstance) {
                 try {
-                    console.log(music)
+                    // console.log(music)
                     const queryParameters = { l: 'en-us', limit: 5 }
                     const res = await musicKitInstance.api.music(
                         url,
                         queryParameters
                     )
 
-                    if (!res.ok) {
-                        console.log('error: ', res.body)
+                    if (res.status !== 200) {
+                        // console.log('error: ', res.body)
                     }
-                    console.log(res)
+                    // console.log(res)
 
                     const data: Song[] = await res.data.data
                     setRecentHistory((prevData: Song[] = []) => {

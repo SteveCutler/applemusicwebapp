@@ -115,22 +115,22 @@ const FetchRecentlyAddedToLib = () => {
         const fetchRecentlyAddedToLib = async (url: string) => {
             if (musicKitInstance) {
                 try {
-                    console.log(music)
+                    // console.log(music)
                     const queryParameters = { l: 'en-us', limit: 10 }
                     const res = await musicKitInstance.api.music(
                         url,
                         queryParameters
                     )
 
-                    if (!res.ok) {
-                        console.log('error: ', res.body)
+                    if (res.status !== 200) {
+                        // console.log('error: ', res.body)
                     }
                     // console.log(res)
 
                     const data: RecentlyAddedItem[] = await res.data.data
                     recent.push(...data)
 
-                    console.log('recent lib: ', recent)
+                    // console.log('recent lib: ', recent)
                     // setRecentlyAddedToLib((prevData: RecentlyAddedItem[]) => {
                     //     const updatedData = [...prevData, ...data]
                     //     console.log('updated data: ', updatedData)

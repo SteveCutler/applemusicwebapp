@@ -76,7 +76,7 @@ const Library = () => {
             console.log(res)
 
             const data = await res.json()
-            // console.log(data)
+            console.log(data)
             setAlbums(data.albums)
             setLibrarySearchResults(data.albums)
             setLoading(false)
@@ -125,6 +125,10 @@ const Library = () => {
                 : null
             setLibrarySearchResults(searchResults)
         }
+
+        // if (albums === null) {
+        //     fetchLibrary()
+        // }
     }, [musicKitInstance, appleMusicToken, albums, librarySearchTerm])
 
     const updateLibrary = async () => {
@@ -152,10 +156,6 @@ const Library = () => {
         } catch (error) {
             setError('Failed to fetch albums')
             setLoading(false)
-        }
-
-        if (albums === null) {
-            fetchLibrary()
         }
     }
 

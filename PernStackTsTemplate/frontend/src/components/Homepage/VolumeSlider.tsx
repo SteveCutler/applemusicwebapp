@@ -13,7 +13,7 @@ const VolumeSlider = () => {
             musicKitInstance: state.musicKitInstance,
         }))
 
-    console.log('currentVolume: ', volume)
+    // console.log('currentVolume: ', volume)
     const handleChange = (e: any) => {
         setCurrrentVolume(e.target.value)
     }

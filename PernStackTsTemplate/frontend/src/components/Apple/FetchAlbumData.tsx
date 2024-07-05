@@ -11,7 +11,7 @@ type AlbumTypeObject = {
 
 type AttributeObject = {
     artistName: string
-    artwork: {
+    artwork?: {
         height: Number
         width: Number
         url: string
@@ -101,6 +101,7 @@ const FetchAlbumData = (albumId: string | undefined) => {
                         const artistId = await artistRes.data.data[0].id
 
                         const data: AlbumTypeObject[] = await res.data.data
+                        console.log('album data:', data)
                         setAlbumData(data[0])
                         setArtistId(artistId)
                     } catch (error: any) {
@@ -125,11 +126,11 @@ const FetchAlbumData = (albumId: string | undefined) => {
 
                         const artistId = await artistRes.data.data[0].id
 
-                        const data = await res.data.data
+                        const data: AlbumTypeObject = await res.data.data[0]
 
                         console.log('data: ', albumData)
 
-                        setAlbumData(data[0])
+                        setAlbumData(data)
                         setArtistId(artistId)
                     } catch (error: any) {
                         console.error(error)
