@@ -62,6 +62,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
     }))
 
     const [loading, setLoading] = useState<Boolean>(false)
+    const [isHovered, setIsHovered] = useState(false)
 
     const playData = async () => {
         if (playlist.includes(song)) {
@@ -88,6 +89,8 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
     return (
         <Link
             to={`/song/${song.id}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             state={{
                 song: {
                     id: song.id,
@@ -97,6 +100,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                         id: song.id,
                         name: song.attributes.name,
                         trackNumber: song.attributes.trackNumber,
+
                         artistName: song.attributes.artistName,
                         albumName: song.attributes.albumName,
                         durationInMillis: song.attributes.durationInMillis,
@@ -120,7 +124,9 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                             600
                         )}
                     />
-                    <div className=" absolute bottom-1 right-1">
+                    <div
+                        className={` absolute bottom-1 right-1 ${isHovered ? 'block' : 'hidden'}`}
+                    >
                         <div
                             onClick={e => {
                                 e.preventDefault()
@@ -133,7 +139,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                     </div>
                     <div className="absolute bottom-1 left-1">
                         <div
-                            className="transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className={`transform text-right h-fit flex justify-end hover:scale-110 active:scale-95 ${isHovered ? 'block' : 'hidden'} transition-transform duration-100 easy-ease`}
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior

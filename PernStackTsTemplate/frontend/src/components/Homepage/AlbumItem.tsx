@@ -99,6 +99,8 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         playlist: state.playlist,
     }))
 
+    const [isHovered, setIsHovered] = useState(false)
+
     // const [loading, setLoading] = useState<Boolean>(false)
 
     // const retrieveAlbumTracks = async () => {
@@ -247,6 +249,8 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             <div
                 className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
                 title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
             >
                 <div
                     className=" relative z-1 w-fit shadow-lg"
@@ -262,7 +266,9 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     ) : (
                         <img src={defaultPlaylistArtwork} />
                     )}
-                    <div className="absolute bottom-1 right-1">
+                    <div
+                        className={`absolute bottom-1 right-1 ${isHovered ? 'block' : 'hidden'} `}
+                    >
                         <div
                             onClick={e => {
                                 e.preventDefault()
@@ -275,7 +281,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     </div>
                     <div className="absolute bottom-1 left-1">
                         <div
-                            className="transform  p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className={`transform  p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'} `}
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior

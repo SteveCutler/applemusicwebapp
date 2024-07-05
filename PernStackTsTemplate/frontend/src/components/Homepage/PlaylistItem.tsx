@@ -111,6 +111,8 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
     const [loading, setLoading] = useState<Boolean>(false)
     const [playlistData, setPlaylistData] = useState<Song[]>([])
 
+    const [isHovered, setIsHovered] = useState(false)
+
     const retrieveAlbumTracks = async () => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
@@ -202,6 +204,8 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
         <div
             className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
             onClick={handleNavigation}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             title={`${playlistItem.attributes.name}`}
         >
             <div className="relative z-1 w-full shadow-lg">
@@ -217,7 +221,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                 )}
 
                 <div
-                    className="transform p-1 absolute bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                    className={`transform p-1 absolute bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
                     onClick={async e => {
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior
@@ -238,7 +242,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior
                     }}
-                    className="absolute bottom-1 right-1 z-100"
+                    className={`absolute bottom-1 right-1 z-100 ${isHovered ? 'block' : 'hidden'}`}
                 >
                     <OptionsModal object={playlistItem} />
                 </div>

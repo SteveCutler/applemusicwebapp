@@ -79,6 +79,7 @@ const StationItem: React.FC<StationItemTypes> = ({
     }))
 
     const [loading, setLoading] = useState<Boolean>(false)
+    const [isHovered, setIsHovered] = useState(false)
 
     const playRadioStation = async () => {
         if (musicKitInstance) {
@@ -94,8 +95,10 @@ const StationItem: React.FC<StationItemTypes> = ({
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : ' text-slate-800 hover:text-slate-300'}  rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300 hover:text-slate-500' : ' text-slate-800 hover:text-slate-300'}  rounded-3xl flex`}
             to={`/station/${stationItem.id}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
             title={`${stationItem.attributes.name}`}
         >
             <div className=" relative w-full shadow-lg">
@@ -108,7 +111,7 @@ const StationItem: React.FC<StationItemTypes> = ({
                     />
                 )}
                 <div
-                    className=" absolute bottom-1 left-1 transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                    className={`absolute bottom-1 left-1 transform   ${isHovered ? 'block' : 'hidden'} flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease`}
                     onClick={async e => {
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior
