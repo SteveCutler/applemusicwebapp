@@ -268,7 +268,7 @@ const Library = () => {
     const style = { fontSize: '2.5rem' }
 
     return (
-        <div className="flex-col w-fit   h-full">
+        <div className="flex-col w-full   h-full">
             <div className=" flex justify-between w-full  mx-auto items-center gap-2">
                 <form className=" p-3 w-full" action="">
                     <input
@@ -284,7 +284,7 @@ const Library = () => {
                 {/* <button onClick={fetchLibrary} className="btn btn-primary">
                     Fetch Library
                 </button> */}
-                <div className="flex  justify-center items-center pe-3 gap-1">
+                <div className="flex w-full justify-center items-center pe-3 gap-1">
                     <span
                         className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
                         onClick={toggleGrid}

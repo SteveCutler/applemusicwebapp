@@ -38,12 +38,14 @@ const Search = () => {
         setSearchTerm,
         darkMode,
         searchResults,
+        queueToggle,
         setSearchResults,
         authorizeMusicKit,
         musicKitInstance,
     } = useStore(state => ({
         searchTerm: state.searchTerm,
         darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
         searchResults: state.searchResults,
         setSearchResults: state.setSearchResults,
@@ -122,7 +124,7 @@ const Search = () => {
     }, [searchTerm, musicKitInstance])
 
     return (
-        <div className="w-full  flex-col h-full px-9 justify-center items-center mx-auto">
+        <div className="w-full  flex-col h-full  justify-center items-center mx-auto">
             {/* <div className="text-3xl m-3 px-3">SEARCH</div> */}
             <form className="m-3 p-3 w-full" action="">
                 <input
@@ -162,7 +164,10 @@ const Search = () => {
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.albums &&
                         searchResults.albums.data.map(album => (
-                            <AlbumItem albumItem={album} />
+                            <AlbumItem
+                                albumItem={album}
+                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                            />
                         ))}
                 </div>
             </div>
@@ -177,7 +182,10 @@ const Search = () => {
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.songs &&
                         searchResults.songs.data.map(song => (
-                            <SongItem song={song} />
+                            <SongItem
+                                song={song}
+                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                            />
                         ))}
                 </div>
             </div>

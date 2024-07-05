@@ -45,13 +45,13 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
 
     if (gridDisplay) {
         return (
-            <div className="flex flex-wrap  w-full overflow-hidden gap-y-10  pb-2 justify-around  ">
+            <div className="flex flex-wrap   w-full gap-y-10 gap-x-1 pb-2 justify-center  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map(album => (
                         <AlbumItem
                             albumItem={album}
-                            width={width}
+                            width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                             // trackCount={album.trackCount}
                         />
                         // <AlbumGrid

@@ -8,6 +8,7 @@ import OptionsModal from './OptionsModal'
 interface AlbumPropTypes {
     song: Song
     carousel?: boolean
+    width?: string
 }
 
 interface Song {
@@ -30,7 +31,7 @@ interface Song {
     }
 }
 
-const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
+const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -113,7 +114,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
                 },
             }}
             // onClick={handleNavigation}
-            className={`${carousel && 'carousel-item'}  select-none flex-col ${queueToggle ? 'w-3/12' : ' w-2/12'} flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : ' text-slate-800 hover:text-slate-300'}   rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
         >
             {song.attributes.artwork?.url && (
                 <div className=" relative flex-col h-full w-full flex flex-shrink  ">

@@ -233,6 +233,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 console.log(catalogId)
                 navigate(`/album/${catalogId}/${albumItem.type}`)
             } catch (error: any) {
+                navigate(`/album/${albumItem.id}/${albumItem.type}`)
                 console.error(error)
             }
         } else {

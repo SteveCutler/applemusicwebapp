@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
 interface AlbumPropTypes {
     artist: Artist
     carousel?: boolean
+    width?: string
 }
 
 type Artist = {
@@ -50,15 +52,16 @@ interface Song {
     }
 }
 
-const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
+const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
     const constructImageUrl = (url: String, width: Number, height: Number) => {
         return url
             .replace('{w}', width.toString())
             .replace('{h}', height.toString())
     }
 
-    const { isPlaying, darkMode } = useStore(state => ({
+    const { isPlaying, darkMode, queueToggle } = useStore(state => ({
         darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
         isPlaying: state.isPlaying,
     }))
 
@@ -68,10 +71,10 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none flex-col w-1/4 flex-grow ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-500'}   rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
             to={`/artist/${artist.id}`}
         >
-            {artist.attributes.artwork?.url && (
+            {artist.attributes.artwork?.url ? (
                 <div className="shadow-lg w-full">
                     <img
                         src={constructImageUrl(
@@ -80,6 +83,10 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
                             600
                         )}
                     />
+                </div>
+            ) : (
+                <div className="shadow-lg w-full">
+                    <img src={defaultPlaylistArtworktay} />
                 </div>
             )}
 
