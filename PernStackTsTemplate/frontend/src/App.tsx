@@ -64,7 +64,7 @@ function App() {
 
     return (
         <div
-            className={`flex-col justify-between bg-fixed flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-gray-700 to-gray-900' : darkMode ? 'bg-gradient-to-b from-gray-900 to-black' : 'bg-gradient-to-b from-gray-300 to-gray-900'} `}
+            className={`flex-col justify-between bg-fixed flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-gray-700 to-gray-900' : darkMode ? 'bg-gradient-to-b from-gray-900 to-black' : 'bg-gradient-to-b from-blue-300 to-orange-900'} `}
         >
             <div className="flex flex-grow ">
                 {backendToken && (
