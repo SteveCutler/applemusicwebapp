@@ -1,85 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-
-import FetchAlbumCatalogId from '../../hooks/AlbumPage/FetchLibraryAlbumCatalogId'
+import { useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
-import {
-    FaCirclePlay,
-    FaRegCirclePause,
-    FaRegCirclePlay,
-} from 'react-icons/fa6'
+import { FaCirclePlay } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
-import QueueDisplay from './QueueDisplay'
+import axios from 'axios'
 
-interface AlbumPropTypes {
-    albumItem: AlbumData
-    carousel?: boolean
-    releaseDate?: string
-    width?: string
-}
-
-type AlbumData = {
-    attributes: {
-        artistName: string
-
-        artwork: {
-            bgColor: string
-            url: string
-        }
-        editorialNotes: {
-            short: string
-            standard: string
-        }
-        genreName: Array<string>
-        name: string
-        trackCount: number
-        url: string
-    }
-    href: string
-    id: string
-    type: string
-}
-
-interface Song {
-    id: string
-    href?: string
-    type: string
-    attributes: {
-        id: string
-        name: string
-        trackNumber: number
-        artistName: string
-        albumName: string
-        durationInMillis: number
-        playParams: {
-            catalogId: string
-        }
-        artwork?: {
-            bgColor: string
-            url: string
-        }
-    }
-}
-
-const AlbumItem: React.FC<AlbumPropTypes> = ({
-    albumItem,
-    carousel,
-    releaseDate,
-    width,
-}) => {
-    // console.log('album item: ', albumItem)
-    const constructImageUrl = (url: String, size: Number) => {
-        return url
-            .replace('{w}', size.toString())
-            .replace('{h}', size.toString())
-    }
-    // const [albumData, setAlbumData] = useState<Song[]>([])
-
+const AlbumItem = ({ albumItem, carousel, releaseDate, lib, width }) => {
+    const constructImageUrl = (url, size) =>
+        url.replace('{w}', size.toString()).replace('{h}', size.toString())
     const {
         isPlaying,
         authorizeMusicKit,
         queueToggle,
+        backendToken,
         setPlaylist,
         darkMode,
         playSong,
@@ -88,124 +22,65 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         musicKitInstance,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        backendToken: state.backendToken,
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
         queueToggle: state.queueToggle,
         playSong: state.playSong,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
-
         setPlaylist: state.setPlaylist,
         playlist: state.playlist,
     }))
 
     const [isHovered, setIsHovered] = useState(false)
+    const [artworkUrl, setArtworkUrl] = useState(
+        albumItem.attributes?.artwork?.url
+    )
+    const navigate = useNavigate()
 
-    // const [loading, setLoading] = useState<Boolean>(false)
+    const fetchNewArtworkUrl = async () => {
+        try {
+            const res = await musicKitInstance?.api.music(
+                `/v1/me/library/albums/${albumItem.id}`
+            )
+            const newArtworkUrl = res.data.data[0].attributes.artwork.url
+            if (newArtworkUrl) {
+                setArtworkUrl(newArtworkUrl)
 
-    // const retrieveAlbumTracks = async () => {
-    //     if (!musicKitInstance) {
-    //         await authorizeMusicKit()
-    //         return
-    //     }
-    //     if (!musicKitInstance || !albumItem.id) {
-    //         return
-    //     }
-    //     setLoading(true)
-    //     try {
-    //         console.log('music kit instance and album id')
-    //         console.log('music kit instance: ', musicKitInstance)
-    //         console.log('albumId: ', albumItem.id)
-
-    //         if (albumItem.id.startsWith('l')) {
-    //             try {
-    //                 const res = await musicKitInstance.api.music(
-    //                     `/v1/me/library/albums/${albumItem.id}/tracks`
-    //                 )
-
-    //                 const data: Song[] = await res.data.data
-    //                 console.log(data)
-
-    //                 setAlbumData(data)
-    //                 setLoading(false)
-
-    //                 return
-    //             } catch (error: any) {
-    //                 console.error(error)
-    //                 setLoading(false)
-    //             }
-    //         } else {
-    //             try {
-    //                 const queryParameters = { l: 'en-us' }
-    //                 const res = await musicKitInstance.api.music(
-    //                     `/v1/catalog//ca/albums/${albumItem.id}/tracks`,
-
-    //                     queryParameters
-    //                 )
-
-    //                 const data: Song[] = await res.data.data
-    //                 console.log(data)
-    //                 setAlbumData(data)
-    //                 setLoading(false)
-
-    //                 return
-    //             } catch (error: any) {
-    //                 console.error(error)
-    //                 setLoading(false)
-    //             }
-    //         }
-    //     } catch (error: any) {
-    //         console.error(error)
-    //         setLoading(false)
-    //     }
-    // }
-    // useEffect(() => {
-    //     if (albumData.length > 0 && !loading) {
-    //         playData()
-    //     }
-    // }, [loading])
-
-    // console.log('albumArtUrl: ', albumArtUrl)
-
-    const navigateToArtist = async () => {
-        if (musicKitInstance) {
-            if (albumItem.id.startsWith('l')) {
-                try {
-                    const albumCatalogRes = await musicKitInstance.api.music(
-                        `/v1/me/library/albums/${albumItem.id}/catalog`
-                    )
-                    const catId = await albumCatalogRes.data.data[0].id
-                    console.log('catId: ', catId)
-
-                    const artistRes = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/albums/${catId}/artists`
-                    )
-                    const artistId = await artistRes.data.data[0].id
-                    navigate(`/artist/${artistId}`)
-
-                    // console.log('artistId:', artistId)
-                } catch (error: any) {
-                    console.error(error)
-                }
-            } else {
-                try {
-                    const artistRes = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/albums/${albumItem.id}/artists`
-                    )
-
-                    const artistId = await artistRes.data.data[0].id
-                    console.log('aritstId:', artistId)
-                    navigate(`/artist/${artistId}`)
-                } catch (error: any) {
-                    console.error(error)
-                }
+                await axios.post(
+                    'http://localhost:5000/api/apple/update-album-artwork',
+                    {
+                        albumId: albumItem.id,
+                        newArtworkUrl: newArtworkUrl,
+                    },
+                    { withCredentials: true }
+                )
             }
+        } catch (error) {
+            console.error('Error fetching new artwork URL:', error)
         }
     }
 
+    useEffect(() => {
+        const checkArtworkUrl = async () => {
+            try {
+                const response = await fetch(artworkUrl)
+                if (!response.ok) {
+                    await fetchNewArtworkUrl()
+                }
+            } catch (error) {
+                console.error('Error checking artwork URL:', error)
+            }
+        }
+
+        if (lib) {
+            checkArtworkUrl()
+        }
+    }, [artworkUrl, lib])
+
     const playData = async () => {
         if (musicKitInstance) {
-            console.log('setting playlist and start position')
             await musicKitInstance.setQueue({
                 album: albumItem.id,
                 startWith: 0,
@@ -213,123 +88,86 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             })
         }
     }
-    // const loadPlayer = async () => {
-    //     await retrieveAlbumTracks()
-    // }
 
-    const handleNavigation = async (e: React.MouseEvent) => {
+    const handleNavigation = async (e: any) => {
         e.preventDefault()
         e.stopPropagation()
-        if (albumItem.id.startsWith('p')) {
-            navigate(`/playlist/${albumItem.id}`)
-        } else if (albumItem.id.startsWith('l')) {
-            try {
-                const res = await musicKitInstance?.api.music(
-                    `v1/me/library/albums/${albumItem.id}/catalog`
-                )
-
-                const catalogId = await res.data.data[0].id
-
-                console.log(catalogId)
-                navigate(`/album/${catalogId}/${albumItem.type}`)
-            } catch (error: any) {
-                navigate(`/album/${albumItem.id}/${albumItem.type}`)
-                console.error(error)
-            }
-        } else {
-            navigate(`/album/${albumItem.id}/${albumItem.type}`)
-        }
+        navigate(`/album/${albumItem.id}`)
     }
-
-    const navigate = useNavigate()
 
     const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
-    if (albumItem) {
-        return (
+    return (
+        <div
+            className={`${carousel && 'carousel-item'} select-none flex-col ${width ? width : queueToggle ? 'w-3/12' : 'w-2/12'} ${darkMode ? 'text-slate-300' : 'text-slate-800'} rounded-3xl flex`}
+            title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
             <div
-                className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
-                title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
+                className="relative z-1 w-fit shadow-lg"
+                onClick={handleNavigation}
             >
+                {artworkUrl ? (
+                    <img
+                        src={constructImageUrl(artworkUrl, 600)}
+                        alt={albumItem.attributes?.name}
+                        onError={fetchNewArtworkUrl}
+                    />
+                ) : (
+                    <img src={defaultPlaylistArtwork} alt="default artwork" />
+                )}
+
                 <div
-                    className=" relative z-1 w-fit shadow-lg"
-                    onClick={handleNavigation}
+                    className={`absolute bottom-1 right-1 ${isHovered ? 'block' : 'hidden'}`}
                 >
-                    {albumItem.attributes.artwork?.url ? (
-                        <img
-                            src={constructImageUrl(
-                                albumItem.attributes.artwork?.url,
-                                600
-                            )}
-                        />
-                    ) : (
-                        <img src={defaultPlaylistArtwork} />
-                    )}
-                    <div
-                        className={`absolute bottom-1 right-1 ${isHovered ? 'block' : 'hidden'} `}
-                    >
-                        <div
-                            onClick={e => {
-                                e.preventDefault()
-                                e.stopPropagation() // Prevents the link's default behavior
-                            }}
-                            className=""
-                        >
-                            <OptionsModal object={albumItem} />
-                        </div>
-                    </div>
-                    <div className="absolute bottom-1 left-1">
-                        <div
-                            className={`transform  p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'} `}
-                            onClick={async e => {
-                                e.preventDefault()
-                                e.stopPropagation() // Prevents the link's default behavior
-                                // await FetchAlbumData(albumId)
-                                // handlePlayPause()
-
-                                await playData()
-                            }}
-                        >
-                            <FaCirclePlay style={style} />
-                        </div>
-                    </div>
+                    <OptionsModal object={albumItem} />
                 </div>
-
-                <div className="flex-col h-full overflow-hidden">
-                    <h2
-                        className={`text-md truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}  font-bold`}
-                        onClick={handleNavigation}
+                <div className="absolute bottom-1 left-1">
+                    <div
+                        className={`transform p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
+                        onClick={e => {
+                            e.stopPropagation()
+                            playData()
+                        }}
                     >
-                        {albumItem.attributes.name}
-                    </h2>
-                    <div className=" justify-between items-center ">
-                        <div
-                            onClick={navigateToArtist}
-                            // to={`/artist/${albumItem.relationships.artists.data[0].id}`}
-                            className={`truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}`}
-                        >
-                            {albumItem.attributes.artistName}
-                        </div>
-                        {releaseDate ? (
-                            <h3 className="text-sm font-bold ">
-                                {releaseDate.split('-')[0]}
-                            </h3>
-                        ) : (
-                            <h1></h1>
-                        )}
+                        <FaCirclePlay style={style} />
                     </div>
-
-                    {albumItem.type === 'library-albums' && (
-                        <div className="bg-slate-300  text-slate-600  w-fit h-fit p-1 font-bold text-sm  flex rounded-lg">
-                            <span>Library</span>
-                        </div>
-                    )}
                 </div>
             </div>
-        )
-    }
+
+            <div className="flex-col h-full overflow-hidden">
+                <h2
+                    className={`text-md truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'} font-bold`}
+                    onClick={handleNavigation}
+                >
+                    {albumItem.attributes.name}
+                </h2>
+                <div className="justify-between items-center">
+                    <div
+                        onClick={() =>
+                            navigate(
+                                `/artist/${albumItem.attributes.artistName}`
+                            )
+                        }
+                        className={`truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}`}
+                    >
+                        {albumItem.attributes.artistName}
+                    </div>
+                    {releaseDate && (
+                        <h3 className="text-sm font-bold">
+                            {releaseDate.split('-')[0]}
+                        </h3>
+                    )}
+                </div>
+                {albumItem.type === 'library-albums' && (
+                    <div className="bg-slate-300 text-slate-600 w-fit h-fit p-1 font-bold text-sm flex rounded-lg">
+                        <span>Library</span>
+                    </div>
+                )}
+            </div>
+        </div>
+    )
 }
 
 export default AlbumItem

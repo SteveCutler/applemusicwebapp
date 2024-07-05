@@ -60,7 +60,7 @@ type TrackAttributeObject = {
     }
 }
 
-const FetchAlbumData = (albumId: string | undefined) => {
+const FetchAlbumData = (albumId: string | undefined, type?: string) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [artistId, setArtistId] = useState<String | null>(null)
@@ -87,8 +87,6 @@ const FetchAlbumData = (albumId: string | undefined) => {
             }
 
             try {
-                console.log('albumId: ', albumId)
-
                 if (albumId.startsWith('l')) {
                     try {
                         const res = await musicKitInstance.api.music(

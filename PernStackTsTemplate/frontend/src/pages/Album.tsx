@@ -100,9 +100,11 @@ type AlbumRelationships = {
 
 const Album = () => {
     const { albumId, type } = useParams<{ albumId: string; type: string }>()
-    console.log(type)
 
-    const { albumData, artistId, loading, error } = useFetchAlbumData(albumId)
+    const { albumData, artistId, loading, error } = useFetchAlbumData(
+        albumId,
+        type
+    )
     const { relatedAlbums } = FetchRelatedAlbums(albumId)
     const { appearsOn } = FetchAppearsOn(albumId)
     const [similarArtistsData, setSimilarArtistsData] =
@@ -139,17 +141,18 @@ const Album = () => {
             if (!artistId) {
                 return
             }
+            if (type !== 'lib') {
+                try {
+                    const featuredAlbums = await musicKitInstance.api.music(
+                        `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
+                    )
 
-            try {
-                const featuredAlbums = await musicKitInstance.api.music(
-                    `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
-                )
-
-                const featuredAlbumsData: Array<AlbumType> =
-                    await featuredAlbums.data.data
-                setFeaturedAlbumsData(featuredAlbumsData)
-            } catch (error: any) {
-                console.error(error)
+                    const featuredAlbumsData: Array<AlbumType> =
+                        await featuredAlbums.data.data
+                    setFeaturedAlbumsData(featuredAlbumsData)
+                } catch (error: any) {
+                    console.error(error)
+                }
             }
         }
 

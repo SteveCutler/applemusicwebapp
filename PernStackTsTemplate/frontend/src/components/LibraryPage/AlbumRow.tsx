@@ -218,7 +218,7 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                         </div>
                     </div>
                 </div>
-                <span className="">{albumItem.attributes.trackCount}</span>
+                {/* <span className="">{albumItem.attributes.trackCount}</span> */}
                 <div
                     className="transform hover:scale-110 pe-5 active:scale-95 transition-transform duration-100 easy-ease"
                     onClick={async e => {

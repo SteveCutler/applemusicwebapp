@@ -124,6 +124,24 @@ export const fetchAndSaveAlbums = async (userId, appleMusicToken, res) => {
         }
     }
 };
+export const updateAlbumArtwork = async (req, res) => {
+    const { albumId, newArtworkUrl } = req.body;
+    try {
+        // Update the album in the database
+        await prisma.album.update({
+            where: { albumId: albumId },
+            data: { artworkUrl: newArtworkUrl },
+        });
+        res.status(200).json({
+            message: 'Artwork URL updated successfully!',
+            newArtworkUrl: newArtworkUrl,
+        });
+    }
+    catch (error) {
+        console.error('Error updating album artwork:', error);
+        res.status(500).json({ error: 'Failed to update album artwork' });
+    }
+};
 export const fetchAndSaveSongsHandler = async (req, res) => {
     const { userId, appleMusicToken } = req.body;
     await fetchAndSaveSongs(userId, appleMusicToken, res);

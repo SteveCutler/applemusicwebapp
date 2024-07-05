@@ -4,16 +4,16 @@ import { LuLibrary } from 'react-icons/lu'
 import { ImStack } from 'react-icons/im'
 import { FaHistory } from 'react-icons/fa'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import SidebarPlaylists from './SidebarPlaylists'
+import SidebarPlaylists from '../components/Homepage/SidebarPlaylists'
 import { LogOut } from 'lucide-react'
-import FetchRecentHistory from '../Apple/FetchRecentHistory'
-import LogoutButton from './LogoutButton'
+import FetchRecentHistory from '../components/Apple/FetchRecentHistory'
+import LogoutButton from '../components/Homepage/LogoutButton'
 // import SidebarSongHistory from './SidebarSongHistory'
-import SidebarFavouriteSongs from './SidebarFavouriteSongs'
+import SidebarFavouriteSongs from '../components/Homepage/SidebarFavouriteSongs'
 import { CiCirclePlus } from 'react-icons/ci'
 import { IoSettingsSharp } from 'react-icons/io5'
-import { useStore } from '../../store/store'
-import SidebarActivity from './Activity'
+import { useStore } from '../store/store'
+import SidebarActivity from '../components/Homepage/Activity'
 import { useEffect, useState } from 'react'
 import { FaHeartbeat } from 'react-icons/fa'
 import { TbHistory } from 'react-icons/tb'
@@ -21,8 +21,8 @@ import { MdLibraryMusic } from 'react-icons/md'
 import { IoLibrary } from 'react-icons/io5'
 import { RiPlayListFill, RiPlayListAddLine } from 'react-icons/ri'
 import { MdOutlineDarkMode } from 'react-icons/md'
-import { MdDarkMode } from 'react-icons/md'
-import FetchRecentlyAddedToLib from '../Apple/FetchRecentlyAddedToLib'
+import { MdDarkMode, MdSunny } from 'react-icons/md'
+import FetchRecentlyAddedToLib from '../components/Apple/FetchRecentlyAddedToLib'
 
 const Sidebar = () => {
     FetchRecentlyAddedToLib()
@@ -78,7 +78,7 @@ const Sidebar = () => {
 
             const data = await res.json()
             // console.log(data)
-            setAlbums(data.albums.slice(0, 400))
+            setAlbums(data.albums)
 
             // setLoading(false)
         } catch (error) {
@@ -115,6 +115,7 @@ const Sidebar = () => {
                     >
                         <div
                             className=" hover:cursor-pointer hover:text-slate-500"
+                            title="toggle dark mode"
                             onClick={() => {
                                 {
                                     darkMode
@@ -123,12 +124,15 @@ const Sidebar = () => {
                                 }
                             }}
                         >
-                            <MdOutlineDarkMode />
+                            {darkMode ? <MdSunny /> : <MdOutlineDarkMode />}
                         </div>
-                        <div className=" hover:cursor-pointer hover:text-slate-500">
+                        <div
+                            className=" hover:cursor-pointer hover:text-slate-500"
+                            title="settings"
+                        >
                             <IoSettingsSharp />
                         </div>
-                        <div className="hover:text-slate-500">
+                        <div className="hover:text-slate-500" title="logout">
                             <LogoutButton />
                         </div>
                     </div>
@@ -139,6 +143,7 @@ const Sidebar = () => {
                                 isActive ? 'text-white' : ''
                             }`
                         }
+                        title="Home"
                     >
                         <IoHomeSharp />
                         <p className="p-2">Home</p>
@@ -146,6 +151,7 @@ const Sidebar = () => {
 
                     <NavLink
                         to="/search"
+                        title="search"
                         className={({ isActive }) =>
                             `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
@@ -157,6 +163,7 @@ const Sidebar = () => {
                     </NavLink>
                     <NavLink
                         to="/library"
+                        title="library"
                         className={({ isActive }) =>
                             `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
@@ -169,6 +176,7 @@ const Sidebar = () => {
 
                     <NavLink
                         to="/playlist-display"
+                        title="playlists"
                         className={({ isActive }) =>
                             `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
@@ -180,6 +188,7 @@ const Sidebar = () => {
                     </NavLink>
                     <NavLink
                         to="/favourites"
+                        title="favourites"
                         className={({ isActive }) =>
                             `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''

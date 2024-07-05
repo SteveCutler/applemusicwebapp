@@ -1,30 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { useStore } from '../store/store'
 import { GiLoveSong } from 'react-icons/gi'
-
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
-import { IoGridOutline } from 'react-icons/io5'
-import { IoGrid } from 'react-icons/io5'
-import e from 'express'
-
-interface Album {
-    attributes: {
-        artistName?: string
-        artwork?: { height: number; width: number; url?: string }
-        dateAdded?: string
-        genreNames?: Array<string>
-        name?: string
-        releaseDate?: string
-        trackCount?: number
-    }
-    id: string
-    type: string
-}
+import { IoGridOutline, IoGrid } from 'react-icons/io5'
 
 const Library = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
+    const [page, setPage] = useState(1)
+    const itemsPerPage = 20
 
     const {
         authorizeMusicKit,
@@ -33,11 +18,13 @@ const Library = () => {
         backendToken,
         appleMusicToken,
         musicKitInstance,
+        queueToggle,
         fetchAppleToken,
         albums,
         setAlbums,
     } = useStore(state => ({
         gridDisplay: state.gridDisplay,
+        queueToggle: state.queueToggle,
         setGridDisplay: state.setGridDisplay,
         authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
@@ -53,7 +40,6 @@ const Library = () => {
     const [librarySearchResults, setLibrarySearchResults] = useState<
         Album[] | null
     >(albums)
-
     const userId = backendToken
 
     const fetchLibrary = async () => {
@@ -64,19 +50,12 @@ const Library = () => {
                 'http://localhost:5000/api/apple/get-library',
                 {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId }),
                     credentials: 'include',
                 }
             )
-            console.log(res)
-
             const data = await res.json()
-            console.log(data)
             setAlbums(data.albums)
             setLibrarySearchResults(data.albums)
             setLoading(false)
@@ -125,10 +104,6 @@ const Library = () => {
                 : null
             setLibrarySearchResults(searchResults)
         }
-
-        // if (albums === null) {
-        //     fetchLibrary()
-        // }
     }, [musicKitInstance, appleMusicToken, albums, librarySearchTerm])
 
     const updateLibrary = async () => {
@@ -138,19 +113,13 @@ const Library = () => {
                 'http://localhost:5000/api/apple/fetch-albums',
                 {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        appleMusicToken,
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, appleMusicToken }),
                     credentials: 'include',
                 }
             )
 
             const data = await res.json()
-            // console.log(data)
             setAlbums(data.albums)
             setLoading(false)
         } catch (error) {
@@ -166,61 +135,19 @@ const Library = () => {
                 'http://localhost:5000/api/apple/fetch-song-ratings',
                 {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        appleMusicToken,
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, appleMusicToken }),
                     credentials: 'include',
                 }
             )
 
-            // const data = await res.json()
-            // console.log(data)
-            // setAlbums(data.albums)
             setLoading(false)
         } catch (error) {
             setError('Failed to fetch song ratings')
             setLoading(false)
         }
-
-        // if (albums === null) {
-        //     fetchLibrary()
-        // }
     }
-    const getSongs = async () => {
-        setLoading(true)
-        try {
-            const res = await fetch(
-                'http://localhost:5000/api/apple/fetch-songs',
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        appleMusicToken,
-                    }),
-                    credentials: 'include',
-                }
-            )
 
-            // const data = await res.json()
-            // console.log(data)
-            // setAlbums(data.albums)
-            setLoading(false)
-        } catch (error) {
-            setError('Failed to fetch song ratings')
-            setLoading(false)
-        }
-
-        // if (albums === null) {
-        //     fetchLibrary()
-        // }
-    }
     const getRatedAlbums = async () => {
         setLoading(true)
         try {
@@ -228,29 +155,18 @@ const Library = () => {
                 'http://localhost:5000/api/apple/fetch-album-ratings',
                 {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId,
-                        appleMusicToken,
-                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, appleMusicToken }),
                     credentials: 'include',
                 }
             )
 
-            // const data = await res.json()
             console.log('check for rated albums: ', res)
-            // setAlbums(data.albums)
             setLoading(false)
         } catch (error) {
             setError('Failed to fetch song ratings')
             setLoading(false)
         }
-
-        // if (albums === null) {
-        //     fetchLibrary()
-        // }
     }
 
     const onChange = (e: any) => {
@@ -258,33 +174,29 @@ const Library = () => {
     }
 
     const toggleGrid = () => {
-        if (gridDisplay) {
-            setGridDisplay(false)
-        } else {
-            setGridDisplay(true)
-        }
+        setGridDisplay(!gridDisplay)
     }
 
     const style = { fontSize: '2.5rem' }
 
+    const loadMoreAlbums = useCallback(() => {
+        setPage(prevPage => prevPage + 1)
+    }, [])
+
     return (
-        <div className="flex-col w-full   h-full">
-            <div className=" flex justify-between w-full  mx-auto items-center gap-2">
-                <form className=" p-3 w-full" action="">
+        <div className="flex-col w-full h-full">
+            <div className="flex justify-between w-full mx-auto items-center gap-2">
+                <form className="p-3 w-full" action="">
                     <input
                         type="text"
                         value={librarySearchTerm}
                         onChange={e => onChange(e)}
                         ref={inputRef}
                         placeholder="Filter library..."
-                        className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
+                        className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-3/3' : 'w-2/3'} text-slate-600 bg-white`}
                     />
                 </form>
-
-                {/* <button onClick={fetchLibrary} className="btn btn-primary">
-                    Fetch Library
-                </button> */}
-                <div className="flex w-full justify-center items-center pe-3 gap-1">
+                <div className="flex w-full justify-end pe-3 items-center  gap-1">
                     <span
                         className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
                         onClick={toggleGrid}
@@ -295,19 +207,18 @@ const Library = () => {
                             <IoGridOutline style={style} />
                         )}
                     </span>
-
                     <button
                         disabled={loading}
                         onClick={updateLibrary}
-                        className=" btn btn-primary rounded-full"
+                        className="btn btn-primary rounded-full"
                         title="Refresh library"
                     >
                         <IoMdRefreshCircle style={style} />
                     </button>
-                    <button
+                    {/* <button
                         disabled={loading}
                         onClick={getRatedSongs}
-                        className=" btn btn-primary rounded-full"
+                        className="btn btn-primary rounded-full"
                         title="Check for Song ratings"
                     >
                         <GiLoveSong style={style} />
@@ -315,31 +226,27 @@ const Library = () => {
                     <button
                         disabled={loading}
                         onClick={getRatedAlbums}
-                        className=" btn btn-primary rounded-full"
+                        className="btn btn-primary rounded-full"
                         title="Check for Song ratings"
-                    >
-                        <GiLoveSong style={style} />
-                    </button>
-                    {/* <button
-                        disabled={loading}
-                        onClick={getSongs}
-                        className=" btn btn-primary rounded-full"
-                        title="Retrieve songs from library"
                     >
                         <GiLoveSong style={style} />
                     </button> */}
                 </div>
             </div>
-
-            <div className="flex-col pt-10  justify-center w-full px-3 mx-0 border-t-2 border-slate-500  ">
+            <div className="flex-col pt-10 justify-center w-full px-3 mx-0 border-t-2 border-slate-500">
                 {librarySearchResults ? (
-                    <AlbumList albums={librarySearchResults.slice(0, 30)} />
+                    <AlbumList
+                        albums={librarySearchResults.slice(
+                            0,
+                            page * itemsPerPage
+                        )}
+                        loadMoreAlbums={loadMoreAlbums}
+                    />
                 ) : (
                     <div className="text-black text-center font-bold flex justify-center mx-auto w-full pt-10 text-2xl">
                         Loading library...
                     </div>
                 )}
-
                 {error && <div>Error</div>}
             </div>
         </div>

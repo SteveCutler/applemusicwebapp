@@ -10,6 +10,12 @@ better home page suggestions & recommendations
 so many refreshes
 
 
+ADd more api calls to home page and rearrange
+create settings page and data for the user - defaults on signup, etc.
+various musicplayer options, location, syncing library options, dark mode
+
+solve expired temp album art problem
+
 add api calls to stations & songs pages 
 
 redesign toast

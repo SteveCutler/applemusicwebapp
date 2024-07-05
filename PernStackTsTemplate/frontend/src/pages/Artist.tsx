@@ -16,6 +16,7 @@ import ScrollToTop from '../components/Homepage/ScrollToTop'
 import SongItem from '../components/Homepage/SongItem'
 import DisplayRow from '../components/Homepage/DisplayRow'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
+import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
 const Artist = () => {
@@ -109,13 +110,21 @@ const Artist = () => {
                     </div>
                     <div className="md:flex-row w-full gap-4 flex flex-col justify-around  items-start">
                         <div className="flex-col flex  w-full relative ">
-                            <img
-                                className="pb-5 w-full"
-                                src={constructImageUrl(
-                                    artistData.attributes.artwork.url,
-                                    600
-                                )}
-                            />
+                            {artistData.attributes.artwork.url ? (
+                                <img
+                                    className="pb-5 w-full"
+                                    src={constructImageUrl(
+                                        artistData.attributes.artwork.url,
+                                        600
+                                    )}
+                                />
+                            ) : (
+                                <img
+                                    className="pb-5 w-full"
+                                    src={defaultPlaylistArtwork}
+                                />
+                            )}
+
                             {topSongsData && (
                                 <div
                                     className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
