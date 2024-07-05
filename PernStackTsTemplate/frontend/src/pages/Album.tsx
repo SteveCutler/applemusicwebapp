@@ -207,7 +207,7 @@ const Album = () => {
         // await retrieveAlbumTracks()
     }
 
-    const styleButton = { fontSize: '3rem', color: 'royalblue ' }
+    const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
 
     const style = { fontSize: '1.5em' }
     if (loading) {

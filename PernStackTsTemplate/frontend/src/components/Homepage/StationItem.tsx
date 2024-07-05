@@ -90,7 +90,7 @@ const StationItem: React.FC<StationItemTypes> = ({
         }
     }
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     return (
         <Link

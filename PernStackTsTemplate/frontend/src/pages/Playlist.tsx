@@ -90,8 +90,8 @@ const Playlist = () => {
             })
         }
     }
-    const styleButton = { fontSize: '3rem', color: 'royalblue ' }
-    const style = { fontSize: '1.5em', color: 'royalblue' }
+    const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
+    const style = { fontSize: '1.5em', color: 'dodgerblue' }
     if (loading) {
         return <div>Loading...</div>
     }

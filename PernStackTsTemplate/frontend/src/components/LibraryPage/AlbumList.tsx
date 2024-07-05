@@ -67,7 +67,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
     }
     if (!gridDisplay) {
         return (
-            <div>
+            <div className="flex flex-wrap  w-11/12 mx-auto overflow-hidden   pb-2 justify-around  ">
                 {/* <span className="">{gridDisplay ? 'true' : 'false'}</span> */}
                 {albums &&
                     albums.map((album, index) => (
@@ -75,11 +75,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums }) => {
                             key={index}
                             first={index === 0}
                             last={index === albums.length}
-                            albumId={album.id}
-                            name={album.attributes.name}
-                            artistName={album.attributes.artistName}
-                            artworkUrl={album.attributes.artwork?.url}
-                            trackCount={album.attributes.trackCount}
+                            albumItem={album}
                         />
                     ))}
             </div>

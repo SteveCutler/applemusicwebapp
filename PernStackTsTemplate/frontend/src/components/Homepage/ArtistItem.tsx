@@ -64,7 +64,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel }) => {
 
     const [loading, setLoading] = useState<Boolean>(false)
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     return (
         <Link

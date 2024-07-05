@@ -130,6 +130,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
 
     const userId = backendToken
     // console.log('object', object)
+    const [isOpen, setIsOpen] = useState(false)
 
     const addToLibrary = async (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -561,7 +562,9 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     className="bg-slate-400 transform rounded-full relative justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease p-1"
                     onClick={async e => {
                         e.preventDefault()
-                        e.stopPropagation() // Prevents the link's default behavior
+                        e.stopPropagation()
+                        setIsOpen(!isOpen)
+                        // Prevents the link's default behavior
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
                     }}
@@ -575,83 +578,97 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     )}
                 </div>
             </div>
-            <ul
-                tabIndex={0}
-                className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
-            >
-                <li className="w-full flex justify-between items-center">
-                    <a
-                        className=" justify-center items-center w-full"
-                        onClick={async e => {
-                            addFavorite(e)
-                            addToLibrary(e)
-                        }}
-                    >
-                        Like{' '}
-                        <IoHeartCircleOutline
-                            style={darkMode ? styleDark : style}
-                        />
-                    </a>
-                    <a
-                        className=" justify-center items-center w-full"
-                        onClick={async e => {
-                            addDislike(e)
-                        }}
-                    >
-                        Dislike{' '}
-                        <IoHeartDislikeCircleOutline
-                            style={darkMode ? styleDark : style}
-                        />
-                    </a>
-                </li>
-                <li
-                    onClick={e => {
-                        addToLibrary(e)
-                    }}
-                    className=" justify-center items-center "
+
+            {isOpen && (
+                <ul
+                    tabIndex={0}
+                    className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
                 >
-                    <div
-                        className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
-                    >
-                        Add to Library
-                    </div>
-                </li>
-
-                {object.type !== 'playlists' &&
-                    object.type !== 'library-playlists' && (
-                        <li
-                            onMouseEnter={() => setIsHovered(true)}
-                            onMouseLeave={() => setIsHovered(false)}
-                            className="relative justify-center items-center w-full"
+                    <li className="w-full flex justify-between items-center">
+                        <a
+                            className=" justify-center items-center w-full"
+                            onClick={async e => {
+                                addFavorite(e)
+                                addToLibrary(e)
+                                setIsOpen(!isOpen)
+                            }}
                         >
-                            <a className="w-full flex justify-center text-center">
-                                Add to Playlist
-                            </a>
+                            Like{' '}
+                            <IoHeartCircleOutline
+                                style={darkMode ? styleDark : style}
+                            />
+                        </a>
+                        <a
+                            className=" justify-center items-center w-full"
+                            onClick={async e => {
+                                addDislike(e)
+                                setIsOpen(!isOpen)
+                            }}
+                        >
+                            Dislike{' '}
+                            <IoHeartDislikeCircleOutline
+                                style={darkMode ? styleDark : style}
+                            />
+                        </a>
+                    </li>
+                    <li
+                        onClick={e => {
+                            setIsOpen(!isOpen)
+                            setIsOpen(!isOpen)
+                        }}
+                        className=" justify-center items-center "
+                    >
+                        <div
+                            className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                        >
+                            Add to Library
+                        </div>
+                    </li>
 
-                            <ul
-                                className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
-                            >
-                                {libraryPlaylists &&
-                                    libraryPlaylists.map(playlist => (
-                                        <li
-                                            className="relative justify-center items-center w-full"
-                                            onClick={e => {
-                                                e.preventDefault()
-                                                handleAddToPlaylist(
-                                                    playlist.id,
-                                                    playlist.attributes.name
-                                                )
-                                            }}
-                                        >
-                                            <a className="w-full flex justify-center text-center">
-                                                {playlist.attributes.name}
-                                            </a>
-                                        </li>
-                                    ))}
-                            </ul>
-                        </li>
-                    )}
-            </ul>
+                    {object.type !== 'playlists' &&
+                        object.type !== 'library-playlists' && (
+                            <li className="relative justify-center items-center w-full">
+                                <div
+                                    onMouseEnter={() => setIsHovered(true)}
+                                    onMouseLeave={() => setIsHovered(false)}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                >
+                                    <a className="w-full flex justify-center text-center">
+                                        Add to Playlist
+                                    </a>
+
+                                    <ul
+                                        className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
+                                    >
+                                        {libraryPlaylists &&
+                                            libraryPlaylists.map(playlist => (
+                                                <li
+                                                    key={playlist.id}
+                                                    className="relative justify-center items-center w-full"
+                                                    onClick={e => {
+                                                        e.preventDefault()
+                                                        handleAddToPlaylist(
+                                                            playlist.id,
+                                                            playlist.attributes
+                                                                .name
+                                                        )
+                                                        setIsOpen(!isOpen)
+                                                    }}
+                                                >
+                                                    <a className="w-full flex justify-center text-center">
+                                                        {
+                                                            playlist.attributes
+                                                                .name
+                                                        }
+                                                    </a>
+                                                </li>
+                                            ))}
+                                    </ul>
+                                </div>
+                            </li>
+                        )}
+                </ul>
+            )}
         </div>
     )
 }

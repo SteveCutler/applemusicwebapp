@@ -155,7 +155,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
     }
 
     const style = { color: 'white', fontSize: '1.3rem' }
-    const styleBlue = { color: 'royalblue', fontSize: '1.3rem' }
+    const styleBlue = { color: 'dodgerblue', fontSize: '1.3rem' }
 
     const constructImageUrl = (url: string, size: number) => {
         return url

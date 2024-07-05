@@ -240,7 +240,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     const navigate = useNavigate()
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     if (albumItem) {
         return (

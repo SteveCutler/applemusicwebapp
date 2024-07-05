@@ -55,7 +55,7 @@ const FavRow: React.FC<playlistProps> = ({ name, artistName, id, index }) => {
             // setCurrrentSongId()
         }
     }
-    const style = { fontSize: '1.5rem', color: 'royalblue' }
+    const style = { fontSize: '1.5rem', color: 'dodgerblue' }
     return (
         <Link
             to={`/song/${id}`}

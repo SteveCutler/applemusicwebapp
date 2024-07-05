@@ -126,7 +126,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
             .replace('{h}', size.toString())
     }
 
-    const style = { fontSize: '1.5rem', color: 'royalblue' }
+    const style = { fontSize: '1.5rem', color: 'dodgerblue' }
     console.log('song sending: ', makeSong(song))
 
     return (

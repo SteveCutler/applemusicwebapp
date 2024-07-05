@@ -115,7 +115,7 @@ const Favourites = () => {
         }
     }
 
-    const styleBlue = { color: 'royalblue', fontSize: '2.5rem' }
+    const styleBlue = { color: 'dodgerblue', fontSize: '2.5rem' }
 
     return (
         <>

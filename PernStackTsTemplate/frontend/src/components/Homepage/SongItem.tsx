@@ -74,7 +74,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel }) => {
         //musicKitInstance?.play(songId)
     }
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     // const handleNavigation = (e: React.MouseEvent) => {
     //     e.preventDefault()

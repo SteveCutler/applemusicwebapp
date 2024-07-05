@@ -121,7 +121,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
             })
         }
     }
-    const style = { fontSize: '1rem', color: 'royalblue' }
+    const style = { fontSize: '1rem', color: 'dodgerblue' }
 
     return (
         <Link

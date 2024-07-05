@@ -91,7 +91,7 @@ const Artist = () => {
         // await retrieveAlbumTracks()
     }
 
-    const styleButton = { fontSize: '3rem', color: 'royalblue ' }
+    const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
 
     return (
         <>

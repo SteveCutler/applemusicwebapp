@@ -20,7 +20,7 @@ const FetchRecentlyPlayed = () => {
         const fetchRecentlyPlayed = async () => {
             if (musicKitInstance) {
                 try {
-                    const queryParameters = { l: 'en-us', limit: 5 }
+                    const queryParameters = { l: 'en-us', limit: 10 }
                     const res = await musicKitInstance.api.music(
                         '/v1/me/recent/played',
                         queryParameters

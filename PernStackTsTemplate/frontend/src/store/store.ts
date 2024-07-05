@@ -281,24 +281,24 @@ type playlist = {
 
 type AlbumType = {
     attributes: AttributeObject
-    id: String
+    id: string
     type: string
 }
 
 type AttributeObject = {
-    artistName: String
-    artwork: ArtworkObject
-    dateAdded: String
-    genreNames: Array<String>
-    name: String
-    releasedDate: String
-    trackCount: Number
+    artistName: string
+    artwork?: ArtworkObject
+    dateAdded: string
+    genreNames: Array<string>
+    name: string
+    releasedDate: string
+    trackCount: number
 }
 
 type ArtworkObject = {
-    height: Number
-    width: Number
-    url: String
+    height: number
+    width: number
+    url: string
 }
 interface Album {
     attributes: {
@@ -400,6 +400,7 @@ interface State {
     favouriteSongs: Array<Song> | null
     recentActivity: Array<Song | playlist | Album | StationType> | null
     darkMode: boolean
+    trackData: Song[]
 }
 
 interface Actions {
@@ -456,6 +457,7 @@ interface Actions {
     setShuffle: () => void
     setRepeat: () => void
     setQueueToggle: () => void
+    setTrackData: (tracks: Song[]) => void
     setRecentActivity: (
         items: Array<Song | playlist | Album | StationType> | null
     ) => void
@@ -477,6 +479,7 @@ export const useStore = create<Store>((set, get) => ({
     albumData: null,
     musicKitInstance: null,
     appleMusicToken: '',
+    trackData: [],
     searchResults: {},
     searchTerm: '',
     playlist: [],
@@ -541,6 +544,8 @@ export const useStore = create<Store>((set, get) => ({
 
         set({ muted })
     },
+
+    setTrackData: (tracks: Song[]) => set({ trackData: tracks }),
 
     setDarkMode: (toggle: boolean) => set({ darkMode: toggle }),
     setRecentActivity: (

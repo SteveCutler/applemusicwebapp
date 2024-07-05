@@ -141,7 +141,7 @@ const AlbumGrid: React.FC<AlbumProps> = ({
         await retrieveAlbumTracks()
     }
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     return (
         <>

@@ -86,7 +86,7 @@ const Song = () => {
 
     const styleButton = {
         fontSize: '3rem',
-        color: 'royalblue ',
+        color: 'dodgerblue ',
         // backgroundColor: 'black',
         // borderRadius: '9999xp',
     }

@@ -58,7 +58,7 @@ const HistoryRow: React.FC<playlistProps> = ({
             // setCurrrentSongId()
         }
     }
-    const style = { fontSize: '1.5rem', color: 'royalblue' }
+    const style = { fontSize: '1.5rem', color: 'dodgerblue' }
     return (
         <Link
             to={`/song/${id}`}

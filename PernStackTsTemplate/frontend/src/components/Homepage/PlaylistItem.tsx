@@ -196,7 +196,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
 
     const navigate = useNavigate()
 
-    const style = { fontSize: '2rem', color: 'royalblue ' }
+    const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     return (
         <div
