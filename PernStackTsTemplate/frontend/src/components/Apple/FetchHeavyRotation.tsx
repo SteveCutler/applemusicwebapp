@@ -25,7 +25,7 @@ const FetchHeavyRotation = () => {
                         {
                             headers: {
                                 Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
-                                //'music-user-token': appleMusicToken,
+                                'music-user-token': appleMusicToken,
                             },
                         }
                     )

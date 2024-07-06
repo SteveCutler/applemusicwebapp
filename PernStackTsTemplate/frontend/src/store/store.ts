@@ -717,8 +717,13 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     fetchAppleToken: async () => {
-        const { musicKitInstance, appleMusicToken, generateAppleToken } = get()
-        const { backendToken } = get()
+        const {
+            musicKitInstance,
+            appleMusicToken,
+            backendToken,
+            generateAppleToken,
+        } = get()
+
         if (!appleMusicToken) {
             try {
                 console.log('getting token from backend')
@@ -784,6 +789,7 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     authorizeMusicKit: async () => {
+        const { backendToken, appleMusicToken, fetchAppleToken } = get()
         const initializeMusicKit = async () => {
             const music = await (window as any).MusicKit.configure({
                 developerToken: import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN,
@@ -793,129 +799,27 @@ export const useStore = create<Store>((set, get) => ({
                 },
             })
 
-            if (music) {
-                console.log('adding event listeners...')
-                const updateState = async () => {
-                    const { playbackState, nowPlayingItem } = music
-
-                    const constructImageUrl = (url: string, size: number) => {
-                        return url
-                            .replace('{w}', size.toString())
-                            .replace('{h}', size.toString())
-                    }
-
-                    const isPlaying = playbackState === 2 ? true : false
-                    const currentSongId = nowPlayingItem?.id
-                    const currentSongDuration =
-                        nowPlayingItem?.attributes.durationInMillis || null
-
-                    if (
-                        nowPlayingItem &&
-                        nowPlayingItem.attributes.artwork?.url
-                    ) {
-                        const displayArt =
-                            await nowPlayingItem.attributes.artwork?.url
-                        if (displayArt) {
-                            const displayArtUrl = constructImageUrl(
-                                displayArt,
-                                50
-                            )
-                            useStore.setState({ albumArtUrl: displayArtUrl })
-                        } else {
-                            useStore.setState({ albumArtUrl: null })
-                        }
-                    } else {
-                        useStore.setState({ albumArtUrl: null })
-                    }
-
-                    useStore.setState({
-                        isPlaying,
-                        currentSongId,
-                        currentSongDuration,
-                        scrubTime: null,
-                    })
-                }
-
-                // Remove existing listeners to avoid duplicate listeners
-                music.removeEventListener('playbackStateDidChange', updateState)
-                music.removeEventListener(
-                    'nowPlayingItemDidChange',
-                    updateState
-                )
-                music.removeEventListener('playbackTimeDidChange', updateState)
-                music.removeEventListener('queueEnded', updateState)
-
-                music.autoplayEnabled = true
-
-                music.addEventListener(
-                    'playbackStateDidChange',
-                    ({ oldState, state }: any) => {
-                        console.log(
-                            `Changed the playback state from ${oldState} to ${state}`
-                        )
-                        updateState()
-                    }
-                )
-                music.addEventListener('queueItemsDidChange', () => {
-                    if (music) {
-                        const currentQueue = music.queue.items
-                        set({ playlist: currentQueue })
-                    }
-                })
-
-                music.addEventListener('queueEnded', () => {
-                    console.log('Queue ended, enabling autoplay')
-                })
-
-                music.addEventListener('nowPlayingItemDidChange', () => {
-                    if (music) {
-                        updateState()
-                        // const { nowPlayingItem } = music
-                        // const currentSongId = nowPlayingItem?.id
-                        // const currentSongDuration =
-                        //     nowPlayingItem?.attributes.durationInMillis || null
-                        // const constructImageUrl = (
-                        //     url: string,
-                        //     size: number
-                        // ) => {
-                        //     return url
-                        //         .replace('{w}', size.toString())
-                        //         .replace('{h}', size.toString())
-                        // }
-
-                        // const displayArt =
-                        //     nowPlayingItem?.attributes.artwork.url
-
-                        // if (nowPlayingItem && displayArt) {
-                        //     const displayArtUrl = constructImageUrl(
-                        //         displayArt,
-                        //         50
-                        //     )
-                        //     useStore.setState({ albumArtUrl: displayArtUrl })
-                        // }
-                        // useStore.setState({
-                        //     currentSongId,
-                        //     currentSongDuration,
-                        //     currentElapsedTime: 0,
-                        //     scrubTime: null,
-                        // })
-                    }
-                })
-
-                music.addEventListener('playbackTimeDidChange', () => {
-                    if (music) {
-                        const { playbackState } = music
-                        if (playbackState) {
-                            const currentElapsedTime =
-                                music.currentPlaybackTime * 1000
-                            useStore.setState({ currentElapsedTime })
-                        }
-                    }
-                })
-
-                set({ musicKitInstance: music })
-                console.log('MusicKit instance: ', music)
+            if (appleMusicToken) {
+                music.musicUserToken = appleMusicToken
             }
+
+            // Add event listeners and other initialization code here...
+
+            // Prompt user to authorize if token is not available or invalid
+            if (!appleMusicToken || !music.isAuthorized) {
+                try {
+                    await music.authorize()
+                    const newToken = music.musicUserToken
+                    if (backendToken) {
+                        saveToken(backendToken, newToken) // Save the new token with user ID
+                    }
+                } catch (error) {
+                    console.error('Authorization failed:', error)
+                }
+            }
+
+            useStore.setState({ musicKitInstance: music })
+            console.log('MusicKit instance: ', music)
         }
 
         if (!(window as any).MusicKit) {
@@ -924,14 +828,14 @@ export const useStore = create<Store>((set, get) => ({
                 'https://js-cdn.music.apple.com/musickit/v3/musickit.js'
             script.onload = async () => {
                 document.addEventListener('musickitloaded', async () => {
-                    console.log('creating musickit')
+                    const musicUserToken = fetchAppleToken() // Get the token with user ID
                     await initializeMusicKit()
                 })
             }
             document.body.appendChild(script)
             console.log('MusicKit script loaded')
         } else {
-            console.log('musickit instance already exists')
+            const musicUserToken = fetchAppleToken() // Get the token with user ID
             await initializeMusicKit()
         }
     },

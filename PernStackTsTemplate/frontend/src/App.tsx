@@ -22,41 +22,48 @@ import NewPlaylist from './pages/NewPlaylist'
 import PlaylistDisplay from './pages/PlaylistDisplay'
 import EditPlaylist from './pages/EditPlaylist'
 import Favourites from './pages/Favourites'
+import AppleMusicLogin from './components/Apple/AppleMusicLogin'
 
 function App() {
     const {
         backendToken,
         authorizeBackend,
         darkMode,
+        appleMusicToken,
         setBackendToken,
         queueToggle,
     } = useStore(state => ({
         darkMode: state.darkMode,
         backendToken: state.backendToken,
         queueToggle: state.queueToggle,
+        appleMusicToken: state.appleMusicToken,
         authorizeBackend: state.authorizeBackend,
         setBackendToken: state.setBackendToken,
     }))
 
     const [isCheckingAuth, setIsCheckingAuth] = useState(true)
-    const authToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('authToken='))
-        ?.split('=')[1]
+    const authToken = localStorage.getItem('backendToken')
+    console.log('backend token', backendToken)
+    console.log('apple token', appleMusicToken)
 
     useEffect(() => {
         const checkAuth = async () => {
             if (authToken) {
+                console.log('found token')
                 setBackendToken(authToken)
             } else {
+                console.log('fetching token')
                 await authorizeBackend()
             }
 
             setIsCheckingAuth(false)
         }
 
-        checkAuth()
-    }, [authorizeBackend, setBackendToken])
+        if (!backendToken) {
+            console.log('checking for token')
+            checkAuth()
+        }
+    }, [authorizeBackend, setBackendToken, backendToken])
 
     if (isCheckingAuth) {
         return <div>Loading...</div>

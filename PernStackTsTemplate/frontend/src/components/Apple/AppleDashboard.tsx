@@ -188,7 +188,7 @@ const AppleDashboard = () => {
             className={`h-100vh flex-col flex-grow ${darkMode ? 'text-slate-200' : 'text-slate-800'}  relative z-10 flex justify-center `}
         >
             {/* MAIN DISPLAY */}
-            {recentlyAddedToLib && (
+            {recentlyAddedToLib.length >= 1 && (
                 <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
                     Recently Added to Library
                 </h2>

@@ -10,6 +10,7 @@ dotenv.config()
 const app = express()
 app.use(cookieParser())
 app.use(express.json()) // for parsing application/json
+
 const corsOptions = {
     origin: 'http://localhost:5173',
     credentials: true,

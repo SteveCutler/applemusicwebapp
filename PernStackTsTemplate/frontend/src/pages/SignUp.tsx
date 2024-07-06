@@ -20,25 +20,30 @@ const SignUp = () => {
         signup(inputs)
     }
     return (
-        <div className="flex flex-col rounded-lg  items-start justify-start    min-w-96  mx-auto">
+        <div className="flex flex-col rounded-lg -translate-y-5  items-start justify-start    min-w-96  mx-auto">
             {/* <img
                 src={MusLogo}
                 width="200"
                 className="flex select-none  mx-auto justify-center"
             /> */}
-            <div className="w-full rounded-lg   p-6 shadow-md bg-slate-300  ">
-                <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
+            <img
+                src={MusLogo}
+                width="150"
+                className="flex select-none  mx-auto justify-center"
+            />
+            <div className="w-full rounded-lg   p-6 shadow-md   ">
+                {/* <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
                     <span className="text-blue-500"> Sign Up</span>{' '}
                     <img src={spiralFavicon} style={{ width: '40px' }} />
-                </h1>
+                </h1> */}
 
-                <form className="font-bold" onSubmit={handleSubmitForm}>
-                    <div>
-                        <label className="label p-2">
+                <form className="font-bold gap-5" onSubmit={handleSubmitForm}>
+                    <div className="pb-8">
+                        {/* <label className="label p-2">
                             <span className="text-base label-text ">
                                 Full Name
                             </span>
-                        </label>
+                        </label> */}
                         <input
                             type="text"
                             placeholder="Enter full name"
@@ -53,12 +58,12 @@ const SignUp = () => {
                         />
                     </div>
 
-                    <div>
-                        <label className="label p-2 ">
+                    <div className="pb-8">
+                        {/* <label className="label p-2 ">
                             <span className="text-base label-text text-white">
                                 Username
                             </span>
-                        </label>
+                        </label> */}
                         <input
                             type="text"
                             placeholder="Enter username"
@@ -72,12 +77,12 @@ const SignUp = () => {
                             }
                         />
                     </div>
-                    <div>
-                        <label className="label p-2 ">
+                    <div className="pb-8">
+                        {/* <label className="label p-2 ">
                             <span className="text-base label-text text-white">
                                 Email
                             </span>
-                        </label>
+                        </label> */}
                         <input
                             type="text"
                             placeholder="Enter email"
@@ -92,12 +97,12 @@ const SignUp = () => {
                         />
                     </div>
 
-                    <div>
-                        <label className="label">
+                    <div className="pb-8">
+                        {/* <label className="label">
                             <span className="text-base label-text">
                                 Password
                             </span>
-                        </label>
+                        </label> */}
                         <input
                             type="password"
                             placeholder="Enter Password"
@@ -112,12 +117,12 @@ const SignUp = () => {
                         />
                     </div>
 
-                    <div>
-                        <label className="label">
+                    <div className="pb-3">
+                        {/* <label className="label">
                             <span className="text-base label-text">
                                 Confirm Password
                             </span>
-                        </label>
+                        </label> */}
                         <input
                             type="password"
                             placeholder="Confirm Password"
@@ -134,7 +139,7 @@ const SignUp = () => {
 
                     <Link
                         to={'/login'}
-                        className="text-md font-bold  hover:text-blue-600 mt-2 inline-block text-black"
+                        className="text-md font-bold  hover:text-blue-600 mt-2 inline-block text-slate-300"
                     >
                         Already have an account?
                     </Link>

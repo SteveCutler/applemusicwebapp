@@ -39,12 +39,16 @@ const Sidebar = () => {
         albums,
         darkMode,
         setDarkMode,
+        musicKitInstance,
+        authorizeMusicKit,
         backendToken,
         setAlbums,
         fetchAppleToken,
         appleMusicToken,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        musicKitInstance: state.musicKitInstance,
+        authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
         darkMode: state.darkMode,
         setDarkMode: state.setDarkMode,
@@ -95,6 +99,7 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
+        authorizeMusicKit()
         if (!appleMusicToken) {
             fetchAppleToken()
         }

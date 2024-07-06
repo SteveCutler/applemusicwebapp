@@ -1,12 +1,9 @@
 import { useState } from 'react'
-import { useAuthContext } from '../../context/AuthContext'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
 import { useStore } from '../../store/store'
-
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    // const { setAuthUser } = useAuthContext()
     const { setBackendToken, musicKitInstance } = useStore(state => ({
         setBackendToken: state.setBackendToken,
         musicKitInstance: state.musicKitInstance,
@@ -22,8 +19,21 @@ const useLogout = () => {
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.error)
-            toast.success('Logged out succesfully')
-            // setAuthUser(null)
+            toast.success('Logged out successfully')
+
+            // Clear all relevant local storage and session storage items
+            localStorage.clear() // Clear all local storage
+            sessionStorage.clear() // Clear all session storage
+
+            // Clear state in your store
+            useStore.setState({
+                appleMusicToken: null,
+                backendToken: null,
+                musicKitInstance: null,
+                heavyRotation: [],
+                // Clear any other user-specific state
+            })
+
             await musicKitInstance?.stop()
             setBackendToken(null)
             navigate('/login')

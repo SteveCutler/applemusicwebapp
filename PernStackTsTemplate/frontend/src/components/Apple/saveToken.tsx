@@ -7,7 +7,7 @@ export const saveToken = async (userToken: string, userId: String | null) => {
         const now = new Date()
         const tokenExpiryDate = new Date(now.setDate(now.getDate() + 15))
 
-        const res = await fetch('/api/apple/' + 'save-token', {
+        const res = await fetch('http://localhost:5000/api/apple/save-token', {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json',
@@ -17,13 +17,15 @@ export const saveToken = async (userToken: string, userId: String | null) => {
                 userToken,
                 tokenExpiryDate,
             }),
+            credentials: 'include',
         })
         // const data = await res.json()
         if (!res.ok) {
             toast.error('Issue saving token')
         }
-        console.log(res)
-        console.log(res.json())
+        // console.log(res)
+        const data = await res.json()
+        console.log('data: ', data)
 
         toast.success('Apple auth saved succesfully')
     } catch (error) {

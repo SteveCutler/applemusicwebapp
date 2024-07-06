@@ -1,10 +1,9 @@
-import { LogOut } from 'lucide-react'
-import useLogout from '../../hooks/auth/useLogout'
 import { HiOutlineLogout } from 'react-icons/hi'
+import useLogout from '../../hooks/auth/useLogout'
 
 const LogoutButton = () => {
-    const { logout } = useLogout()
     const style = { fontSize: '0.5rem' }
+    const { logout } = useLogout()
 
     return (
         <div className="mt-auto">
@@ -16,4 +15,5 @@ const LogoutButton = () => {
         </div>
     )
 }
+
 export default LogoutButton
