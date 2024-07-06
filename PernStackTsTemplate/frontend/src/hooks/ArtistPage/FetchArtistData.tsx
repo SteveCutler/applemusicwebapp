@@ -172,8 +172,6 @@ const FetchArtistData = (id: string | undefined) => {
                             `/v1/me/library/artists/${id}`
                         )
 
-                        console.log('test res:', res)
-
                         const data: Artist = await res.data.data[0]
 
                         setArtistData(data)

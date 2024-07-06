@@ -166,12 +166,11 @@ function Footer() {
                                 </div>
                                 <div className="flex items-center gap-2">
                                     <div onClick={goToAlbum}>
-                                        {
-                                            playlist[
+                                        {musicKitInstance.queue.items &&
+                                            musicKitInstance.queue.items[
                                                 musicKitInstance
                                                     ?.nowPlayingItemIndex
-                                            ].attributes.albumName
-                                        }
+                                            ].attributes.albumName}
                                     </div>
                                     <div className="flex justify-start items-end">
                                         {musicKitInstance?.queue &&

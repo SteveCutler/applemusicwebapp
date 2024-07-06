@@ -4,10 +4,13 @@ import toast from 'react-hot-toast'
 import { useStore } from '../../store/store'
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    const { setBackendToken, musicKitInstance } = useStore(state => ({
-        setBackendToken: state.setBackendToken,
-        musicKitInstance: state.musicKitInstance,
-    }))
+    const { setBackendToken, musicKitInstance, setAppleMusicToken } = useStore(
+        state => ({
+            setBackendToken: state.setBackendToken,
+            setAppleMusicToken: state.setAppleMusicToken,
+            musicKitInstance: state.musicKitInstance,
+        })
+    )
     const navigate = useNavigate()
 
     const logout = async () => {
@@ -22,20 +25,38 @@ const useLogout = () => {
             toast.success('Logged out successfully')
 
             // Clear all relevant local storage and session storage items
-            localStorage.clear() // Clear all local storage
-            sessionStorage.clear() // Clear all session storage
+            localStorage.clear()
+            sessionStorage.clear()
 
             // Clear state in your store
             useStore.setState({
+                heavyRotation: [],
+                recentlyPlayed: null,
+                recommendations: null,
+                recentlyPlayedAlbums: null,
+                personalizedPlaylists: null,
+                themedRecommendations: null,
+                moreLikeRecommendations: null,
+                stationsForYou: null,
+                recentlyAddedToLib: [],
+                recentHistory: [],
+                playlistData: [],
+                recentActivity: null,
+                trackData: [],
                 appleMusicToken: null,
                 backendToken: null,
                 musicKitInstance: null,
-                heavyRotation: [],
+                favouriteSongs: null,
+                libraryPlaylists: null,
+                albumData: null,
+
+                albums: null,
                 // Clear any other user-specific state
             })
 
             await musicKitInstance?.stop()
             setBackendToken(null)
+            setAppleMusicToken(null)
             navigate('/login')
         } catch (error: any) {
             console.error(error.message)

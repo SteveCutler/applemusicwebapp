@@ -28,46 +28,51 @@ function App() {
     const {
         backendToken,
         authorizeBackend,
+        setAppleMusicToken,
         darkMode,
         appleMusicToken,
         setBackendToken,
+        musicKitInstance,
         queueToggle,
     } = useStore(state => ({
         darkMode: state.darkMode,
         backendToken: state.backendToken,
+        setAppleMusicToken: state.setAppleMusicToken,
+        musicKitInstance: state.musicKitInstance,
         queueToggle: state.queueToggle,
         appleMusicToken: state.appleMusicToken,
         authorizeBackend: state.authorizeBackend,
         setBackendToken: state.setBackendToken,
     }))
 
-    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
-    const authToken = localStorage.getItem('backendToken')
-    console.log('backend token', backendToken)
-    console.log('apple token', appleMusicToken)
+    // const [isCheckingAuth, setIsCheckingAuth] = useState(true)
+
+    // console.log('backend token', backendToken)
+    // console.log('apple token', appleMusicToken)
 
     useEffect(() => {
-        const checkAuth = async () => {
-            if (authToken) {
-                console.log('found token')
-                setBackendToken(authToken)
-            } else {
-                console.log('fetching token')
-                await authorizeBackend()
-            }
+        // const checkAuth = async () => {
+        //     if (authToken && !backendToken) {
+        //         console.log('found token')
+        //         setBackendToken(authToken)
+        //     }
 
-            setIsCheckingAuth(false)
+        //     setIsCheckingAuth(false)
+        // }
+        if (!appleMusicToken) {
+            const appleToken = localStorage.getItem('musicUserToken')
+            setAppleMusicToken(appleToken)
         }
 
         if (!backendToken) {
-            console.log('checking for token')
-            checkAuth()
+            const authToken = localStorage.getItem('backendToken')
+            setBackendToken(authToken)
         }
-    }, [authorizeBackend, setBackendToken, backendToken])
+    }, [authorizeBackend, appleMusicToken, backendToken])
 
-    if (isCheckingAuth) {
-        return <div>Loading...</div>
-    }
+    // if (isCheckingAuth) {
+    //     return <div>Loading...</div>
+    // }
 
     return (
         <div
@@ -91,7 +96,7 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                backendToken || authToken ? (
+                                backendToken ? (
                                     <Home />
                                 ) : (
                                     <Navigate to="/login" />
@@ -101,67 +106,35 @@ function App() {
                         <Route
                             path="/signup"
                             element={
-                                backendToken || authToken ? (
-                                    <Navigate to="/" />
-                                ) : (
-                                    <SignUp />
-                                )
+                                backendToken ? <Navigate to="/" /> : <SignUp />
                             }
                         />
                         <Route
                             path="/search/"
-                            element={
-                                backendToken || authToken ? (
-                                    <Search />
-                                ) : (
-                                    <Login />
-                                )
-                            }
+                            element={backendToken ? <Search /> : <Login />}
                         />
                         <Route
                             path="/new-playlist/"
-                            element={
-                                backendToken || authToken ? (
-                                    <NewPlaylist />
-                                ) : (
-                                    <Login />
-                                )
-                            }
+                            element={backendToken ? <NewPlaylist /> : <Login />}
                         />
                         <Route
                             path="/artist/:Id"
-                            element={
-                                backendToken || authToken ? (
-                                    <Artist />
-                                ) : (
-                                    <Login />
-                                )
-                            }
+                            element={backendToken ? <Artist /> : <Login />}
                         />
                         <Route
                             path="/login"
                             element={
-                                backendToken || authToken ? (
-                                    <Navigate to="/" />
-                                ) : (
-                                    <Login />
-                                )
+                                backendToken ? <Navigate to="/" /> : <Login />
                             }
                         />
                         <Route
                             path="/library"
-                            element={
-                                backendToken || authToken ? (
-                                    <Library />
-                                ) : (
-                                    <Login />
-                                )
-                            }
+                            element={backendToken ? <Library /> : <Login />}
                         />
                         {/* <Route
                             path="/playlist-edit/:playlistId"
                             element={
-                                backendToken || authToken ? (
+                                 backendToken ? (
                                     <EditPlaylist />
                                 ) : (
                                     <Login />
@@ -171,22 +144,12 @@ function App() {
                         <Route
                             path="/playlist-display"
                             element={
-                                backendToken || authToken ? (
-                                    <PlaylistDisplay />
-                                ) : (
-                                    <Login />
-                                )
+                                backendToken ? <PlaylistDisplay /> : <Login />
                             }
                         />
                         <Route
                             path="/favourites"
-                            element={
-                                backendToken || authToken ? (
-                                    <Favourites />
-                                ) : (
-                                    <Login />
-                                )
-                            }
+                            element={backendToken ? <Favourites /> : <Login />}
                         />
                         <Route path="/stacks" element={<Stacks />} />
                         <Route

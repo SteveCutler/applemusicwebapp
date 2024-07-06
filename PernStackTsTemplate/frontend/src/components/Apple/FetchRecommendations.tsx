@@ -44,9 +44,9 @@ const FetchRecommendations = () => {
                         queryParameters
                     )
 
-                    if (!res.ok) {
-                        console.log('error: ', res.body)
-                    }
+                    // if (!res.ok) {
+                    //     console.log('error: ', res.body)
+                    // }
                     // console.log(res)
 
                     const data = await res.data.data

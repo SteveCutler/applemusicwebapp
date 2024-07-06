@@ -30,7 +30,7 @@ const Login = () => {
                 width="150"
                 className="flex select-none  mx-auto justify-center"
             />
-            <div className="w-full p-6 rounded-lg text-black shadow-xl bg-clip-padding ">
+            <div className="w-full p-6 rounded-lg text-black  bg-clip-padding ">
                 {/* <h1 className="text-3xl font-bold flex justify-center items-center text-center text-black">
                     <span className="text-blue-500 select-none">Login</span>
                     <img src={spiralFavicon} style={{ width: '40px' }} />

@@ -99,7 +99,9 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
-        authorizeMusicKit()
+        if (!musicKitInstance) {
+            authorizeMusicKit()
+        }
         if (!appleMusicToken) {
             fetchAppleToken()
         }

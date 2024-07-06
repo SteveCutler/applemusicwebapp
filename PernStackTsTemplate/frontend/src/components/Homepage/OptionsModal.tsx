@@ -582,7 +582,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
             {isOpen && (
                 <ul
                     tabIndex={0}
-                    className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 menu w-40 p-2 shadow-md rounded-box`}
+                    className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -top-20 -translate-y-20 -translate-x-20  menu w-40 p-2 shadow-md rounded-box`}
                 >
                     <li className="w-full flex justify-between items-center">
                         <a
@@ -634,11 +634,11 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                                     onClick={() => setIsOpen(!isOpen)}
                                 >
                                     <a className="w-full flex justify-center text-center">
-                                        Add to Playlist
+                                        {'Add to Playlist'}
                                     </a>
 
                                     <ul
-                                        className={`absolute left-full overflow-auto -top-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
+                                        className={`absolute left-full overflow-scroll -top-20 -translate-y-20 ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} z-50 max-h-52 font-bold w-40 p-2 shadow-md rounded-box transition-all duration-300 ease-in-out transform ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-2 '}`}
                                     >
                                         {libraryPlaylists &&
                                             libraryPlaylists.map(playlist => (

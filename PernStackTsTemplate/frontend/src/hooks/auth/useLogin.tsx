@@ -5,13 +5,19 @@ import { useStore } from '../../store/store'
 
 const useLogin = () => {
     const [loading, setLoading] = useState(false)
-    const { isAuthorized, setAuthorized, setBackendToken, fetchAppleToken } =
-        useStore(state => ({
-            isAuthorized: state.isAuthorized,
-            fetchAppleToken: state.fetchAppleToken,
-            setAuthorized: state.setAuthorized,
-            setBackendToken: state.setBackendToken,
-        }))
+    const {
+        setAuthorized,
+        authorizeMusicKit,
+        setBackendToken,
+        appleMusicToken,
+        fetchAppleToken,
+    } = useStore(state => ({
+        authorizeMusicKit: state.authorizeMusicKit,
+        appleMusicToken: state.appleMusicToken,
+        fetchAppleToken: state.fetchAppleToken,
+        setAuthorized: state.setAuthorized,
+        setBackendToken: state.setBackendToken,
+    }))
     const navigate = useNavigate()
 
     const login = async (email: string, password: string) => {
@@ -32,19 +38,19 @@ const useLogin = () => {
                 return
             }
 
-            toast.success('Logged in successfully')
-
-            // Save tokens to local storage
             localStorage.setItem('backendToken', data.id)
             setBackendToken(data.id)
-            fetchAppleToken()
-            setAuthorized(true)
 
-            // navigate('/dashboard') // or any other route after successful login
-        } catch (error: any) {
+            await fetchAppleToken()
+
+            await authorizeMusicKit()
+            setAuthorized(true)
+            toast.success('Logged in successfully')
+
+            // navigate('/dashboard')
+        } catch (error) {
             toast.error('Failed to log in')
             navigate('/login')
-            return
         } finally {
             setLoading(false)
         }

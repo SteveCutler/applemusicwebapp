@@ -26,43 +26,32 @@ const Home = () => {
     }))
 
     const initialize = async () => {
+        // if (!appleMusicToken && musicKitInstance) {
+        //     console.log('fetching Apple token...')
+        //     await fetchAppleToken()
+        // }
         if (!musicKitInstance) {
             console.log('Initializing MusicKit...')
-            authorizeMusicKit()
-        }
-
-        if (!appleMusicToken && musicKitInstance) {
-            console.log('fetching Apple token...')
-            fetchAppleToken()
+            await authorizeMusicKit()
         }
     }
-
-    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
-    const authToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('authToken='))
-        ?.split('=')[1]
 
     useEffect(() => {
-        const checkAuth = async () => {
-            if (authToken) {
-                setBackendToken(authToken)
-            } else {
-                await authorizeBackend()
-            }
+        // const checkAuth = async () => {
+        //     if (authToken) {
+        //         setBackendToken(authToken)
+        //     } else {
+        //         await authorizeBackend()
+        //     }
 
-            setIsCheckingAuth(false)
-        }
+        //     setIsCheckingAuth(false)
+        // }
         if (!musicKitInstance || !appleMusicToken) {
+            console.log('music kit', musicKitInstance)
+            console.log('music token', appleMusicToken)
             initialize()
         }
-
-        checkAuth()
-    }, [authorizeBackend, setBackendToken, musicKitInstance, appleMusicToken])
-
-    if (isCheckingAuth) {
-        return <div>Loading...</div>
-    }
+    }, [setBackendToken, musicKitInstance, appleMusicToken])
 
     if (!appleMusicToken) {
         return <div>Loading...</div>
@@ -70,11 +59,7 @@ const Home = () => {
 
     return (
         <div className="flex-col mx-auto flex pt-5 relative z-10 w-full  mb-40 rounded-lg ">
-            {appleMusicToken && musicKitInstance ? (
-                <AppleDashboard />
-            ) : (
-                <AuthorizeButton />
-            )}
+            {appleMusicToken ? <AppleDashboard /> : <AuthorizeButton />}
         </div>
     )
 }
