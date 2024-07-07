@@ -6,8 +6,43 @@ import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import axios from 'axios'
 
-const AlbumItem = ({ albumItem, carousel, releaseDate, lib, width }) => {
-    const constructImageUrl = (url, size) =>
+interface AlbumPropTypes {
+    albumItem: AlbumData
+    carousel?: boolean
+    releaseDate?: string
+    width?: string
+    lib?: boolean
+}
+
+type AlbumData = {
+    attributes: {
+        artistName: string
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        editorialNotes: {
+            short: string
+            standard: string
+        }
+        genreName: Array<string>
+        name: string
+        trackCount: number
+        url: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+const AlbumItem: React.FC<AlbumPropTypes> = ({
+    albumItem,
+    carousel,
+    releaseDate,
+    lib,
+    width,
+}) => {
+    const constructImageUrl = (url: string, size: number) =>
         url.replace('{w}', size.toString()).replace('{h}', size.toString())
     const {
         isPlaying,

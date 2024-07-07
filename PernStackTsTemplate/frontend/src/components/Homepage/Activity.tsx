@@ -39,10 +39,12 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
         backendToken,
         recentActivity,
         setRecentActivity,
+        appleMusicToken,
         recentHistory,
         musicKitInstance,
     } = useStore(state => ({
         recentlyPlayed: state.recentlyPlayed,
+
         recentHistory: state.recentHistory,
         favouriteSongs: state.favouriteSongs,
         recentlyAddedToLib: state.recentlyAddedToLib,
@@ -79,11 +81,11 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
             }
         }
 
-        if (musicKitInstance) {
+        if (musicKitInstance && backendToken && appleMusicToken) {
             fetchRecentActivity()
         }
         //
-    }, [musicKitInstance])
+    }, [musicKitInstance, backendToken, appleMusicToken])
 
     switch (type) {
         case 'likes':

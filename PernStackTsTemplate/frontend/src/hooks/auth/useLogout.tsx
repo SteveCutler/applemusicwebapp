@@ -4,13 +4,23 @@ import toast from 'react-hot-toast'
 import { useStore } from '../../store/store'
 const useLogout = () => {
     const [loading, setLoading] = useState(false)
-    const { setBackendToken, musicKitInstance, setAppleMusicToken } = useStore(
-        state => ({
-            setBackendToken: state.setBackendToken,
-            setAppleMusicToken: state.setAppleMusicToken,
-            musicKitInstance: state.musicKitInstance,
-        })
-    )
+    const {
+        setBackendToken,
+        setLibraryPlaylists,
+        setRecentHistory,
+        setRecentlyAddedToLib,
+        recentActivity,
+        musicKitInstance,
+        setAppleMusicToken,
+    } = useStore(state => ({
+        setBackendToken: state.setBackendToken,
+        recentActivity: state.recentActivity,
+        setRecentHistory: state.setRecentHistory,
+        setRecentlyAddedToLib: state.setRecentlyAddedToLib,
+        setAppleMusicToken: state.setAppleMusicToken,
+        setLibraryPlaylists: state.setLibraryPlaylists,
+        musicKitInstance: state.musicKitInstance,
+    }))
     const navigate = useNavigate()
 
     const logout = async () => {
@@ -49,14 +59,18 @@ const useLogout = () => {
                 favouriteSongs: null,
                 libraryPlaylists: null,
                 albumData: null,
-
                 albums: null,
                 // Clear any other user-specific state
             })
 
             await musicKitInstance?.stop()
+
             setBackendToken(null)
             setAppleMusicToken(null)
+            setLibraryPlaylists(null)
+            setRecentHistory([])
+            setRecentlyAddedToLib([])
+            recentActivity
             navigate('/login')
         } catch (error: any) {
             console.error(error.message)

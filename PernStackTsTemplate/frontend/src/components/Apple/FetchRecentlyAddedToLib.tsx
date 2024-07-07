@@ -97,12 +97,19 @@ interface StationType {
 }
 
 const FetchRecentlyAddedToLib = () => {
-    const { musicKitInstance, setRecentlyAddedToLib, recentlyAddedToLib } =
-        useStore(state => ({
-            musicKitInstance: state.musicKitInstance,
-            recentlyAddedToLib: state.recentlyAddedToLib,
-            setRecentlyAddedToLib: state.setRecentlyAddedToLib,
-        }))
+    const {
+        musicKitInstance,
+        setRecentlyAddedToLib,
+        appleMusicToken,
+        backendToken,
+        recentlyAddedToLib,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        appleMusicToken: state.appleMusicToken,
+        backendToken: state.backendToken,
+        recentlyAddedToLib: state.recentlyAddedToLib,
+        setRecentlyAddedToLib: state.setRecentlyAddedToLib,
+    }))
     // const [recommendations, setRecommendations] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -152,10 +159,10 @@ const FetchRecentlyAddedToLib = () => {
             }
         }
 
-        if (musicKitInstance) {
+        if (musicKitInstance && backendToken) {
             fetchRecentlyAddedToLib('/v1/me/library/recently-added')
         }
-    }, [musicKitInstance])
+    }, [musicKitInstance, backendToken, appleMusicToken])
 
     return { loading, error }
 }

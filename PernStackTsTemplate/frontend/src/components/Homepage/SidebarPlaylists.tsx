@@ -28,9 +28,13 @@ const SidebarPlaylists = () => {
         libraryPlaylists,
         setLibraryPlaylists,
         musicKitInstance,
+        backendToken,
+        appleMusicToken,
         authorizeMusicKit,
     } = useStore(state => ({
         libraryPlaylists: state.libraryPlaylists,
+        backendToken: state.backendToken,
+        appleMusicToken: state.appleMusicToken,
         setLibraryPlaylists: state.setLibraryPlaylists,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -66,10 +70,10 @@ const SidebarPlaylists = () => {
     }
 
     useEffect(() => {
-        if (libraryPlaylists === null) {
+        if (backendToken && appleMusicToken && libraryPlaylists === null) {
             fetchLibraryPlaylists()
         }
-    }, [musicKitInstance])
+    }, [musicKitInstance, backendToken, appleMusicToken, libraryPlaylists])
 
     const style = { fontSize: '2rem' }
 

@@ -25,15 +25,21 @@ interface Song {
 }
 
 const FetchRecentHistory = () => {
-    const { musicKitInstance, setRecentHistory, recentHistory } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            recentlyAddedToLib: state.recentlyAddedToLib,
-            setRecentHistory: state.setRecentHistory,
-            recentHistory: state.recentHistory,
-            currentSongId: state.currentSongId,
-        })
-    )
+    const {
+        musicKitInstance,
+        setRecentHistory,
+        backendToken,
+        appleMusicToken,
+        recentHistory,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        appleMusicToken: state.appleMusicToken,
+        backendToken: state.backendToken,
+        recentlyAddedToLib: state.recentlyAddedToLib,
+        setRecentHistory: state.setRecentHistory,
+        recentHistory: state.recentHistory,
+        currentSongId: state.currentSongId,
+    }))
     // const [recommendations, setRecommendations] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
@@ -76,10 +82,15 @@ const FetchRecentHistory = () => {
             }
         }
 
-        if (musicKitInstance && recentHistory.length < 1) {
+        if (
+            musicKitInstance &&
+            recentHistory.length < 1 &&
+            backendToken &&
+            appleMusicToken
+        ) {
             fetchRecentHistory('/v1/me/recent/played/tracks')
         }
-    }, [musicKitInstance])
+    }, [musicKitInstance, backendToken, appleMusicToken])
 
     return { loading, error }
 }

@@ -37,7 +37,7 @@ const FetchRecommendations = () => {
                     console.log(music)
                     const queryParameters = {
                         l: 'en-us',
-                        limit: 5,
+                        limit: 20,
                     }
                     const res = await musicKitInstance.api.music(
                         '/v1/me/recommendations/',
