@@ -72,7 +72,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                                 >
                                     <AlbumItem
                                         albumItem={album}
-                                        // lib={true}
+                                        lib={true}
                                         width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                                     />
                                 </div>
@@ -82,7 +82,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                                 <AlbumItem
                                     key={album.id}
                                     albumItem={album}
-                                    // lib={true}
+                                    lib={true}
                                     width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                                 />
                             )

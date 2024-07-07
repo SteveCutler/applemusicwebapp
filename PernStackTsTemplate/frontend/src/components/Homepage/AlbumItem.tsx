@@ -154,6 +154,34 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         }
     }
 
+    const navigateToArtist = async () => {
+        try {
+            if (albumItem.id.startsWith('l')) {
+                const artistRes = await musicKitInstance?.api.music(
+                    `/v1/me/library/albums/${albumItem.id}/artists`
+                )
+
+                const artistId = await artistRes.data.data[0].id
+                if (artistId) {
+                    navigate(`/artist/${artistId}`)
+                }
+            } else if (albumItem.id.startsWith('r')) {
+                navigate(`/album/${albumItem.id}`)
+            } else {
+                const artistRes = await musicKitInstance?.api.music(
+                    `/v1/catalog/ca/albums/${albumItem.id}/artists`
+                )
+
+                const artistId = await artistRes.data.data[0].id
+                if (artistId) {
+                    navigate(`/artist/${artistId}`)
+                }
+            }
+        } catch (error: any) {
+            console.error(error)
+        }
+    }
+
     const style = { fontSize: '2rem', color: 'dodgerblue ' }
 
     return (
@@ -204,11 +232,9 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 </h2>
                 <div className="justify-between items-center">
                     <div
-                        onClick={() =>
-                            navigate(
-                                `/artist/${albumData.attributes.artistName}`
-                            )
-                        }
+                        onClick={e => {
+                            lib ? handleNavigation(e) : navigateToArtist()
+                        }}
                         className={`truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}`}
                     >
                         {albumItem.attributes.artistName}
