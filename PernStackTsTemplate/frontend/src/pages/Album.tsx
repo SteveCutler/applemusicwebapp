@@ -238,10 +238,10 @@ const Album = () => {
                     </div>
                 </Link> */}
                 <div className="flex-col ">
-                    <h1 className="text-3xl w-1/2 font-bold">
+                    <h1 className="text-3xl w-1/2 font-bold select-none">
                         {albumData.attributes?.name}
                     </h1>
-                    {albumData.relationships?.artists?.data[0].id && (
+                    {albumData.relationships?.artists?.data[0].id ? (
                         <Link
                             to={
                                 type === 'library-albums'
@@ -251,10 +251,16 @@ const Album = () => {
                             // onClick={
                             //     type === 'library-albums' ? setTerm : undefined
                             // }
-                            className={`text-2xl ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-700 hover:text-slate-500'}  hover:cursor-pointer font-bold`}
+                            className={`text-2xl ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-700 hover:text-slate-500'}  select-none hover:cursor-pointer font-bold`}
                         >
                             {albumData.attributes?.artistName}
                         </Link>
+                    ) : (
+                        <div
+                            className={`text-2xl ${darkMode ? 'text-slate-300' : 'text-slate-800'}  select-none font-bold`}
+                        >
+                            {albumData.attributes?.artistName}
+                        </div>
                     )}
                 </div>
                 <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">

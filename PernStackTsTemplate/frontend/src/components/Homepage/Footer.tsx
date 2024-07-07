@@ -95,18 +95,120 @@ function Footer() {
     const navigate = useNavigate()
 
     const goToAlbum = async () => {
-        // console.log('item check: ', await musicKitInstance?.queue.items[0])
-        // navigate(
-        //     `/albums/id=${musicKitInstance?.queue.items[0].relationships.albums.data[0].id}`
-        // )
+        console.log('item check: ', await musicKitInstance?.queue.items[0])
+        if (
+            musicKitInstance?.nowPlayingItem.container.id &&
+            Number(musicKitInstance?.nowPlayingItem.container.id)
+        ) {
+            navigate(`/album/${musicKitInstance?.nowPlayingItem.container.id}`)
+        } else {
+            if (musicKitInstance?.nowPlayingItem.id.startsWith('i')) {
+                try {
+                    //track data api call
+                    const res = await musicKitInstance?.api.music(
+                        `/v1/me/library/songs/${musicKitInstance?.nowPlayingItem.id}/catalog`
+                    )
+
+                    const catSongId = await res.data.data[0].id
+
+                    const resAlbum = await musicKitInstance?.api.music(
+                        `/v1/catalog/ca/songs/${catSongId}/albums`
+                    )
+                    // const resArtist = await musicKitInstance?.api.music(
+                    //     `/v1/catalog/ca/songs/${catSongId}/artists`
+                    // )
+
+                    // const trackArtistData = await resArtist.data.data[0]
+
+                    const trackAlbumData = await resAlbum.data.data[0]
+
+                    if (trackAlbumData) {
+                        navigate(`/album/${trackAlbumData.id}`)
+                    } else {
+                        {
+                            musicKitInstance.nowPlayingItem.container.id.startsWith(
+                                'l'
+                            ) &&
+                                navigate(
+                                    `/album/${musicKitInstance.nowPlayingItem.container.id}`
+                                )
+                        }
+                    }
+                    console.log('track album data: ', trackAlbumData)
+                    // console.log('track artist data: ', trackArtistData)
+
+                    // const data: Song = await res.data.data[0]
+                    // console.log(res)
+                    // return { data, trackAlbumData }
+                } catch (error: any) {
+                    {
+                        musicKitInstance.nowPlayingItem.container.id.startsWith(
+                            'l'
+                        ) &&
+                            navigate(
+                                `/album/${musicKitInstance.nowPlayingItem.container.id}`
+                            )
+                    }
+                    console.error(error)
+                }
+            } else {
+                try {
+                    const resAlbum = await musicKitInstance?.api.music(
+                        `/v1/catalog/ca/songs/${musicKitInstance?.nowPlayingItem.id}/albums`
+                    )
+                    // const resArtist = await musicKitInstance?.api.music(
+                    //     `/v1/catalog/ca/songs/${musicKitInstance?.nowPlayingItem.id}/artists`
+                    // )
+
+                    const trackAlbumData = await resAlbum.data.data[0]
+                    if (trackAlbumData) {
+                        navigate(`/album/${trackAlbumData.id}`)
+                    } else if (
+                        musicKitInstance?.nowPlayingItem.container.id.startsWith(
+                            'l'
+                        )
+                    ) {
+                        navigate(
+                            `/album/${musicKitInstance.nowPlayingItem.container.id}`
+                        )
+                    }
+
+                    // const trackArtistData = await resArtist.data.data[0]
+                } catch (error: any) {
+                    if (
+                        musicKitInstance?.nowPlayingItem.container.id.startsWith(
+                            'l'
+                        )
+                    ) {
+                        navigate(
+                            `/album/${musicKitInstance.nowPlayingItem.container.id}`
+                        )
+                    }
+                    console.error(error)
+                }
+            }
+        }
     }
 
     const goToArtist = async () => {
-        // console.log(
-        //     await musicKitInstance?.queue.items[0].relationships.albums.data[0]
-        //         .id
-        // )
-        // navigate(`/albums/${musicKitInstance?.nowPlayingItem.attributes.}`)
+        if (
+            musicKitInstance?.nowPlayingItem.container.id &&
+            musicKitInstance?.nowPlayingItem
+        ) {
+            console.log('test')
+
+            try {
+                const artistRes = await musicKitInstance.api.music(
+                    `/v1/catalog/ca/albums/${musicKitInstance?.nowPlayingItem.container.id}/artists`
+                )
+
+                const artistId = await artistRes.data.data[0].id
+
+                navigate(`/artist/${artistId}`)
+            } catch (error) {
+                console.error(error)
+            }
+        }
     }
 
     const playPauseHandler = (e: any) => {
@@ -126,8 +228,8 @@ function Footer() {
         setQueueToggle()
     }
 
-    const albumId =
-        musicKitInstance?.nowPlayingItem?.relationships?.albums?.data[0]?.id
+    // const albumId =
+    //     musicKitInstance?.nowPlayingItem?.relationships?.albums?.data[0]?.id
 
     const style = { fontSize: '3em' }
     const styleSmall = { fontSize: '2em' }
@@ -138,13 +240,15 @@ function Footer() {
                 <div
                     // to={`/album/${albumId}`}
 
-                    className="flex  gap-2 justify-start w-1/4"
+                    className="flex gap-2 justify-start w-1/4"
                 >
                     {albumArtUrl ? (
                         <img
                             src={albumArtUrl}
                             alt="album image"
                             style={{ width: '70px' }}
+                            className=" hover:cursor-pointer hover:scale-105"
+                            onClick={goToAlbum}
                         />
                     ) : (
                         isPlaying && (
@@ -152,25 +256,56 @@ function Footer() {
                                 src={defaultPlaylistArtwork}
                                 alt="album image"
                                 style={{ width: '70px' }}
+                                className=" hover:cursor-pointer hover:scale-105"
+                                onClick={goToAlbum}
                             />
                         )
                     )}
                     <div className="flex flex-col w-full justify-center items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <>
-                                <div className="font-semibold w-full flex flex-grow">
-                                    {
-                                        musicKitInstance?.nowPlayingItem
-                                            .attributes.name
-                                    }
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <div onClick={goToAlbum}>
+                                <div
+                                    onClick={goToAlbum}
+                                    className="font-semibold hover:cursor-pointer hover:text-white w-full flex-col "
+                                >
+                                    <div>
+                                        {
+                                            musicKitInstance?.nowPlayingItem
+                                                .attributes.name
+                                        }
+                                    </div>
+                                    <div>
                                         {musicKitInstance.queue.items &&
                                             musicKitInstance.queue.items[
                                                 musicKitInstance
                                                     ?.nowPlayingItemIndex
                                             ].attributes.albumName}
+                                    </div>
+                                </div>
+                                {/* <div onClick={goToAlbum}>
+                                    {musicKitInstance.queue.items &&
+                                        musicKitInstance.queue.items[
+                                            musicKitInstance
+                                                ?.nowPlayingItemIndex
+                                        ].attributes.albumName}
+                                </div> */}
+                                <div className="flex items-center gap-2">
+                                    <div
+                                        onClick={goToArtist}
+                                        className={`${
+                                            musicKitInstance.nowPlayingItem &&
+                                            musicKitInstance.nowPlayingItem.id.startsWith(
+                                                'i'
+                                            )
+                                                ? ''
+                                                : 'hover:cursor-pointer hover:text-white'
+                                        }`}
+                                    >
+                                        {musicKitInstance.queue.items &&
+                                            musicKitInstance.queue.items[
+                                                musicKitInstance
+                                                    ?.nowPlayingItemIndex
+                                            ].attributes.artistName}
                                     </div>
                                     <div className="flex justify-start items-end">
                                         {musicKitInstance?.queue &&

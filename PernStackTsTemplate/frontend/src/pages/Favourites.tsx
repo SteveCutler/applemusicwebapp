@@ -205,7 +205,7 @@ const Favourites = () => {
                                         <div>{song.attributes.artistName}</div>
                                         <div>{song.attributes.albumName}</div>
                                     </div>
-                                    <div>{song.attributes.ratedAt}</div>
+                                    {/* <div>{song.attributes.ratedAt}</div> */}
                                 </div>
                                 <div className="flex items-center gap-2 ">
                                     <div>

@@ -17,6 +17,10 @@ body {
     background-attachment: fixed;
 }
 
+.last-album {
+    display: contents; /* or any other CSS property that ensures the div does not affect the layout */
+}
+
 .label-text {
     color: black;
 }

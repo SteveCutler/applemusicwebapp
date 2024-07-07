@@ -56,7 +56,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
         [loadMoreAlbums]
     )
 
-    const width = queueToggle ? 'w-1/4 p-1 ' : 'w-1/6 p-1'
+    // const width = queueToggle ? 'w-1/4 p-1 ' : 'w-1/6 p-1'
 
     if (gridDisplay) {
         return (
@@ -65,7 +65,11 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                     albums.map((album, index) => {
                         if (albums.length === index + 1) {
                             return (
-                                <div ref={lastAlbumElementRef} key={album.id}>
+                                <div
+                                    className="last-album"
+                                    ref={lastAlbumElementRef}
+                                    key={album.id}
+                                >
                                     <AlbumItem
                                         albumItem={album}
                                         lib={true}
@@ -94,7 +98,11 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                 albums.map((album, index) => {
                     if (albums.length === index + 1) {
                         return (
-                            <div ref={lastAlbumElementRef} key={album.id}>
+                            <div
+                                className="last-album"
+                                ref={lastAlbumElementRef}
+                                key={album.id}
+                            >
                                 <AlbumRow
                                     key={index}
                                     first={index === 0}
