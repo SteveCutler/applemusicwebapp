@@ -15,6 +15,8 @@ import DisplayRow from '../components/Homepage/DisplayRow'
 import AlbumItem from '../components/Homepage/AlbumItem'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import OptionsModal from '../components/Homepage/OptionsModal'
+import ArtistItem from '../components/Homepage/ArtistItem'
+import PlaylistItem from '../components/Homepage/PlaylistItem'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -105,6 +107,8 @@ const Album = () => {
         albumId,
         type
     )
+
+    console.log('album data: ', albumData?.relationships?.tracks.data)
     const { relatedAlbums } = FetchRelatedAlbums(albumId)
     const { appearsOn } = FetchAppearsOn(albumId)
     const [similarArtistsData, setSimilarArtistsData] =
@@ -263,8 +267,12 @@ const Album = () => {
                         </div>
                     )}
                 </div>
-                <div className="lg:flex-row  gap-4 flex flex-col justify-around  items-start">
-                    <div className="relative lg:w-1/2 w-full h-fit ">
+                <div
+                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex  justify-around  items-start`}
+                >
+                    <div
+                        className={`relative ${queueToggle ? ' w-full' : 'lg:w-1/2 w-full'} h-fit `}
+                    >
                         {albumData.attributes?.artwork?.url ? (
                             <img
                                 className="w-full"
@@ -307,12 +315,16 @@ const Album = () => {
                         </div>
                     </div>
                     <div
-                        className=" w-full  overflow-y-auto lg:w-1/2 "
+                        className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '}  overflow-y-auto  `}
                         style={{ maxHeight: '600px' }}
                     >
-                        <TrackDisplay
-                            albumTracks={albumData.relationships.tracks.data}
-                        />
+                        {albumData && (
+                            <TrackDisplay
+                                albumTracks={
+                                    albumData?.relationships?.tracks.data
+                                }
+                            />
+                        )}
                     </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
                 </div>
@@ -387,8 +399,8 @@ const Album = () => {
                     <div className="w-full justify-left flex flex-wrap">
                         {similarArtistsData.map(album => (
                             <>
-                                <AlbumItem
-                                    albumItem={album}
+                                <ArtistItem
+                                    artist={album}
                                     width={
                                         queueToggle
                                             ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
@@ -412,8 +424,8 @@ const Album = () => {
                     <div className="w-full justify-left flex flex-wrap">
                         {appearsOn.map(album => (
                             <>
-                                <AlbumItem
-                                    albumItem={album}
+                                <PlaylistItem
+                                    playlistItem={album}
                                     width={
                                         queueToggle
                                             ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'

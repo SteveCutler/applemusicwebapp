@@ -126,7 +126,7 @@ const FetchAlbumData = (albumId: string | undefined, type?: string) => {
 
                         const data: AlbumTypeObject = await res.data.data[0]
 
-                        console.log('data: ', albumData)
+                        console.log('data: ', data)
 
                         setAlbumData(data)
                         setArtistId(artistId)

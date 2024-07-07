@@ -18,6 +18,8 @@ import DisplayRow from '../components/Homepage/DisplayRow'
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import ArtistItem from '../components/Homepage/ArtistItem'
+import PlaylistItem from '../components/Homepage/PlaylistItem'
 
 const Artist = () => {
     const {
@@ -270,8 +272,8 @@ const Artist = () => {
                         <div className="w-full justify-left flex flex-wrap">
                             {similarArtistsData.map(album => (
                                 <>
-                                    <AlbumItem
-                                        albumItem={album}
+                                    <ArtistItem
+                                        artist={album}
                                         width={
                                             queueToggle
                                                 ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
@@ -302,8 +304,8 @@ const Artist = () => {
                         <div className="w-full justify-left flex flex-wrap">
                             {featuredPlaylistsData.map(album => (
                                 <>
-                                    <AlbumItem
-                                        albumItem={album}
+                                    <PlaylistItem
+                                        playlistItem={album}
                                         width={
                                             queueToggle
                                                 ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'

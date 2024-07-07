@@ -127,7 +127,31 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     const handleNavigation = async (e: any) => {
         e.preventDefault()
         e.stopPropagation()
-        navigate(`/album/${albumItem.id}`)
+        if (lib || albumItem.id.startsWith('l')) {
+            try {
+                console.log('albumItemTest')
+                const resAlbum = await musicKitInstance?.api.music(
+                    `/v1/me/library/albums/${albumItem.id}/catalog`
+                )
+
+                const catAlbumId = await resAlbum.data.data[0].id
+
+                if (catAlbumId) {
+                    navigate(`/album/${catAlbumId}`)
+                } else {
+                    {
+                        navigate(`/album/${albumItem.id}`)
+                    }
+                }
+            } catch (error: any) {
+                {
+                    navigate(`/album/${albumItem.id}`)
+                }
+                console.error(error)
+            }
+        } else {
+            navigate(`/album/${albumItem.id}`)
+        }
     }
 
     const style = { fontSize: '2rem', color: 'dodgerblue ' }
@@ -182,7 +206,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     <div
                         onClick={() =>
                             navigate(
-                                `/artist/${albumItem.attributes.artistName}`
+                                `/artist/${albumData.attributes.artistName}`
                             )
                         }
                         className={`truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'}`}
