@@ -120,6 +120,7 @@ type ArtworkObject = {
 type AlbumData = {
     attributes: {
         artistName: string
+        releaseDate?: string
         artwork: {
             bgColor: string
             url: string

@@ -15,7 +15,7 @@ type AttributeObject = {
     dateAdded: string
     genreNames: Array<string>
     name: string
-    releaseDate: string
+    releaseDate?: string
     trackCount: Number
 }
 type RelationshipObject = {

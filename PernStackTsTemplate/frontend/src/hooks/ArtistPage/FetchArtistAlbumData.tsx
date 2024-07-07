@@ -113,6 +113,7 @@ type ArtworkObject = {
 
 type AlbumData = {
     attributes: {
+        releaseDate?: string
         artistName: string
 
         artwork: {

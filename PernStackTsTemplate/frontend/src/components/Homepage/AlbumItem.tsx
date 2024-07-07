@@ -17,6 +17,7 @@ interface AlbumPropTypes {
 type AlbumData = {
     attributes: {
         artistName: string
+        releaseDate?: string
         artwork: {
             bgColor: string
             url: string
@@ -239,9 +240,9 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                     >
                         {albumItem.attributes.artistName}
                     </div>
-                    {releaseDate && (
+                    {albumItem.attributes.releaseDate && (
                         <h3 className="text-sm font-bold">
-                            {releaseDate.split('-')[0]}
+                            {albumItem.attributes.releaseDate?.split('-')[0]}
                         </h3>
                     )}
                 </div>

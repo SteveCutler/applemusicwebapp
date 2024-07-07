@@ -347,6 +347,7 @@ const Album = () => {
                                             ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
                                             : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
                                     }
+                                    releaseDate={album.attributes.releaseDate}
                                 />
                             </>
                             // <p className="">{album.attributes.name}</p>
@@ -381,6 +382,7 @@ const Album = () => {
                                             ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
                                             : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
                                     }
+                                    releaseDate={album.attributes.releaseDate}
                                 />
                             </>
                             // <p className="">{album.attributes.name}</p>
