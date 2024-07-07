@@ -159,7 +159,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({ reco, sliceNumber }) => {
     const [expand, setExpand] = useState(false)
 
     return (
-        <>
+        <div className="h-full">
             {reco && moreLikeAlbumImage && reco.attributes.title.contentIds ? (
                 <div className="flex text-2xl justify-start mx-auto gap-2 w-10/12 pb-2 items-center   ">
                     <div>
@@ -244,7 +244,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({ reco, sliceNumber }) => {
                         )}
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
