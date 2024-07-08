@@ -16,12 +16,76 @@ import ArtistItem from '../Homepage/ArtistItem'
 import { useMediaQuery } from 'react-responsive'
 import RecommendationDisplay from './RecommendationDisplay'
 
-interface appleDashboardProps {
-    musicUserToken: String
+type AlbumType = {
+    attributes: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releasedDate: string
+        trackCount: number
+    }
+    id: string
+    type: string
 }
 
-type AlbumType = {
-    attributes: AttributeObject
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+interface RecommendationType {
+    attributes: {
+        title: {
+            stringForDisplay: string
+            contentIds?: string[]
+        }
+    }
+    relationships: {
+        contents: {
+            data: Array<playlist | AlbumType | StationType>
+        }
+    }
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
 }
 
 type AttributeObject = {
@@ -96,6 +160,15 @@ const AppleDashboard = () => {
     // )
     // console.log('more like recommendations: ', moreLikeRecommendations)
 
+    const shuffle = (array: Array<RecommendationType>) => {
+        console.log('array', array)
+        const newArray = array.sort(() => Math.random() - 0.5)
+        return newArray
+    }
+    // if (recommendations) {
+    //     console.log('shuffled', shuffle(recommendations))
+    // }
+
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
     const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
@@ -119,13 +192,13 @@ const AppleDashboard = () => {
         if (!musicKitInstance) {
             authorizeMusicKit()
         }
-    }, [musicKitInstance, moreLikeRecommendations])
+    }, [musicKitInstance])
 
     fetchHeavyRotation()
     FetchRecentlyPlayed()
     FetchRecommendations()
 
-    console.log('recommendations: ', recommendations)
+    // console.log('recommendations: ', recommendations)
 
     // const { recommendations } = FetchRecommendations()
 

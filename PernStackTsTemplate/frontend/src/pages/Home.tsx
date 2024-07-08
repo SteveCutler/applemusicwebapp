@@ -37,15 +37,6 @@ const Home = () => {
     }
 
     useEffect(() => {
-        // const checkAuth = async () => {
-        //     if (authToken) {
-        //         setBackendToken(authToken)
-        //     } else {
-        //         await authorizeBackend()
-        //     }
-
-        //     setIsCheckingAuth(false)
-        // }
         if (!musicKitInstance || !appleMusicToken) {
             console.log('music kit', musicKitInstance)
             console.log('music token', appleMusicToken)

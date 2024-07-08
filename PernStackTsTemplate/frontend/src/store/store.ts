@@ -283,7 +283,19 @@ type playlist = {
 }
 
 type AlbumType = {
-    attributes: AttributeObject
+    attributes: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releasedDate: string
+        trackCount: number
+    }
     id: string
     type: string
 }

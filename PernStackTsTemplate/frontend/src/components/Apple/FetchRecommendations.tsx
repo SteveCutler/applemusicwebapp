@@ -30,6 +30,15 @@ const FetchRecommendations = () => {
     // const musicKitLoaded = useMusicKit()
     const { musicInstance: music } = useMusickitContext()
 
+    const shuffle = (array: any[]) => {
+        console.log('array', array)
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1))
+            ;[array[i], array[j]] = [array[j], array[i]]
+        }
+        return array
+    }
+
     useEffect(() => {
         const fetchRecommendations = async () => {
             if (musicKitInstance) {
@@ -57,11 +66,25 @@ const FetchRecommendations = () => {
                     // )
 
                     setPersonalizedPlaylists(data[0])
-                    setRecentlyPlayedAlbums(data[1])
-                    setThemedRecommendations(data[2])
-                    setMoreLikeRecommendations(data[3])
-                    setStationsForYou(data[4])
-                    setRecommendations(data)
+
+                    const newList = [
+                        data[1],
+                        data[6],
+                        data[11],
+                        data[10],
+                        data[12],
+                        data[8],
+                        data[9],
+                        data[7],
+                        data[2],
+                        data[4],
+                        data[5],
+                        data[13],
+                        data[0],
+                        data[3],
+                    ]
+
+                    setRecommendations(newList)
                 } catch (error: any) {
                     console.error(error)
                     setError(error)
@@ -71,7 +94,7 @@ const FetchRecommendations = () => {
             }
         }
 
-        if (musicKitInstance) {
+        if (musicKitInstance && !recommendations) {
             fetchRecommendations()
         }
     }, [musicKitInstance])

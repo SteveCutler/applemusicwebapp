@@ -133,12 +133,14 @@ const Sidebar = () => {
                         >
                             {darkMode ? <MdSunny /> : <MdOutlineDarkMode />}
                         </div>
-                        <div
+                        <Link
+                            to="/settings"
                             className=" hover:cursor-pointer hover:text-slate-500"
                             title="settings"
                         >
                             <IoSettingsSharp />
-                        </div>
+                        </Link>
+
                         <div className="hover:text-slate-500" title="logout">
                             <LogoutButton />
                         </div>

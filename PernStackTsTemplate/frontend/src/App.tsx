@@ -23,6 +23,7 @@ import PlaylistDisplay from './pages/PlaylistDisplay'
 import EditPlaylist from './pages/EditPlaylist'
 import Favourites from './pages/Favourites'
 import AppleMusicLogin from './components/Apple/AppleMusicLogin'
+import Settings from './pages/Settings'
 
 function App() {
     const {
@@ -51,14 +52,6 @@ function App() {
     // console.log('apple token', appleMusicToken)
 
     useEffect(() => {
-        // const checkAuth = async () => {
-        //     if (authToken && !backendToken) {
-        //         console.log('found token')
-        //         setBackendToken(authToken)
-        //     }
-
-        //     setIsCheckingAuth(false)
-        // }
         if (!appleMusicToken) {
             const appleToken = localStorage.getItem('musicUserToken')
             setAppleMusicToken(appleToken)
@@ -131,16 +124,10 @@ function App() {
                             path="/library"
                             element={backendToken ? <Library /> : <Login />}
                         />
-                        {/* <Route
-                            path="/playlist-edit/:playlistId"
-                            element={
-                                 backendToken ? (
-                                    <EditPlaylist />
-                                ) : (
-                                    <Login />
-                                )
-                            }
-                        /> */}
+                        <Route
+                            path="/settings"
+                            element={backendToken ? <Settings /> : <Login />}
+                        />
                         <Route
                             path="/playlist-display"
                             element={

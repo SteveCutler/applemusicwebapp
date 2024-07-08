@@ -5,17 +5,23 @@ import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { IoMdAddCircleOutline } from 'react-icons/io'
 import toast from 'react-hot-toast'
 import { FaCirclePlay } from 'react-icons/fa6'
+import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
+import { useMediaQuery } from 'react-responsive'
 
 const PlaylistDisplay = () => {
     const {
         libraryPlaylists,
+        queueToggle,
         musicKitInstance,
         authorizeMusicKit,
         appleMusicToken,
+        personalizedPlaylists,
         fetchAppleToken,
     } = useStore(state => ({
+        queueToggle: state.queueToggle,
         libraryPlaylists: state.libraryPlaylists,
         musicKitInstance: state.musicKitInstance,
+        personalizedPlaylists: state.personalizedPlaylists,
         authorizeMusicKit: state.authorizeMusicKit,
         appleMusicToken: state.appleMusicToken,
         fetchAppleToken: state.fetchAppleToken,
@@ -37,6 +43,25 @@ const PlaylistDisplay = () => {
                 startPlaying: true,
             })
         }
+    }
+
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
     }
 
     const removePlaylist = async (playlistId: string) => {
@@ -90,6 +115,10 @@ const PlaylistDisplay = () => {
             {/* <h1 className="text-center text-5xl  text-black p-4 font-bold mx-auto">
                 Playlists
             </h1> */}
+            <RecommendationDisplay
+                reco={personalizedPlaylists}
+                sliceNumber={sliceNumber}
+            />
             <button
                 className="btn btn-primary my-5 mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
                 onClick={e => {
