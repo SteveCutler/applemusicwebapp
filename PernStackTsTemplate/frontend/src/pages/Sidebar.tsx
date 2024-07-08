@@ -23,6 +23,10 @@ import { RiPlayListFill, RiPlayListAddLine } from 'react-icons/ri'
 import { MdOutlineDarkMode } from 'react-icons/md'
 import { MdDarkMode, MdSunny } from 'react-icons/md'
 import FetchRecentlyAddedToLib from '../components/Apple/FetchRecentlyAddedToLib'
+import FetchHeavyRotation from '../components/Apple/FetchHeavyRotation'
+import FetchRecentlyPlayed from '../components/Apple/FetchRecentlyPlayed'
+import FetchRecommendations from '../components/Apple/FetchRecommendations'
+import { FaPodcast } from 'react-icons/fa'
 
 const Sidebar = () => {
     FetchRecentlyAddedToLib()
@@ -60,6 +64,10 @@ const Sidebar = () => {
 
     const userId = backendToken
     const navigate = useNavigate()
+
+    FetchHeavyRotation()
+    FetchRecentlyPlayed()
+    FetchRecommendations()
 
     const fetchLibrary = async () => {
         console.log('fetching library...')
@@ -184,17 +192,19 @@ const Sidebar = () => {
                     </NavLink>
 
                     <NavLink
-                        to="/playlist-display"
-                        title="playlists"
+                        to="/podcasts"
+                        title="podcasts"
                         className={({ isActive }) =>
                             `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }
                     >
-                        <RiPlayListFill />
-                        <p className="p-2">Playlists</p>
+                        {' '}
+                        <FaPodcast />
+                        <span className="p-2 ">Podcasts</span>
                     </NavLink>
+
                     <NavLink
                         to="/favourites"
                         title="favourites"
@@ -205,7 +215,20 @@ const Sidebar = () => {
                         }
                     >
                         <FaHeartbeat />
-                        <p className="p-2">Favourites</p>
+                        <p className="p-2">Favs</p>
+                    </NavLink>
+
+                    <NavLink
+                        to="/playlist-display"
+                        title="playlists"
+                        className={({ isActive }) =>
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
+                                isActive ? 'text-white' : ''
+                            }`
+                        }
+                    >
+                        <RiPlayListFill />
+                        <p className="p-2">Playlists</p>
                     </NavLink>
 
                     {/* <NavLink
@@ -223,12 +246,6 @@ const Sidebar = () => {
                         <ImStack />
                         <p className="p-2">Stacks</p>
                     </Link> */}
-                    {/* <div className="flex w-full select:none active:scale[0.90] px-3 hover:text-slate-100  cursor-pointer  rounded-xl  justify-center items-center">
-                        <div>
-                            <LogoutButton />
-                        </div>
-                        <span className="p-2 ">Logout</span>
-                    </div> */}
                 </div>
                 <div className="flex-col bg-black p-1  rounded-lg w-full  border-slate-700    font-semibold text-slate-200  items-center mx-auto justify-start text-center">
                     <div className="div flex px-1  justify-around">

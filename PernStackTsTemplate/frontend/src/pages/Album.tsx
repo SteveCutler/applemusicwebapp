@@ -271,7 +271,7 @@ const Album = () => {
                     className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex  justify-around  items-start`}
                 >
                     <div
-                        className={`relative ${queueToggle ? ' w-full' : 'lg:w-1/2 w-full'} h-fit `}
+                        className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                     >
                         {albumData.attributes?.artwork?.url ? (
                             <img

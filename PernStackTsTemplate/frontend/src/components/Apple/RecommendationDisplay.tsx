@@ -82,9 +82,14 @@ type StationType = {
 interface recoProps {
     reco: RecommendationType
     sliceNumber: number
+    noTitle?: boolean
 }
 
-const RecommendationDisplay: React.FC<recoProps> = ({ reco, sliceNumber }) => {
+const RecommendationDisplay: React.FC<recoProps> = ({
+    reco,
+    sliceNumber,
+    noTitle,
+}) => {
     const style = { fontSize: '1.5rem' }
 
     const { queueToggle, musicKitInstance } = useStore(state => ({
@@ -149,7 +154,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({ reco, sliceNumber }) => {
             }
         }
 
-        if (!moreLikeAlbumImage && reco.attributes.title.contentIds) {
+        if (!moreLikeAlbumImage && reco && reco.attributes.title.contentIds) {
             console.log('running image retrieval')
             retrieveMoreLikeImage()
         }
@@ -170,9 +175,12 @@ const RecommendationDisplay: React.FC<recoProps> = ({ reco, sliceNumber }) => {
                     </h2>
                 </div>
             ) : (
-                <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
-                    {reco.attributes.title.stringForDisplay}
-                </h2>
+                !noTitle &&
+                reco && (
+                    <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
+                        {reco.attributes.title.stringForDisplay}
+                    </h2>
+                )
             )}
             {reco && (
                 <div className="flex flex-col mb-10  ">

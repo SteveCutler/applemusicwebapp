@@ -17,6 +17,10 @@ body {
     background-attachment: fixed;
 }
 
+.transition-bg {
+    transition: background-color 0.5s ease-in-out;
+}
+
 .last-album {
     display: contents; /* or any other CSS property that ensures the div does not affect the layout */
 }

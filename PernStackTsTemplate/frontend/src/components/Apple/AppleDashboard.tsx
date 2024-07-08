@@ -194,10 +194,6 @@ const AppleDashboard = () => {
         }
     }, [musicKitInstance])
 
-    fetchHeavyRotation()
-    FetchRecentlyPlayed()
-    FetchRecommendations()
-
     // console.log('recommendations: ', recommendations)
 
     // const { recommendations } = FetchRecommendations()

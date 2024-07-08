@@ -281,7 +281,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <div
                                 className={`truncate 
                         ${
-                            isPlaying &&
+                            musicKitInstance?.nowPlayingItem &&
                             item.id === musicKitInstance?.nowPlayingItem.id
                                 ? 'font-bold text-slate-300'
                                 : 'font-semibold'
@@ -294,7 +294,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <div
                                 className={`truncate 
                         ${
-                            isPlaying &&
+                            musicKitInstance?.nowPlayingItem &&
                             item.id === musicKitInstance?.nowPlayingItem.id
                                 ? 'font-bold text-slate-200'
                                 : 'font-semibold text-slate-500'
@@ -306,7 +306,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <div
                                 className={`truncate 
                         ${
-                            isPlaying &&
+                            musicKitInstance?.nowPlayingItem &&
                             item.id === musicKitInstance?.nowPlayingItem.id
                                 ? 'font-bold text-slate-200'
                                 : 'font-semibold text-slate-500'
@@ -327,7 +327,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             playPauseHandler()
                         }}
                     >
-                        {isPlaying &&
+                        {musicKitInstance?.nowPlayingItem &&
                         item.id === musicKitInstance?.nowPlayingItem.id ? (
                             <FaRegCirclePause style={style} />
                         ) : (

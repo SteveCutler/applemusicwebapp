@@ -24,6 +24,8 @@ import EditPlaylist from './pages/EditPlaylist'
 import Favourites from './pages/Favourites'
 import AppleMusicLogin from './components/Apple/AppleMusicLogin'
 import Settings from './pages/Settings'
+import Podcast from './pages/Podcast'
+import Podcasts from './pages/Podcasts'
 
 function App() {
     const {
@@ -69,7 +71,14 @@ function App() {
 
     return (
         <div
-            className={`flex-col justify-between bg-fixed flex min-h-screen ${!backendToken ? 'bg-gradient-to-b from-indigo-900 to-black' : darkMode ? 'bg-gradient-to-b from-indigo-900 to-black' : 'bg-gradient-to-b from-blue-300 to-orange-900'} `}
+            style={{ transition: 'bg 0.5s ease-in-out' }}
+            className={`flex-col justify-between bg-fixed flex min-h-screen ${
+                !backendToken
+                    ? 'bg-gradient-to-b from-indigo-900 to-black'
+                    : darkMode
+                      ? 'bg-gradient-to-b from-indigo-900 to-black'
+                      : 'bg-gradient-to-b from-blue-300 to-orange-900'
+            }`}
         >
             <div className="flex flex-grow ">
                 {backendToken && (
@@ -127,6 +136,14 @@ function App() {
                         <Route
                             path="/settings"
                             element={backendToken ? <Settings /> : <Login />}
+                        />
+                        <Route
+                            path="/podcasts"
+                            element={backendToken ? <Podcasts /> : <Login />}
+                        />
+                        <Route
+                            path="/podcast/:id"
+                            element={backendToken ? <Podcast /> : <Login />}
                         />
                         <Route
                             path="/playlist-display"

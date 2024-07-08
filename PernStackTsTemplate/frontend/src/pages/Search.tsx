@@ -5,6 +5,39 @@ import { Link, useParams } from 'react-router-dom'
 import AlbumItem from '../components/Homepage/AlbumItem'
 import ArtistItem from '../components/Homepage/ArtistItem'
 import SongItem from '../components/Homepage/SongItem'
+import PodcastItem from '../components/Homepage/PodcastItem'
+
+type podcastInfo = {
+    artistName: string
+    artworkUrl100: string
+    artworkUrl30: string
+    artworkUrl60: string
+    artworkUrl600: string
+    collectionCensoredName: string
+    collectionExplicitness: string
+    collectionId: number
+    collectionName: string
+    collectionPrice: number
+    collectionViewUrl: string
+    contentAdvisoryRating: string
+    country: string
+    currency: string
+    feedUrl: string
+    genreIds: Array<string>
+    genres: Array<string>
+    kind: string
+    primaryGenreName: string
+    releaseDate: string
+    trackCensoredName: string
+    trackCount: number
+    trackExplicitness: string
+    trackId: number
+    trackName: string
+    trackPrice: number
+    trackTimeMillis: number
+    trackViewUrl: string
+    wrapperType: string
+}
 
 type Artist = {
     attributes: {
@@ -105,9 +138,21 @@ const Search = () => {
 
                     // const queryParameters = { l: 'en-us' }
 
-                    const data = await response.data.results
-                    console.log(data)
-                    setSearchResults(data)
+                    const musicData = await response.data.results
+
+                    const podcastResponse = await axios.get(
+                        `https://itunes.apple.com/search?term=${searchTerm}&entity=podcast&limit=25`
+                    )
+
+                    const podcastData = podcastResponse.data.results
+
+                    console.log('podcasts: ', podcastData)
+
+                    // console.log(data)
+                    setSearchResults({
+                        ...musicData,
+                        podcasts: { data: podcastData },
+                    })
                 } catch (error: any) {
                     console.error(error)
                     setError(error)
@@ -184,6 +229,45 @@ const Search = () => {
                         searchResults.songs.data.map(song => (
                             <SongItem
                                 song={song}
+                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                            />
+                        ))}
+                </div>
+            </div>
+
+            <div className="flex-col mx-3 mb-4 px-3">
+                {searchResults.albums && (
+                    <p
+                        className={`text-left font-bold ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} mt-7 pb-3 text-2xl`}
+                    >
+                        Songs:
+                    </p>
+                )}
+                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                    {searchResults.songs &&
+                        searchResults.songs.data.map(song => (
+                            <SongItem
+                                song={song}
+                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                            />
+                        ))}
+                </div>
+            </div>
+
+            <div className="flex-col mx-3 mb-4 px-3">
+                {searchResults.podcasts && (
+                    <p
+                        className={`text-left font-bold ${darkMode ? 'text-slate-300' : 'text-slate-800'} mt-7 pb-3 text-2xl`}
+                    >
+                        Podcasts:
+                    </p>
+                )}
+                <div className="flex flex-wrap w-full justify-start gap-2">
+                    {searchResults.podcasts &&
+                        searchResults.podcasts.data.map(podcast => (
+                            <PodcastItem
+                                key={podcast.collectionId}
+                                podcast={podcast}
                                 width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                             />
                         ))}

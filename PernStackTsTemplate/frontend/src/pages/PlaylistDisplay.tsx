@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { Link, useNavigate } from 'react-router-dom'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
@@ -7,6 +7,78 @@ import toast from 'react-hot-toast'
 import { FaCirclePlay } from 'react-icons/fa6'
 import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
 import { useMediaQuery } from 'react-responsive'
+
+type RecommendationType = {
+    attributes: {
+        title: {
+            stringForDisplay: string
+            contentIds?: string[]
+        }
+    }
+    relationships: {
+        contents: {
+            data: Array<playlist | AlbumType | StationType>
+        }
+    }
+}
+
+type AlbumType = {
+    attributes: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releasedDate: string
+        trackCount: number
+    }
+    id: string
+    type: string
+}
+
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+type StationType = {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
+}
 
 const PlaylistDisplay = () => {
     const {
@@ -26,6 +98,8 @@ const PlaylistDisplay = () => {
         appleMusicToken: state.appleMusicToken,
         fetchAppleToken: state.fetchAppleToken,
     }))
+
+    const [personal, setPersonal] = useState<RecommendationType | null>(null)
 
     const constructImageUrl = (url: String, size: Number) => {
         return url
@@ -108,19 +182,30 @@ const PlaylistDisplay = () => {
         }
     }
 
+    // useEffect(() => {
+    //     if (personalizedPlaylists && !personal) {
+    //         setPersonal(personalizedPlaylists)
+    //     }
+    // }, [personalizedPlaylists, personal])
+
     const styleBlue = { color: 'dodgerblue', fontSize: '2.5rem' }
 
     return (
         <>
-            {/* <h1 className="text-center text-5xl  text-black p-4 font-bold mx-auto">
-                Playlists
-            </h1> */}
-            <RecommendationDisplay
-                reco={personalizedPlaylists}
-                sliceNumber={sliceNumber}
-            />
+            {personalizedPlaylists && (
+                <>
+                    <h1 className="text-center text-5xl italic  text-black p-4 font-bold mx-auto">
+                        Made for You
+                    </h1>
+                    <RecommendationDisplay
+                        reco={personalizedPlaylists}
+                        noTitle={true}
+                        sliceNumber={sliceNumber}
+                    />
+                </>
+            )}
             <button
-                className="btn btn-primary my-5 mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
+                className="btn btn-primary  mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
                 onClick={e => {
                     e.preventDefault()
                     navigate('/new-playlist')

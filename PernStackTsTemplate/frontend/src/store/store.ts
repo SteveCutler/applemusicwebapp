@@ -4,6 +4,8 @@ import { saveToken } from '../components/Apple/saveToken'
 import e from 'express'
 import { CloudHail } from 'lucide-react'
 import { TrackHTMLAttributes } from 'react'
+import 'react-h5-audio-player/lib/styles.css'
+import AudioPlayer from 'react-h5-audio-player'
 
 type AuthUserType = {
     id: string
@@ -158,6 +160,9 @@ interface SearchResults {
     songs?: {
         data: Song[]
     }
+    podcasts?: {
+        data: podcastInfo[]
+    }
 }
 
 type Artist = {
@@ -280,6 +285,70 @@ type playlist = {
     href: string
     id: string
     type: string
+}
+
+interface podcastEpisode {
+    artistIds: Array<string>
+    artworkUrl160: string
+    artworkUrl60: string
+    artworkUrl600: string
+    closedCaptioning: string
+    collectionId: number
+    collectionName: string
+    collectionViewUrl: string
+    contentAdvisoryRating: string
+    country: string
+    description: string
+    episodeContentType: string
+    episodeFileExtension: string
+    episodeGuid: string
+    episodeUrl: string
+    feedUrl: string
+    genres: Array<{
+        id: string
+        name: string
+    }>
+    kind: string
+    previewUrl: string
+    releaseDate: string
+    shortDescription: string
+    trackId: number
+    trackName: string
+    trackTimeMillis: number
+    trackViewUrl: string
+    wrapperType: string
+}
+
+interface podcastInfo {
+    artistName: string
+    artworkUrl100: string
+    artworkUrl30: string
+    artworkUrl60: string
+    artworkUrl600: string
+    collectionCensoredName: string
+    collectionExplicitness: string
+    collectionId: number
+    collectionName: string
+    collectionPrice: number
+    collectionViewUrl: string
+    contentAdvisoryRating: string
+    country: string
+    currency: string
+    feedUrl: string
+    genreIds: Array<string>
+    genres: Array<string>
+    kind: string
+    primaryGenreName: string
+    releaseDate: string
+    trackCensoredName: string
+    trackCount: number
+    trackExplicitness: string
+    trackId: number
+    trackName: string
+    trackPrice: number
+    trackTimeMillis: number
+    trackViewUrl: string
+    wrapperType: string
 }
 
 type AlbumType = {
@@ -416,6 +485,10 @@ interface State {
     recentActivity: Array<Song | playlist | Album | StationType> | null
     darkMode: boolean
     trackData: Song[]
+    isPlayingPodcast: boolean
+    podcastUrl: string
+    currentPodcastTime: number
+    podcastDuration: number
 }
 
 interface Actions {
@@ -479,6 +552,12 @@ interface Actions {
     setFavouriteSongs: (songs: Array<Song>) => void
     setDarkMode: (toggle: boolean) => void
     setAppleMusicToken: (token: string | null) => void
+    playPodcast: (url: string) => void
+    stopPodcast: () => void
+    updatePodcastTime: (time: number) => void
+    pausePodcast: () => void
+
+    setPodcastDuration: (duration: number) => void
 }
 
 type Store = State & Actions
@@ -525,8 +604,45 @@ export const useStore = create<Store>((set, get) => ({
     favouriteSongs: null,
     recentActivity: null,
     darkMode: false,
+    isPlayingPodcast: false,
+    podcastUrl: '',
+    currentPodcastTime: 0,
+    podcastDuration: 0,
+
+    podcastAudio: new Audio(),
+    playPodcast: url =>
+        set(state => {
+            const { musicKitInstance } = get()
+            if (musicKitInstance) {
+                musicKitInstance.stop()
+            }
+            if (state.podcastAudio) {
+                state.podcastAudio.src = url
+                state.podcastAudio.play()
+            }
+            return { isPlayingPodcast: true, podcastUrl: url }
+        }),
+    pausePodcast: () =>
+        set(state => {
+            if (state.podcastAudio) {
+                state.podcastAudio.pause()
+            }
+            return { isPlayingPodcast: false }
+        }),
+    stopPodcast: () =>
+        set(state => {
+            if (state.podcastAudio) {
+                state.podcastAudio.pause()
+                state.podcastAudio.currentTime = 0
+            }
+            return { isPlayingPodcast: false, podcastUrl: '' }
+        }),
 
     // Actions
+
+    updatePodcastTime: time => set({ currentPodcastTime: time }),
+    setPodcastDuration: duration => set({ podcastDuration: duration }),
+
     authorizeBackend: async () => {
         try {
             const res = await fetch('http://localhost:5000/api/auth/me', {
