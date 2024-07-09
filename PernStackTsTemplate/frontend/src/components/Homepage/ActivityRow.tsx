@@ -191,7 +191,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         if (item.id.startsWith('l')) {
                             try {
                                 const res = await musicKitInstance?.api.music(
-                                    `v1/me/library/items/${item.id}/catalog`
+                                    `v1/me/library/albums/${item.id}/catalog`
                                 )
 
                                 const catalogId = await res.data.data[0].id
