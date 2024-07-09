@@ -451,6 +451,14 @@ interface favouriteSong {
 
 type RecentlyAddedItem = AlbumType | playlist | StationType | Song
 
+type podSub = {
+    title: string
+    id: string
+    image: string
+}
+
+// STATE INTERFACE
+
 interface State {
     isAuthorized: boolean
     backendToken: string | null
@@ -504,6 +512,7 @@ interface State {
     scrubPod: number | null
     podcastVolume: number
     podcastMuted: boolean
+    podSubs: podSub[] | null
 }
 
 interface Actions {
@@ -586,6 +595,7 @@ interface Actions {
     setScrubPod: (time: number | null) => void
     setPodcastVolume: (vol: number) => void
     setPodcastMuted: (toggle: boolean) => void
+    setPodSubs: (subs: podSub[] | null) => void
 }
 
 type Store = State & Actions
@@ -645,8 +655,12 @@ export const useStore = create<Store>((set, get) => ({
     podcastMuted: false,
     podcastAudio: new Audio(),
     podcastVolume: 0.75,
+    podSubs: null,
 
     // Actions
+
+    setPodSubs: (subs: podSub[] | null) => set({ podSubs: subs }),
+
     setPodcastVolume: (vol: number) => {
         const { podcastAudio } = get()
         podcastAudio.volume = vol

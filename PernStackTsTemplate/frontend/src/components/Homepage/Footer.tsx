@@ -352,7 +352,7 @@ function Footer() {
                         <img
                             src={albumArtUrl}
                             alt="album image"
-                            style={{ width: '70px' }}
+                            style={{ width: '60px', height: '60px' }}
                             onClick={goToAlbum}
                             className="hover:scale-105"
                         />

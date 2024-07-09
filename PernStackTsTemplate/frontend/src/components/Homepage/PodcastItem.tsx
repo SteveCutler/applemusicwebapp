@@ -4,6 +4,7 @@ import { useStore } from '../../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import PodcastOptionsModal from './PodcastOptionsModal'
 
 type podcastInfo = {
     artwork: string
@@ -42,12 +43,14 @@ type podcastInfo = {
     type: number
     url: string
 }
+
 interface podcastProp {
     podcast: podcastInfo
-    width: string
+    width?: string
+    sub?: boolean
 }
 
-const PodcastItem: React.FC<podcastProp> = ({ podcast, width }) => {
+const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
     const constructImageUrl = (url: String, size: Number) => {
         return url
             .replace('{w}', size.toString())
@@ -88,13 +91,15 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width }) => {
     return (
         <Link
             to={`/podcast/${podcast.id}`}
-            className={` select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
+            className={` select-none  flex-col justify-start ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             title={`${podcast.title}`}
         >
-            <div className="relative z-1 w-full shadow-lg">
-                {podcast.artwork ? (
+            <div className="relative z-1 w-full h-fit shadow-lg">
+                {sub ? (
+                    <img src={podcast.image} />
+                ) : podcast.artwork ? (
                     <img src={podcast.artwork} />
                 ) : (
                     <img src={defaultPlaylistArtwork} />
@@ -117,29 +122,29 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width }) => {
                         <FaCirclePlay style={style} />
                     )} */}
                 </div>
+
                 <div
                     onClick={e => {
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior
                     }}
-                    className={`absolute bottom-1 right-1 z-100 ${isHovered ? 'block' : 'hidden'}`}
+                    className={`absolute bottom-1 right-1 z-100 ${isHovered && !sub ? 'block' : 'hidden'}`}
                 >
-                    {/* <OptionsModal object={playlistItem} /> */}
+                    <PodcastOptionsModal object={podcast.id} />
                 </div>
             </div>
-            <div className="flex  h-full ">
-                <div className="flex-col justify-between h-full overflow-hidden">
-                    <h2 className="text-md truncate font-bold">
+            <div className="flex justify-start items-start">
+                <div className="flex-col flex items-start  justify-start overflow-hidden">
+                    <h2 className={`text-md  line-clamp-3 font-bold`}>
                         {podcast.title}
                     </h2>
-                    <h3 className="truncate">Podcast</h3>
-
+                    {!sub && <h3 className="truncate">Podcast</h3>}
                     {/* {playlistItem.type === 'library-playlists' && (
                         <div className="bg-slate-300  text-slate-600 w-fit p-1 font-bold text-sm  flex rounded-lg">
                             <span>Library</span>
                         </div>
                     )} */}
-                    <span></span>
+                    <div></div>
                 </div>
             </div>
         </Link>

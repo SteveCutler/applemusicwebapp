@@ -26,6 +26,7 @@ import axios from 'axios'
 import PodcastListItem from '../components/Homepage/PodcastListItem'
 import CryptoJS from 'crypto-js'
 import parse from 'html-react-parser'
+import PodcastOptionsModal from '../components/Homepage/PodcastOptionsModal'
 
 // import { usePodcastPlayer } from '../components/Homepage/PodcastPlayer'
 
@@ -294,17 +295,21 @@ const Podcast = () => {
                     >
                         <FaCirclePlay style={styleButtonBig} />
                     </div>
-                    <div className="absolute bottom-4 right-4">
-                        <div
-                            onClick={e => {
-                                e.preventDefault()
-                                e.stopPropagation() // Prevents the link's default behavior
-                            }}
-                            className=""
-                        >
-                            {/* <OptionsModal big={true} object={albumData} /> */}
+                    {podcastEpisodes && (
+                        <div className="absolute bottom-4 right-4">
+                            <div
+                                onClick={e => {
+                                    e.preventDefault()
+                                    e.stopPropagation() // Prevents the link's default behavior
+                                }}
+                                className=""
+                            >
+                                {id && (
+                                    <PodcastOptionsModal big={true} id={id} />
+                                )}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* <div className="text-xl select-none font-semibold">

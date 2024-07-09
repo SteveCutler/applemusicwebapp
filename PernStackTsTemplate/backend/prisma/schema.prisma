@@ -27,6 +27,53 @@ model User {
   ratings         Rating[]
   albums          Album[]
   songs           Song[]
+    subscriptions     Subscription[]
+  listenedEpisodes  ListenedEpisode[]
+}
+
+
+model Podcast {
+  id              String             @id @default(cuid())
+  podcastIndexId  String                @unique
+  rssFeedUrl      String
+  title           String
+  description     String?
+  artworkUrl      String?
+  categories      Json
+  episodes        Episode[]
+  subscriptions   Subscription[]
+}
+
+model Episode {
+  id              String             @id @default(cuid())
+  podcastId       String
+  podcast         Podcast            @relation(fields: [podcastId], references: [id])
+  title           String
+  description     String?
+  audioUrl        String @unique
+  releaseDate     DateTime
+  listenedEpisodes ListenedEpisode[]
+}
+
+model Subscription {
+  id        String @id @default(cuid())
+  userId    String
+  podcastId String
+  user      User   @relation(fields: [userId], references: [id])
+  podcast   Podcast @relation(fields: [podcastId], references: [id])
+}
+
+model ListenedEpisode {
+  id        String   @id @default(cuid())
+  userId    String
+  episodeId String
+  progress  Int
+  completed Boolean  @default(false)
+
+  user      User     @relation(fields: [userId], references: [id])
+  episode   Episode  @relation(fields: [episodeId], references: [id])
+
+  @@unique([userId, episodeId])
 }
 
 model Album {
