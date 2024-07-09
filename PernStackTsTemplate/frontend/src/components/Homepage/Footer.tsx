@@ -441,8 +441,8 @@ function Footer() {
                 {/* {podcastDuration && isPlayingPodcast && (
                     <div>{podcastDuration}</div>
                 )} */}
-                <div className="flex flex-col justify-between items-around gap-3 w-1/2 mx-auto">
-                    <div className="flex gap-1 mx-auto w-1/4 justify-center mx-10">
+                <div className="flex flex-col justify-center items-between gap-3 w-1/2 mx-auto">
+                    <div className="flex gap-1 mx-auto w-1/4 justify-center ">
                         <button
                             className={`${shuffle && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {

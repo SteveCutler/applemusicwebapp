@@ -502,6 +502,8 @@ interface State {
     podcastArtUrl: string
     showId: number
     scrubPod: number | null
+    podcastVolume: number
+    podcastMuted: boolean
 }
 
 interface Actions {
@@ -582,6 +584,8 @@ interface Actions {
     setCurrentTime: () => void
     seekPodcast: (time: number) => void
     setScrubPod: (time: number | null) => void
+    setPodcastVolume: (vol: number) => void
+    setPodcastMuted: (toggle: boolean) => void
 }
 
 type Store = State & Actions
@@ -638,11 +642,17 @@ export const useStore = create<Store>((set, get) => ({
     podcastArtUrl: '',
     showId: 0,
     scrubPod: null,
-
+    podcastMuted: false,
     podcastAudio: new Audio(),
+    podcastVolume: 0.75,
 
     // Actions
+    setPodcastVolume: (vol: number) => {
+        const { podcastAudio } = get()
+        podcastAudio.volume = vol
+    },
 
+    setPodcastMuted: (toggle: boolean) => set({ podcastMuted: toggle }),
     setCurrentTime: () =>
         set(state => ({ currentTime: state.podcastAudio.currentTime })),
 
@@ -695,6 +705,7 @@ export const useStore = create<Store>((set, get) => ({
                     set({
                         currentTime: state.podcastAudio.currentTime,
                         scrubPod: null,
+                        queueToggle: false,
                     })
                 }
             }
@@ -872,8 +883,17 @@ export const useStore = create<Store>((set, get) => ({
         }
     },
     setCurrentVolume: async (volume: number) => {
-        const { musicKitInstance } = get()
-        if (musicKitInstance) {
+        const {
+            musicKitInstance,
+            podcastAudio,
+            isPlayingPodcast,
+            podcastVolume,
+        } = get()
+        if (isPlayingPodcast) {
+            podcastAudio.muted = false
+            set({ podcastVolume: volume })
+            podcastAudio.volume = volume
+        } else if (musicKitInstance) {
             musicKitInstance.volume = volume
             set({ volume })
         }
