@@ -319,36 +319,42 @@ interface podcastEpisode {
     wrapperType: string
 }
 
-interface podcastInfo {
-    artistName: string
-    artworkUrl100: string
-    artworkUrl30: string
-    artworkUrl60: string
-    artworkUrl600: string
-    collectionCensoredName: string
-    collectionExplicitness: string
-    collectionId: number
-    collectionName: string
-    collectionPrice: number
-    collectionViewUrl: string
-    contentAdvisoryRating: string
-    country: string
-    currency: string
-    feedUrl: string
-    genreIds: Array<string>
-    genres: Array<string>
-    kind: string
-    primaryGenreName: string
-    releaseDate: string
-    trackCensoredName: string
-    trackCount: number
-    trackExplicitness: string
-    trackId: number
-    trackName: string
-    trackPrice: number
-    trackTimeMillis: number
-    trackViewUrl: string
-    wrapperType: string
+type podcastInfo = {
+    artwork: string
+    author: string
+    categories: {
+        [key: number]: string
+    }
+    contentType: string
+    crawlErrors: number
+    dead: number
+    description: string
+    episodeCount: number
+    explicit: boolean
+    generator: string
+    id: number
+    image: string
+    imageUrlHash: number
+    inPollingQueue: number
+    itunesId: number
+    language: string
+    lastCrawlTime: number
+    lastGoodHttpStatusTime: number
+    lastHttpStatus: number
+    lastParseTime: number
+    lastUpdateTime: number
+    link: string
+    locked: number
+    medium: string
+    newestItemPubdate: number
+    originalUrl: string
+    ownerName: string
+    parseErrors: number
+    podcastGuid: string
+    priority: number
+    title: string
+    type: number
+    url: string
 }
 
 type AlbumType = {
@@ -489,6 +495,13 @@ interface State {
     podcastUrl: string
     currentPodcastTime: number
     podcastDuration: number
+    podcastAudio: HTMLAudioElement
+    currentTime: number
+    podcastArtist: string
+    podcastEpTitle: string
+    podcastArtUrl: string
+    showId: number
+    scrubPod: number | null
 }
 
 interface Actions {
@@ -552,12 +565,23 @@ interface Actions {
     setFavouriteSongs: (songs: Array<Song>) => void
     setDarkMode: (toggle: boolean) => void
     setAppleMusicToken: (token: string | null) => void
-    playPodcast: (url: string) => void
+    playPodcast: (
+        url: string,
+        time: number,
+        artUrl: string,
+        trackName: string,
+        collectionCensoredName: string,
+        showId: number
+    ) => void
+
     stopPodcast: () => void
     updatePodcastTime: (time: number) => void
     pausePodcast: () => void
 
     setPodcastDuration: (duration: number) => void
+    setCurrentTime: () => void
+    seekPodcast: (time: number) => void
+    setScrubPod: (time: number | null) => void
 }
 
 type Store = State & Actions
@@ -608,20 +632,59 @@ export const useStore = create<Store>((set, get) => ({
     podcastUrl: '',
     currentPodcastTime: 0,
     podcastDuration: 0,
+    currentTime: 0,
+    podcastArtist: '',
+    podcastEpTitle: '',
+    podcastArtUrl: '',
+    showId: 0,
+    scrubPod: null,
 
     podcastAudio: new Audio(),
-    playPodcast: url =>
+
+    // Actions
+
+    setCurrentTime: () =>
+        set(state => ({ currentTime: state.podcastAudio.currentTime })),
+
+    setScrubPod: (time: number | null) => set({ scrubPod: time }),
+    seekPodcast: (time: number) => {
         set(state => {
-            const { musicKitInstance } = get()
-            if (musicKitInstance) {
-                musicKitInstance.stop()
-            }
+            state.podcastAudio.currentTime = time
+            // state.scrubPod = 0
+            return { ...state }
+        })
+        set({ scrubPod: null })
+    },
+    playPodcast: (url, time, artUrl, trackName, collectionName, showId) => {
+        const { musicKitInstance } = get()
+        if (musicKitInstance) {
+            musicKitInstance.stop()
+        }
+        set({ currentTime: 0 })
+        console.log(url, time, artUrl, trackName, collectionName)
+        set(state => {
             if (state.podcastAudio) {
                 state.podcastAudio.src = url
                 state.podcastAudio.play()
+                state.podcastAudio.ontimeupdate = () => {
+                    set({
+                        currentTime: state.podcastAudio.currentTime,
+                        scrubPod: null,
+                    })
+                }
             }
-            return { isPlayingPodcast: true, podcastUrl: url }
-        }),
+            return {
+                isPlayingPodcast: true,
+                podcastUrl: url,
+
+                podcastDuration: time,
+                podcastArtist: collectionName,
+                podcastEpTitle: trackName,
+                podcastArtUrl: artUrl,
+                showId,
+            }
+        })
+    },
     pausePodcast: () =>
         set(state => {
             if (state.podcastAudio) {
@@ -635,10 +698,16 @@ export const useStore = create<Store>((set, get) => ({
                 state.podcastAudio.pause()
                 state.podcastAudio.currentTime = 0
             }
-            return { isPlayingPodcast: false, podcastUrl: '' }
+            return {
+                isPlayingPodcast: false,
+                podcastUrl: '',
+                podcastDuration: 0,
+                podcastArtist: '',
+                podcastEpTitle: '',
+                showId: 0,
+                podcastArtUrl: '',
+            }
         }),
-
-    // Actions
 
     updatePodcastTime: time => set({ currentPodcastTime: time }),
     setPodcastDuration: duration => set({ podcastDuration: duration }),
@@ -930,7 +999,12 @@ export const useStore = create<Store>((set, get) => ({
     },
 
     authorizeMusicKit: async () => {
-        const { appleMusicToken, fetchAppleToken } = get()
+        const {
+            appleMusicToken,
+            fetchAppleToken,
+            isPlayingPodcast,
+            stopPodcast,
+        } = get()
         console.log('initializing with music token: ', appleMusicToken)
 
         const initializeMusicKit = async () => {
@@ -1012,6 +1086,8 @@ export const useStore = create<Store>((set, get) => ({
                     }
                 )
                 music.addEventListener('queueItemsDidChange', () => {
+                    console.log('stopping podcast')
+                    stopPodcast()
                     if (music) {
                         const currentQueue = music.queue.items
                         set({ playlist: currentQueue })

@@ -120,7 +120,7 @@ const Favourites = () => {
     return (
         <>
             <h1
-                className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'}  p-4 font-bold mx-auto`}
+                className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'} italic p-4 font-bold mx-auto`}
             >
                 Favourite Songs
             </h1>

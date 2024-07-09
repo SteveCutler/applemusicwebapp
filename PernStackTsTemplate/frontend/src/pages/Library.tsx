@@ -22,9 +22,11 @@ const Library = () => {
         fetchAppleToken,
         albums,
         setAlbums,
+        darkMode,
     } = useStore(state => ({
         gridDisplay: state.gridDisplay,
         queueToggle: state.queueToggle,
+        darkMode: state.darkMode,
         setGridDisplay: state.setGridDisplay,
         authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
@@ -185,6 +187,11 @@ const Library = () => {
 
     return (
         <div className="flex-col w-full h-full">
+            <h1
+                className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'} italic p-4 font-bold mx-auto`}
+            >
+                Library
+            </h1>
             <div className="flex justify-between w-full mx-auto items-center gap-2">
                 <form className="p-3 w-full" action="">
                     <input

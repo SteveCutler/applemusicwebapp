@@ -1,5 +1,5 @@
 import { useStore } from '../../store/store'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Timeline = () => {
     let {
@@ -7,10 +7,22 @@ const Timeline = () => {
         currentElapsedTime,
         musicKitInstance,
         currentSongId,
+        currentTime,
+        isPlayingPodcast,
+        podcastDuration,
+        seekPodcast,
         setCurrentElapsedTime,
         scrubTime,
+        scrubPod,
+        setScrubPod,
         setScrubTime,
     } = useStore(state => ({
+        podcastDuration: state.podcastDuration,
+        scrubPod: state.scrubPod,
+        setScrubPod: state.setScrubPod,
+        seekPodcast: state.seekPodcast,
+        currentTime: state.currentTime,
+        isPlayingPodcast: state.isPlayingPodcast,
         currentSongDuration: state.currentSongDuration,
         currentSongId: state.currentSongId,
         scrubTime: state.scrubTime,
@@ -20,42 +32,85 @@ const Timeline = () => {
         musicKitInstance: state.musicKitInstance,
     }))
 
+    const [scrubbing, setScrubbing] = useState(false)
+
     const handleScrub = (e: any) => {
         console.log('scrubbing')
-        if (musicKitInstance) {
+        if (isPlayingPodcast) {
+            // setScrubbing(true)
+            setScrubPod(e.target.value)
+        } else if (musicKitInstance) {
             setScrubTime(e.target.value)
         }
     }
 
     const handleScrubEnd = (e: any) => {
-        if (musicKitInstance && scrubTime) {
+        if (isPlayingPodcast && scrubPod) {
+            seekPodcast(scrubPod)
+            setScrubPod(null)
+            // setScrubbing(false)
+        } else if (musicKitInstance && scrubTime) {
             setCurrentElapsedTime(scrubTime / 1000)
             musicKitInstance.seekToTime(scrubTime / 1000)
         }
+
         // setScrubTime(null)
     }
 
-    return (
-        <>
-            <input
-                type="range"
-                min={0}
-                max={currentSongDuration ? String(currentSongDuration) : '100'}
-                value={
-                    scrubTime
-                        ? scrubTime
-                        : currentElapsedTime
-                          ? String(currentElapsedTime)
-                          : '0'
-                }
-                // value={currentElapsedTime ? String(currentElapsedTime) : '0'}
-                className="range range-xs mb-5 range-info flex"
-                onChange={handleScrub}
-                onMouseUp={handleScrubEnd}
-                onTouchEnd={handleScrubEnd}
-            />
-        </>
-    )
+    if (isPlayingPodcast) {
+        return (
+            <>
+                <input
+                    type="range"
+                    min={0}
+                    max={podcastDuration ? podcastDuration : '100'}
+                    value={
+                        scrubPod
+                            ? scrubPod
+                            : currentTime
+                              ? currentTime.toFixed(0)
+                              : '0'
+                    }
+                    className="range range-xs mb-5 range-info flex"
+                    onChange={handleScrub}
+                    onMouseUp={e => {
+                        handleScrubEnd(e)
+                        setScrubPod(null)
+                    }}
+                    onTouchEnd={e => {
+                        handleScrubEnd(e)
+                        setScrubPod(null)
+                    }}
+                />
+            </>
+        )
+    } else {
+        return (
+            <>
+                <input
+                    type="range"
+                    min={0}
+                    max={
+                        currentSongDuration
+                            ? String(currentSongDuration)
+                            : '100'
+                    }
+                    value={
+                        scrubTime
+                            ? scrubTime
+                            : currentElapsedTime
+                              ? String(currentElapsedTime)
+                              : '0'
+                    }
+                    // value={currentElapsedTime ? String(currentElapsedTime) : '0'}
+                    className="range range-xs mb-5 range-info flex"
+                    onChange={handleScrub}
+                    onMouseUp={handleScrubEnd}
+                    onTouchEnd={handleScrubEnd}
+                />
+            </>
+        )
+    }
 }
 
 export default Timeline

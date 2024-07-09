@@ -6,37 +6,45 @@ import AlbumItem from '../components/Homepage/AlbumItem'
 import ArtistItem from '../components/Homepage/ArtistItem'
 import SongItem from '../components/Homepage/SongItem'
 import PodcastItem from '../components/Homepage/PodcastItem'
+// import bcrypt from 'bcrypt'
+import CryptoJS from 'crypto-js'
 
 type podcastInfo = {
-    artistName: string
-    artworkUrl100: string
-    artworkUrl30: string
-    artworkUrl60: string
-    artworkUrl600: string
-    collectionCensoredName: string
-    collectionExplicitness: string
-    collectionId: number
-    collectionName: string
-    collectionPrice: number
-    collectionViewUrl: string
-    contentAdvisoryRating: string
-    country: string
-    currency: string
-    feedUrl: string
-    genreIds: Array<string>
-    genres: Array<string>
-    kind: string
-    primaryGenreName: string
-    releaseDate: string
-    trackCensoredName: string
-    trackCount: number
-    trackExplicitness: string
-    trackId: number
-    trackName: string
-    trackPrice: number
-    trackTimeMillis: number
-    trackViewUrl: string
-    wrapperType: string
+    artwork: string
+    author: string
+    categories: {
+        [key: number]: string
+    }
+    contentType: string
+    crawlErrors: number
+    dead: number
+    description: string
+    episodeCount: number
+    explicit: boolean
+    generator: string
+    id: number
+    image: string
+    imageUrlHash: number
+    inPollingQueue: number
+    itunesId: number
+    language: string
+    lastCrawlTime: number
+    lastGoodHttpStatusTime: number
+    lastHttpStatus: number
+    lastParseTime: number
+    lastUpdateTime: number
+    link: string
+    locked: number
+    medium: string
+    newestItemPubdate: number
+    originalUrl: string
+    ownerName: string
+    parseErrors: number
+    podcastGuid: string
+    priority: number
+    title: string
+    type: number
+    url: string
 }
 
 type Artist = {
@@ -134,25 +142,52 @@ const Search = () => {
                         `/v1/catalog/ca/search`,
                         queryParameters
                     )
-                    // console.log(response)
-
-                    // const queryParameters = { l: 'en-us' }
 
                     const musicData = await response.data.results
+                    const headerTime = Math.floor(Date.now() / 1000)
+                    const hash = CryptoJS.SHA1(
+                        import.meta.env.VITE_PODCASTINDEX_KEY +
+                            import.meta.env.VITE_PODCASTINDEX_SECRET +
+                            headerTime
+                    ).toString()
 
                     const podcastResponse = await axios.get(
-                        `https://itunes.apple.com/search?term=${searchTerm}&entity=podcast&limit=25`
+                        'https://api.podcastindex.org/api/1.0/search/byterm',
+                        {
+                            headers: {
+                                'User-Agent': 'AppleMusicDashboard/1.0',
+                                'X-Auth-Key': import.meta.env
+                                    .VITE_PODCASTINDEX_KEY,
+                                'X-Auth-Date': headerTime,
+                                Authorization: hash,
+                            },
+                            params: {
+                                q: searchTerm,
+                            },
+                        }
+                    )
+                    const podcastData: podcastInfo[] =
+                        await podcastResponse.data.feeds
+
+                    const filteredPodcast = podcastData.filter(
+                        podcast =>
+                            podcast.priority > 0 &&
+                            podcast.dead == 0 &&
+                            podcast.parseErrors == 0 &&
+                            podcast.locked == 0 &&
+                            podcast.crawlErrors == 0 &&
+                            podcast.episodeCount >= 1
                     )
 
-                    const podcastData = podcastResponse.data.results
+                    const sortedFilteredPodcasts = filteredPodcast.sort(
+                        (a, b) => b.priority - a.priority
+                    )
 
-                    console.log('podcasts: ', podcastData)
-
-                    // console.log(data)
                     setSearchResults({
                         ...musicData,
-                        podcasts: { data: podcastData },
+                        podcasts: { data: sortedFilteredPodcasts },
                     })
+                    // console.log('search data:', searchResults)
                 } catch (error: any) {
                     console.error(error)
                     setError(error)
@@ -192,8 +227,8 @@ const Search = () => {
                 )}
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.artists &&
-                        searchResults.artists.data.map(artist => (
-                            <ArtistItem artist={artist} />
+                        searchResults.artists.data.map((artist, index) => (
+                            <ArtistItem key={index} artist={artist} />
                         ))}
                 </div>
             </div>
@@ -208,8 +243,9 @@ const Search = () => {
                 )}
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.albums &&
-                        searchResults.albums.data.map(album => (
+                        searchResults.albums.data.map((album, index) => (
                             <AlbumItem
+                                key={index}
                                 albumItem={album}
                                 width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                             />
@@ -226,27 +262,9 @@ const Search = () => {
                 )}
                 <div className=" flex flex-wrap w-full justify-start gap-2 ">
                     {searchResults.songs &&
-                        searchResults.songs.data.map(song => (
+                        searchResults.songs.data.map((song, index) => (
                             <SongItem
-                                song={song}
-                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
-                            />
-                        ))}
-                </div>
-            </div>
-
-            <div className="flex-col mx-3 mb-4 px-3">
-                {searchResults.albums && (
-                    <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} mt-7 pb-3 text-2xl`}
-                    >
-                        Songs:
-                    </p>
-                )}
-                <div className=" flex flex-wrap w-full justify-start gap-2 ">
-                    {searchResults.songs &&
-                        searchResults.songs.data.map(song => (
-                            <SongItem
+                                key={index}
                                 song={song}
                                 width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                             />
@@ -264,9 +282,9 @@ const Search = () => {
                 )}
                 <div className="flex flex-wrap w-full justify-start gap-2">
                     {searchResults.podcasts &&
-                        searchResults.podcasts.data.map(podcast => (
+                        searchResults.podcasts.data.map((podcast, index) => (
                             <PodcastItem
-                                key={podcast.collectionId}
+                                key={index}
                                 podcast={podcast}
                                 width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                             />
