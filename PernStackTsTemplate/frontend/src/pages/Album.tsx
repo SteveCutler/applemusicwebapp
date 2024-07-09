@@ -108,7 +108,7 @@ const Album = () => {
         type
     )
 
-    console.log('album data: ', albumData?.relationships?.tracks.data)
+    // console.log('album data: ', albumData?.relationships?.tracks.data)
     const { relatedAlbums } = FetchRelatedAlbums(albumId)
     const { appearsOn } = FetchAppearsOn(albumId)
     const [similarArtistsData, setSimilarArtistsData] =

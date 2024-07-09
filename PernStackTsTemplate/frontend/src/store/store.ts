@@ -652,6 +652,56 @@ export const useStore = create<Store>((set, get) => ({
         podcastAudio.volume = vol
     },
 
+    // Media Session API setup
+    // updateMediaSession: (
+    //     type: string,
+    //     mediaElement: HTMLAudioElement,
+    //     metadata: any
+    // ) => {
+    //     const { musicKitInstance } = get()
+    //     if ('mediaSession' in navigator) {
+    //         navigator.mediaSession.metadata = new MediaMetadata({
+    //             title: metadata.title,
+    //             artist: metadata.artist,
+    //             album: metadata.album,
+    //             artwork: [
+    //                 {
+    //                     src: metadata.artUrl,
+    //                     sizes: '512x512',
+    //                     type: 'image/png',
+    //                 },
+    //             ],
+    //         })
+
+    //         navigator.mediaSession.setActionHandler('play', () => {
+    //             set(state => {
+    //                 if (type === 'music') {
+    //                     musicKitInstance?.play()
+    //                 } else if (type === 'podcast') {
+    //                     mediaElement.play()
+    //                 }
+    //                 return {
+    //                     isPlaying: type === 'music',
+    //                     isPlayingPodcast: type === 'podcast',
+    //                 }
+    //             })
+    //         })
+
+    //         navigator.mediaSession.setActionHandler('pause', () => {
+    //             set(state => {
+    //                 if (type === 'music') {
+    //                     musicKitInstance?.pause()
+    //                 } else if (type === 'podcast') {
+    //                     mediaElement.pause()
+    //                 }
+    //                 return { isPlaying: false, isPlayingPodcast: false }
+    //             })
+    //         })
+
+    //         // Optionally, set other media session actions like 'seekbackward', 'seekforward', etc.
+    //     }
+    // },
+
     setPodcastMuted: (toggle: boolean) => set({ podcastMuted: toggle }),
     setCurrentTime: () =>
         set(state => ({ currentTime: state.podcastAudio.currentTime })),

@@ -45,10 +45,10 @@ type PlayParameterObject = {
     kind: string
 }
 const TrackDisplay = ({ albumTracks }: TracksObject) => {
-    console.log('album tracks', albumTracks)
+    // console.log('album tracks', albumTracks)
 
     const convertToDuration = (milliseconds: Number) => {
-        console.log('millis,', milliseconds)
+        // console.log('millis,', milliseconds)
         if (typeof milliseconds !== 'number' || milliseconds < 0) {
             // throw new Error('Input must be a non-negative number')
             return ''

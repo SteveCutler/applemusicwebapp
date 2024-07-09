@@ -344,14 +344,6 @@ function Footer() {
         return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     }
 
-    // Example usage:
-    const sec = 7200
-    console.log(convertSecondsToHoursMinutesAndSeconds(sec)) // Output: "2:00:00"
-
-    // Example usage:
-    const ms = 3568000
-    console.log(convertMillisecondsToMinutesAndSeconds(ms)) // Output: "59:28"
-
     return (
         <div className="footer px-5 flex items-center justify-between bg-gradient-to-b from-gray-900 to-black">
             <div className="flex justify-between items-center mt-3 w-full">

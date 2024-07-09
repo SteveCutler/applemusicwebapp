@@ -613,7 +613,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     </li>
                     <li
                         onClick={e => {
-                            setIsOpen(!isOpen)
+                            addToLibrary(e)
                             setIsOpen(!isOpen)
                         }}
                         className=" justify-center items-center "
