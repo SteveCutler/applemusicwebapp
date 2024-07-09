@@ -37,9 +37,11 @@ function Footer() {
         setQueueToggle,
         podcastArtist,
         podcastEpTitle,
+        currentTime,
         podcastArtUrl,
     } = useStore(state => ({
         podcastArtist: state.podcastArtist,
+        currentTime: state.currentTime,
         podcastEpTitle: state.podcastEpTitle,
         showId: state.showId,
         podcastArtUrl: state.podcastArtUrl,
@@ -329,6 +331,27 @@ function Footer() {
     const style = { fontSize: '3em' }
     const styleSmall = { fontSize: '2em' }
 
+    function convertMillisecondsToMinutesAndSeconds(ms: number) {
+        const minutes = Math.floor(ms / 60000)
+        const seconds = Math.floor((ms % 60000) / 1000)
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`
+    }
+
+    function convertSecondsToHoursMinutesAndSeconds(sec: number) {
+        const hours = Math.floor(sec / 3600)
+        const minutes = Math.floor((sec % 3600) / 60)
+        const seconds = sec % 60
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    }
+
+    // Example usage:
+    const sec = 7200
+    console.log(convertSecondsToHoursMinutesAndSeconds(sec)) // Output: "2:00:00"
+
+    // Example usage:
+    const ms = 3568000
+    console.log(convertMillisecondsToMinutesAndSeconds(ms)) // Output: "59:28"
+
     return (
         <div className="footer px-5 flex items-center justify-between bg-gradient-to-b from-gray-900 to-black">
             <div className="flex justify-between items-center mt-3 w-full">
@@ -465,14 +488,48 @@ function Footer() {
                             )}
                         </button>
                     </div>
-                    <div className="">
-                        <Timeline />
+                    <div className="flex justify-center items-center ">
+                        <div
+                            className="h-full w-fit font-semibold select-none -translate-y-2 flex justify-center items-center"
+                            style={{ width: '100px' }}
+                        >
+                            {isPlayingPodcast
+                                ? convertSecondsToHoursMinutesAndSeconds(
+                                      Number(currentTime.toFixed(0))
+                                  )
+                                : musicKitInstance?.nowPlayingItem
+                                  ? convertMillisecondsToMinutesAndSeconds(
+                                        Number(currentElapsedTime)
+                                    )
+                                  : ''}
+                        </div>
+
+                        <div className="w-full flex">
+                            <Timeline />
+                        </div>
+                        <div
+                            className="h-full font-semibold w-fit select-none -translate-y-2 flex justify-center items-center"
+                            style={{ width: '100px' }}
+                        >
+                            {isPlayingPodcast
+                                ? convertSecondsToHoursMinutesAndSeconds(
+                                      Number(podcastDuration)
+                                  )
+                                : musicKitInstance?.nowPlayingItem
+                                  ? convertMillisecondsToMinutesAndSeconds(
+                                        Number(
+                                            musicKitInstance.nowPlayingItem
+                                                .attributes.durationInMillis
+                                        )
+                                    )
+                                  : ''}
+                        </div>
                     </div>
                 </div>
             </div>
             <div className="flex items-center justify-end mx-5">
                 <button
-                    className={`${queueToggle && 'text-blue-600'} flex rounded-full items-center pe-10 justify-end active:scale-95`}
+                    className={`${queueToggle && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} *:flex rounded-full items-center pe-10 justify-end active:scale-95`}
                     title="Display Queue"
                     onClick={e => {
                         e.preventDefault()

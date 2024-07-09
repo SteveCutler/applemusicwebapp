@@ -655,8 +655,33 @@ export const useStore = create<Store>((set, get) => ({
         })
         set({ scrubPod: null })
     },
-    playPodcast: (url, time, artUrl, trackName, collectionName, showId) => {
+    playPodcast: async (
+        url,
+        time,
+        artUrl,
+        trackName,
+        collectionName,
+        showId
+    ) => {
         const { musicKitInstance } = get()
+
+        const fetchFinalUrl = async (initialUrl: string) => {
+            try {
+                const response = await fetch(
+                    `/api/apple/resolve-url?url=${encodeURIComponent(initialUrl)}`
+                )
+                const data = await response.json()
+                return data.finalUrl
+            } catch (error) {
+                console.error('Failed to fetch final URL:', error)
+                return null
+            }
+        }
+
+        const finalUrl = await fetchFinalUrl(url)
+
+        // console.log('finalUrl', finalUrl)
+
         if (musicKitInstance) {
             musicKitInstance.stop()
         }
@@ -664,7 +689,7 @@ export const useStore = create<Store>((set, get) => ({
         console.log(url, time, artUrl, trackName, collectionName)
         set(state => {
             if (state.podcastAudio) {
-                state.podcastAudio.src = url
+                state.podcastAudio.src = finalUrl
                 state.podcastAudio.play()
                 state.podcastAudio.ontimeupdate = () => {
                     set({
