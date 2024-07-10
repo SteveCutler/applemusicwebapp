@@ -187,7 +187,7 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
             {isOpen && (
                 <ul
                     tabIndex={0}
-                    className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -translate-y-20 -translate-x-20  menu w-40 p-2 shadow-md rounded-box`}
+                    className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -translate-y-10 -translate-x-20  menu w-40 p-2 shadow-md rounded-box`}
                 >
                     {podSubs && subIds?.includes(id) ? (
                         <li className="w-full flex justify-between items-center">

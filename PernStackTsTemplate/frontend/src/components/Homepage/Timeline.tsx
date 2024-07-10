@@ -50,7 +50,7 @@ const Timeline = () => {
             setScrubPod(null)
             // setScrubbing(false)
         } else if (musicKitInstance && scrubTime) {
-            setCurrentElapsedTime(scrubTime / 1000)
+            // setCurrentElapsedTime(scrubTime / 1000)
             musicKitInstance.seekToTime(scrubTime / 1000)
         }
 
@@ -98,8 +98,12 @@ const Timeline = () => {
                     value={
                         scrubTime
                             ? scrubTime
-                            : currentElapsedTime
-                              ? String(currentElapsedTime)
+                            : musicKitInstance?.currentPlaybackTime
+                              ? String(
+                                    Number(
+                                        musicKitInstance?.currentPlaybackTime
+                                    ) * 1000
+                                )
                               : '0'
                     }
                     // value={currentElapsedTime ? String(currentElapsedTime) : '0'}

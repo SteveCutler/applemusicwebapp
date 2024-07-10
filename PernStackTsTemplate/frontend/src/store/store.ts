@@ -1213,16 +1213,16 @@ export const useStore = create<Store>((set, get) => ({
                     }
                 })
 
-                music.addEventListener('playbackTimeDidChange', () => {
-                    if (music) {
-                        const { playbackState } = music
-                        if (playbackState) {
-                            const currentElapsedTime =
-                                music.currentPlaybackTime * 1000
-                            useStore.setState({ currentElapsedTime })
-                        }
-                    }
-                })
+                // music.addEventListener('playbackTimeDidChange', () => {
+                //     if (music) {
+                //         const { playbackState } = music
+                //         if (playbackState) {
+                //             const currentElapsedTime =
+                //                 music.currentPlaybackTime * 1000
+                //             useStore.setState({ currentElapsedTime })
+                //         }
+                //     }
+                // })
 
                 set({ musicKitInstance: music })
                 console.log('MusicKit instance: ', music)

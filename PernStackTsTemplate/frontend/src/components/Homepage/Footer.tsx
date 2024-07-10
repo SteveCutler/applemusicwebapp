@@ -490,8 +490,8 @@ function Footer() {
                                       Number(currentTime.toFixed(0))
                                   )
                                 : musicKitInstance?.nowPlayingItem
-                                  ? convertMillisecondsToMinutesAndSeconds(
-                                        Number(currentElapsedTime)
+                                  ? Number(
+                                        musicKitInstance?.currentPlaybackTime
                                     )
                                   : ''}
                         </div>
