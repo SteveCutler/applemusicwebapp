@@ -54,10 +54,12 @@ const Song = () => {
         musicKitInstance,
         darkMode,
         isPlaying,
+        queueToggle,
         playlist,
         setPlaylist,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
         setSearchTerm: state.setSearchTerm,
         musicKitInstance: state.musicKitInstance,
         isPlaying: state.isPlaying,
@@ -144,7 +146,9 @@ const Song = () => {
                         </Link>
                     )}
                 </div>
-                <div className="lg:flex  w-full justify-between gap-4 py-3  ">
+                <div
+                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex  justify-around  items-start`}
+                >
                     <div className="relative w-1/2">
                         {song.attributes.artwork?.url ? (
                             <img
@@ -184,7 +188,9 @@ const Song = () => {
                             </div>
                         </div>
                     </div>
-                    <div className=" w-1/2">
+                    <div
+                        className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '}  overflow-y-auto  `}
+                    >
                         <TrackDisplay albumTracks={[song]} />
                     </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}

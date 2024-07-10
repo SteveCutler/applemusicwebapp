@@ -235,7 +235,7 @@ const Track: React.FC<TrackPropTypes> = ({
             >
                 {timeLeft()}
             </div>
-            <div className="flex justify-center truncate max-w-3/5 gap-1">
+            <div className="flex justify-start truncate w-full ps-5 gap-1">
                 <div
                     className={` truncate
                         ${
@@ -243,12 +243,13 @@ const Track: React.FC<TrackPropTypes> = ({
                                 ? 'font-bold text-slate-300'
                                 : 'font-semibold'
                         }
+                        w-full flex justify-start
                     `}
                 >
                     {song.attributes.name}
                 </div>
                 {/* <p className="text-slate-100"> / </p> */}
-                <div
+                {/* <div
                     className={`truncate max-w-1/5
                         ${
                             isPlaying && song.id === currentSongId
@@ -258,7 +259,7 @@ const Track: React.FC<TrackPropTypes> = ({
                     `}
                 >
                     {song.attributes.artistName}
-                </div>
+                </div> */}
             </div>
             <button
                 onClick={e => {

@@ -316,7 +316,6 @@ const Album = () => {
                     </div>
                     <div
                         className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '}  overflow-y-auto  `}
-                        style={{ maxHeight: '600px' }}
                     >
                         {albumData && (
                             <TrackDisplay

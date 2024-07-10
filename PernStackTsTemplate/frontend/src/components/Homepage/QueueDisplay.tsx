@@ -30,65 +30,52 @@ const QueueDisplay = () => {
 
     // }
     console.log('current queue: ', musicKitInstance?.queue)
-    if (musicKitInstance?.nowPlayingItem) {
-        return (
-            <div className="flex-col flex select-none h-full ">
-                <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
-                    <div className="border-b-2 border-slate-600 pb-3">
-                        {playlist &&
-                            musicKitInstance.queue.items &&
-                            musicKitInstance?.nowPlayingItem && (
-                                <>
-                                    <h1 className="text-3xl pb-3 font-bold text-white">
-                                        Now playing:
-                                    </h1>
-                                    <QueueTrackDisplay
-                                        key={
-                                            musicKitInstance?.nowPlayingItemIndex
-                                        }
-                                        song={musicKitInstance?.nowPlayingItem}
-                                        index={
-                                            musicKitInstance?.nowPlayingItemIndex
-                                        }
-                                        // albumId={
-                                        //     musicKitInstance?.nowPlayingItem
-                                        //         .container.id
-                                        // }
-                                    />
-                                </>
-                            )}
-                    </div>
-                    <div className="pt-3 ">
-                        <h1 className="text-3xl pb-3  font-bold text-white">
-                            Coming up:
-                        </h1>
-                        {playlist &&
-                            musicKitInstance?.nowPlayingItem &&
-                            musicKitInstance.queue.items
-                                .slice(
-                                    musicKitInstance?.nowPlayingItemIndex + 1
-                                )
-                                .map((song, index) => (
-                                    <QueueTrackDisplay
-                                        key={index}
-                                        song={song}
-                                        index={index}
-                                        // albumId={song}
-                                    />
-                                ))}
-                    </div>
+
+    return (
+        <div className="flex-col flex select-none h-full ">
+            <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
+                <div className="border-b-2 border-slate-600 pb-3">
+                    {playlist &&
+                        musicKitInstance?.queue.items &&
+                        musicKitInstance?.nowPlayingItem && (
+                            <>
+                                <h1 className="text-3xl pb-3 font-bold text-white">
+                                    Now playing:
+                                </h1>
+                                <QueueTrackDisplay
+                                    key={musicKitInstance?.nowPlayingItemIndex}
+                                    song={musicKitInstance?.nowPlayingItem}
+                                    index={
+                                        musicKitInstance?.nowPlayingItemIndex
+                                    }
+                                    // albumId={
+                                    //     musicKitInstance?.nowPlayingItem
+                                    //         .container.id
+                                    // }
+                                />
+                            </>
+                        )}
+                </div>
+                <div className="pt-3 ">
+                    <h1 className="text-3xl pb-3  font-bold text-white">
+                        Coming up:
+                    </h1>
+                    {playlist &&
+                        musicKitInstance?.nowPlayingItem &&
+                        musicKitInstance.queue.items
+                            .slice(musicKitInstance?.nowPlayingItemIndex + 1)
+                            .map((song, index) => (
+                                <QueueTrackDisplay
+                                    key={index}
+                                    song={song}
+                                    index={index}
+                                    // albumId={song}
+                                />
+                            ))}
                 </div>
             </div>
-        )
-    } else {
-        return (
-            <div className="flex-col flex select-none h-full ">
-                <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-md items-center mx-auto justify-start ps-6">
-                    No items in queue...
-                </div>
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 export default QueueDisplay
