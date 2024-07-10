@@ -101,7 +101,7 @@ const Podcasts = () => {
         } else if (hours > 0) {
             return `${hours}h`
         } else {
-            return '<1hour'
+            return '<1h'
         }
     }
 

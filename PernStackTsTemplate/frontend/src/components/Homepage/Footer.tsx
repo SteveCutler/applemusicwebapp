@@ -11,6 +11,9 @@ import { useStore } from '../../store/store'
 import OptionsModal from './OptionsModal'
 import { useNavigate } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
+import { RiForward15Line } from 'react-icons/ri'
+import { TbRewindBackward15 } from 'react-icons/tb'
+import { useState } from 'react'
 
 function Footer() {
     const {
@@ -32,6 +35,7 @@ function Footer() {
         shuffle,
         setShuffle,
         repeat,
+        podcastAudio,
         setRepeat,
         queueToggle,
         setQueueToggle,
@@ -42,6 +46,7 @@ function Footer() {
     } = useStore(state => ({
         podcastArtist: state.podcastArtist,
         currentTime: state.currentTime,
+        podcastAudio: state.podcastAudio,
         podcastEpTitle: state.podcastEpTitle,
         showId: state.showId,
         podcastArtUrl: state.podcastArtUrl,
@@ -90,6 +95,8 @@ function Footer() {
             },
         }
     }
+
+    const [playbackSpeed, setPlaybackSpeed] = useState(1)
 
     const navigate = useNavigate()
 
@@ -304,7 +311,7 @@ function Footer() {
     const playPauseHandler = e => {
         e.preventDefault()
         if (isPlayingPodcast) {
-            pausePodcast()
+            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
         } else if (isPlaying) {
             pauseSong()
         } else {
@@ -451,20 +458,68 @@ function Footer() {
                             <IoPlayBackCircleSharp style={style} />
                         </button>
                         <button
+                            className={`flex rounded-full items-center ${!isPlayingPodcast && 'hidden'} pe-3 justify-center hover:text-white active:scale-95`}
+                            onClick={() => {
+                                podcastAudio.currentTime -= 15
+                            }}
+                        >
+                            <TbRewindBackward15 style={styleSmall} />
+                        </button>
+                        <button
                             className="flex items-center rounded-full justify-center hover:text-white active:scale-95"
                             onClick={e => playPauseHandler(e)}
                         >
-                            {isPlaying || isPlayingPodcast ? (
+                            {isPlaying || !podcastAudio.paused ? (
                                 <FaRegCirclePause style={style} />
                             ) : (
                                 <FaCirclePlay style={style} />
                             )}
                         </button>
                         <button
+                            className={`flex rounded-full items-center ${!isPlayingPodcast && 'hidden'} ps-3 justify-center hover:text-white active:scale-95`}
+                            onClick={() => {
+                                podcastAudio.currentTime += 15
+                            }}
+                        >
+                            <RiForward15Line style={styleSmall} />
+                        </button>
+                        <button
                             className={`flex rounded-full items-center ${isPlayingPodcast && 'hidden'} justify-center hover:text-white active:scale-95`}
                             onClick={e => playNext(e)}
                         >
                             <IoPlayForwardCircleSharp style={style} />
+                        </button>
+                        <button
+                            className={`${repeat && 'text-blue-600'} ${!isPlayingPodcast && 'hidden'} flex rounded-full mx-2 font-bold hover:text-white items-center justify-center active:scale-95`}
+                            onClick={e => {
+                                e.preventDefault()
+                                switch (playbackSpeed) {
+                                    case 1:
+                                        setPlaybackSpeed(1.5)
+                                        podcastAudio.playbackRate = 1.5
+                                        break
+                                    case 1.5:
+                                        setPlaybackSpeed(2)
+                                        podcastAudio.playbackRate = 2
+                                        break
+
+                                    case 2:
+                                        setPlaybackSpeed(0.75)
+                                        podcastAudio.playbackRate = 0.75
+                                        break
+                                    case 0.75:
+                                        setPlaybackSpeed(1)
+                                        podcastAudio.playbackRate = 1
+                                        break
+
+                                    default:
+                                        setPlaybackSpeed(1)
+                                        podcastAudio.playbackRate = 1
+                                        break
+                                }
+                            }}
+                        >
+                            {playbackSpeed}x
                         </button>
                         <button
                             className={`${repeat && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
