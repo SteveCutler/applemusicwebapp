@@ -10,6 +10,7 @@ import PodcastItem from '../components/Homepage/PodcastItem'
 import CryptoJS from 'crypto-js'
 import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
 import { useMediaQuery } from 'react-responsive'
+import DropdownDisplay from '../components/Apple/DropdownDisplay'
 
 type podcastInfo = {
     artwork: string
@@ -96,6 +97,7 @@ const Search = () => {
         musicKitInstance: state.musicKitInstance,
     }))
 
+    const [searchFilters, setSearchFilters] = useState<Array<string>>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -110,9 +112,15 @@ const Search = () => {
     const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
 
     let sliceNumber
-
     if (is2XLarge) {
-        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+        sliceNumber =
+            searchFilters.length < 2
+                ? queueToggle
+                    ? 5
+                    : 11
+                : queueToggle
+                  ? 3
+                  : 5 // For 2xl screens and larger
     } else if (isXLarge) {
         sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
     } else if (isLarge) {
@@ -192,8 +200,8 @@ const Search = () => {
 
                     const filteredPodcast = podcastData.filter(
                         podcast =>
-                            podcast.priority > 0 &&
-                            podcast.dead == 0 &&
+                            // podcast.priority > 0 &&
+                            // podcast.dead == 0 &&
                             podcast.parseErrors == 0 &&
                             podcast.locked == 0 &&
                             podcast.crawlErrors == 0 &&
@@ -227,99 +235,151 @@ const Search = () => {
     return (
         <div className="w-full  flex-col h-full overflow-hidden justify-center items-center mx-auto">
             {/* <div className="text-3xl m-3 px-3">SEARCH</div> */}
-            <form className="m-3 p-3 w-full" action="">
-                <input
-                    type="text"
-                    value={searchTerm}
-                    onChange={e => onChange(e)}
-                    ref={inputRef}
-                    placeholder="What do you want to listen to?..."
-                    className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
-                />
-            </form>
+            <div className="flex justify-between gap-1 items-center">
+                <form className="m-3 p-3 w-full" action="">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={e => onChange(e)}
+                        ref={inputRef}
+                        placeholder="What do you want to listen to?..."
+                        className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
+                    />
+                </form>
+                <div className="gap-1 flex h-fit pe-5 ">
+                    <button
+                        className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('podcasts') ? 'bg-blue-400' : ''}`}
+                        onClick={e => {
+                            e.preventDefault()
+                            searchFilters.includes('podcasts')
+                                ? setSearchFilters(
+                                      searchFilters.filter(
+                                          item => item != 'podcasts'
+                                      )
+                                  )
+                                : setSearchFilters([
+                                      ...searchFilters,
+                                      'podcasts',
+                                  ])
+                        }}
+                    >
+                        Podcasts
+                    </button>
+                    <button
+                        className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('artists') ? 'bg-blue-400' : ''}`}
+                        onClick={e => {
+                            e.preventDefault()
+                            searchFilters.includes('artists')
+                                ? setSearchFilters(
+                                      searchFilters.filter(
+                                          item => item != 'artists'
+                                      )
+                                  )
+                                : setSearchFilters([
+                                      ...searchFilters,
+                                      'artists',
+                                  ])
+                        }}
+                    >
+                        Artists
+                    </button>
+
+                    <button
+                        className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('albums') ? 'bg-blue-400' : ''}`}
+                        onClick={e => {
+                            e.preventDefault()
+                            searchFilters.includes('albums')
+                                ? setSearchFilters(
+                                      searchFilters.filter(
+                                          item => item != 'albums'
+                                      )
+                                  )
+                                : setSearchFilters([...searchFilters, 'albums'])
+                        }}
+                    >
+                        Albums
+                    </button>
+
+                    <button
+                        className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('songs') ? 'bg-blue-400' : ''}`}
+                        onClick={e => {
+                            e.preventDefault()
+                            searchFilters.includes('songs')
+                                ? setSearchFilters(
+                                      searchFilters.filter(
+                                          item => item != 'songs'
+                                      )
+                                  )
+                                : setSearchFilters([...searchFilters, 'songs'])
+                        }}
+                    >
+                        Songs
+                    </button>
+                </div>
+            </div>
             {/*  */}
-            <div className="flex-col mx-3 px-3">
-                {searchResults.artists && (
-                    <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
-                    >
-                        <p className="px-5 flex justify-start w-full">
-                            Artists:
-                        </p>
-                    </p>
-                )}
-                <div className=" flex flex-wrap w-full justify-center gap-2 ">
-                    {searchResults.artists &&
-                        searchResults.artists.data.map((artist, index) => (
-                            <ArtistItem key={index} artist={artist} />
-                        ))}
-                </div>
-            </div>
-
-            <div className="flex-col mx-3 mb-4 px-3">
-                {searchResults.albums && (
-                    <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
-                    >
-                        <p className="px-5 flex justify-start w-full">
-                            Albums:
-                        </p>
-                    </p>
-                )}
-                <div className=" flex flex-wrap w-full justify-center gap-2 ">
-                    {searchResults.albums &&
-                        searchResults.albums.data.map((album, index) => (
-                            <AlbumItem
-                                key={index}
-                                albumItem={album}
-                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
-                            />
-                        ))}
-                </div>
-            </div>
-            <div className="flex-col mx-3 mb-4 px-3">
-                {searchResults.albums && (
-                    <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
-                    >
-                        <p className="px-5 flex justify-start w-full">Songs:</p>
-                    </p>
-                )}
-                <div className=" flex flex-wrap w-full justify-center gap-2 ">
-                    {searchResults.songs &&
-                        searchResults.songs.data.map((song, index) => (
-                            // <RecommendationDisplay
-                            //     reco={song}
-                            //     sliceNumber={sliceNumber}
-                            // />
-                            <SongItem
-                                key={index}
-                                song={song}
-                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
-                            />
-                        ))}
-                </div>
-            </div>
-
-            <div className="flex-col mx-3 mb-4 px-3">
-                {searchResults.podcasts && (
-                    <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
-                    >
-                        <p className="px-5 flex justify-start w-full">
-                            Podcasts:
-                        </p>
-                    </p>
-                )}
-                <div className="flex flex-wrap w-full justify-center gap-2">
+            <div className="flex flex-wrap w-full justify-center mx-3 px-3">
+                <div
+                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                >
                     {searchResults.podcasts &&
-                        searchResults.podcasts.data.map((podcast, index) => (
-                            <PodcastItem
-                                key={index}
-                                podcast={podcast}
-                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                        (searchFilters.length == 0 ||
+                            searchFilters.includes('podcasts')) && (
+                            <DropdownDisplay
+                                object={searchResults.podcasts.data}
+                                podcastShow={true}
+                                sliceNumber={sliceNumber}
+                                noTitle={true}
+                                title={'Podcasts'}
+                                shrink={searchFilters.length < 2}
                             />
-                        ))}
+                        )}
+                </div>
+
+                <div
+                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                >
+                    {searchResults.artists &&
+                        (searchFilters.length == 0 ||
+                            searchFilters.includes('artists')) && (
+                            <DropdownDisplay
+                                object={searchResults.artists.data}
+                                sliceNumber={sliceNumber}
+                                noTitle={true}
+                                title={'Artists'}
+                                shrink={searchFilters.length < 2}
+                            />
+                        )}
+                </div>
+                <div
+                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                >
+                    {searchResults.albums &&
+                        (searchFilters.length == 0 ||
+                            searchFilters.includes('albums')) && (
+                            <DropdownDisplay
+                                object={searchResults.albums.data}
+                                sliceNumber={sliceNumber}
+                                noTitle={true}
+                                title={'Albums'}
+                                shrink={searchFilters.length < 2}
+                            />
+                        )}
+                </div>
+                <div
+                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                >
+                    {searchResults.songs &&
+                        (searchFilters.length == 0 ||
+                            searchFilters.includes('songs')) && (
+                            <DropdownDisplay
+                                object={searchResults.songs.data}
+                                sliceNumber={sliceNumber}
+                                noTitle={true}
+                                title={'Songs'}
+                                shrink={searchFilters.length < 2}
+                            />
+                        )}
                 </div>
             </div>
         </div>

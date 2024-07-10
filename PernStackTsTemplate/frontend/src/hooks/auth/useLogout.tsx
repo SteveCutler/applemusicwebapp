@@ -54,7 +54,8 @@ const useLogout = () => {
                 recentHistory: [],
                 playlistData: [],
                 recentActivity: null,
-
+                podSubs: null,
+                recentEps: null,
                 trackData: [],
                 appleMusicToken: null,
                 backendToken: null,

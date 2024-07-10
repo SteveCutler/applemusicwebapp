@@ -97,8 +97,9 @@ interface podcastEpisode {
 const PodcastEpisode = () => {
     const [podcastInfo, setPodcastInfo] = useState<podcastInfo | null>(null)
     const [loading, setLoading] = useState(false)
-    const [podcastEpisodes, setPodcastEpisodes] =
-        useState<Array<podcastEpisode> | null>(null)
+    const [podcastEpisode, setPodcastEpisode] = useState<podcastEpisode | null>(
+        null
+    )
 
     const { id } = useParams<{ id: string }>()
 
@@ -122,19 +123,6 @@ const PodcastEpisode = () => {
         }
     }
 
-    const fetchRSSFeed = async (feedUrl: string) => {
-        try {
-            const response = await fetch(feedUrl)
-
-            console.log('feed data: ', response)
-
-            // const episodes = rssData.rss.channel[0].item;
-            // console.log('Episodes from RSS Feed:', episodes);
-        } catch (error) {
-            console.error('Error fetching RSS feed:', error)
-        }
-    }
-
     useEffect(() => {
         const fetchPodcastData = async () => {
             setLoading(true)
@@ -146,24 +134,8 @@ const PodcastEpisode = () => {
                         headerTime
                 ).toString()
 
-                const infoResponse = await axios.get(
-                    `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${id}&pretty`,
-                    {
-                        headers: {
-                            'User-Agent': 'AppleMusicDashboard/1.0',
-                            'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
-                            'X-Auth-Date': headerTime,
-                            Authorization: hash,
-                        },
-                        params: {
-                            fulltext: true,
-                            max: 10,
-                        },
-                    }
-                )
-
                 const episodesResponse = await axios.get(
-                    `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
+                    `https://api.podcastindex.org/api/1.0/episodes/byid?id=${id}&pretty`,
                     {
                         headers: {
                             'User-Agent': 'AppleMusicDashboard/1.0',
@@ -177,20 +149,46 @@ const PodcastEpisode = () => {
                         },
                     }
                 )
+                const episode: podcastEpisode = episodesResponse.data.episode
+
+                console.log('episode', episode)
+
+                setPodcastEpisode(episode)
+                if (episode) {
+                    try {
+                        const infoResponse = await axios.get(
+                            `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=75075&pretty`,
+                            {
+                                headers: {
+                                    'User-Agent': 'AppleMusicDashboard/1.0',
+                                    'X-Auth-Key': import.meta.env
+                                        .VITE_PODCASTINDEX_KEY,
+                                    'X-Auth-Date': headerTime,
+                                    Authorization: hash,
+                                },
+                                params: {
+                                    fulltext: true,
+                                    max: 10,
+                                },
+                            }
+                        )
+                        const info = infoResponse.data.feed
+
+                        setPodcastInfo(info)
+                    } catch (error) {
+                        console.error(error)
+                    }
+                }
                 // console.log('podcast response', response)
-                const episodes: podcastEpisode[] = episodesResponse.data.items
 
-                const info: podcastInfo = infoResponse.data.feed
+                // const info: podcastInfo = infoResponse.data.feed
 
-                console.log('episodes', episodes)
-
-                setPodcastEpisodes(episodes)
                 // const info = data.shift(0)
                 // const episodes = data
 
                 // console.log('info: ', info)
                 // console.log('episodes: ', episodes)
-                setPodcastInfo(info)
+                // setPodcastInfo(info)
             } catch (error) {
                 console.error('Error fetching podcast details:', error)
                 throw error
@@ -234,12 +232,12 @@ const PodcastEpisode = () => {
     const style = { fontSize: '1.5em' }
 
     const handlePlayPodcast = async () => {
-        if (podcastEpisodes && podcastInfo) {
+        if (podcastEpisode && podcastInfo) {
             playPodcast(
-                podcastEpisodes[0].enclosureUrl,
-                podcastEpisodes[0].duration,
-                podcastEpisodes[0].feedImage,
-                podcastEpisodes[0].title,
+                podcastEpisode.enclosureUrl,
+                podcastEpisode.duration,
+                podcastEpisode.feedImage,
+                podcastEpisode.title,
                 podcastInfo.title,
                 podcastInfo.id
             )
@@ -258,9 +256,14 @@ const PodcastEpisode = () => {
 
             <div className="flex-col ">
                 <h1 className="text-3xl w-1/2 font-bold select-none">
-                    {podcastInfo?.title}
+                    {podcastEpisode?.title}
                 </h1>
-                <h1 className="text-xl w-1/2 font-bold select-none">Podcast</h1>
+                <Link
+                    to={`/podcast/${podcastInfo?.id}`}
+                    className={`text-xl w-1/2 ${darkMode ? 'hover:text-slate-400' : 'hover:text-slate-600'} font-bold select-none`}
+                >
+                    Go to show{' '}
+                </Link>
             </div>
             <div
                 className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-5 justify-around  items-start`}
@@ -268,10 +271,10 @@ const PodcastEpisode = () => {
                 <div
                     className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                 >
-                    {podcastInfo?.artwork ? (
+                    {podcastEpisode?.feedImage ? (
                         <img
                             className="w-full"
-                            src={podcastInfo.artwork}
+                            src={podcastEpisode?.feedImage}
                             alt=""
                         />
                     ) : (
@@ -295,7 +298,7 @@ const PodcastEpisode = () => {
                     >
                         <FaCirclePlay style={styleButtonBig} />
                     </div>
-                    {podcastEpisodes && (
+                    {podcastEpisode && (
                         <div className="absolute bottom-4 right-4">
                             <div
                                 onClick={e => {
@@ -305,7 +308,10 @@ const PodcastEpisode = () => {
                                 className=""
                             >
                                 {id && (
-                                    <PodcastOptionsModal big={true} id={id} />
+                                    <PodcastOptionsModal
+                                        big={true}
+                                        id={podcastEpisode.feedId}
+                                    />
                                 )}
                             </div>
                         </div>
@@ -316,7 +322,7 @@ const PodcastEpisode = () => {
                     {podcastInfo?.author}
                 </div> */}
                 {/* <div>{podcastInfo?.country}</div> */}
-                {podcastEpisodes && !queueToggle && (
+                {podcastEpisode && !queueToggle && (
                     <div
                         className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '} ${darkMode ? 'text-white bg-slate-700' : 'text-black bg-slate-300'} flex-col   rounded-lg p-3 `}
                     >
@@ -325,13 +331,13 @@ const PodcastEpisode = () => {
                         >
                             Latest release
                         </div>
-                        {podcastEpisodes && (
+                        {podcastEpisode && (
                             <div className="flex-col pt-3 flex">
                                 <div className="text-2xl select-none  font-semibold">
-                                    {podcastEpisodes[0].title}
+                                    {podcastEpisode.title}
                                 </div>
                                 <div className="text-lg select-none font-normal">
-                                    {podcastEpisodes[0].datePublishedPretty}
+                                    {podcastEpisode.datePublishedPretty}
                                 </div>
                                 <div className=" flex select-none items-center gap-1 pb-2">
                                     <div
@@ -342,9 +348,7 @@ const PodcastEpisode = () => {
                                     </div>
 
                                     <div>
-                                        {formatTime(
-                                            podcastEpisodes[0].duration
-                                        )}
+                                        {formatTime(podcastEpisode.duration)}
                                     </div>
                                 </div>
 
@@ -354,7 +358,7 @@ const PodcastEpisode = () => {
                                         maxHeight: queueToggle ? '' : '400px',
                                     }}
                                 >
-                                    {parse(podcastEpisodes[0].description)}
+                                    {parse(podcastEpisode.description)}
                                 </div>
                                 <button
                                     onClick={e => {

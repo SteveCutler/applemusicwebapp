@@ -187,13 +187,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none flex-col ${width ? width : queueToggle ? 'w-3/12' : 'w-2/12'} ${darkMode ? 'text-slate-300' : 'text-slate-800'} rounded-3xl flex`}
+            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
             title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
             <div
-                className="relative z-1 w-fit shadow-lg"
+                className=" relative flex-col h-full w-full flex flex-shrink  "
                 onClick={handleNavigation}
             >
                 {artworkUrl ? (
@@ -224,7 +224,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 </div>
             </div>
 
-            <div className="flex-col h-full overflow-hidden">
+            <div className="flex-col w-full h-full justify-between overflow-hidden">
                 <h2
                     className={`text-md truncate ${darkMode ? 'hover:text-slate-500' : 'hover:text-slate-300'} font-bold`}
                     onClick={handleNavigation}

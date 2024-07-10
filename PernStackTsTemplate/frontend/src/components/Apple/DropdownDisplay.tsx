@@ -8,6 +8,7 @@ import AlbumItem from '../Homepage/AlbumItem'
 import { useStore } from '../../store/store'
 import PodcastEpisode from '../../pages/PodcastEpisode'
 import PodcastEpisodeItem from '../Homepage/PodcastEpisodeItem'
+import PodcastItem from '../Homepage/PodcastItem'
 
 interface podcastEpisode {
     dateCrawled: number
@@ -95,6 +96,25 @@ type RecommendationType = {
     }
 }
 
+type Artist = {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+        }
+    }
+    id: string
+    type: string
+}
+
 type AlbumType = {
     attributes: {
         artistName: string
@@ -153,11 +173,41 @@ type StationType = {
     type: string
 }
 
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
 interface recoProps {
-    object: RecommendationType | podcastEpisode[]
+    object:
+        | AlbumType[]
+        | StationType[]
+        | playlist[]
+        | Song[]
+        | Artist[]
+        | podcastEpisode[]
     sliceNumber: number
     noTitle?: boolean
     podcast?: boolean
+    title?: string
+    podcastShow?: boolean
+    shrink?: boolean
 }
 
 const DropdownDisplay: React.FC<recoProps> = ({
@@ -165,6 +215,9 @@ const DropdownDisplay: React.FC<recoProps> = ({
     sliceNumber,
     noTitle,
     podcast,
+    title,
+    podcastShow,
+    shrink,
 }) => {
     const style = { fontSize: '1.5rem' }
 
@@ -184,65 +237,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
         null
     )
 
-    useEffect(() => {
-        const retrieveMoreLikeImage = async () => {
-            if (object.attributes.title.contentIds) {
-                try {
-                    if (object.attributes.title.contentIds[0].startsWith('l')) {
-                        try {
-                            const res = await musicKitInstance?.api.music(
-                                `/v1/me/library/albums/${object.attributes.title.contentIds[0]}`
-                            )
-
-                            const data =
-                                await res.data.data[0].attributes.artwork.url
-
-                            console.log('data1: ', data)
-                            {
-                                data && setMoreLikeAlbumImage(data)
-                            }
-                        } catch (error: any) {
-                            console.error(error)
-                        }
-                    } else {
-                        try {
-                            const queryParameters = { l: 'en-us' }
-                            const res = await musicKitInstance?.api.music(
-                                `/v1/catalog/ca/albums/${object.attributes.title.contentIds[0]}`,
-
-                                queryParameters
-                            )
-
-                            const data =
-                                await res.data.data[0].attributes.artwork.url
-
-                            console.log('data2: ', data)
-
-                            {
-                                data && setMoreLikeAlbumImage(data)
-                            }
-                        } catch (error: any) {
-                            console.error(error)
-                        }
-                    }
-                } catch (error: any) {
-                    console.error(error)
-                }
-            }
-        }
-
-        if (
-            !moreLikeAlbumImage &&
-            object &&
-            !podcast &&
-            object.attributes.title.contentIds
-        ) {
-            console.log('running image retrieval')
-            retrieveMoreLikeImage()
-        }
-    }, [])
-
-    // console.log('object:', object, 'sliceNunber:', sliceNumber)
+    console.log('object:', object, 'sliceNunber:', sliceNumber)
     const [expand, setExpand] = useState(false)
 
     return (
@@ -266,81 +261,92 @@ const DropdownDisplay: React.FC<recoProps> = ({
                         {object.attributes.title.stringForDisplay}
                     </h2>
                 </div>
+            ) : !noTitle && object ? (
+                <div
+                    className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                >
+                    <h2 className=" px-5 text-xl font-bold">
+                        {object.attributes.title.stringForDisplay}
+                    </h2>
+                </div>
             ) : (
-                !noTitle &&
-                object && (
+                title && (
                     <div
                         className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
                     >
-                        <h2 className=" px-5 text-xl font-bold">
-                            {object.attributes.title.stringForDisplay}
-                        </h2>
+                        <h2 className=" px-5 text-xl font-bold">{title}</h2>
                     </div>
                 )
             )}
             {object && (
-                <div className="flex flex-col mb-10  ">
-                    {podcast ? (
+                <div className="flex flex-col mb-10  rounded-xl w-fit">
+                    {podcastShow ? (
                         <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
                                 .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
-                                .map((item: podcastEpisode, index: number) => (
+                                .map((item, index: number) => (
+                                    <PodcastItem
+                                        key={index}
+                                        recent={true}
+                                        podcast={item}
+                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                    />
+                                ))}
+                        </div>
+                    ) : podcast ? (
+                        <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
+                            {object
+                                .slice(0, 15)
+                                .slice(0, expand ? object.length : sliceNumber)
+                                .map((item, index: number) => (
                                     <PodcastEpisodeItem
                                         key={index}
                                         recent={true}
                                         podcast={item}
-                                        width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                     />
                                 ))}
                         </div>
                     ) : (
                         <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
-                            {object.relationships.contents.data
+                            {object
                                 .slice(0, 15)
-                                .slice(
-                                    0,
-                                    expand
-                                        ? object.relationships.contents.data
-                                              .length
-                                        : sliceNumber
-                                )
+                                .slice(0, expand ? object.length : sliceNumber)
                                 .map(item =>
                                     item.type === 'library-playlists' ||
                                     item.type === 'playlists' ? (
                                         <PlaylistItem
                                             playlistItem={item}
                                             carousel={true}
-                                            width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12'} `}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : item.type === 'stations' ? (
                                         <StationItem
                                             stationItem={item}
                                             carousel={true}
-                                            width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12'} `}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : item.type === 'songs' ||
                                       item.type === 'library-songs' ? (
                                         <SongItem
                                             song={item}
                                             carousel={true}
-                                            width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12'} `}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : item.type === 'artists' ||
                                       item.type === 'library-artists' ? (
                                         <ArtistItem
                                             carousel={true}
                                             artist={item}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : (
                                         item.attributes && (
                                             <AlbumItem
                                                 albumItem={item}
                                                 carousel={true}
-                                                releaseDate={
-                                                    item.attributes.releaseDate
-                                                }
-                                                width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 3xl:w-full'} `}
+                                                width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                             />
                                         )
                                     )

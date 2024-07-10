@@ -19,46 +19,38 @@ import ArtistItem from '../components/Homepage/ArtistItem'
 import PlaylistItem from '../components/Homepage/PlaylistItem'
 
 type AlbumType = {
-    attributes: AttributeObject
-    relationships?: RelationshipObject
+    attributes: {
+        artistName: string
+        artwork: ArtworkObject
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releasedDate: string
+        trackCount: number
+    }
+    relationships?: {
+        tracks: {
+            data: [
+                {
+                    attributes: {
+                        artistName: string
+                        artwork: ArtworkObject
+                        dateAdded: string
+                        genreNames: Array<string>
+                        durationInMillis: Number
+                        name: string
+                        releasedDate: string
+                        trackCount: Number
+                        playParams: PlayParameterObject
+                    }
+                },
+            ]
+        }
+        artists?: Array<{
+            id: string
+        }>
+    }
     id: string
-}
-
-type AttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
-    name: string
-    releasedDate: string
-    trackCount: Number
-}
-type RelationshipObject = {
-    tracks: TracksObject
-    artists?: Array<ArtistObject>
-}
-
-type ArtistObject = {
-    id: string
-}
-
-type TracksObject = {
-    data: Array<Track>
-}
-type Track = {
-    attributes: TrackAttributeObject
-}
-
-type TrackAttributeObject = {
-    artistName: string
-    artwork: ArtworkObject
-    dateAdded: string
-    genreNames: Array<string>
-    durationInMillis: Number
-    name: string
-    releasedDate: string
-    trackCount: Number
-    playParams: PlayParameterObject
 }
 
 type PlayParameterObject = {

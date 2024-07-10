@@ -145,7 +145,7 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
     console.log('podcast ', podcast)
 
     const handleNavigation = () => {
-        navigate(`/podcast/${podcast.id}`)
+        navigate(`/podcast-episode/${podcast.id}`)
     }
 
     return (

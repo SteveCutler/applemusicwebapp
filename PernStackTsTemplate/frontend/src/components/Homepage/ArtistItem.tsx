@@ -74,27 +74,26 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
             className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
             to={`/artist/${artist.id}`}
         >
-            {artist.attributes.artwork?.url ? (
-                <div className="shadow-lg w-full">
+            <div className=" relative flex-col flex flex-shrink  ">
+                {artist.attributes.artwork?.url ? (
                     <img
                         src={constructImageUrl(
                             artist.attributes.artwork?.url,
                             600,
                             600
                         )}
+                        className="shadow-lg"
                     />
-                </div>
-            ) : (
-                <div className="shadow-lg w-full">
-                    <img src={defaultPlaylistArtwork} />
-                </div>
-            )}
+                ) : (
+                    <img className="shadow-lg " src={defaultPlaylistArtwork} />
+                )}
 
-            <div className="flexw-full justify-between mb-5">
-                <div className="flex-col h-full w-full overflow-hidden">
-                    <h2 className="text-md truncate font-bold">
-                        {artist.attributes.name}
-                    </h2>
+                <div className="flex w-full justify-between mb-5">
+                    <div className="flex-col  w-full overflow-hidden">
+                        <h2 className="text-md truncate font-bold">
+                            {artist.attributes.name}
+                        </h2>
+                    </div>
                 </div>
             </div>
 

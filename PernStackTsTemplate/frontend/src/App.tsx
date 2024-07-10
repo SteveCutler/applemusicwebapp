@@ -26,6 +26,10 @@ import AppleMusicLogin from './components/Apple/AppleMusicLogin'
 import Settings from './pages/Settings'
 import Podcast from './pages/Podcast'
 import Podcasts from './pages/Podcasts'
+import FetchHeavyRotation from './components/Apple/FetchHeavyRotation'
+import FetchRecentlyPlayed from './components/Apple/FetchRecentlyPlayed'
+import FetchRecommendations from './components/Apple/FetchRecommendations'
+import PodcastEpisode from './pages/PodcastEpisode'
 
 function App() {
     const {
@@ -144,6 +148,12 @@ function App() {
                         <Route
                             path="/podcast/:id"
                             element={backendToken ? <Podcast /> : <Login />}
+                        />
+                        <Route
+                            path="/podcast-episode/:id"
+                            element={
+                                backendToken ? <PodcastEpisode /> : <Login />
+                            }
                         />
                         <Route
                             path="/playlist-display"

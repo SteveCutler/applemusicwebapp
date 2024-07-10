@@ -65,12 +65,6 @@ const Sidebar = () => {
     const userId = backendToken
     const navigate = useNavigate()
 
-    if (appleMusicToken && backendToken) {
-        FetchHeavyRotation()
-        FetchRecentlyPlayed()
-        FetchRecommendations()
-    }
-
     const fetchLibrary = async () => {
         console.log('fetching library...')
         // setLoading(true)
@@ -98,6 +92,12 @@ const Sidebar = () => {
         } catch (error) {
             // setLoading(false)
         }
+    }
+
+    if (appleMusicToken && backendToken) {
+        FetchHeavyRotation()
+        FetchRecentlyPlayed()
+        FetchRecommendations()
     }
 
     const handleMouseEnter = () => {
