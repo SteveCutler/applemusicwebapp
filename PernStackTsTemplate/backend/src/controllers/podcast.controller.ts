@@ -85,6 +85,40 @@ export const subscribePodcast = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Internal Server Error' })
     }
 }
+export const removeSub = async (req: Request, res: Response) => {
+    try {
+        const { podcastIndexId } = req.body
+        const userId = req.user.id
+
+        console.log('podcastIndexId:', podcastIndexId) // Add this line
+        console.log('userId:', userId) // Add this line
+
+        const podcast = await prisma.podcast.findUnique({
+            where: { podcastIndexId },
+        })
+
+        if (!podcast) {
+            return res.status(404).json({ error: 'Podcast not found' })
+        }
+
+        // Delete the subscription for the user and podcast
+        const deletedSubscription = await prisma.subscription.deleteMany({
+            where: {
+                userId,
+                podcastId: podcast.id,
+            },
+        })
+
+        if (deletedSubscription.count === 0) {
+            return res.status(404).json({ error: 'Subscription not found' })
+        }
+
+        res.status(200).json({ message: 'Subscription deleted successfully' })
+    } catch (error) {
+        console.error('Error removing subscription:', error)
+        res.status(500).json({ error: 'Internal Server Error' })
+    }
+}
 
 // Fetch episodes of a podcast
 export const fetchEpisodes = async (req: Request, res: Response) => {

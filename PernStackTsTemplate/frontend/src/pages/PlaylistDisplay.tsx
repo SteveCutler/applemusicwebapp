@@ -89,8 +89,10 @@ const PlaylistDisplay = () => {
         appleMusicToken,
         personalizedPlaylists,
         fetchAppleToken,
+        darkMode,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        darkMode: state.darkMode,
         libraryPlaylists: state.libraryPlaylists,
         musicKitInstance: state.musicKitInstance,
         personalizedPlaylists: state.personalizedPlaylists,
@@ -194,9 +196,11 @@ const PlaylistDisplay = () => {
         <>
             {personalizedPlaylists && (
                 <>
-                    <h1 className="text-center text-5xl italic  text-black p-4 font-bold mx-auto">
-                        Made for You
-                    </h1>
+                    <div
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 border-b-2 mt-7 mb-2 pb-1 text-xl`}
+                    >
+                        <p className="px-5 italic">Made for You</p>
+                    </div>
                     <RecommendationDisplay
                         reco={personalizedPlaylists}
                         noTitle={true}

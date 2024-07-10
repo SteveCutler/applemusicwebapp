@@ -187,12 +187,15 @@ const Library = () => {
 
     return (
         <div className="flex-col w-full h-full">
-            <h1
+            {/* <h1
                 className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'} italic p-4 font-bold mx-auto`}
             >
                 Library
-            </h1>
-            <div className="flex justify-between w-full mx-auto items-center gap-2">
+            </h1> */}
+
+            <div
+                className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
+            >
                 <form className="p-3 w-full" action="">
                     <input
                         type="text"
@@ -240,7 +243,7 @@ const Library = () => {
                     </button> */}
                 </div>
             </div>
-            <div className="flex-col pt-10 justify-center w-full px-3 mx-0 border-t-2 border-slate-500">
+            <div className="flex-col pt-10 justify-center w-full px-3 mx-0 ">
                 {librarySearchResults ? (
                     <AlbumList
                         albums={librarySearchResults.slice(

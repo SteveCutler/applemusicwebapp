@@ -11,9 +11,11 @@ const useLogout = () => {
         setRecentlyAddedToLib,
         recentActivity,
         musicKitInstance,
+        setPersonalizedPlaylists,
         setAppleMusicToken,
     } = useStore(state => ({
         setBackendToken: state.setBackendToken,
+        setPersonalizedPlaylists: state.setPersonalizedPlaylists,
         recentActivity: state.recentActivity,
         setRecentHistory: state.setRecentHistory,
         setRecentlyAddedToLib: state.setRecentlyAddedToLib,
@@ -52,6 +54,7 @@ const useLogout = () => {
                 recentHistory: [],
                 playlistData: [],
                 recentActivity: null,
+
                 trackData: [],
                 appleMusicToken: null,
                 backendToken: null,
@@ -68,6 +71,7 @@ const useLogout = () => {
             setBackendToken(null)
             setAppleMusicToken(null)
             setLibraryPlaylists(null)
+            setPersonalizedPlaylists(null)
             setRecentHistory([])
             setRecentlyAddedToLib([])
             recentActivity

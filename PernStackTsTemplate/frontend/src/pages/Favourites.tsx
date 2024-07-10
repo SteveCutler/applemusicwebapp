@@ -119,11 +119,11 @@ const Favourites = () => {
 
     return (
         <>
-            <h1
+            {/* <h1
                 className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'} italic p-4 font-bold mx-auto`}
             >
                 Favourite Songs
-            </h1>
+            </h1> */}
             <div className="w-4/5 flex justify-center">
                 <form className="m-3 p-3 w-full" action="">
                     <input

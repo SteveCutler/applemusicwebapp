@@ -61,11 +61,13 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
         authorizeMusicKit,
         darkMode,
         fetchAppleToken,
+        podSubs,
         libraryPlaylists,
         appleMusicToken,
         backendToken,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        podSubs: state.podSubs,
         fetchAppleToken: state.fetchAppleToken,
         libraryPlaylists: state.libraryPlaylists,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -78,8 +80,40 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
     // console.log('object', object)
     const [isOpen, setIsOpen] = useState(false)
 
-    const followPodcast = () => {
-        console.log('follow click')
+    const subIds = podSubs?.map(pod => pod.id)
+
+    console.log('id:', id)
+    console.log('subIds:', subIds)
+
+    const removeSub = async () => {
+        try {
+            const response = await fetch(
+                'http://localhost:5000/api/podcast/remove-sub',
+
+                {
+                    method: 'POST',
+
+                    headers: {
+                        'Content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        podcastIndexId: id,
+                    }),
+                    credentials: 'include',
+                }
+            )
+            const data = await response.json()
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Unsubcribed!')
+            }
+            console.log(response)
+            console.log(data)
+        } catch (error) {
+            console.error('Error unsubscribing to podcast:', error)
+            toast.error('Error unsubscribing..')
+        }
     }
 
     const styleSmall = { fontSize: '1rem' }
@@ -155,20 +189,31 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
                     tabIndex={0}
                     className={`dropdown-content ${darkMode ? 'bg-slate-300' : 'bg-slate-800'} fixed z-50 font-bold -right-20 -translate-y-20 -translate-x-20  menu w-40 p-2 shadow-md rounded-box`}
                 >
-                    <li className="w-full flex justify-between items-center">
-                        <a
-                            className=" justify-center items-center w-full"
-                            onClick={async e => {
-                                subscribeToPodcast()
-                                setIsOpen(!isOpen)
-                            }}
-                        >
-                            Subscribe{' '}
-                            <IoHeartCircleOutline
-                                style={darkMode ? styleDark : style}
-                            />
-                        </a>
-                    </li>
+                    {podSubs && subIds?.includes(id) ? (
+                        <li className="w-full flex justify-between items-center">
+                            <a
+                                className=" justify-center items-center w-full"
+                                onClick={async e => {
+                                    removeSub()
+                                    setIsOpen(!isOpen)
+                                }}
+                            >
+                                Unsubscribe{' '}
+                            </a>
+                        </li>
+                    ) : (
+                        <li className="w-full flex justify-between items-center">
+                            <a
+                                className=" justify-center items-center w-full"
+                                onClick={async e => {
+                                    subscribeToPodcast()
+                                    setIsOpen(!isOpen)
+                                }}
+                            >
+                                Subscribe{' '}
+                            </a>
+                        </li>
+                    )}
                 </ul>
             )}
         </div>

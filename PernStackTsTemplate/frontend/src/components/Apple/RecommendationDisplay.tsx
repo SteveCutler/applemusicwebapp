@@ -92,8 +92,9 @@ const RecommendationDisplay: React.FC<recoProps> = ({
 }) => {
     const style = { fontSize: '1.5rem' }
 
-    const { queueToggle, musicKitInstance } = useStore(state => ({
+    const { queueToggle, darkMode, musicKitInstance } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
+        darkMode: state.darkMode,
         queueToggle: state.queueToggle,
     }))
 
@@ -166,20 +167,26 @@ const RecommendationDisplay: React.FC<recoProps> = ({
     return (
         <div className="h-full">
             {reco && moreLikeAlbumImage && reco.attributes.title.contentIds ? (
-                <div className="flex text-2xl justify-start mx-auto gap-2 w-10/12 pb-2 items-center   ">
-                    <div>
+                <div
+                    className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                >
+                    <div className="px-5">
                         <img src={constructImageUrl(moreLikeAlbumImage, 75)} />
                     </div>
-                    <h2 className="text-2xl   font-bold">
+                    <h2 className="text-xl   font-bold">
                         {reco.attributes.title.stringForDisplay}
                     </h2>
                 </div>
             ) : (
                 !noTitle &&
                 reco && (
-                    <h2 className="text-2xl w-10/12 pb-5 mx-auto font-bold">
-                        {reco.attributes.title.stringForDisplay}
-                    </h2>
+                    <div
+                        className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                    >
+                        <h2 className=" px-5 text-xl font-bold">
+                            {reco.attributes.title.stringForDisplay}
+                        </h2>
+                    </div>
                 )
             )}
             {reco && (
@@ -209,7 +216,11 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                                     />
                                 ) : item.type === 'songs' ||
                                   item.type === 'library-songs' ? (
-                                    <SongItem song={item} carousel={true} />
+                                    <SongItem
+                                        song={item}
+                                        carousel={true}
+                                        width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12'} `}
+                                    />
                                 ) : item.type === 'artists' ||
                                   item.type === 'library-artists' ? (
                                     <ArtistItem carousel={true} artist={item} />

@@ -15,6 +15,7 @@ import SongItem from '../Homepage/SongItem'
 import ArtistItem from '../Homepage/ArtistItem'
 import { useMediaQuery } from 'react-responsive'
 import RecommendationDisplay from './RecommendationDisplay'
+import FetchHeavyRotation from './FetchHeavyRotation'
 
 type AlbumType = {
     attributes: {
@@ -119,10 +120,12 @@ const AppleDashboard = () => {
         recentlyPlayed,
         recentlyAddedToLib,
         moreLikeRecommendations,
+        appleMusicToken,
         stationsForYou,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
         musicKitInstance: state.musicKitInstance,
+        appleMusicToken: state.appleMusicToken,
         recentlyAddedToLib: state.recentlyAddedToLib,
         darkMode: state.darkMode,
         moreLikeRecommendations: state.moreLikeRecommendations,
@@ -186,6 +189,12 @@ const AppleDashboard = () => {
         sliceNumber = 4 // For md screens and larger
     } else {
         sliceNumber = 2 // For small screens
+    }
+
+    if (appleMusicToken) {
+        FetchHeavyRotation()
+        FetchRecentlyPlayed()
+        FetchRecommendations()
     }
 
     useEffect(() => {

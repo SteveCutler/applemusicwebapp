@@ -87,10 +87,15 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     // console.log('albumArtUrl: ', albumArtUrl)
+    const navigate = useNavigate()
+
+    const handleNavigation = () => {
+        navigate(`/podcast/${podcast.id}`)
+    }
 
     return (
-        <Link
-            to={`/podcast/${podcast.id}`}
+        <div
+            onClick={handleNavigation}
             className={` select-none  flex-col justify-start ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -109,7 +114,7 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
                     className={`transform p-1 absolute bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
                     onClick={async e => {
                         e.preventDefault()
-                        e.stopPropagation() // Prevents the link's default behavior
+                        e.stopPropagation() // Prevents the div's default behavior
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
 
@@ -128,9 +133,9 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior
                     }}
-                    className={`absolute bottom-1 right-1 z-100 ${isHovered && !sub ? 'block' : 'hidden'}`}
+                    className={`absolute bottom-1 right-1 z-100 ${isHovered ? 'block' : 'hidden'}`}
                 >
-                    <PodcastOptionsModal object={podcast.id} />
+                    <PodcastOptionsModal id={String(podcast.id)} />
                 </div>
             </div>
             <div className="flex justify-start items-start">
@@ -147,7 +152,7 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
                     <div></div>
                 </div>
             </div>
-        </Link>
+        </div>
     )
 }
 

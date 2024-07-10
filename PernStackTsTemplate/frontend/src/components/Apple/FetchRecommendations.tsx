@@ -12,10 +12,12 @@ const FetchRecommendations = () => {
         setRecommendations,
         setStationsForYou,
         setRecentlyPlayedAlbums,
+        appleMusicToken,
         setMoreLikeRecommendations,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
         setStationsForYou: state.setStationsForYou,
+        appleMusicToken: state.appleMusicToken,
         setMoreLikeRecommendations: state.setMoreLikeRecommendations,
         setThemedRecommendations: state.setThemedRecommendations,
         setRecentlyPlayedAlbums: state.setRecentlyPlayedAlbums,
@@ -94,7 +96,7 @@ const FetchRecommendations = () => {
             }
         }
 
-        if (musicKitInstance && !recommendations) {
+        if (musicKitInstance && !recommendations && appleMusicToken) {
             fetchRecommendations()
         }
     }, [musicKitInstance])

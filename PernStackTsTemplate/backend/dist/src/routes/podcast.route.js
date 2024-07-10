@@ -1,11 +1,13 @@
 import express from 'express';
-import { subscribePodcast, fetchEpisodes, trackProgress, fetchRecentEpisodes, getSubs, } from '../controllers/podcast.controller.js';
+import { subscribePodcast, fetchEpisodes, trackProgress, fetchRecentEpisodes, getSubs, removeSub, } from '../controllers/podcast.controller.js';
 import protectRoute from '../middleware/protectRoute.js';
 const app = express();
 app.use(express.json());
 const router = express.Router();
 // http://localhost:5000/api/podcast/subcribe
 router.post('/subscribe', protectRoute, subscribePodcast);
+// http://localhost:5000/api/podcast/subcribe
+router.post('/remove-sub', protectRoute, removeSub);
 // http://localhost:5000/api/podcast/episodes/:podcastId
 router.get('/episodes/:podcastId', protectRoute, fetchEpisodes);
 // http://localhost:5000/api/podcast/track-progress

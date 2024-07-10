@@ -8,6 +8,8 @@ import SongItem from '../components/Homepage/SongItem'
 import PodcastItem from '../components/Homepage/PodcastItem'
 // import bcrypt from 'bcrypt'
 import CryptoJS from 'crypto-js'
+import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
+import { useMediaQuery } from 'react-responsive'
 
 type podcastInfo = {
     artwork: string
@@ -100,6 +102,25 @@ const Search = () => {
 
     const onChange = (e: any) => {
         setSearchTerm(e.target.value)
+    }
+
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
     }
 
     const initialize = async () => {
@@ -220,12 +241,14 @@ const Search = () => {
             <div className="flex-col mx-3 px-3">
                 {searchResults.artists && (
                     <p
-                        className={`text-left text-2xl ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} font-bold  mt-7 pb-3 `}
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
                     >
-                        Artists:
+                        <p className="px-5 flex justify-start w-full">
+                            Artists:
+                        </p>
                     </p>
                 )}
-                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                <div className=" flex flex-wrap w-full justify-center gap-2 ">
                     {searchResults.artists &&
                         searchResults.artists.data.map((artist, index) => (
                             <ArtistItem key={index} artist={artist} />
@@ -236,12 +259,14 @@ const Search = () => {
             <div className="flex-col mx-3 mb-4 px-3">
                 {searchResults.albums && (
                     <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} mt-7 mb-0 pb-3 text-2xl`}
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
                     >
-                        Albums:
+                        <p className="px-5 flex justify-start w-full">
+                            Albums:
+                        </p>
                     </p>
                 )}
-                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                <div className=" flex flex-wrap w-full justify-center gap-2 ">
                     {searchResults.albums &&
                         searchResults.albums.data.map((album, index) => (
                             <AlbumItem
@@ -255,14 +280,18 @@ const Search = () => {
             <div className="flex-col mx-3 mb-4 px-3">
                 {searchResults.albums && (
                     <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-300 ' : ' text-slate-800 '} mt-7 pb-3 text-2xl`}
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
                     >
-                        Songs:
+                        <p className="px-5 flex justify-start w-full">Songs:</p>
                     </p>
                 )}
-                <div className=" flex flex-wrap w-full justify-start gap-2 ">
+                <div className=" flex flex-wrap w-full justify-center gap-2 ">
                     {searchResults.songs &&
                         searchResults.songs.data.map((song, index) => (
+                            // <RecommendationDisplay
+                            //     reco={song}
+                            //     sliceNumber={sliceNumber}
+                            // />
                             <SongItem
                                 key={index}
                                 song={song}
@@ -275,12 +304,14 @@ const Search = () => {
             <div className="flex-col mx-3 mb-4 px-3">
                 {searchResults.podcasts && (
                     <p
-                        className={`text-left font-bold ${darkMode ? 'text-slate-300' : 'text-slate-800'} mt-7 pb-3 text-2xl`}
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 flex justify-center mx-auto border-b-2 mt-7 mb-2 pb-1 text-xl`}
                     >
-                        Podcasts:
+                        <p className="px-5 flex justify-start w-full">
+                            Podcasts:
+                        </p>
                     </p>
                 )}
-                <div className="flex flex-wrap w-full justify-start gap-2">
+                <div className="flex flex-wrap w-full justify-center gap-2">
                     {searchResults.podcasts &&
                         searchResults.podcasts.data.map((podcast, index) => (
                             <PodcastItem
