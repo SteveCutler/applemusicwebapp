@@ -241,7 +241,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
     const [expand, setExpand] = useState(false)
 
     return (
-        <div className="h-full">
+        <div className="">
             {podcast ? (
                 <div
                     className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
@@ -281,7 +281,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
             {object && (
                 <div className="flex flex-col mb-10  rounded-xl w-fit">
                     {podcastShow ? (
-                        <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
+                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
                                 .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
@@ -295,7 +295,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                 ))}
                         </div>
                     ) : podcast ? (
-                        <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
+                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
                                 .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
@@ -304,12 +304,12 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                         key={index}
                                         recent={true}
                                         podcast={item}
-                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                                     />
                                 ))}
                         </div>
                     ) : (
-                        <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
+                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
                                 .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
@@ -319,7 +319,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                         <PlaylistItem
                                             playlistItem={item}
                                             carousel={true}
-                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : item.type === 'stations' ? (
                                         <StationItem
@@ -332,7 +332,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                         <SongItem
                                             song={item}
                                             carousel={true}
-                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 ' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
                                     ) : item.type === 'artists' ||
                                       item.type === 'library-artists' ? (

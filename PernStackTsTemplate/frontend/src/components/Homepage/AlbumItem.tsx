@@ -201,6 +201,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         src={constructImageUrl(artworkUrl, 600)}
                         alt={albumItem.attributes?.name}
                         onError={fetchNewArtworkUrl}
+                        style={{ width: '1000px' }}
                     />
                 ) : (
                     <img src={defaultPlaylistArtwork} alt="default artwork" />

@@ -83,6 +83,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
                             600
                         )}
                         className="shadow-lg"
+                        style={{ width: '1000px' }}
                     />
                 ) : (
                     <img className="shadow-lg " src={defaultPlaylistArtwork} />

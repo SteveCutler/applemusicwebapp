@@ -268,10 +268,10 @@ const Podcast = () => {
                 <div
                     className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                 >
-                    {podcastInfo?.artwork ? (
+                    {podcastEpisodes && podcastEpisodes[0]?.feedImage ? (
                         <img
                             className="w-full"
-                            src={podcastInfo.artwork}
+                            src={podcastEpisodes[0].feedImage}
                             alt=""
                         />
                     ) : (

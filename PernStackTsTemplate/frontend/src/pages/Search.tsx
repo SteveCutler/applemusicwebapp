@@ -208,7 +208,7 @@ const Search = () => {
                             podcast.episodeCount >= 1
                     )
 
-                    const sortedFilteredPodcasts = filteredPodcast.sort(
+                    const sortedFilteredPodcasts = podcastData.sort(
                         (a, b) => b.priority - a.priority
                     )
 

@@ -103,9 +103,9 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
         >
             <div className="relative z-1 w-full h-fit shadow-lg">
                 {sub ? (
-                    <img src={podcast.image} />
+                    <img src={podcast.image} style={{ width: '600px' }} />
                 ) : podcast.artwork ? (
-                    <img src={podcast.artwork} />
+                    <img src={podcast.artwork} style={{ width: '600px' }} />
                 ) : (
                     <img src={defaultPlaylistArtwork} />
                 )}

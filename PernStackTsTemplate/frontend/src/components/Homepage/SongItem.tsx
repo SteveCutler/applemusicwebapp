@@ -114,7 +114,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
                 },
             }}
             // onClick={handleNavigation}
-            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none   flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
         >
             {song.attributes.artwork?.url && (
                 <div className=" relative flex-col h-full w-full flex flex-shrink  ">
@@ -124,6 +124,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
                             song.attributes.artwork?.url,
                             600
                         )}
+                        style={{ width: '1000px' }}
                     />
                     <div
                         className={` absolute bottom-1 right-1 ${isHovered ? 'block' : 'hidden'}`}

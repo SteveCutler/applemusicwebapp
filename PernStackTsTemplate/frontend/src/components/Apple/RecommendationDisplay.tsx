@@ -193,7 +193,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                 <div className="flex flex-col mb-10  ">
                     <div className=" flex flex-wrap w-full px-2 justify-center gap-y-10 mx-auto gap-1">
                         {reco.relationships.contents.data
-                            .slice(0, 15)
+                            .slice(0, 20)
                             .slice(
                                 0,
                                 expand
