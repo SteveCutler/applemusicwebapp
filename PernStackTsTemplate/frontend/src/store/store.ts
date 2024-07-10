@@ -513,6 +513,7 @@ interface State {
     podcastVolume: number
     podcastMuted: boolean
     podSubs: podSub[] | null
+    recentEps: podcastEpisode[] | null
 }
 
 interface Actions {
@@ -596,6 +597,7 @@ interface Actions {
     setPodcastVolume: (vol: number) => void
     setPodcastMuted: (toggle: boolean) => void
     setPodSubs: (subs: podSub[] | null) => void
+    setRecentEps: (eps: podcastEpisode[] | null) => void
 }
 
 type Store = State & Actions
@@ -656,9 +658,11 @@ export const useStore = create<Store>((set, get) => ({
     podcastAudio: new Audio(),
     podcastVolume: 0.75,
     podSubs: null,
+    recentEps: null,
 
     // Actions
 
+    setRecentEps: (eps: podcastEpisode[] | null) => set({ recentEps: eps }),
     setPodSubs: (subs: podSub[] | null) => set({ podSubs: subs }),
 
     setPodcastVolume: (vol: number) => {

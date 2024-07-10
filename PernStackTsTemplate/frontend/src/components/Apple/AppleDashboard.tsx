@@ -16,6 +16,10 @@ import ArtistItem from '../Homepage/ArtistItem'
 import { useMediaQuery } from 'react-responsive'
 import RecommendationDisplay from './RecommendationDisplay'
 import FetchHeavyRotation from './FetchHeavyRotation'
+import DropdownDisplay from './DropdownDisplay'
+import axios from 'axios'
+import toast from 'react-hot-toast'
+import CryptoJS from 'crypto-js'
 
 type AlbumType = {
     attributes: {
@@ -105,6 +109,74 @@ type ArtworkObject = {
     url: String
 }
 
+type podcastInfo = {
+    artwork: string
+    author: string
+    categories: {
+        [key: number]: string
+    }
+    contentType: string
+    crawlErrors: number
+    dead: number
+    description: string
+    episodeCount: number
+    explicit: boolean
+    generator: string
+    id: number
+    image: string
+    imageUrlHash: number
+    inPollingQueue: number
+    itunesId: number
+    language: string
+    lastCrawlTime: number
+    lastGoodHttpStatusTime: number
+    lastHttpStatus: number
+    lastParseTime: number
+    lastUpdateTime: number
+    link: string
+    locked: number
+    medium: string
+    newestItemPubdate: number
+    originalUrl: string
+    ownerName: string
+    parseErrors: number
+    podcastGuid: string
+    priority: number
+    title: string
+    type: number
+    url: string
+}
+
+interface podcastEpisode {
+    dateCrawled: number
+    datePublished: number
+    datePublishedPretty: string
+    description: string
+    duration: number
+    enclosureLength: number
+    enclosureType: string
+    enclosureUrl: string
+    episodeType: string
+    explicit: number
+    feedDead: number
+    feedDuplicateOf: number
+    feedId: number
+    feedImage: string
+    feedItunesId: number
+    feedLanguage: string
+    feedUrl: string
+    guid: string
+    id: number
+    image: string
+    link: string
+    podcastGuid: string
+    season: number
+    title: string
+    released?: string
+    timeSinceRelease?: number
+    showTitle?: string
+}
+
 const AppleDashboard = () => {
     const {
         musicKitInstance,
@@ -118,13 +190,24 @@ const AppleDashboard = () => {
         recentlyPlayedAlbums,
         personalizedPlaylists,
         recentlyPlayed,
+        podSubs,
+        setPodSubs,
+        recentEps,
+        setRecentEps,
         recentlyAddedToLib,
+        backendToken,
+
         moreLikeRecommendations,
         appleMusicToken,
         stationsForYou,
     } = useStore(state => ({
+        podSubs: state.podSubs,
+        setPodSubs: state.setPodSubs,
+        setRecentEps: state.setRecentEps,
         queueToggle: state.queueToggle,
         musicKitInstance: state.musicKitInstance,
+        recentEps: state.recentEps,
+        backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
         recentlyAddedToLib: state.recentlyAddedToLib,
         darkMode: state.darkMode,
@@ -172,6 +255,12 @@ const AppleDashboard = () => {
     //     console.log('shuffled', shuffle(recommendations))
     // }
 
+    function isWithinLastWeek(datePublished: number) {
+        const currentTime = Math.floor(Date.now() / 1000) // Current time in Unix timestamp
+
+        return currentTime - datePublished
+    }
+
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
     const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
@@ -191,17 +280,126 @@ const AppleDashboard = () => {
         sliceNumber = 2 // For small screens
     }
 
-    if (appleMusicToken) {
-        FetchHeavyRotation()
-        FetchRecentlyPlayed()
-        FetchRecommendations()
+    function getTimeDifference(datePublished: number) {
+        const currentTime = Math.floor(Date.now() / 1000) // Current time in Unix timestamp
+        const timeDifference = currentTime - datePublished
+
+        // Convert difference to human-readable format
+        const hours = Math.floor(timeDifference / 3600)
+        const days = Math.floor(timeDifference / 86400)
+
+        if (days > 0) {
+            return `${days}d`
+        } else if (hours > 0) {
+            return `${hours}h`
+        } else {
+            return '<1hour'
+        }
+    }
+
+    const fetchMostRecentEp = async (id: string, title: string) => {
+        try {
+            const headerTime = Math.floor(Date.now() / 1000)
+            const hash = CryptoJS.SHA1(
+                import.meta.env.VITE_PODCASTINDEX_KEY +
+                    import.meta.env.VITE_PODCASTINDEX_SECRET +
+                    headerTime
+            ).toString()
+
+            const episodesResponse = await axios.get(
+                `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
+                {
+                    headers: {
+                        'User-Agent': 'AppleMusicDashboard/1.0',
+                        'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
+                        'X-Auth-Date': headerTime,
+                        Authorization: hash,
+                    },
+                    params: {
+                        fulltext: true,
+                        max: 10,
+                    },
+                }
+            )
+            const episode: podcastEpisode = episodesResponse.data.items[0]
+
+            const time = isWithinLastWeek(episode.datePublished)
+            const oneWeekInSeconds = 604800
+            if (time < oneWeekInSeconds) {
+                const newEpisode = {
+                    ...episode,
+                    released: getTimeDifference(episode.datePublished),
+                    timeSinceRelease: time,
+                    showTitle: title,
+                }
+                return newEpisode
+            } else {
+                return null
+            }
+
+            // return episodes[0]
+        } catch (error: any) {
+            console.error(error)
+        }
     }
 
     useEffect(() => {
+        const getRecentEps = async () => {
+            if (podSubs) {
+                let eps = await Promise.all(
+                    podSubs.map(pod => fetchMostRecentEp(pod.id, pod.title))
+                )
+                const recentEps = eps.filter(
+                    ep => ep !== null && ep !== undefined
+                )
+                const sortedEps: podcastEpisode[] = recentEps.sort(
+                    (a, b) => a.timeSinceRelease - b.timeSinceRelease
+                )
+                console.log('sorted eps', sortedEps)
+                // Filter out null values
+
+                setRecentEps(sortedEps)
+            }
+        }
+
+        const getSubs = async () => {
+            const userId = backendToken
+            try {
+                const response = await fetch(
+                    'http://localhost:5000/api/podcast/get-subs',
+
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            userId,
+                        }),
+                        credentials: 'include',
+                    }
+                )
+
+                const data = await response.json()
+
+                setPodSubs(data)
+            } catch (error) {
+                console.error('Error subscribing to podcast:', error)
+
+                toast.error('Error retrieving podcasts..')
+            }
+        }
+        if (!podSubs) {
+            getSubs()
+        }
+        if (!recentEps && podSubs) {
+            getRecentEps()
+        }
+
         if (!musicKitInstance) {
             authorizeMusicKit()
         }
-    }, [musicKitInstance])
+    }, [podSubs, musicKitInstance])
 
     // console.log('recommendations: ', recommendations)
 
@@ -211,6 +409,13 @@ const AppleDashboard = () => {
         <div
             className={`h-100vh flex-col flex-grow ${darkMode ? 'text-slate-200' : 'text-slate-800'}  relative z-10 flex justify-center `}
         >
+            {recentEps && (
+                <DropdownDisplay
+                    podcast={true}
+                    object={recentEps}
+                    sliceNumber={sliceNumber}
+                />
+            )}
             {recommendations &&
                 recommendations.map((reco, index) => (
                     <RecommendationDisplay
