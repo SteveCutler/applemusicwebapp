@@ -35,6 +35,7 @@ function App() {
     const {
         backendToken,
         authorizeBackend,
+        isPlayingPodcast,
         setAppleMusicToken,
         darkMode,
         appleMusicToken,
@@ -44,6 +45,7 @@ function App() {
     } = useStore(state => ({
         darkMode: state.darkMode,
         backendToken: state.backendToken,
+        isPlayingPodcast: state.isPlayingPodcast,
         setAppleMusicToken: state.setAppleMusicToken,
         musicKitInstance: state.musicKitInstance,
         queueToggle: state.queueToggle,
@@ -188,11 +190,12 @@ function App() {
                     </div>
                 )}
             </div>
-            {backendToken && (
-                <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
-                    <Footer />
-                </div>
-            )}
+            {backendToken &&
+                (musicKitInstance?.nowPlayingItem || isPlayingPodcast) && (
+                    <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
+                        <Footer />
+                    </div>
+                )}
             <Toaster />
         </div>
     )

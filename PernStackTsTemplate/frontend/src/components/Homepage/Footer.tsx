@@ -312,10 +312,10 @@ function Footer() {
         e.preventDefault()
         if (isPlayingPodcast) {
             podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
-        } else if (isPlaying) {
-            pauseSong()
         } else {
-            podcastUrl ? playPodcast(podcastUrl) : playSong()
+            musicKitInstance?.playbackState == 2
+                ? musicKitInstance?.pause()
+                : musicKitInstance?.play()
         }
     }
 
@@ -469,7 +469,8 @@ function Footer() {
                             className={`flex items-center rounded-full justify-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'disabled'} hover:text-white active:scale-95`}
                             onClick={e => playPauseHandler(e)}
                         >
-                            {isPlaying || !podcastAudio.paused ? (
+                            {musicKitInstance?.playbackState == 2 ||
+                            !podcastAudio.paused ? (
                                 <FaRegCirclePause style={style} />
                             ) : (
                                 <FaCirclePlay style={style} />

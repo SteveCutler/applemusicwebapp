@@ -52,9 +52,9 @@ function Header() {
                     <IoArrowBackCircle style={style} />
                 </button>
                 <button
-                    className={` cursor-default ${canGoForward ? 'hover:text-slate-500 cursor-normal' : 'disabled hover:text-black cursor-normal'} `}
+                    className={` cursor-default ${!canGoForward ? 'hover:text-slate-500 cursor-normal' : 'disabled hover:text-black cursor-normal'} `}
                     onClick={navigateForward}
-                    disabled={!canGoForward}
+                    disabled={canGoForward}
                 >
                     <IoArrowForwardCircle style={style} />
                 </button>

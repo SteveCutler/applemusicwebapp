@@ -127,6 +127,7 @@ interface MusickitInstance {
         shuffleMode: string
     }
     setQueue: (options: SetQueueOptions) => Promise<void>
+    PlaybackStates: any
     play: () => Promise<void>
     pause: () => Promise<void>
     skipToNextItem: () => Promise<void>
