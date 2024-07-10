@@ -82,8 +82,8 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
 
     const subIds = podSubs?.map(pod => pod.id)
 
-    console.log('id:', id)
-    console.log('subIds:', subIds)
+    // console.log('id:', id)
+    // console.log('subIds:', subIds)
 
     const removeSub = async () => {
         try {

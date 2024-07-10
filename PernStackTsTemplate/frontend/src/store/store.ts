@@ -743,6 +743,9 @@ export const useStore = create<Store>((set, get) => ({
     ) => {
         const { musicKitInstance } = get()
 
+        if (musicKitInstance) {
+            musicKitInstance.stop()
+        }
         const fetchFinalUrl = async (initialUrl: string) => {
             try {
                 const response = await fetch(
@@ -760,11 +763,8 @@ export const useStore = create<Store>((set, get) => ({
 
         // console.log('finalUrl', finalUrl)
 
-        if (musicKitInstance) {
-            musicKitInstance.stop()
-        }
         set({ currentTime: 0 })
-        console.log(url, time, artUrl, trackName, collectionName)
+        // console.log(url, time, artUrl, trackName, collectionName)
         set(state => {
             if (state.podcastAudio) {
                 state.podcastAudio.src = finalUrl
@@ -1146,7 +1146,8 @@ export const useStore = create<Store>((set, get) => ({
                             .replace('{h}', size.toString())
                     }
 
-                    const isPlaying = playbackState === 2 ? true : false
+                    const isPlaying =
+                        playbackState === 2 || 1 || 6 ? true : false
                     const currentSongId = nowPlayingItem?.id
                     const currentSongDuration =
                         nowPlayingItem?.attributes.durationInMillis || null
@@ -1192,6 +1193,7 @@ export const useStore = create<Store>((set, get) => ({
                 music.addEventListener(
                     'playbackStateDidChange',
                     ({ oldState, state }: any) => {
+                        stopPodcast()
                         console.log(
                             `Changed the playback state from ${oldState} to ${state}`
                         )
@@ -1200,33 +1202,33 @@ export const useStore = create<Store>((set, get) => ({
                 )
                 music.addEventListener('queueItemsDidChange', () => {
                     console.log('stopping podcast')
-                    stopPodcast()
+
                     if (music) {
                         const currentQueue = music.queue.items
                         set({ playlist: currentQueue })
                     }
                 })
 
-                music.addEventListener('queueEnded', () => {
-                    console.log('Queue ended, enabling autoplay')
-                })
+                // music.addEventListener('queueEnded', () => {
+                //     console.log('Queue ended, enabling autoplay')
+                // })
 
-                music.addEventListener('nowPlayingItemDidChange', () => {
-                    if (music) {
-                        updateState()
-                    }
-                })
-
-                // music.addEventListener('playbackTimeDidChange', () => {
+                // music.addEventListener('nowPlayingItemDidChange', () => {
                 //     if (music) {
-                //         const { playbackState } = music
-                //         if (playbackState) {
-                //             const currentElapsedTime =
-                //                 music.currentPlaybackTime * 1000
-                //             useStore.setState({ currentElapsedTime })
-                //         }
+                //         updateState()
                 //     }
                 // })
+
+                music.addEventListener('playbackTimeDidChange', () => {
+                    if (music) {
+                        const { playbackState } = music
+                        if (playbackState) {
+                            const currentElapsedTime =
+                                music.currentPlaybackTime * 1000
+                            useStore.setState({ currentElapsedTime })
+                        }
+                    }
+                })
 
                 set({ musicKitInstance: music })
                 console.log('MusicKit instance: ', music)

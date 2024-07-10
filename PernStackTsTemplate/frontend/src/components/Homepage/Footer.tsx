@@ -443,7 +443,7 @@ function Footer() {
                 <div className="flex flex-col justify-center items-between gap-3 w-1/2 mx-auto">
                     <div className="flex gap-1 mx-auto w-1/4 justify-center ">
                         <button
-                            className={`${shuffle && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
+                            className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {
                                 e.preventDefault()
                                 setShuffle()
@@ -452,7 +452,7 @@ function Footer() {
                             <LuShuffle style={styleSmall} />
                         </button>
                         <button
-                            className={`flex rounded-full items-center ${isPlayingPodcast && 'hidden'} justify-center hover:text-white active:scale-95`}
+                            className={`flex rounded-full items-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} justify-center hover:text-white active:scale-95`}
                             onClick={e => playPrev(e)}
                         >
                             <IoPlayBackCircleSharp style={style} />
@@ -466,7 +466,7 @@ function Footer() {
                             <TbRewindBackward15 style={styleSmall} />
                         </button>
                         <button
-                            className="flex items-center rounded-full justify-center hover:text-white active:scale-95"
+                            className={`flex items-center rounded-full justify-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'disabled'} hover:text-white active:scale-95`}
                             onClick={e => playPauseHandler(e)}
                         >
                             {isPlaying || !podcastAudio.paused ? (
@@ -484,7 +484,7 @@ function Footer() {
                             <RiForward15Line style={styleSmall} />
                         </button>
                         <button
-                            className={`flex rounded-full items-center ${isPlayingPodcast && 'hidden'} justify-center hover:text-white active:scale-95`}
+                            className={`flex rounded-full items-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} justify-center hover:text-white active:scale-95`}
                             onClick={e => playNext(e)}
                         >
                             <IoPlayForwardCircleSharp style={style} />
@@ -522,7 +522,7 @@ function Footer() {
                             {playbackSpeed}x
                         </button>
                         <button
-                            className={`${repeat && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
+                            className={`${repeat && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {
                                 e.preventDefault()
                                 setRepeat()

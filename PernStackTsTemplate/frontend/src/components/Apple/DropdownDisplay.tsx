@@ -237,7 +237,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
         null
     )
 
-    console.log('object:', object, 'sliceNunber:', sliceNumber)
+    // console.log('object:', object, 'sliceNunber:', sliceNumber)
     const [expand, setExpand] = useState(false)
 
     return (
