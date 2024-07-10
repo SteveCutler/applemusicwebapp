@@ -157,7 +157,7 @@ const PodcastEpisode = () => {
                 if (episode) {
                     try {
                         const infoResponse = await axios.get(
-                            `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=75075&pretty`,
+                            `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${episode.feedId}&pretty`,
                             {
                                 headers: {
                                     'User-Agent': 'AppleMusicDashboard/1.0',
