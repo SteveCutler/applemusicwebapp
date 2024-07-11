@@ -107,15 +107,15 @@ const Podcasts = () => {
 
     const fetchMostRecentEp = async (id: string) => {
         try {
-            const headerTime = '1720710762'
-            const key = 'RH3ZRAWDPDWRERUCXHJE'
-            const secret =
-                'uCFTcwhE5^Fp5VvfurpJH2u^rnMKhakjaWkvaSvm$k8h^S9ueYeG'
-            const hashInput = key + secret + headerTime
-            // const headerTime = Math.floor(Date.now() / 1000).toString()
-            // const key = import.meta.env.VITE_PODCASTINDEX_KEY
-            // const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
+            // const headerTime = '1720710762'
+            // const key = 'RH3ZRAWDPDWRERUCXHJE'
+            // const secret =
+            //     'uCFTcwhE5^Fp5VvfurpJH2u^rnMKhakjaWkvaSvm$k8h^S9ueYeG'
             // const hashInput = key + secret + headerTime
+            const headerTime = Math.floor(Date.now() / 1000).toString()
+            const key = import.meta.env.VITE_PODCASTINDEX_KEY
+            const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
+            const hashInput = key + secret + headerTime
 
             // Ensure concatenation is correct
             // const hash = crypto
@@ -127,6 +127,8 @@ const Podcasts = () => {
 
             console.log(
                 'headers',
+                'input',
+                hashInput,
                 'key',
                 key,
                 'time',

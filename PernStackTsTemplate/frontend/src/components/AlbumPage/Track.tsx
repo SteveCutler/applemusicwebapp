@@ -1,10 +1,9 @@
 import React from 'react'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
-import { MdArrowBackIosNew } from 'react-icons/md'
+
 import { Link } from 'react-router-dom'
 // import PlaySong from '../Apple/PlaySong'
 // import { usePlayerContext } from '../../context/PlayerContext'
-import { useState } from 'react'
 
 import { useStore } from '../../store/store'
 
@@ -38,14 +37,6 @@ interface Song {
     }
 }
 
-type PlayParameterObject = {
-    catalogId: String
-    id: String
-
-    isLibrary: Boolean
-    kind: String
-}
-
 const Track: React.FC<TrackPropTypes> = ({
     song,
     albumTracks,
@@ -70,19 +61,17 @@ const Track: React.FC<TrackPropTypes> = ({
         playSong,
         pauseSong,
         isPlaying,
-        musicKitInstance,
+
         setCurrentSongIndex,
-        setCurrrentSongId,
-        authorizeMusicKit,
+
         switchTrack,
-        currentSongIndex,
+
         currentElapsedTime,
 
         currentSongDuration,
         currentSongId,
         playlist,
-        nextSong,
-        previousSong,
+
         setPlaylist,
     } = useStore(state => ({
         switchTrack: state.switchTrack,
@@ -114,9 +103,7 @@ const Track: React.FC<TrackPropTypes> = ({
     const pause = async () => {
         await pauseSong()
     }
-    const setSongIndex = async (index: number) => {
-        await setCurrentSongIndex(index)
-    }
+
     const play = async () => {
         playSong()
     }

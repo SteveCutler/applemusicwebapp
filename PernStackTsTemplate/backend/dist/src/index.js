@@ -1,24 +1,32 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import authRoutes from '../src/routes/auth.route.js';
-import appleRoutes from '../src/routes/apple.route.js';
-import podcastRoutes from '../src/routes/podcast.route.js';
-import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
-const app = express();
-app.use(cookieParser());
-app.use(express.json()); // for parsing application/json
+import express from 'express'
+import cookieParser from 'cookie-parser'
+import authRoutes from '../src/routes/auth.route.js'
+import appleRoutes from '../src/routes/apple.route.js'
+import podcastRoutes from '../src/routes/podcast.route.js'
+import cors from 'cors'
+import dotenv from 'dotenv'
+dotenv.config()
+
+const app = express()
+app.use(cookieParser())
+app.use(express.json()) // for parsing application/json
+
 const corsOptions = {
-    origin: 'http://localhost:5173',
+    origin:
+        process.env.NODE_ENV === 'production'
+            ? 'YOUR_PRODUCTION_FRONTEND_URL'
+            : 'http://localhost:5173',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,
-};
-app.use(cors(corsOptions));
-app.use('/api/auth', authRoutes);
-app.use('/api/apple', appleRoutes);
-app.use('/api/podcast', podcastRoutes);
-app.listen(5000, () => {
-    console.log('Server is running on port 5000');
-});
+}
+app.use(cors(corsOptions))
+
+app.use('/api/auth', authRoutes)
+app.use('/api/apple', appleRoutes)
+app.use('/api/podcast', podcastRoutes)
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
+})
