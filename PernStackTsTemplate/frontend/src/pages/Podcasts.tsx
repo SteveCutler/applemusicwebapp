@@ -105,45 +105,66 @@ const Podcasts = () => {
         }
     }
 
-    const fetchMostRecentEp = async (id: string, title: string) => {
+    const fetchMostRecentEp = async (id: string) => {
         try {
-            const headerTime = Math.floor(Date.now() / 1000)
-            const hash = CryptoJS.SHA1(
-                import.meta.env.VITE_PODCASTINDEX_KEY +
-                    import.meta.env.VITE_PODCASTINDEX_SECRET +
-                    headerTime
-            ).toString()
+            const headerTime = '1720710762'
+            const key = 'RH3ZRAWDPDWRERUCXHJE'
+            const secret =
+                'uCFTcwhE5^Fp5VvfurpJH2u^rnMKhakjaWkvaSvm$k8h^S9ueYeG'
+            const hashInput = key + secret + headerTime
+            // const headerTime = Math.floor(Date.now() / 1000).toString()
+            // const key = import.meta.env.VITE_PODCASTINDEX_KEY
+            // const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
+            // const hashInput = key + secret + headerTime
 
+            // Ensure concatenation is correct
+            // const hash = crypto
+            //     .createHash('sha1')
+            //     .update(authString)
+            //     .digest('hex')
+            const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
+            // const hash = crypto.createHash('sha1').update(hashInput).digest('hex');
+
+            console.log(
+                'headers',
+                'key',
+                key,
+                'time',
+                headerTime,
+                'hash',
+
+                hash
+            )
             const episodesResponse = await axios.get(
-                `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
+                `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}`,
                 {
                     headers: {
                         'User-Agent': 'AppleMusicDashboard/1.0',
-                        'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
+                        'X-Auth-Key': key,
                         'X-Auth-Date': headerTime,
                         Authorization: hash,
                     },
-                    params: {
-                        fulltext: true,
-                        max: 10,
-                    },
+                    // params: {
+                    //     fulltext: true,
+                    //     max: 10,
+                    // },
                 }
             )
-            const episode: podcastEpisode = episodesResponse.data.items[0]
+            console.log('episodes', episodesResponse)
+            // const episode: podcastEpisode = episodesResponse.data.items[0]
 
-            const time = isWithinLastWeek(episode.datePublished)
-            const oneWeekInSeconds = 604800
-            if (time < oneWeekInSeconds) {
-                const newEpisode = {
-                    ...episode,
-                    released: getTimeDifference(episode.datePublished),
-                    timeSinceRelease: time,
-                    showTitle: title,
-                }
-                return newEpisode
-            } else {
-                return null
-            }
+            // const time = isWithinLastWeek(episode.datePublished)
+            // const oneWeekInSeconds = 604800
+            // if (time < oneWeekInSeconds) {
+            //     const newEpisode = {
+            //         ...episode,
+            //         released: getTimeDifference(episode.datePublished),
+            //         timeSinceRelease: time,
+            //     }
+            //     return newEpisode
+            // } else {
+            //     return null
+            // }
 
             // return episodes[0]
         } catch (error: any) {
@@ -154,19 +175,21 @@ const Podcasts = () => {
     useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
-                let eps = await Promise.all(
-                    podSubs.map(pod => fetchMostRecentEp(pod.id, pod.title))
-                )
-                const recentEps: podcastEpisode[] = eps.filter(
-                    ep => ep !== null && ep !== undefined
-                )
-                const sortedEps: podcastEpisode[] = recentEps.sort(
-                    (a, b) => a.timeSinceRelease - b.timeSinceRelease
-                )
-                console.log('sorted eps', sortedEps)
+                const ids = podSubs.map(pod => pod.id).join()
+                console.log('ids', ids)
+                let eps = await fetchMostRecentEp(podSubs[0].id)
+                console.log('eps', eps)
+
+                // const recentEps: podcastEpisode[] = eps.filter(
+                //     ep => ep !== null && ep !== undefined
+                // )
+                // const sortedEps: podcastEpisode[] = recentEps.sort(
+                //     (a, b) => a.timeSinceRelease - b.timeSinceRelease
+                // )
+                // console.log('sorted eps', sortedEps)
                 // Filter out null values
 
-                setRecentEps(sortedEps)
+                // setRecentEps(sortedEps)
             }
         }
 

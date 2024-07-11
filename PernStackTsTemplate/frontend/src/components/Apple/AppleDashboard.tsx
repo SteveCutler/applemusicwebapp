@@ -300,18 +300,19 @@ const AppleDashboard = () => {
     const fetchMostRecentEp = async (id: string, title: string) => {
         try {
             const headerTime = Math.floor(Date.now() / 1000)
-            const hash = CryptoJS.SHA1(
-                import.meta.env.VITE_PODCASTINDEX_KEY +
-                    import.meta.env.VITE_PODCASTINDEX_SECRET +
-                    headerTime
-            ).toString()
+            const key = import.meta.env.VITE_PODCASTINDEX_KEY
+            const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
+
+            // Ensure concatenation is correct
+            const hashInput = key + secret + headerTime
+            const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
 
             const episodesResponse = await axios.get(
                 `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
                 {
                     headers: {
                         'User-Agent': 'AppleMusicDashboard/1.0',
-                        'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
+                        'X-Auth-Key': key,
                         'X-Auth-Date': headerTime,
                         Authorization: hash,
                     },
@@ -321,6 +322,7 @@ const AppleDashboard = () => {
                     },
                 }
             )
+            console.log('api test', episodesResponse)
             const episode: podcastEpisode = episodesResponse.data.items[0]
 
             const time = isWithinLastWeek(episode.datePublished)
@@ -339,7 +341,7 @@ const AppleDashboard = () => {
 
             // return episodes[0]
         } catch (error: any) {
-            console.error(error)
+            console.error('podcast fetch error', error)
         }
     }
 
@@ -389,12 +391,12 @@ const AppleDashboard = () => {
                 toast.error('Error retrieving podcasts..')
             }
         }
-        if (!podSubs) {
-            getSubs()
-        }
-        if (!recentEps && podSubs) {
-            getRecentEps()
-        }
+        // if (!podSubs) {
+        //     getSubs()
+        // }
+        // if (!recentEps && podSubs) {
+        //     getRecentEps()
+        // }
 
         if (!musicKitInstance) {
             authorizeMusicKit()

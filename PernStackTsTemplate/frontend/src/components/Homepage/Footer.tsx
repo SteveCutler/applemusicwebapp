@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import { RiForward15Line } from 'react-icons/ri'
 import { TbRewindBackward15 } from 'react-icons/tb'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 function Footer() {
     const {
@@ -308,16 +308,35 @@ function Footer() {
             // }
         }
     }
-    const playPauseHandler = e => {
-        e.preventDefault()
-        if (isPlayingPodcast) {
-            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
-        } else {
-            musicKitInstance?.playbackState == 2
-                ? musicKitInstance?.pause()
-                : musicKitInstance?.play()
-        }
+
+    const playPauseHandler = () => {
+        musicKitInstance?.playbackState == 2
+            ? musicKitInstance?.pause()
+            : musicKitInstance?.playbackState == 3 && musicKitInstance?.play()
     }
+
+    const playPauseHandlerPodcast = () => {
+        podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+    }
+    useEffect(() => {
+        const handleKeyDown = (e: any) => {
+            if (e.code === 'Space') {
+                if (
+                    e.target.tagName !== 'INPUT' &&
+                    e.target.tagName !== 'TEXTAREA'
+                ) {
+                    isPlayingPodcast
+                        ? playPauseHandlerPodcast()
+                        : playPauseHandler()
+                }
+            }
+        }
+
+        document.addEventListener('keydown', handleKeyDown)
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+        }
+    }, [])
 
     const playPrev = e => {
         e.preventDefault()
@@ -467,7 +486,11 @@ function Footer() {
                         </button>
                         <button
                             className={`flex items-center rounded-full justify-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'disabled'} hover:text-white active:scale-95`}
-                            onClick={e => playPauseHandler(e)}
+                            onClick={e =>
+                                isPlayingPodcast
+                                    ? playPauseHandlerPodcast()
+                                    : playPauseHandler()
+                            }
                         >
                             {musicKitInstance?.playbackState == 2 ||
                             !podcastAudio.paused ? (

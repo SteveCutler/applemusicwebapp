@@ -127,7 +127,7 @@ interface MusickitInstance {
         shuffleMode: string
     }
     setQueue: (options: SetQueueOptions) => Promise<void>
-    PlaybackStates: any
+    playbackState: number
     play: () => Promise<void>
     pause: () => Promise<void>
     skipToNextItem: () => Promise<void>
@@ -1117,6 +1117,7 @@ export const useStore = create<Store>((set, get) => ({
             appleMusicToken,
             fetchAppleToken,
             isPlayingPodcast,
+            podcastAudio,
             stopPodcast,
         } = get()
         console.log('initializing with music token: ', appleMusicToken)
@@ -1195,6 +1196,7 @@ export const useStore = create<Store>((set, get) => ({
                     'playbackStateDidChange',
                     ({ oldState, state }: any) => {
                         stopPodcast()
+
                         console.log(
                             `Changed the playback state from ${oldState} to ${state}`
                         )
