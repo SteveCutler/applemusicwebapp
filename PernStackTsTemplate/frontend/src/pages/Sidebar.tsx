@@ -70,7 +70,7 @@ const Sidebar = () => {
         // setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/get-library',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-library',
                 {
                     method: 'POST',
                     headers: {

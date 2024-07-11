@@ -200,7 +200,7 @@ const Podcasts = () => {
             const userId = backendToken
             try {
                 const response = await fetch(
-                    'http://localhost:5000/api/podcast/get-subs',
+                    'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-subs',
 
                     {
                         method: 'POST',

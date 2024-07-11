@@ -819,9 +819,12 @@ export const useStore = create<Store>((set, get) => ({
 
     authorizeBackend: async () => {
         try {
-            const res = await fetch('http://localhost:5000/api/auth/me', {
-                credentials: 'include',
-            })
+            const res = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/me',
+                {
+                    credentials: 'include',
+                }
+            )
             const data: AuthUserType = await res.json()
 
             if (!res.ok) {
@@ -1044,7 +1047,7 @@ export const useStore = create<Store>((set, get) => ({
             try {
                 console.log('getting music token from backend')
                 const res = await fetch(
-                    'http://localhost:5000/api/apple/get-token',
+                    'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-token',
                     {
                         method: 'POST',
                         headers: {

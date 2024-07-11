@@ -14,17 +14,17 @@ app.use(express.json())
 
 const router = express.Router()
 
-// http://localhost:5000/api/podcast/subcribe
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe
 router.post('/subscribe', protectRoute, subscribePodcast)
-// http://localhost:5000/api/podcast/subcribe
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe
 router.post('/remove-sub', protectRoute, removeSub)
-// http://localhost:5000/api/podcast/episodes/:podcastId
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes/:podcastId
 router.get('/episodes/:podcastId', protectRoute, fetchEpisodes)
-// http://localhost:5000/api/podcast/track-progress
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress
 router.post('/track-progress', protectRoute, trackProgress)
-// http://localhost:5000/api/podcast/recent-episodes
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/recent-episodes
 router.get('/recent-episodes', protectRoute, fetchRecentEpisodes)
-// http://localhost:5000/api/podcast/get-subs
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-subs
 router.post('/get-subs', protectRoute, getSubs)
 
 export default router

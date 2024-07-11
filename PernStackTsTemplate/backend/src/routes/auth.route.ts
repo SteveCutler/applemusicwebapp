@@ -7,16 +7,16 @@ app.use(express.json())
 
 const router = express.Router()
 
-// http://localhost:5000/api/auth/login
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/login
 router.post('/login', login)
 
-// http://localhost:5000/api/auth/logout
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/logout
 router.post('/logout', logout)
 
-// http://localhost:5000/api/auth/signup
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/signup
 router.post('/signup', signup)
 
-// http://localhost:5000/api/auth/signup
+// https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/signup
 router.get('/me', protectRoute, getMe)
 
 export default router

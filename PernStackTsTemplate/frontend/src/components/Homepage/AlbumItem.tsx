@@ -85,7 +85,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 setArtworkUrl(newArtworkUrl)
 
                 await axios.post(
-                    'http://localhost:5000/api/apple/update-album-artwork',
+                    'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/update-album-artwork',
                     {
                         albumId: albumItem.id,
                         newArtworkUrl: newArtworkUrl,

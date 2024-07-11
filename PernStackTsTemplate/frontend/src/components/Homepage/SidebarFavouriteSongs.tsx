@@ -47,7 +47,7 @@ const SidebarFavouriteSongs = () => {
             console.log('test')
             try {
                 const res = await fetch(
-                    'http://localhost:5000/api/apple/get-ratings',
+                    'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-ratings',
                     {
                         method: 'POST',
                         headers: {

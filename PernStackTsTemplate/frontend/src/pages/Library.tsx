@@ -49,7 +49,7 @@ const Library = () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/get-library',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-library',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -112,7 +112,7 @@ const Library = () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/fetch-albums',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-albums',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -134,7 +134,7 @@ const Library = () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/fetch-song-ratings',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-song-ratings',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -154,7 +154,7 @@ const Library = () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/fetch-album-ratings',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-album-ratings',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },

@@ -40,9 +40,12 @@ export const AuthContextProvdider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchAuthUser = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/auth/me', {
-                    credentials: 'include',
-                })
+                const res = await fetch(
+                    'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/me',
+                    {
+                        credentials: 'include',
+                    }
+                )
                 const data: AuthUserType = await res.json()
 
                 if (!res.ok) {

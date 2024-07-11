@@ -185,7 +185,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         console.log('song details: ', songDetails)
         try {
             const res = await fetch(
-                'http://localhost:5000/api/apple/add-songs-to-ratings',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/add-songs-to-ratings',
                 {
                     method: 'POST',
                     headers: {

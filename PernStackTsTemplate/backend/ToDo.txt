@@ -1,0 +1,120 @@
+
+WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
+
+Major problems:
+album art issue with library
+storefront selection, storage, retrieval and insertion in calls 
+create a settings page where this and certain music kit settings can be changed, autofade, bitrate, explicit songs, etc.
+Song page api calls?
+better home page suggestions & recommendations
+so many refreshes
+
+
+ADd more api calls to home page and rearrange
+create settings page and data for the user - defaults on signup, etc.
+various musicplayer options, location, syncing library options, dark mode
+
+add to queue/ play next functionality on modal
+
+add api calls to stations & songs pages 
+
+redesign toast
+
+add drag and drop feature to playlist creation
+'add to playlist' functionality to songs, albums
+favourite artists
+creation playlist edit page
+
+THINGS TO FOCUS ON
+add feature for users to follow artist - checks if they have anything new and displays on homepage
+create playlist functionality - create new playlist, add song to playlist, re-order playlist, etc.
+re-design library page, pagination or something so it doesn't load a million albums at once?
+    > also find a workaround for the images that are not display, maybe have to retrieve in batches, maybe one solution solves both problems
+Create stacks functionality (playlist composed of multiple albumIds)
+create a playlist made up of favourited songs (that will display in your apple music as well)
+pull more historical data and do something interesting with that.
+work on search page - design, search hints, etc
+create a settings page
+investigate podcasts?
+investigate adding friends?
+search based on choice (album, song, artist, playlist, podcast?)
+
+player buttons break if you touch them and nothing playing
+fix back functionality to actually go back, there might be a global variable for this
+fix if you go to an album and theres no itunes page for it nothing happens?
+fix if you click an artists name and they're library then it brings you to search instead of seeking their id and presenting that result instead
+like/follow artist
+ACTIVITY Page, most recently followed artists, top release or recent releases from them, recent liked songs, recent liked albums
+up next queue songs don't play correct song when clicked
+get library to load while on the homepage to decrease load times, but only after everything else i loaded
+
+remove name and username from signup form and user table
+
+sidebar inspiration rom spotify:
+fav songs list pinned to top
+then songs, albums, playlist listed in descending order 
+sorting options, filter options
+
+center column inspiration:
+a toggle that lets you click on a row and expand it to display all the items of the list
+more better recommendations
+
+things open up in the middle area
+WHAT I NEED TO DO BEFORE I CAN LAUNCH
+can wait for podcasts until after
+test with multiple computers & apple music accounts,
+most of the above 
+add more datapoints to homepage (make sure I have all of them)
+look at spotify and apple music and see what I'm missing
+
+-recent searches, add podcast searches together into one page?
+-create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
+
+** create sign up page that scans apple music library for albums, songs, playlists, favourites, etc.
+
+**fix bug where if two of the same song on playlist they both get highlighted in playlist view when playing (filter by trackId?)
+
+**need to set certain global variables when user signs up, settings page where these can be changed:
+country code
+bitrate
+
+
+log out button
+
+
+**add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
+**fix issue on library page of making sure only the album playing changes to the play sign
+
+add default image for artist, song playlist etc
+
+----
+
+
+
+** add display for album image in the 'more like this album' display bar
+
+** make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
+
+** sort playlists by most recently played
+
+** fix issue where when a song is playing, any song item with that ID will play as well
+
+
+
+follow artist?
+
+
+add different display options for library (artist, album, song, genre?)
+add two buttons - one for list display and one for grid display
+
+** create playlist, add to playlist etc.
+
+** add big play button to album/playlist/song image
+** add functionality to playlist play buttons on homepage (if type === playlists or something)
+
+FEATURE IDEAS:
+-recommendations based on heavy rotation albums
+-wayback playback: pick a time in history and highlight your top albums of the time
+-in general get the historical plays information and do some interesting things with it
+-suggested playlist based on library listens
+-when the new mix drops make it a feature at the top of the page for the first day 

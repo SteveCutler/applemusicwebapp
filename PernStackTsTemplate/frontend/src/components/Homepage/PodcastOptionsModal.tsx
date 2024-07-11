@@ -88,7 +88,7 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
     const removeSub = async () => {
         try {
             const response = await fetch(
-                'http://localhost:5000/api/podcast/remove-sub',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/remove-sub',
 
                 {
                     method: 'POST',
@@ -122,7 +122,7 @@ const PodcastOptionsModal: React.FC<OptionsProps> = ({ id, small, big }) => {
     const subscribeToPodcast = async () => {
         try {
             const response = await fetch(
-                'http://localhost:5000/api/podcast/subscribe',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subscribe',
 
                 {
                     method: 'POST',

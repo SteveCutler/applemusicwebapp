@@ -7,7 +7,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/api': {
-                target: 'http://localhost:5000',
+                target: 'https://mus-backend-b262ef3b1b65.herokuapp.com',
             },
         },
     },

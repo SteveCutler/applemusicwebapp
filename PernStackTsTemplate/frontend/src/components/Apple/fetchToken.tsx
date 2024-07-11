@@ -7,16 +7,19 @@ export const fetchToken = async (userId: String | null) => {
     // const [loading, setLoading] = useState(false)
     console.log('fetching token')
     try {
-        const res = await fetch('http://localhost:5000/api/apple/get-token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId,
-            }),
-            credentials: 'include',
-        })
+        const res = await fetch(
+            'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-token',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                }),
+                credentials: 'include',
+            }
+        )
         console.log(res)
 
         const { appleMusicToken, tokenExpiryDate } = await res.json()
