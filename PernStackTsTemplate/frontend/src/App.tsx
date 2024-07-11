@@ -186,12 +186,11 @@ function App() {
                     </div>
                 )}
             </div>
-            {(backendToken && (musicKitInstance?.playbackState == 2 || 3)) ||
-                (isPlayingPodcast && (
-                    <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
-                        <Footer />
-                    </div>
-                ))}
+            {backendToken && (
+                <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
+                    <Footer />
+                </div>
+            )}
             <Toaster />
         </div>
     )
