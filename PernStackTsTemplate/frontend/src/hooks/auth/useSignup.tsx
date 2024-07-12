@@ -23,13 +23,16 @@ const useSignup = () => {
     const signup = async (inputs: SignupInputs) => {
         try {
             setLoading(true)
-            const res = await fetch('/api/auth/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(inputs),
-            })
+            const res = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/signup',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(inputs),
+                }
+            )
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.error)

@@ -88,9 +88,9 @@ const SidebarFavouriteSongs = () => {
             }
         }
 
-        if (!favouriteSongs && backendToken) {
-            fetchFavouriteSongs()
-        }
+        // if (!favouriteSongs && backendToken) {
+        //     fetchFavouriteSongs()
+        // }
         // if(favouriteSongs && libraryPlaylists){
         //     //check for favourite songs playlist
         //     if()

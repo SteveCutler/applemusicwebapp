@@ -14,8 +14,16 @@ app.use(express.json()) // for parsing application/json
 const corsOptions = {
     origin:
         process.env.NODE_ENV === 'production'
-            ? 'YOUR_PRODUCTION_FRONTEND_URL'
-            : 'http://localhost:5173',
+            ? [
+                  'http://localhost:5173',
+                  'https://musfrontend.vercel.app',
+                  'https://mus-backend-b262ef3b1b65.herokuapp.com',
+              ]
+            : [
+                  'http://localhost:5173',
+                  'https://musfrontend.vercel.app',
+                  'https://mus-backend-b262ef3b1b65.herokuapp.com',
+              ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     optionsSuccessStatus: 204,

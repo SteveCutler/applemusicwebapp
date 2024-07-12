@@ -1046,6 +1046,8 @@ export const useStore = create<Store>((set, get) => ({
         if (!appleMusicToken) {
             try {
                 console.log('getting music token from backend')
+                // let cookieArr = document.cookie
+                // console.log('cookie', cookieArr)
                 const res = await fetch(
                     'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-token',
                     {
@@ -1056,7 +1058,7 @@ export const useStore = create<Store>((set, get) => ({
                         body: JSON.stringify({
                             userId: backendToken,
                         }),
-                        credentials: 'include',
+                        credentials: 'include', // Include credentials in the request
                     }
                 )
                 console.log('music token retrieval: ', res)

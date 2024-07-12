@@ -28,9 +28,12 @@ const useLogout = () => {
     const logout = async () => {
         try {
             setLoading(true)
-            const res = await fetch('/api/auth/logout', {
-                method: 'POST',
-            })
+            const res = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/logout',
+                {
+                    method: 'POST',
+                }
+            )
             const data = await res.json()
 
             if (!res.ok) throw new Error(data.error)

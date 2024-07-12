@@ -9,11 +9,13 @@ const useLogin = () => {
         setAuthorized,
         authorizeMusicKit,
         setBackendToken,
+        backendToken,
         appleMusicToken,
         fetchAppleToken,
     } = useStore(state => ({
         authorizeMusicKit: state.authorizeMusicKit,
         appleMusicToken: state.appleMusicToken,
+        backendToken: state.backendToken,
         fetchAppleToken: state.fetchAppleToken,
         setAuthorized: state.setAuthorized,
         setBackendToken: state.setBackendToken,
@@ -24,11 +26,15 @@ const useLogin = () => {
         try {
             setLoading(true)
 
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            })
+            const res = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/login',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                    credentials: 'include',
+                }
+            )
 
             const data = await res.json()
 
@@ -39,12 +45,21 @@ const useLogin = () => {
             }
 
             localStorage.setItem('backendToken', data.id)
-            setBackendToken(data.id)
 
-            await fetchAppleToken()
+            // set cookie = data.jwt
 
-            await authorizeMusicKit()
+            console.log('setting backend token', backendToken)
+
+            // document.cookie = `jwt=${data};`
+            // console.log('jwt', data.jwt)
+
+            console.log('fetching apple token')
+
+            fetchAppleToken()
+
+            authorizeMusicKit()
             setAuthorized(true)
+            setBackendToken(data.id)
             toast.success('Logged in successfully')
 
             // navigate('/dashboard')
