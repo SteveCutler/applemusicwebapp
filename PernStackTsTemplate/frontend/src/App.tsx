@@ -76,7 +76,7 @@ function App() {
         <div
             style={{ transition: 'bg 0.5s ease-in-out' }}
             className={`flex-col justify-between bg-fixed flex min-h-screen ${
-                !isAuthorized
+                !backendToken
                     ? 'bg-gradient-to-b from-indigo-900 to-black'
                     : darkMode
                       ? 'bg-gradient-to-b from-indigo-900 to-black'
@@ -84,12 +84,12 @@ function App() {
             }`}
         >
             <div className="flex flex-grow ">
-                {isAuthorized && (
+                {backendToken && (
                     <div className="sidebar overflow-y-auto  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12  h-1/2 ">
                         <Sidebar />
                     </div>
                 )}
-                {isAuthorized && (
+                {backendToken && (
                     <div className="">
                         <Header />
                     </div>
@@ -101,7 +101,7 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                isAuthorized ? (
+                                backendToken ? (
                                     <Home />
                                 ) : (
                                     <Navigate to="/login" />
@@ -111,58 +111,58 @@ function App() {
                         <Route
                             path="/signup"
                             element={
-                                isAuthorized ? <Navigate to="/" /> : <SignUp />
+                                backendToken ? <Navigate to="/" /> : <SignUp />
                             }
                         />
                         <Route
                             path="/search/"
-                            element={isAuthorized ? <Search /> : <Login />}
+                            element={backendToken ? <Search /> : <Login />}
                         />
                         <Route
                             path="/new-playlist/"
-                            element={isAuthorized ? <NewPlaylist /> : <Login />}
+                            element={backendToken ? <NewPlaylist /> : <Login />}
                         />
                         <Route
                             path="/artist/:Id"
-                            element={isAuthorized ? <Artist /> : <Login />}
+                            element={backendToken ? <Artist /> : <Login />}
                         />
                         <Route
                             path="/login"
                             element={
-                                isAuthorized ? <Navigate to="/" /> : <Login />
+                                backendToken ? <Navigate to="/" /> : <Login />
                             }
                         />
                         <Route
                             path="/library"
-                            element={isAuthorized ? <Library /> : <Login />}
+                            element={backendToken ? <Library /> : <Login />}
                         />
                         <Route
                             path="/settings"
-                            element={isAuthorized ? <Settings /> : <Login />}
+                            element={backendToken ? <Settings /> : <Login />}
                         />
                         <Route
                             path="/podcasts"
-                            element={isAuthorized ? <Podcasts /> : <Login />}
+                            element={backendToken ? <Podcasts /> : <Login />}
                         />
                         <Route
                             path="/podcast/:id"
-                            element={isAuthorized ? <Podcast /> : <Login />}
+                            element={backendToken ? <Podcast /> : <Login />}
                         />
                         <Route
                             path="/podcast-episode/:id"
                             element={
-                                isAuthorized ? <PodcastEpisode /> : <Login />
+                                backendToken ? <PodcastEpisode /> : <Login />
                             }
                         />
                         <Route
                             path="/playlist-display"
                             element={
-                                isAuthorized ? <PlaylistDisplay /> : <Login />
+                                backendToken ? <PlaylistDisplay /> : <Login />
                             }
                         />
                         <Route
                             path="/favourites"
-                            element={isAuthorized ? <Favourites /> : <Login />}
+                            element={backendToken ? <Favourites /> : <Login />}
                         />
                         <Route path="/stacks" element={<Stacks />} />
                         <Route
@@ -181,13 +181,13 @@ function App() {
                         />
                     </Routes>
                 </div>
-                {queueToggle && isAuthorized && (
+                {queueToggle && backendToken && (
                     <div className="sidebar w-3/12 2xl:w-2/12  rounded-lg m-1 h-fit bg-black">
                         <QueueDisplay />
                     </div>
                 )}
             </div>
-            {isAuthorized && (
+            {backendToken && (
                 <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
                     <Footer />
                 </div>
