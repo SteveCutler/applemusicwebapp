@@ -117,18 +117,11 @@ const Podcasts = () => {
             const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
             const hashInput = key + secret + headerTime
 
-            // Ensure concatenation is correct
-            // const hash = crypto
-            //     .createHash('sha1')
-            //     .update(authString)
-            //     .digest('hex')
             const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
-            // const hash = crypto.createHash('sha1').update(hashInput).digest('hex');
 
             console.log(
-                'headers',
-                'input',
-                hashInput,
+                'secret',
+                secret,
                 'key',
                 key,
                 'time',
@@ -137,19 +130,20 @@ const Podcasts = () => {
 
                 hash
             )
+
             const episodesResponse = await axios.get(
                 `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}`,
                 {
                     headers: {
-                        'User-Agent': 'AppleMusicDashboard/1.0',
+                        'User-Agent': 'Mus/0.2',
                         'X-Auth-Key': key,
                         'X-Auth-Date': headerTime,
                         Authorization: hash,
                     },
-                    // params: {
-                    //     fulltext: true,
-                    //     max: 10,
-                    // },
+                    params: {
+                        fulltext: true,
+                        max: 10,
+                    },
                 }
             )
             console.log('episodes', episodesResponse)

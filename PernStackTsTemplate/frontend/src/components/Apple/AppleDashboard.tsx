@@ -194,16 +194,19 @@ const AppleDashboard = () => {
         setPodSubs,
         recentEps,
         setRecentEps,
+        setPersonalizedPlaylists,
         recentlyAddedToLib,
         backendToken,
-
+        setRecommendations,
         moreLikeRecommendations,
         appleMusicToken,
         stationsForYou,
     } = useStore(state => ({
         podSubs: state.podSubs,
+        setPersonalizedPlaylists: state.setPersonalizedPlaylists,
         setPodSubs: state.setPodSubs,
         setRecentEps: state.setRecentEps,
+        setRecommendations: state.setRecommendations,
         queueToggle: state.queueToggle,
         musicKitInstance: state.musicKitInstance,
         recentEps: state.recentEps,
@@ -346,6 +349,63 @@ const AppleDashboard = () => {
     }
 
     useEffect(() => {
+        const fetchRecommendations = async () => {
+            if (musicKitInstance) {
+                try {
+                    const queryParameters = {
+                        l: 'en-us',
+                        limit: 20,
+                    }
+                    const res = await musicKitInstance.api.music(
+                        '/v1/me/recommendations/',
+                        queryParameters
+                    )
+
+                    // if (!res.ok) {
+                    //     console.log('error: ', res.body)
+                    // }
+                    // console.log(res)
+
+                    const data = await res.data.data
+                    console.log('recommendations: ', data)
+                    // console.log(
+                    //     'first group: ',
+                    //     data[0].relationships.contents.data
+                    // )
+
+                    setPersonalizedPlaylists(data[0])
+
+                    const newList = [
+                        data[1],
+                        data[6],
+                        data[11],
+                        data[10],
+                        data[12],
+                        data[8],
+                        data[9],
+                        data[7],
+                        data[2],
+                        data[4],
+                        data[5],
+                        data[13],
+                        data[0],
+                        data[3],
+                    ]
+
+                    setRecommendations(newList)
+                } catch (error: any) {
+                    console.error(error)
+                    // setError(error)
+                }
+            }
+        }
+
+        if (musicKitInstance && !recommendations && appleMusicToken) {
+            fetchRecommendations()
+        }
+    }, [musicKitInstance])
+
+    useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
                 let eps = await Promise.all(
@@ -400,6 +460,9 @@ const AppleDashboard = () => {
 
         if (!musicKitInstance) {
             authorizeMusicKit()
+            // FetchHeavyRotation()
+            //     FetchRecentlyPlayed()
+            //     FetchRecommendations()
         }
     }, [podSubs, musicKitInstance])
 

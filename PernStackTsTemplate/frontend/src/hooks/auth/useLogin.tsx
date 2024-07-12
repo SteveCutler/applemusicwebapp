@@ -45,21 +45,20 @@ const useLogin = () => {
                 return
             }
 
-            localStorage.setItem('backendToken', data.id)
-            localStorage.setItem('jwt', data.token)
+            // localStorage.setItem('jwt', data.token)
 
             // set cookie = data.jwt
 
             // document.cookie = `jwt=${data};`
             // console.log('jwt', data.jwt)
 
-            console.log('fetching apple token')
-
-            fetchAppleToken()
-
-            authorizeMusicKit()
-            setAuthorized(true)
+            localStorage.setItem('backendToken', data.id)
             setBackendToken(data.id)
+            console.log('fetching apple token')
+            await fetchAppleToken()
+
+            await authorizeMusicKit()
+            setAuthorized(true)
             toast.success('Logged in successfully')
 
             // navigate('/dashboard')

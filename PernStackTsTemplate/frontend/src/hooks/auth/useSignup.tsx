@@ -14,8 +14,16 @@ type SignupInputs = {
 
 const useSignup = () => {
     const [loading, setLoading] = useState(false)
-    const { authorizeBackend } = useStore(state => ({
+    const {
+        authorizeBackend,
+        setAuthorized,
+        authorizeMusicKit,
+        setBackendToken,
+    } = useStore(state => ({
         authorizeBackend: state.authorizeBackend,
+        authorizeMusicKit: state.authorizeMusicKit,
+        setBackendToken: state.setBackendToken,
+        setAuthorized: state.setAuthorized,
     }))
     // const { setAuthUser } = useAuthContext()
     const navigate = useNavigate()
@@ -31,14 +39,24 @@ const useSignup = () => {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(inputs),
+                    credentials: 'include',
                 }
             )
             const data = await res.json()
 
-            if (!res.ok) throw new Error(data.error)
+            if (!res.ok) {
+                toast.error('Failed to log in')
+                navigate('/signup')
+                return
+            }
+            localStorage.setItem('backendToken', data.id)
+            setBackendToken(data.id)
+
+            // await authorizeBackend()
+            await authorizeMusicKit()
+            setAuthorized(true)
             toast.success('New account created!')
-            await authorizeBackend()
-            navigate('/')
+
             // setAuthUser(data)
         } catch (error: any) {
             console.error(error.message)

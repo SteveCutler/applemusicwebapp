@@ -94,11 +94,11 @@ const Sidebar = () => {
         }
     }
 
-    if (appleMusicToken && backendToken) {
-        FetchHeavyRotation()
-        FetchRecentlyPlayed()
-        FetchRecommendations()
-    }
+    // if (appleMusicToken && backendToken) {
+    //     FetchHeavyRotation()
+    //     FetchRecentlyPlayed()
+    //     FetchRecommendations()
+    // }
 
     const handleMouseEnter = () => {
         setIsHovered(true)

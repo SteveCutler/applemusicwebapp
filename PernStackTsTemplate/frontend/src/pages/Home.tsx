@@ -8,6 +8,7 @@ const Home = () => {
     const {
         authorizeBackend,
         appleMusicToken,
+        isAuthorized,
         backendToken,
         authorizeMusicKit,
         setBackendToken,
@@ -21,6 +22,7 @@ const Home = () => {
         backendToken: state.backendToken,
         authorizeMusicKit: state.authorizeMusicKit,
         musicKitInstance: state.musicKitInstance,
+        isAuthorized: state.isAuthorized,
         fetchAppleToken: state.fetchAppleToken,
         generateAppleToken: state.generateAppleToken,
     }))
@@ -44,7 +46,7 @@ const Home = () => {
         }
     }, [setBackendToken, musicKitInstance, appleMusicToken])
 
-    if (!appleMusicToken) {
+    if (!appleMusicToken && isAuthorized) {
         return (
             <div>
                 <AuthorizeButton />
@@ -54,7 +56,7 @@ const Home = () => {
 
     return (
         <div className="flex-col mx-auto flex pt-5 relative z-10 w-full  mb-40 rounded-lg ">
-            {appleMusicToken && <AppleDashboard />}
+            {appleMusicToken && isAuthorized && <AppleDashboard />}
         </div>
     )
 }

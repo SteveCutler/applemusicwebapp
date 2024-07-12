@@ -75,6 +75,9 @@ export const login = async (req: Request, res: Response) => {
             return res.status(400).json({ error: 'Invalid credentials' })
         }
 
+        const appleMusicToken = user.appleMusicToken
+        console.log('user token =', appleMusicToken)
+
         generateToken(user.id, res)
 
         res.status(200).json({
@@ -82,6 +85,7 @@ export const login = async (req: Request, res: Response) => {
             fullName: user.fullName,
             username: user.username,
             email: user.email,
+            appleMusicToken: appleMusicToken,
         })
     } catch (error: any) {
         console.log('Error in login controller', error.message)

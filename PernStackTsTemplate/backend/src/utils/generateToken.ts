@@ -10,9 +10,10 @@ const generateToken = (userId: String, res: Response) => {
         maxAge: 15 * 24 * 60 * 60 * 1000, // in ms
         httpOnly: true,
         secure: true, // Ensure this is true if you're using HTTPS
-        sameSite: 'none',
+
+        sameSite: 'None' as any,
     })
-    console.log('cookie gen', token)
+
     return token
 }
 

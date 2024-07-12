@@ -32,6 +32,7 @@ const useLogout = () => {
                 'https://mus-backend-b262ef3b1b65.herokuapp.com/api/auth/logout',
                 {
                     method: 'POST',
+                    credentials: 'include',
                 }
             )
             const data = await res.json()
@@ -48,6 +49,7 @@ const useLogout = () => {
                 heavyRotation: [],
                 recentlyPlayed: null,
                 recommendations: null,
+                isAuthorized: false,
                 recentlyPlayedAlbums: null,
                 personalizedPlaylists: null,
                 themedRecommendations: null,
