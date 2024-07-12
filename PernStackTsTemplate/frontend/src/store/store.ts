@@ -1043,7 +1043,7 @@ export const useStore = create<Store>((set, get) => ({
             generateAppleToken,
         } = get()
 
-        if (!appleMusicToken) {
+        if (!appleMusicToken && backendToken) {
             try {
                 console.log('getting music token from backend')
                 // let cookieArr = document.cookie

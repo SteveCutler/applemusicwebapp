@@ -38,6 +38,7 @@ const useLogin = () => {
 
             const data = await res.json()
 
+            console.log('data', data)
             if (!res.ok) {
                 toast.error('Failed to log in')
                 navigate('/login')
@@ -45,10 +46,9 @@ const useLogin = () => {
             }
 
             localStorage.setItem('backendToken', data.id)
+            localStorage.setItem('jwt', data.token)
 
             // set cookie = data.jwt
-
-            console.log('setting backend token', backendToken)
 
             // document.cookie = `jwt=${data};`
             // console.log('jwt', data.jwt)
