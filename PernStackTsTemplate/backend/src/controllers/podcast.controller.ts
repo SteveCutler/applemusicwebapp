@@ -1,7 +1,10 @@
 import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
-import { fetchPodcastDataFromIndex } from '../utils/podcastIndex.js'
+import {
+    fetchPodcastDataFromIndex,
+    fetchRecentEpisodes,
+} from '../utils/podcastIndex.js'
 import crypto from 'crypto'
 import axios from 'axios'
 
@@ -124,6 +127,7 @@ export const removeSub = async (req: Request, res: Response) => {
 
 // Fetch episodes of a podcast
 export const fetchEpisodes = async (req: Request, res: Response) => {
+    console.log('fetching episodes')
     try {
         const { podcastId } = req.params
         const episodes = await prisma.episode.findMany({
@@ -137,34 +141,34 @@ export const fetchEpisodes = async (req: Request, res: Response) => {
     }
 }
 
-export const fetchRecentEpisodes = async (req: Request, res: Response) => {
-    try {
-        const userId = req.user.id
+// export const fetchRecentEpisodes = async (req: Request, res: Response) => {
+//     try {
+//         const userId = req.user.id
 
-        const subscriptions = await prisma.subscription.findMany({
-            where: { userId },
-            include: {
-                podcast: {
-                    include: {
-                        episodes: {
-                            orderBy: { releaseDate: 'desc' },
-                            take: 10, // Adjust the number of recent episodes to fetch
-                        },
-                    },
-                },
-            },
-        })
+//         const subscriptions = await prisma.subscription.findMany({
+//             where: { userId },
+//             include: {
+//                 podcast: {
+//                     include: {
+//                         episodes: {
+//                             orderBy: { releaseDate: 'desc' },
+//                             take: 10, // Adjust the number of recent episodes to fetch
+//                         },
+//                     },
+//                 },
+//             },
+//         })
 
-        const recentEpisodes = subscriptions.flatMap(
-            sub => sub.podcast.episodes
-        )
+//         const recentEpisodes = subscriptions.flatMap(
+//             sub => sub.podcast.episodes
+//         )
 
-        res.status(200).json(recentEpisodes)
-    } catch (error) {
-        console.error('Error fetching recent episodes:', error)
-        res.status(500).json({ error: 'Internal Server Error' })
-    }
-}
+//         res.status(200).json(recentEpisodes)
+//     } catch (error) {
+//         console.error('Error fetching recent episodes:', error)
+//         res.status(500).json({ error: 'Internal Server Error' })
+//     }
+// }
 
 // Track listening progress
 export const trackProgress = async (req: Request, res: Response) => {
@@ -221,38 +225,28 @@ export const getSubs = async (req: Request, res: Response) => {
 
 // Controller to get episodes by feed ID
 export const getEpisodesByFeedId = async (req: Request, res: Response) => {
+    console.log('retrieving episode')
     const feedId = req.params.feedId
+    console.log('feedId', feedId)
     try {
-        const key = process.env.PODCASTINDEX_KEY
-        const secret = process.env.PODCASTINDEX_SECRET
+        // const key = process.env.PODCASTINDEX_KEY
+        // const secret = process.env.PODCASTINDEX_SECRET
 
-        if (!key || !secret) {
-            console.error('Podcast Index API key or secret is not set')
-            return
-        }
+        // if (!key || !secret) {
+        //     console.error('Podcast Index API key or secret is not set')
+        //     return
+        // }
 
-        const headerTime = Math.floor(Date.now() / 1000)
-        const hashInput = key + secret + headerTime
+        // const headerTime = Math.floor(Date.now() / 1000)
+        // const hashInput = key + secret + headerTime
 
-        const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
+        // const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
 
-        const response = await axios.get(
-            `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`,
-            {
-                headers: {
-                    'User-Agent': 'Mus/0.5',
-                    'X-Auth-Key': key,
-                    'X-Auth-Date': headerTime,
-                    Authorization: hash,
-                },
-                params: {
-                    fulltext: true,
-                },
-            }
-        )
+        const podcastData = await fetchRecentEpisodes(feedId)
+        console.log(podcastData)
         res.status(200).json({
             message: 'latest podcast episodes',
-            data: response.data,
+            data: podcastData,
         })
     } catch (error) {
         console.error('Error fetching episodes:', error)

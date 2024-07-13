@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchPodcastDataFromIndex = void 0;
+exports.fetchRecentEpisodes = exports.fetchPodcastDataFromIndex = void 0;
 const axios_1 = __importDefault(require("axios"));
 const crypto_1 = __importDefault(require("crypto"));
 const dotenv_1 = __importDefault(require("dotenv"));
@@ -63,3 +63,32 @@ const fetchPodcastDataFromIndex = async (podcastIndexId) => {
     }
 };
 exports.fetchPodcastDataFromIndex = fetchPodcastDataFromIndex;
+const fetchRecentEpisodes = async (feedId) => {
+    try {
+        const headers = generateAuthHeaders();
+        console.log('headers:', headers);
+        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`, {
+            headers,
+            params: {
+                fulltext: true,
+            },
+        });
+        // const episodeResponse = await axios.get(
+        //     `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${podcastIndexId}&pretty`,
+        //     { headers }
+        // )
+        const podcasts = await response.data.feed;
+        console.log('podcast: ', podcasts);
+        // const podcastEpisodes: podcastEpisode[] =
+        //     await episodeResponse.data.items
+        // console.log('podcast episodes: ', podcastEpisodes)
+        return {
+            podcasts,
+        };
+    }
+    catch (error) {
+        console.error('Error fetching podcast episodes from PodcastIndex:', error);
+        throw new Error('Failed to fetch podcast episode data');
+    }
+};
+exports.fetchRecentEpisodes = fetchRecentEpisodes;

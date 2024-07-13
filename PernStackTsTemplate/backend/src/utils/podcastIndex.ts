@@ -135,3 +135,40 @@ export const fetchPodcastDataFromIndex = async (podcastIndexId: string) => {
         throw new Error('Failed to fetch podcast data')
     }
 }
+export const fetchRecentEpisodes = async (feedId: string) => {
+    try {
+        const headers = generateAuthHeaders()
+        console.log('headers:', headers)
+
+        const response = await axios.get(
+            `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`,
+            {
+                headers,
+                params: {
+                    fulltext: true,
+                },
+            }
+        )
+
+        // const episodeResponse = await axios.get(
+        //     `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${podcastIndexId}&pretty`,
+        //     { headers }
+        // )
+
+        const podcasts: podcastInfo[] = await response.data.feed
+        console.log('podcast: ', podcasts)
+        // const podcastEpisodes: podcastEpisode[] =
+        //     await episodeResponse.data.items
+        // console.log('podcast episodes: ', podcastEpisodes)
+
+        return {
+            podcasts,
+        }
+    } catch (error) {
+        console.error(
+            'Error fetching podcast episodes from PodcastIndex:',
+            error
+        )
+        throw new Error('Failed to fetch podcast episode data')
+    }
+}

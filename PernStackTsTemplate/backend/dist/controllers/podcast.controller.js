@@ -1,14 +1,9 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEpisodesByFeedId = exports.getSubs = exports.trackProgress = exports.fetchRecentEpisodes = exports.fetchEpisodes = exports.removeSub = exports.subscribePodcast = void 0;
+exports.getEpisodesByFeedId = exports.getSubs = exports.trackProgress = exports.fetchEpisodes = exports.removeSub = exports.subscribePodcast = void 0;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const podcastIndex_js_1 = require("../utils/podcastIndex.js");
-const crypto_1 = __importDefault(require("crypto"));
-const axios_1 = __importDefault(require("axios"));
 const subscribePodcast = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
@@ -90,6 +85,7 @@ const removeSub = async (req, res) => {
 exports.removeSub = removeSub;
 // Fetch episodes of a podcast
 const fetchEpisodes = async (req, res) => {
+    console.log('fetching episodes');
     try {
         const { podcastId } = req.params;
         const episodes = await prisma.episode.findMany({
@@ -103,31 +99,31 @@ const fetchEpisodes = async (req, res) => {
     }
 };
 exports.fetchEpisodes = fetchEpisodes;
-const fetchRecentEpisodes = async (req, res) => {
-    try {
-        const userId = req.user.id;
-        const subscriptions = await prisma.subscription.findMany({
-            where: { userId },
-            include: {
-                podcast: {
-                    include: {
-                        episodes: {
-                            orderBy: { releaseDate: 'desc' },
-                            take: 10, // Adjust the number of recent episodes to fetch
-                        },
-                    },
-                },
-            },
-        });
-        const recentEpisodes = subscriptions.flatMap(sub => sub.podcast.episodes);
-        res.status(200).json(recentEpisodes);
-    }
-    catch (error) {
-        console.error('Error fetching recent episodes:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
-exports.fetchRecentEpisodes = fetchRecentEpisodes;
+// export const fetchRecentEpisodes = async (req: Request, res: Response) => {
+//     try {
+//         const userId = req.user.id
+//         const subscriptions = await prisma.subscription.findMany({
+//             where: { userId },
+//             include: {
+//                 podcast: {
+//                     include: {
+//                         episodes: {
+//                             orderBy: { releaseDate: 'desc' },
+//                             take: 10, // Adjust the number of recent episodes to fetch
+//                         },
+//                     },
+//                 },
+//             },
+//         })
+//         const recentEpisodes = subscriptions.flatMap(
+//             sub => sub.podcast.episodes
+//         )
+//         res.status(200).json(recentEpisodes)
+//     } catch (error) {
+//         console.error('Error fetching recent episodes:', error)
+//         res.status(500).json({ error: 'Internal Server Error' })
+//     }
+// }
 // Track listening progress
 const trackProgress = async (req, res) => {
     try {
@@ -180,31 +176,24 @@ const getSubs = async (req, res) => {
 exports.getSubs = getSubs;
 // Controller to get episodes by feed ID
 const getEpisodesByFeedId = async (req, res) => {
+    console.log('retrieving episode');
     const feedId = req.params.feedId;
+    console.log('feedId', feedId);
     try {
-        const key = process.env.PODCASTINDEX_KEY;
-        const secret = process.env.PODCASTINDEX_SECRET;
-        if (!key || !secret) {
-            console.error('Podcast Index API key or secret is not set');
-            return;
-        }
-        const headerTime = Math.floor(Date.now() / 1000);
-        const hashInput = key + secret + headerTime;
-        const hash = crypto_1.default.createHash('sha1').update(hashInput).digest('hex');
-        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`, {
-            headers: {
-                'User-Agent': 'Mus/0.5',
-                'X-Auth-Key': key,
-                'X-Auth-Date': headerTime,
-                Authorization: hash,
-            },
-            params: {
-                fulltext: true,
-            },
-        });
+        // const key = process.env.PODCASTINDEX_KEY
+        // const secret = process.env.PODCASTINDEX_SECRET
+        // if (!key || !secret) {
+        //     console.error('Podcast Index API key or secret is not set')
+        //     return
+        // }
+        // const headerTime = Math.floor(Date.now() / 1000)
+        // const hashInput = key + secret + headerTime
+        // const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
+        const podcastData = await (0, podcastIndex_js_1.fetchRecentEpisodes)(feedId);
+        console.log(podcastData);
         res.status(200).json({
             message: 'latest podcast episodes',
-            data: response.data,
+            data: podcastData,
         });
     }
     catch (error) {

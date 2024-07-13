@@ -9,6 +9,44 @@ import PodcastEpisodeItem from '../components/Homepage/PodcastEpisodeItem'
 import DropdownDisplay from '../components/Apple/DropdownDisplay'
 import { useMediaQuery } from 'react-responsive'
 
+type podcastInfo = {
+    artwork: string
+    author: string
+    categories: {
+        [key: number]: string
+    }
+    contentType: string
+    crawlErrors: number
+    dead: number
+    description: string
+    episodeCount: number
+    explicit: boolean
+    generator: string
+    id: number
+    image: string
+    imageUrlHash: number
+    inPollingQueue: number
+    itunesId: number
+    language: string
+    lastCrawlTime: number
+    lastGoodHttpStatusTime: number
+    lastHttpStatus: number
+    lastParseTime: number
+    lastUpdateTime: number
+    link: string
+    locked: number
+    medium: string
+    newestItemPubdate: number
+    originalUrl: string
+    ownerName: string
+    parseErrors: number
+    podcastGuid: string
+    priority: number
+    title: string
+    type: number
+    url: string
+}
+
 interface podcastEpisode {
     dateCrawled: number
     datePublished: number
@@ -157,21 +195,19 @@ const Podcasts = () => {
 
     useEffect(() => {
         const getRecentEps = async () => {
-            if (podSubs) {
-                const ids = podSubs.map(pod => pod.id).join()
-                console.log('ids', ids)
+            if (!podSubs) {
+                // const ids = podSubs.map(pod => pod.id).join()
+                // console.log('ids', ids)
+                // const id = podSubs[0].id.toString()
+                // console.log('id', id.toString())
+
                 try {
-                    let eps = await fetch(
-                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes/${ids}`,
-                        {
-                            method: 'GET',
-                            headers: {
-                                'Content-type': 'application/json',
-                            },
-                            credentials: 'include',
-                        }
+                    const response = await axios.post(
+                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes`,
+                        { method: 'POST', withCredentials: true }
                     )
 
+                    const eps = response
                     console.log('eps', eps)
                 } catch (error) {
                     console.error(error)
@@ -219,11 +255,11 @@ const Podcasts = () => {
                 toast.error('Error retrieving podcasts..')
             }
         }
-        if (!podSubs) {
-            getSubs()
-        }
+        // if (!podSubs) {
+        //     getSubs()
+        // }
+        getRecentEps()
         if (!recentEps && podSubs) {
-            getRecentEps()
         }
     }, [podSubs])
 
