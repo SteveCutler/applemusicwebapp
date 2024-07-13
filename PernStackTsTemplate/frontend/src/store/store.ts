@@ -289,35 +289,33 @@ type playlist = {
 }
 
 interface podcastEpisode {
-    artistIds: Array<string>
-    artworkUrl160: string
-    artworkUrl60: string
-    artworkUrl600: string
-    closedCaptioning: string
-    collectionId: number
-    collectionName: string
-    collectionViewUrl: string
-    contentAdvisoryRating: string
-    country: string
+    dateCrawled: number
+    datePublished: number
+    datePublishedPretty: string
     description: string
-    episodeContentType: string
-    episodeFileExtension: string
-    episodeGuid: string
-    episodeUrl: string
+    duration: number
+    enclosureLength: number
+    enclosureType: string
+    enclosureUrl: string
+    episodeType: string
+    explicit: number
+    feedDead: number
+    feedDuplicateOf: number
+    feedId: number
+    feedImage: string
+    feedItunesId: number
+    feedLanguage: string
     feedUrl: string
-    genres: Array<{
-        id: string
-        name: string
-    }>
-    kind: string
-    previewUrl: string
-    releaseDate: string
-    shortDescription: string
-    trackId: number
-    trackName: string
-    trackTimeMillis: number
-    trackViewUrl: string
-    wrapperType: string
+    guid: string
+    id: number
+    image: string
+    link: string
+    podcastGuid: string
+    season: number
+    title: string
+    released?: string
+    timeSinceRelease?: number
+    showTitle?: string
 }
 
 type podcastInfo = {

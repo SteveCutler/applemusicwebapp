@@ -1,23 +1,17 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.fetchRecentEpisodes = exports.fetchPodcastDataFromIndex = void 0;
-const axios_1 = __importDefault(require("axios"));
-const crypto_1 = __importDefault(require("crypto"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+import axios from 'axios';
+import crypto from 'crypto';
+import dotenv from 'dotenv';
+dotenv.config();
 const apiKey = process.env.PODCASTINDEX_KEY;
 const apiSecret = process.env.PODCASTINDEX_SECRET;
-console.log('apiKey', process.env.PODCASTINDEX_KEY);
-console.log('apiSecret', process.env.PODCASTINDEX_SECRET);
+// console.log('apiKey', process.env.PODCASTINDEX_KEY)
+// console.log('apiSecret', process.env.PODCASTINDEX_SECRET)
 const generateAuthHeaders = () => {
     if (!apiKey || !apiSecret) {
         throw new Error('API key and secret must be defined in the environment variables.');
     }
     const apiHeaderTime = Math.floor(Date.now() / 1000);
-    const hash = crypto_1.default
+    const hash = crypto
         .createHash('sha1')
         .update(apiKey + apiSecret + apiHeaderTime)
         .digest('hex');
@@ -28,11 +22,11 @@ const generateAuthHeaders = () => {
         Authorization: hash,
     };
 };
-const fetchPodcastDataFromIndex = async (podcastIndexId) => {
+export const fetchPodcastDataFromIndex = async (podcastIndexId) => {
     try {
         const headers = generateAuthHeaders();
         console.log('headers:', headers);
-        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${podcastIndexId}&pretty`, { headers });
+        const response = await axios.get(`https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${podcastIndexId}&pretty`, { headers });
         // const episodeResponse = await axios.get(
         //     `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${podcastIndexId}&pretty`,
         //     { headers }
@@ -62,12 +56,11 @@ const fetchPodcastDataFromIndex = async (podcastIndexId) => {
         throw new Error('Failed to fetch podcast data');
     }
 };
-exports.fetchPodcastDataFromIndex = fetchPodcastDataFromIndex;
-const fetchRecentEpisodes = async (feedId) => {
+export const fetchRecentEpisodes = async (feedId) => {
     try {
         const headers = generateAuthHeaders();
-        console.log('headers:', headers);
-        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`, {
+        const number = feedId.split(',').length;
+        const response = await axios.get(`https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`, {
             headers,
             params: {
                 fulltext: true,
@@ -77,18 +70,15 @@ const fetchRecentEpisodes = async (feedId) => {
         //     `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${podcastIndexId}&pretty`,
         //     { headers }
         // )
-        const podcasts = await response.data.feed;
-        console.log('podcast: ', podcasts);
+        const podcasts = await response.data;
+        // console.log('podcast: ', podcasts)
         // const podcastEpisodes: podcastEpisode[] =
         //     await episodeResponse.data.items
         // console.log('podcast episodes: ', podcastEpisodes)
-        return {
-            podcasts,
-        };
+        return podcasts;
     }
     catch (error) {
         console.error('Error fetching podcast episodes from PodcastIndex:', error);
         throw new Error('Failed to fetch podcast episode data');
     }
 };
-exports.fetchRecentEpisodes = fetchRecentEpisodes;

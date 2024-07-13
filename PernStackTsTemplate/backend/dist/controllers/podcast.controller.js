@@ -1,16 +1,13 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getEpisodesByFeedId = exports.getSubs = exports.trackProgress = exports.fetchEpisodes = exports.removeSub = exports.subscribePodcast = void 0;
-const client_1 = require("@prisma/client");
-const prisma = new client_1.PrismaClient();
-const podcastIndex_js_1 = require("../utils/podcastIndex.js");
-const subscribePodcast = async (req, res) => {
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
+import { fetchPodcastDataFromIndex, fetchRecentEpisodes, } from '../utils/podcastIndex.js';
+export const subscribePodcast = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
         const userId = req.user.id;
         console.log('podcastIndexId:', podcastIndexId); // Add this line
         console.log('userId:', userId); // Add this line
-        const podcastData = await (0, podcastIndex_js_1.fetchPodcastDataFromIndex)(podcastIndexId);
+        const podcastData = await fetchPodcastDataFromIndex(podcastIndexId);
         const podcast = await prisma.podcast.upsert({
             where: { podcastIndexId },
             update: {
@@ -52,8 +49,7 @@ const subscribePodcast = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-exports.subscribePodcast = subscribePodcast;
-const removeSub = async (req, res) => {
+export const removeSub = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
         const userId = req.user.id;
@@ -82,9 +78,8 @@ const removeSub = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-exports.removeSub = removeSub;
 // Fetch episodes of a podcast
-const fetchEpisodes = async (req, res) => {
+export const fetchEpisodes = async (req, res) => {
     console.log('fetching episodes');
     try {
         const { podcastId } = req.params;
@@ -98,7 +93,6 @@ const fetchEpisodes = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-exports.fetchEpisodes = fetchEpisodes;
 // export const fetchRecentEpisodes = async (req: Request, res: Response) => {
 //     try {
 //         const userId = req.user.id
@@ -125,7 +119,7 @@ exports.fetchEpisodes = fetchEpisodes;
 //     }
 // }
 // Track listening progress
-const trackProgress = async (req, res) => {
+export const trackProgress = async (req, res) => {
     try {
         const { episodeId, progress } = req.body;
         const userId = req.user.id;
@@ -150,9 +144,8 @@ const trackProgress = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-exports.trackProgress = trackProgress;
 // Get subscribed podcast index IDs
-const getSubs = async (req, res) => {
+export const getSubs = async (req, res) => {
     try {
         const userId = req.user.id;
         const subscriptions = await prisma.subscription.findMany({
@@ -173,10 +166,8 @@ const getSubs = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-exports.getSubs = getSubs;
 // Controller to get episodes by feed ID
-const getEpisodesByFeedId = async (req, res) => {
-    console.log('retrieving episode');
+export const getEpisodesById = async (req, res) => {
     const feedId = req.params.feedId;
     console.log('feedId', feedId);
     try {
@@ -189,8 +180,7 @@ const getEpisodesByFeedId = async (req, res) => {
         // const headerTime = Math.floor(Date.now() / 1000)
         // const hashInput = key + secret + headerTime
         // const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
-        const podcastData = await (0, podcastIndex_js_1.fetchRecentEpisodes)(feedId);
-        console.log(podcastData);
+        const podcastData = await fetchRecentEpisodes(feedId);
         res.status(200).json({
             message: 'latest podcast episodes',
             data: podcastData,
@@ -201,7 +191,6 @@ const getEpisodesByFeedId = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch episodes' });
     }
 };
-exports.getEpisodesByFeedId = getEpisodesByFeedId;
-module.exports = {
-    getEpisodesByFeedId: exports.getEpisodesByFeedId,
-};
+// module.exports = {
+//     getEpisodesByFeedId,
+// }

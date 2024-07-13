@@ -70,8 +70,8 @@ dotenv.config()
 
 const apiKey = process.env.PODCASTINDEX_KEY as string
 const apiSecret = process.env.PODCASTINDEX_SECRET as string
-console.log('apiKey', process.env.PODCASTINDEX_KEY)
-console.log('apiSecret', process.env.PODCASTINDEX_SECRET)
+// console.log('apiKey', process.env.PODCASTINDEX_KEY)
+// console.log('apiSecret', process.env.PODCASTINDEX_SECRET)
 
 const generateAuthHeaders = () => {
     if (!apiKey || !apiSecret) {
@@ -138,7 +138,7 @@ export const fetchPodcastDataFromIndex = async (podcastIndexId: string) => {
 export const fetchRecentEpisodes = async (feedId: string) => {
     try {
         const headers = generateAuthHeaders()
-        console.log('headers:', headers)
+        const number = feedId.split(',').length
 
         const response = await axios.get(
             `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`,
@@ -155,15 +155,13 @@ export const fetchRecentEpisodes = async (feedId: string) => {
         //     { headers }
         // )
 
-        const podcasts: podcastInfo[] = await response.data.feed
-        console.log('podcast: ', podcasts)
+        const podcasts: podcastInfo[] = await response.data
+        // console.log('podcast: ', podcasts)
         // const podcastEpisodes: podcastEpisode[] =
         //     await episodeResponse.data.items
         // console.log('podcast episodes: ', podcastEpisodes)
 
-        return {
-            podcasts,
-        }
+        return podcasts
     } catch (error) {
         console.error(
             'Error fetching podcast episodes from PodcastIndex:',

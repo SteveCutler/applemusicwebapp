@@ -195,34 +195,69 @@ const Podcasts = () => {
 
     useEffect(() => {
         const getRecentEps = async () => {
-            if (!podSubs) {
-                // const ids = podSubs.map(pod => pod.id).join()
-                // console.log('ids', ids)
+            if (podSubs) {
+                const ids = podSubs.map(pod => pod.id).join()
+                console.log('ids', ids)
                 // const id = podSubs[0].id.toString()
                 // console.log('id', id.toString())
 
                 try {
-                    const response = await axios.post(
-                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes`,
-                        { method: 'POST', withCredentials: true }
+                    const response = await fetch(
+                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-episodes/${ids}`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json',
+                            },
+
+                            credentials: 'include',
+                        }
                     )
 
-                    const eps = response
-                    console.log('eps', eps)
+                    let eps = await response.json()
+                    const epsData = eps.data.items
+                    const filteredEps: podcastEpisode[] = []
+                    const feedIdSet: Set<string> = new Set()
+
+                    epsData.forEach(ep => {
+                        if (!feedIdSet.has(ep.feedId)) {
+                            feedIdSet.add(ep.feedId)
+                            filteredEps.push(ep)
+                        }
+                    })
+
+                    console.log('eps data', filteredEps)
+                    const recent = filteredEps
+                        .map((ep: podcastEpisode) => {
+                            const oneWeekInSeconds = 604800
+                            const currentTime = Math.floor(Date.now() / 1000)
+                            const timeDifference =
+                                currentTime - ep.datePublished
+
+                            if (timeDifference < oneWeekInSeconds) {
+                                return {
+                                    ...ep,
+                                    released: getTimeDifference(
+                                        ep.datePublished
+                                    ),
+                                    timeSinceRelease: timeDifference,
+                                }
+                            }
+                            return null
+                        })
+                        .filter(ep => ep !== null)
+
+                    const sortedEps: podcastEpisode[] = recent.sort(
+                        (a, b) => a.timeSinceRelease - b.timeSinceRelease
+                    )
+                    // console.log('sorted eps', sortedEps)
+                    // Filter out null values
+                    console.log('sorted', sortedEps)
+
+                    setRecentEps(sortedEps)
                 } catch (error) {
                     console.error(error)
                 }
-
-                // const recentEps: podcastEpisode[] = eps.filter(
-                //     ep => ep !== null && ep !== undefined
-                // )
-                // const sortedEps: podcastEpisode[] = recentEps.sort(
-                //     (a, b) => a.timeSinceRelease - b.timeSinceRelease
-                // )
-                // console.log('sorted eps', sortedEps)
-                // Filter out null values
-
-                // setRecentEps(sortedEps)
             }
         }
 
@@ -255,11 +290,11 @@ const Podcasts = () => {
                 toast.error('Error retrieving podcasts..')
             }
         }
-        // if (!podSubs) {
-        //     getSubs()
-        // }
-        getRecentEps()
+        if (!podSubs) {
+            getSubs()
+        }
         if (!recentEps && podSubs) {
+            getRecentEps()
         }
     }, [podSubs])
 

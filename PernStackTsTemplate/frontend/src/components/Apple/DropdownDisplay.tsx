@@ -283,7 +283,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                     {podcastShow ? (
                         <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
-                                .slice(0, 15)
+                                // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
                                 .map((item, index: number) => (
                                     <PodcastItem
@@ -297,7 +297,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                     ) : podcast ? (
                         <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
-                                .slice(0, 15)
+                                // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
                                 .map((item, index: number) => (
                                     <PodcastEpisodeItem
@@ -311,7 +311,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                     ) : (
                         <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
                             {object
-                                .slice(0, 15)
+                                // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
                                 .map(item =>
                                     item.type === 'library-playlists' ||

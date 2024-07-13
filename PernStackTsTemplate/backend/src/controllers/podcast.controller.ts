@@ -224,8 +224,7 @@ export const getSubs = async (req: Request, res: Response) => {
 }
 
 // Controller to get episodes by feed ID
-export const getEpisodesByFeedId = async (req: Request, res: Response) => {
-    console.log('retrieving episode')
+export const getEpisodesById = async (req: Request, res: Response) => {
     const feedId = req.params.feedId
     console.log('feedId', feedId)
     try {
@@ -243,7 +242,7 @@ export const getEpisodesByFeedId = async (req: Request, res: Response) => {
         // const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
 
         const podcastData = await fetchRecentEpisodes(feedId)
-        console.log(podcastData)
+
         res.status(200).json({
             message: 'latest podcast episodes',
             data: podcastData,
@@ -254,6 +253,6 @@ export const getEpisodesByFeedId = async (req: Request, res: Response) => {
     }
 }
 
-module.exports = {
-    getEpisodesByFeedId,
-}
+// module.exports = {
+//     getEpisodesByFeedId,
+// }

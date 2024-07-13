@@ -1,26 +1,23 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const podcast_controller_js_1 = require("../controllers/podcast.controller.js");
-const protectRoute_js_1 = __importDefault(require("../middleware/protectRoute.js"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-const router = express_1.default.Router();
+import express from 'express';
+import { subscribePodcast, trackProgress, 
+// fetchRecentEpisodes,
+getSubs, removeSub, getEpisodesById, } from '../controllers/podcast.controller.js';
+import protectRoute from '../middleware/protectRoute.js';
+const app = express();
+app.use(express.json());
+const router = express.Router();
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodesFetch/${ids}
-router.post('/episodes/', podcast_controller_js_1.getEpisodesByFeedId);
+router.post('/get-episodes/:feedId', protectRoute, getEpisodesById);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe
-router.post('/subscribe', protectRoute_js_1.default, podcast_controller_js_1.subscribePodcast);
+router.post('/subscribe', protectRoute, subscribePodcast);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe
-router.post('/remove-sub', protectRoute_js_1.default, podcast_controller_js_1.removeSub);
+router.post('/remove-sub', protectRoute, removeSub);
 // // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes/:podcastId
 // router.get('/episodes/:podcastId', protectRoute, fetchEpisodes)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress
-router.post('/track-progress', protectRoute_js_1.default, podcast_controller_js_1.trackProgress);
+router.post('/track-progress', protectRoute, trackProgress);
 // // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/recent-episodes
 // router.get('/recent-episodes', protectRoute, fetchRecentEpisodes)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-subs
-router.post('/get-subs', protectRoute_js_1.default, podcast_controller_js_1.getSubs);
-exports.default = router;
+router.post('/get-subs', protectRoute, getSubs);
+export default router;

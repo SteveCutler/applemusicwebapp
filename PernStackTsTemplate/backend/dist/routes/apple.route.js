@@ -1,35 +1,30 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const apple_controller_js_1 = require("../controllers/apple.controller.js");
-const protectRoute_js_1 = __importDefault(require("../middleware/protectRoute.js"));
-const axios_1 = __importDefault(require("axios"));
-const app = (0, express_1.default)();
-app.use(express_1.default.json());
-const router = express_1.default.Router();
+import express from 'express';
+import { saveToken, getToken, fetchAndSaveAlbumsHandler, fetchAndSaveSongsHandler, fetchAndSaveRatingsHandler, fetchAndSaveAlbumRatingsHandler, addSongsToRatingsHandler, getRatings, getLibrary, updateAlbumArtwork, } from '../controllers/apple.controller.js';
+import protectRoute from '../middleware/protectRoute.js';
+import axios from 'axios';
+const app = express();
+app.use(express.json());
+const router = express.Router();
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/save-token
-router.post('/save-token', protectRoute_js_1.default, apple_controller_js_1.saveToken);
+router.post('/save-token', protectRoute, saveToken);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/update-album-artwork
-router.post('/update-album-artwork', protectRoute_js_1.default, apple_controller_js_1.updateAlbumArtwork);
+router.post('/update-album-artwork', protectRoute, updateAlbumArtwork);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-token
-router.post('/get-token', protectRoute_js_1.default, apple_controller_js_1.getToken);
+router.post('/get-token', protectRoute, getToken);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-albums
-router.post('/fetch-albums', protectRoute_js_1.default, apple_controller_js_1.fetchAndSaveAlbumsHandler);
+router.post('/fetch-albums', protectRoute, fetchAndSaveAlbumsHandler);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-songs
-router.post('/fetch-songs', protectRoute_js_1.default, apple_controller_js_1.fetchAndSaveSongsHandler);
+router.post('/fetch-songs', protectRoute, fetchAndSaveSongsHandler);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-song-ratings
-router.post('/fetch-song-ratings', protectRoute_js_1.default, apple_controller_js_1.fetchAndSaveRatingsHandler);
+router.post('/fetch-song-ratings', protectRoute, fetchAndSaveRatingsHandler);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-album-ratings
-router.post('/fetch-album-ratings', protectRoute_js_1.default, apple_controller_js_1.fetchAndSaveAlbumRatingsHandler);
+router.post('/fetch-album-ratings', protectRoute, fetchAndSaveAlbumRatingsHandler);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/add-songs-to-ratings
-router.post('/add-songs-to-ratings', protectRoute_js_1.default, apple_controller_js_1.addSongsToRatingsHandler);
+router.post('/add-songs-to-ratings', protectRoute, addSongsToRatingsHandler);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-ratings
-router.post('/get-ratings', protectRoute_js_1.default, apple_controller_js_1.getRatings);
+router.post('/get-ratings', protectRoute, getRatings);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-library
-router.post('/get-library', protectRoute_js_1.default, apple_controller_js_1.getLibrary);
+router.post('/get-library', protectRoute, getLibrary);
 //Resolve URL redirect
 router.get('/resolve-url', async (req, res) => {
     const url = req.query.url;
@@ -37,7 +32,7 @@ router.get('/resolve-url', async (req, res) => {
         return res.status(400).send('Invalid URL');
     }
     try {
-        const response = await axios_1.default.head(url, { maxRedirects: 10 });
+        const response = await axios.head(url, { maxRedirects: 10 });
         res.json({ finalUrl: response.request.res.responseUrl });
     }
     catch (error) {
@@ -45,4 +40,4 @@ router.get('/resolve-url', async (req, res) => {
         res.status(500).send('Error resolving URL');
     }
 });
-exports.default = router;
+export default router;

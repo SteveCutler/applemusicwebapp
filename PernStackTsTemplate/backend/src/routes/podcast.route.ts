@@ -6,7 +6,7 @@ import {
     // fetchRecentEpisodes,
     getSubs,
     removeSub,
-    getEpisodesByFeedId,
+    getEpisodesById,
 } from '../controllers/podcast.controller.js'
 import protectRoute from '../middleware/protectRoute.js'
 
@@ -16,7 +16,7 @@ app.use(express.json())
 const router = express.Router()
 
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodesFetch/${ids}
-router.post('/episodes/', getEpisodesByFeedId)
+router.post('/get-episodes/:feedId', protectRoute, getEpisodesById)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe
 router.post('/subscribe', protectRoute, subscribePodcast)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/subcribe

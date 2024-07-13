@@ -1,13 +1,7 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.getLibrary = exports.getRatings = exports.addSongsToRatings = exports.addSongsToRatingsHandler = exports.fetchAndSaveAlbumRatings = exports.fetchAndSaveAlbumRatingsHandler = exports.fetchAndSaveRatings = exports.fetchAndSaveRatingsHandler = exports.fetchAndSaveSongs = exports.fetchAndSaveSongsHandler = exports.updateAlbumArtwork = exports.fetchAndSaveAlbums = exports.fetchAndSaveAlbumsHandler = exports.getToken = exports.saveToken = void 0;
-const client_1 = require("@prisma/client");
-const axios_1 = __importDefault(require("axios"));
-const prisma = new client_1.PrismaClient();
-const saveToken = async (req, res) => {
+import { PrismaClient } from '@prisma/client';
+import axios from 'axios';
+const prisma = new PrismaClient();
+export const saveToken = async (req, res) => {
     // console.log(req.body)
     const { userId, userToken, tokenExpiryDate } = req.body;
     try {
@@ -25,8 +19,7 @@ const saveToken = async (req, res) => {
         res.status(500).send('Error updating token');
     }
 };
-exports.saveToken = saveToken;
-const getToken = async (req, res) => {
+export const getToken = async (req, res) => {
     const { userId } = req.body;
     try {
         const result = await prisma.user.findUnique({
@@ -51,18 +44,16 @@ const getToken = async (req, res) => {
         res.status(500).send('Error updating token');
     }
 };
-exports.getToken = getToken;
-const fetchAndSaveAlbumsHandler = async (req, res) => {
+export const fetchAndSaveAlbumsHandler = async (req, res) => {
     const { userId, appleMusicToken } = req.body;
-    await (0, exports.fetchAndSaveAlbums)(userId, appleMusicToken, res);
+    await fetchAndSaveAlbums(userId, appleMusicToken, res);
 };
-exports.fetchAndSaveAlbumsHandler = fetchAndSaveAlbumsHandler;
-const fetchAndSaveAlbums = async (userId, appleMusicToken, res) => {
+export const fetchAndSaveAlbums = async (userId, appleMusicToken, res) => {
     const albums = [];
     let responseSent = false;
     const fetchAlbums = async (url) => {
         try {
-            const res = await axios_1.default.get(url, {
+            const res = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                     'Music-User-Token': appleMusicToken,
@@ -133,8 +124,7 @@ const fetchAndSaveAlbums = async (userId, appleMusicToken, res) => {
         }
     }
 };
-exports.fetchAndSaveAlbums = fetchAndSaveAlbums;
-const updateAlbumArtwork = async (req, res) => {
+export const updateAlbumArtwork = async (req, res) => {
     const { albumId, newArtworkUrl } = req.body;
     try {
         // Update the album in the database
@@ -152,18 +142,16 @@ const updateAlbumArtwork = async (req, res) => {
         res.status(500).json({ error: 'Failed to update album artwork' });
     }
 };
-exports.updateAlbumArtwork = updateAlbumArtwork;
-const fetchAndSaveSongsHandler = async (req, res) => {
+export const fetchAndSaveSongsHandler = async (req, res) => {
     const { userId, appleMusicToken } = req.body;
-    await (0, exports.fetchAndSaveSongs)(userId, appleMusicToken, res);
+    await fetchAndSaveSongs(userId, appleMusicToken, res);
 };
-exports.fetchAndSaveSongsHandler = fetchAndSaveSongsHandler;
-const fetchAndSaveSongs = async (userId, appleMusicToken, res) => {
+export const fetchAndSaveSongs = async (userId, appleMusicToken, res) => {
     const songs = [];
     let responseSent = false;
     const fetchSongs = async (url) => {
         try {
-            const res = await axios_1.default.get(url, {
+            const res = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                     'Music-User-Token': appleMusicToken,
@@ -234,13 +222,11 @@ const fetchAndSaveSongs = async (userId, appleMusicToken, res) => {
         }
     }
 };
-exports.fetchAndSaveSongs = fetchAndSaveSongs;
-const fetchAndSaveRatingsHandler = async (req, res) => {
+export const fetchAndSaveRatingsHandler = async (req, res) => {
     const { userId, appleMusicToken } = req.body;
-    await (0, exports.fetchAndSaveRatings)(userId, appleMusicToken, res);
+    await fetchAndSaveRatings(userId, appleMusicToken, res);
 };
-exports.fetchAndSaveRatingsHandler = fetchAndSaveRatingsHandler;
-const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
+export const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
     const ratings = [];
     let responseSent = false;
     const fetchRatings = async (songs) => {
@@ -249,7 +235,7 @@ const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
                 ? `https://api.music.apple.com/v1/me/ratings/library-songs/${song.id}`
                 : `https://api.music.apple.com/v1/me/ratings/songs/${song.id}`;
             try {
-                const res = await axios_1.default.get(endpoint, {
+                const res = await axios.get(endpoint, {
                     headers: {
                         Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                         'Music-User-Token': appleMusicToken,
@@ -302,7 +288,7 @@ const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
     const songs = [];
     const fetchSongs = async (url) => {
         try {
-            const res = await axios_1.default.get(url, {
+            const res = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                     'Music-User-Token': appleMusicToken,
@@ -361,20 +347,18 @@ const fetchAndSaveRatings = async (userId, appleMusicToken, res) => {
         }
     }
 };
-exports.fetchAndSaveRatings = fetchAndSaveRatings;
-const fetchAndSaveAlbumRatingsHandler = async (req, res) => {
+export const fetchAndSaveAlbumRatingsHandler = async (req, res) => {
     const { userId, appleMusicToken } = req.body;
-    await (0, exports.fetchAndSaveAlbumRatings)(userId, appleMusicToken, res);
+    await fetchAndSaveAlbumRatings(userId, appleMusicToken, res);
 };
-exports.fetchAndSaveAlbumRatingsHandler = fetchAndSaveAlbumRatingsHandler;
-const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => {
+export const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => {
     const ratings = [];
     let responseSent = false;
     const fetchRatings = async (albumIds) => {
         for (const albumId of albumIds) {
             const endpoint = `https://api.music.apple.com/v1/me/ratings/library-albums/${albumId}`;
             try {
-                const res = await axios_1.default.get(endpoint, {
+                const res = await axios.get(endpoint, {
                     headers: {
                         Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                         'Music-User-Token': appleMusicToken,
@@ -422,7 +406,7 @@ const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => {
         const tracks = [];
         const endpoint = `https://api.music.apple.com/v1/me/library/albums/${albumId}/tracks`;
         try {
-            const res = await axios_1.default.get(endpoint, {
+            const res = await axios.get(endpoint, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                     'Music-User-Token': appleMusicToken,
@@ -441,7 +425,7 @@ const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => {
     const albums = [];
     const fetchAlbums = async (url) => {
         try {
-            const res = await axios_1.default.get(url, {
+            const res = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
                     'Music-User-Token': appleMusicToken,
@@ -498,13 +482,11 @@ const fetchAndSaveAlbumRatings = async (userId, appleMusicToken, res) => {
         }
     }
 };
-exports.fetchAndSaveAlbumRatings = fetchAndSaveAlbumRatings;
-const addSongsToRatingsHandler = async (req, res) => {
+export const addSongsToRatingsHandler = async (req, res) => {
     const { userId, songDetails } = req.body;
-    await (0, exports.addSongsToRatings)(userId, songDetails, res);
+    await addSongsToRatings(userId, songDetails, res);
 };
-exports.addSongsToRatingsHandler = addSongsToRatingsHandler;
-const addSongsToRatings = async (userId, songDetails, res) => {
+export const addSongsToRatings = async (userId, songDetails, res) => {
     console.log('song details receive: ', songDetails);
     const ratings = songDetails.map(song => ({
         songId: song.songId,
@@ -537,8 +519,7 @@ const addSongsToRatings = async (userId, songDetails, res) => {
         }
     }
 };
-exports.addSongsToRatings = addSongsToRatings;
-const getRatings = async (req, res) => {
+export const getRatings = async (req, res) => {
     const { userId } = req.body;
     try {
         const ratings = await prisma.rating.findMany({
@@ -583,8 +564,7 @@ const getRatings = async (req, res) => {
         });
     }
 };
-exports.getRatings = getRatings;
-const getLibrary = async (req, res) => {
+export const getLibrary = async (req, res) => {
     const { userId } = req.body;
     console.log(userId);
     try {
@@ -639,4 +619,3 @@ const getLibrary = async (req, res) => {
         res.status(500).send('Error fetching user library');
     }
 };
-exports.getLibrary = getLibrary;
