@@ -105,76 +105,77 @@ const Podcasts = () => {
         }
     }
 
-    const fetchMostRecentEp = async (id: string) => {
-        try {
-            // const headerTime = '1720710762'
-            // const key = 'RH3ZRAWDPDWRERUCXHJE'
-            // const secret =
-            //     'uCFTcwhE5^Fp5VvfurpJH2u^rnMKhakjaWkvaSvm$k8h^S9ueYeG'
-            // const hashInput = key + secret + headerTime
-            const headerTime = Math.floor(Date.now() / 1000).toString()
-            const key = import.meta.env.VITE_PODCASTINDEX_KEY
-            const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
-            const hashInput = key + secret + headerTime
+    // const fetchMostRecentEp = async (id: string) => {
+    //     try {
+    //         const key = import.meta.env.VITE_PODCASTINDEX_KEY
+    //         const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
 
-            const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
+    //         if (!key || !secret) {
+    //             console.error('Podcast Index API key or secret is not set')
+    //             return
+    //         }
 
-            console.log(
-                'secret',
-                secret,
-                'key',
-                key,
-                'time',
-                headerTime,
-                'hash',
+    //         const headerTime = Math.floor(Date.now() / 1000)
+    //         const hashInput = key + secret + headerTime
 
-                hash
-            )
+    //         const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
 
-            const episodesResponse = await axios.get(
-                `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}`,
-                {
-                    headers: {
-                        'User-Agent': 'Mus/0.2',
-                        'X-Auth-Key': key,
-                        'X-Auth-Date': headerTime,
-                        Authorization: hash,
-                    },
-                    params: {
-                        fulltext: true,
-                        max: 10,
-                    },
-                }
-            )
-            console.log('episodes', episodesResponse)
-            // const episode: podcastEpisode = episodesResponse.data.items[0]
+    //         const response = await axios.get(
+    //             `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}`,
+    //             {
+    //                 headers: {
+    //                     'X-Auth-Key': key,
+    //                     'X-Auth-Date': headerTime,
+    //                     Authorization: hash,
+    //                 },
+    //                 params: {
+    //                     fulltext: true,
+    //                 },
+    //             }
+    //         )
+    //         console.log('episodes', response)
+    //         // const episode: podcastEpisode = episodesResponse.data.items[0]
 
-            // const time = isWithinLastWeek(episode.datePublished)
-            // const oneWeekInSeconds = 604800
-            // if (time < oneWeekInSeconds) {
-            //     const newEpisode = {
-            //         ...episode,
-            //         released: getTimeDifference(episode.datePublished),
-            //         timeSinceRelease: time,
-            //     }
-            //     return newEpisode
-            // } else {
-            //     return null
-            // }
+    //         const time = isWithinLastWeek(episode.datePublished)
+    //         const oneWeekInSeconds = 604800
+    //         if (time < oneWeekInSeconds) {
+    //             const newEpisode = {
+    //                 ...episode,
+    //                 released: getTimeDifference(episode.datePublished),
+    //                 timeSinceRelease: time,
+    //             }
+    //             return newEpisode
+    //         } else {
+    //             return null
+    //         }
 
-            // return episodes[0]
-        } catch (error: any) {
-            console.error(error)
-        }
-    }
+    //         // return episodes[0]
+    //     } catch (error: any) {
+    //         console.error(error)
+    //     }
+    // }
 
     useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
                 const ids = podSubs.map(pod => pod.id).join()
                 console.log('ids', ids)
-                let eps = await fetchMostRecentEp(podSubs[0].id)
-                console.log('eps', eps)
+                try {
+                    let eps = await fetch(
+                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episodes/${ids}`,
+                        {
+                            method: 'GET',
+                            headers: {
+                                'Content-type': 'application/json',
+                            },
+                            credentials: 'include',
+                        }
+                    )
+
+                    console.log('eps', eps)
+                } catch (error) {
+                    console.error(error)
+                }
 
                 // const recentEps: podcastEpisode[] = eps.filter(
                 //     ep => ep !== null && ep !== undefined

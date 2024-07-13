@@ -115,9 +115,9 @@ const Sidebar = () => {
         if (!appleMusicToken) {
             fetchAppleToken()
         }
-        if (!albums && appleMusicToken) {
-            fetchLibrary()
-        }
+        // if (!albums && appleMusicToken) {
+        //     fetchLibrary()
+        // }
     }, [appleMusicToken])
 
     const [viewType, setViewType] = useState('likes')
@@ -180,7 +180,7 @@ const Sidebar = () => {
                         <FaSearch />
                         <p className="p-2">Search</p>
                     </NavLink>
-                    <NavLink
+                    {/* <NavLink
                         to="/library"
                         title="library"
                         className={({ isActive }) =>
@@ -191,7 +191,7 @@ const Sidebar = () => {
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
-                    </NavLink>
+                    </NavLink> */}
 
                     <NavLink
                         to="/podcasts"

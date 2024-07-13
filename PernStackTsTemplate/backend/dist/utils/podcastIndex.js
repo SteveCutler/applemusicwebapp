@@ -1,7 +1,13 @@
-import axios from 'axios';
-import crypto from 'crypto';
-import dotenv from 'dotenv';
-dotenv.config();
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fetchPodcastDataFromIndex = void 0;
+const axios_1 = __importDefault(require("axios"));
+const crypto_1 = __importDefault(require("crypto"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const apiKey = process.env.PODCASTINDEX_KEY;
 const apiSecret = process.env.PODCASTINDEX_SECRET;
 console.log('apiKey', process.env.PODCASTINDEX_KEY);
@@ -11,7 +17,7 @@ const generateAuthHeaders = () => {
         throw new Error('API key and secret must be defined in the environment variables.');
     }
     const apiHeaderTime = Math.floor(Date.now() / 1000);
-    const hash = crypto
+    const hash = crypto_1.default
         .createHash('sha1')
         .update(apiKey + apiSecret + apiHeaderTime)
         .digest('hex');
@@ -22,11 +28,11 @@ const generateAuthHeaders = () => {
         Authorization: hash,
     };
 };
-export const fetchPodcastDataFromIndex = async (podcastIndexId) => {
+const fetchPodcastDataFromIndex = async (podcastIndexId) => {
     try {
         const headers = generateAuthHeaders();
         console.log('headers:', headers);
-        const response = await axios.get(`https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${podcastIndexId}&pretty`, { headers });
+        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${podcastIndexId}&pretty`, { headers });
         // const episodeResponse = await axios.get(
         //     `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${podcastIndexId}&pretty`,
         //     { headers }
@@ -56,3 +62,4 @@ export const fetchPodcastDataFromIndex = async (podcastIndexId) => {
         throw new Error('Failed to fetch podcast data');
     }
 };
+exports.fetchPodcastDataFromIndex = fetchPodcastDataFromIndex;

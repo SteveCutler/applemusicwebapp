@@ -217,14 +217,14 @@ const Library = () => {
                             <IoGridOutline style={style} />
                         )}
                     </span>
-                    <button
+                    {/* <button
                         disabled={loading}
                         onClick={updateLibrary}
                         className="btn btn-primary rounded-full"
                         title="Refresh library"
                     >
                         <IoMdRefreshCircle style={style} />
-                    </button>
+                    </button> */}
                     {/* <button
                         disabled={loading}
                         onClick={getRatedSongs}

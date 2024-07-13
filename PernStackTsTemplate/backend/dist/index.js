@@ -1,14 +1,19 @@
-import express from 'express';
-import cookieParser from 'cookie-parser';
-import authRoutes from '../src/routes/auth.route.js';
-import appleRoutes from '../src/routes/apple.route.js';
-import podcastRoutes from '../src/routes/podcast.route.js';
-import cors from 'cors';
-import dotenv from 'dotenv';
-dotenv.config();
-const app = express();
-app.use(cookieParser());
-app.use(express.json()); // for parsing application/json
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
+const auth_route_js_1 = __importDefault(require("../src/routes/auth.route.js"));
+const apple_route_js_1 = __importDefault(require("../src/routes/apple.route.js"));
+const podcast_route_js_1 = __importDefault(require("../src/routes/podcast.route.js"));
+const cors_1 = __importDefault(require("cors"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
+const app = (0, express_1.default)();
+app.use((0, cookie_parser_1.default)());
+app.use(express_1.default.json()); // for parsing application/json
 const allowedOrigins = [
     'http://localhost:5173',
     'https://mus-b2sxm6mp2-steve-cutlers-projects.vercel.app',
@@ -27,10 +32,10 @@ const corsOptions = {
     credentials: true,
     optionsSuccessStatus: 204,
 };
-app.use(cors(corsOptions));
-app.use('/api/auth', authRoutes);
-app.use('/api/apple', appleRoutes);
-app.use('/api/podcast', podcastRoutes);
+app.use((0, cors_1.default)(corsOptions));
+app.use('/api/auth', auth_route_js_1.default);
+app.use('/api/apple', apple_route_js_1.default);
+app.use('/api/podcast', podcast_route_js_1.default);
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });

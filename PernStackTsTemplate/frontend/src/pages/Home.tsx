@@ -46,7 +46,7 @@ const Home = () => {
         }
     }, [setBackendToken, musicKitInstance, appleMusicToken])
 
-    if (!appleMusicToken && isAuthorized) {
+    if (!appleMusicToken) {
         return (
             <div>
                 <AuthorizeButton />
@@ -56,7 +56,7 @@ const Home = () => {
 
     return (
         <div className="flex-col mx-auto flex pt-5 relative z-10 w-full  mb-40 rounded-lg ">
-            {appleMusicToken && isAuthorized && <AppleDashboard />}
+            {appleMusicToken && <AppleDashboard />}
         </div>
     )
 }

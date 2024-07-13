@@ -1,13 +1,21 @@
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-import { fetchPodcastDataFromIndex } from '../utils/podcastIndex.js';
-export const subscribePodcast = async (req, res) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getEpisodesByFeedId = exports.getSubs = exports.trackProgress = exports.fetchRecentEpisodes = exports.fetchEpisodes = exports.removeSub = exports.subscribePodcast = void 0;
+const client_1 = require("@prisma/client");
+const prisma = new client_1.PrismaClient();
+const podcastIndex_js_1 = require("../utils/podcastIndex.js");
+const crypto_1 = __importDefault(require("crypto"));
+const axios_1 = __importDefault(require("axios"));
+const subscribePodcast = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
         const userId = req.user.id;
         console.log('podcastIndexId:', podcastIndexId); // Add this line
         console.log('userId:', userId); // Add this line
-        const podcastData = await fetchPodcastDataFromIndex(podcastIndexId);
+        const podcastData = await (0, podcastIndex_js_1.fetchPodcastDataFromIndex)(podcastIndexId);
         const podcast = await prisma.podcast.upsert({
             where: { podcastIndexId },
             update: {
@@ -49,7 +57,8 @@ export const subscribePodcast = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-export const removeSub = async (req, res) => {
+exports.subscribePodcast = subscribePodcast;
+const removeSub = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
         const userId = req.user.id;
@@ -78,8 +87,9 @@ export const removeSub = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+exports.removeSub = removeSub;
 // Fetch episodes of a podcast
-export const fetchEpisodes = async (req, res) => {
+const fetchEpisodes = async (req, res) => {
     try {
         const { podcastId } = req.params;
         const episodes = await prisma.episode.findMany({
@@ -92,7 +102,8 @@ export const fetchEpisodes = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-export const fetchRecentEpisodes = async (req, res) => {
+exports.fetchEpisodes = fetchEpisodes;
+const fetchRecentEpisodes = async (req, res) => {
     try {
         const userId = req.user.id;
         const subscriptions = await prisma.subscription.findMany({
@@ -116,8 +127,9 @@ export const fetchRecentEpisodes = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+exports.fetchRecentEpisodes = fetchRecentEpisodes;
 // Track listening progress
-export const trackProgress = async (req, res) => {
+const trackProgress = async (req, res) => {
     try {
         const { episodeId, progress } = req.body;
         const userId = req.user.id;
@@ -142,8 +154,9 @@ export const trackProgress = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+exports.trackProgress = trackProgress;
 // Get subscribed podcast index IDs
-export const getSubs = async (req, res) => {
+const getSubs = async (req, res) => {
     try {
         const userId = req.user.id;
         const subscriptions = await prisma.subscription.findMany({
@@ -163,4 +176,43 @@ export const getSubs = async (req, res) => {
         console.error('Error fetching subscribed podcast IDs:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
+};
+exports.getSubs = getSubs;
+// Controller to get episodes by feed ID
+const getEpisodesByFeedId = async (req, res) => {
+    const feedId = req.params.feedId;
+    try {
+        const key = process.env.PODCASTINDEX_KEY;
+        const secret = process.env.PODCASTINDEX_SECRET;
+        if (!key || !secret) {
+            console.error('Podcast Index API key or secret is not set');
+            return;
+        }
+        const headerTime = Math.floor(Date.now() / 1000);
+        const hashInput = key + secret + headerTime;
+        const hash = crypto_1.default.createHash('sha1').update(hashInput).digest('hex');
+        const response = await axios_1.default.get(`https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`, {
+            headers: {
+                'User-Agent': 'Mus/0.5',
+                'X-Auth-Key': key,
+                'X-Auth-Date': headerTime,
+                Authorization: hash,
+            },
+            params: {
+                fulltext: true,
+            },
+        });
+        res.status(200).json({
+            message: 'latest podcast episodes',
+            data: response.data,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching episodes:', error);
+        res.status(500).json({ error: 'Failed to fetch episodes' });
+    }
+};
+exports.getEpisodesByFeedId = getEpisodesByFeedId;
+module.exports = {
+    getEpisodesByFeedId: exports.getEpisodesByFeedId,
 };

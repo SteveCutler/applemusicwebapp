@@ -173,12 +173,24 @@ const Search = () => {
                     )
 
                     const musicData = await response.data.results
-                    const headerTime = Math.floor(Date.now() / 1000)
-                    const hash = CryptoJS.SHA1(
+
+                    const headerTime = Math.floor(Date.now() / 1000).toString()
+                    const input =
                         import.meta.env.VITE_PODCASTINDEX_KEY +
-                            import.meta.env.VITE_PODCASTINDEX_SECRET +
-                            headerTime
-                    ).toString()
+                        import.meta.env.VITE_PODCASTINDEX_SECRET +
+                        headerTime
+                    const hash = CryptoJS.SHA1(input).toString()
+
+                    console.log(
+                        'key',
+                        import.meta.env.VITE_PODCASTINDEX_KEY,
+                        'secret',
+                        import.meta.env.VITE_PODCASTINDEX_SECRET,
+                        'headerTime',
+                        headerTime,
+                        'hash',
+                        hash
+                    )
 
                     const podcastResponse = await axios.get(
                         'https://api.podcastindex.org/api/1.0/search/byterm',

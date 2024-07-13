@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 import { fetchPodcastDataFromIndex } from '../utils/podcastIndex.js'
+import crypto from 'crypto'
+import axios from 'axios'
 
 // Subscribe to a podcast
 
@@ -215,4 +217,49 @@ export const getSubs = async (req: Request, res: Response) => {
         console.error('Error fetching subscribed podcast IDs:', error)
         res.status(500).json({ error: 'Internal Server Error' })
     }
+}
+
+// Controller to get episodes by feed ID
+export const getEpisodesByFeedId = async (req: Request, res: Response) => {
+    const feedId = req.params.feedId
+    try {
+        const key = process.env.PODCASTINDEX_KEY
+        const secret = process.env.PODCASTINDEX_SECRET
+
+        if (!key || !secret) {
+            console.error('Podcast Index API key or secret is not set')
+            return
+        }
+
+        const headerTime = Math.floor(Date.now() / 1000)
+        const hashInput = key + secret + headerTime
+
+        const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
+
+        const response = await axios.get(
+            `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${feedId}`,
+            {
+                headers: {
+                    'User-Agent': 'Mus/0.5',
+                    'X-Auth-Key': key,
+                    'X-Auth-Date': headerTime,
+                    Authorization: hash,
+                },
+                params: {
+                    fulltext: true,
+                },
+            }
+        )
+        res.status(200).json({
+            message: 'latest podcast episodes',
+            data: response.data,
+        })
+    } catch (error) {
+        console.error('Error fetching episodes:', error)
+        res.status(500).json({ error: 'Failed to fetch episodes' })
+    }
+}
+
+module.exports = {
+    getEpisodesByFeedId,
 }

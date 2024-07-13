@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import useLogin from '../hooks/auth/useLogin'
-import MusLogo from '/MusLogo.png'
+import MusLogo from '../../public/MusLogo.png'
+
 import spiralFavicon from '/spiralFavicon.svg'
 import { useStore } from '../store/store'
 

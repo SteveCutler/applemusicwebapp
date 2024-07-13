@@ -58,14 +58,18 @@ function App() {
     // console.log('apple token', appleMusicToken)
 
     useEffect(() => {
-        // if (!appleMusicToken) {
-        //     const appleToken = localStorage.getItem('musicUserToken')
-        //     setAppleMusicToken(appleToken)
-        // }
-        // if (!backendToken) {
-        //     const authToken = localStorage.getItem('backendToken')
-        //     setBackendToken(authToken)
-        // }
+        if (!appleMusicToken) {
+            try {
+                const appleToken = localStorage.getItem('musicUserToken')
+                setAppleMusicToken(appleToken)
+            } catch (error) {}
+        }
+        if (!backendToken) {
+            try {
+                const authToken = localStorage.getItem('backendToken')
+                setBackendToken(authToken)
+            } catch (error) {}
+        }
     }, [authorizeBackend, appleMusicToken, backendToken])
 
     // if (isCheckingAuth) {

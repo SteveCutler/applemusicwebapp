@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import spiralFavicon from '/spiralFavicon.svg'
-import MusLogo from '/MusLogo.png'
+import MusLogo from '../../public/MusLogo.png'
 import { useState } from 'react'
 import useSignup from '../hooks/auth/useSignup'
 
