@@ -27,7 +27,7 @@ const SignUp = () => {
                 className="flex select-none  mx-auto justify-center"
             /> */}
             <img
-                src={MusLogo}
+                src="/MusLogo.png?url"
                 width="150"
                 className="flex select-none  mx-auto justify-center"
             />

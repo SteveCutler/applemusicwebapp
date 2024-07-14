@@ -166,51 +166,32 @@ const Search = () => {
                         limit: 25,
                         l: 'en-us',
                     }
-
                     const response = await musicKitInstance.api.music(
                         `/v1/catalog/ca/search`,
                         queryParameters
                     )
-
                     const musicData = await response.data.results
 
-                    const headerTime = Math.floor(Date.now() / 1000).toString()
-                    const input =
-                        import.meta.env.VITE_PODCASTINDEX_KEY +
-                        import.meta.env.VITE_PODCASTINDEX_SECRET +
-                        headerTime
-                    const hash = CryptoJS.SHA1(input).toString()
-
-                    console.log(
-                        'key',
-                        import.meta.env.VITE_PODCASTINDEX_KEY,
-                        'secret',
-                        import.meta.env.VITE_PODCASTINDEX_SECRET,
-                        'headerTime',
-                        headerTime,
-                        'hash',
-                        hash
-                    )
-
-                    const podcastResponse = await axios.get(
-                        'https://api.podcastindex.org/api/1.0/search/byterm',
+                    const podcastResponse = await fetch(
+                        'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/search',
                         {
+                            method: 'POST',
                             headers: {
-                                'User-Agent': 'AppleMusicDashboard/1.0',
-                                'X-Auth-Key': import.meta.env
-                                    .VITE_PODCASTINDEX_KEY,
-                                'X-Auth-Date': headerTime,
-                                Authorization: hash,
+                                'Content-type': 'application/json',
                             },
-                            params: {
-                                q: searchTerm,
-                            },
+                            body: JSON.stringify({
+                                term: searchTerm,
+                            }),
+                            credentials: 'include',
                         }
                     )
-                    const podcastData: podcastInfo[] =
-                        await podcastResponse.data.feeds
+                    const podcastData = await podcastResponse.json()
 
-                    const filteredPodcast = podcastData.filter(
+                    const podcasts: podcastInfo[] = podcastData.data.feeds
+                    // const data = await podcastResponse.data
+                    console.log('podcast response', podcasts)
+
+                    const filteredPodcast = podcasts.filter(
                         podcast =>
                             // podcast.priority > 0 &&
                             // podcast.dead == 0 &&
@@ -220,7 +201,7 @@ const Search = () => {
                             podcast.episodeCount >= 1
                     )
 
-                    const sortedFilteredPodcasts = podcastData.sort(
+                    const sortedFilteredPodcasts = filteredPodcast.sort(
                         (a, b) => b.priority - a.priority
                     )
 

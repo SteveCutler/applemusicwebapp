@@ -371,7 +371,7 @@ function Footer() {
     }
 
     return (
-        <div className="footer px-5 flex items-center justify-between bg-gradient-to-b from-gray-900 to-black">
+        <div className="footer px-5 flex items-center justify-between bg-gradient-to-b  from-gray-900 to-black">
             <div className="flex justify-between items-center mt-3 w-full">
                 <div className="flex gap-2 justify-start w-1/4">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
@@ -459,7 +459,7 @@ function Footer() {
                 {/* {podcastDuration && isPlayingPodcast && (
                     <div>{podcastDuration}</div>
                 )} */}
-                <div className="flex flex-col justify-center items-between gap-3 w-1/2 mx-auto">
+                <div className="flex flex-col justify-center items-between  w-1/2 mx-auto">
                     <div className="flex gap-1 mx-auto w-1/4 justify-center ">
                         <button
                             className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}

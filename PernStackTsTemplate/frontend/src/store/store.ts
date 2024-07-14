@@ -743,14 +743,19 @@ export const useStore = create<Store>((set, get) => ({
         const { musicKitInstance } = get()
 
         if (musicKitInstance) {
-            musicKitInstance.stop()
+            ;(musicKitInstance.playbackState == 2 ||
+                musicKitInstance.playbackState == 3) &&
+                musicKitInstance.stop()
         }
+
         const fetchFinalUrl = async (initialUrl: string) => {
             try {
                 const response = await fetch(
-                    `/api/apple/resolve-url?url=${encodeURIComponent(initialUrl)}`
+                    `https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/resolve-url?url=${encodeURIComponent(initialUrl)}`
                 )
+                console.log('response', response)
                 const data = await response.json()
+                console.log('finalUrlData', data)
                 return data.finalUrl
             } catch (error) {
                 console.error('Failed to fetch final URL:', error)

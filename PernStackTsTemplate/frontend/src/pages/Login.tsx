@@ -27,7 +27,7 @@ const Login = () => {
     return (
         <div className="flex flex-col h-full -translate-y-10 items-center justify-center min-w-96 mx-auto">
             <img
-                src={MusLogo}
+                src="/MusLogo.png?url"
                 width="150"
                 className="flex select-none  mx-auto justify-center"
             />

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
-import { fetchPodcastDataFromIndex, fetchRecentEpisodes, } from '../utils/podcastIndex.js';
+import { fetchPodcastDataFromIndex, fetchRecentEpisodes, searchPodcastIndex, podcastEpisodeById, podcastByFeedId, } from '../utils/podcastIndex.js';
 export const subscribePodcast = async (req, res) => {
     try {
         const { podcastIndexId } = req.body;
@@ -167,19 +167,10 @@ export const getSubs = async (req, res) => {
     }
 };
 // Controller to get episodes by feed ID
-export const getEpisodesById = async (req, res) => {
+export const getRecentEpisodes = async (req, res) => {
     const feedId = req.params.feedId;
     console.log('feedId', feedId);
     try {
-        // const key = process.env.PODCASTINDEX_KEY
-        // const secret = process.env.PODCASTINDEX_SECRET
-        // if (!key || !secret) {
-        //     console.error('Podcast Index API key or secret is not set')
-        //     return
-        // }
-        // const headerTime = Math.floor(Date.now() / 1000)
-        // const hashInput = key + secret + headerTime
-        // const hash = crypto.createHash('sha1').update(hashInput).digest('hex')
         const podcastData = await fetchRecentEpisodes(feedId);
         res.status(200).json({
             message: 'latest podcast episodes',
@@ -191,6 +182,45 @@ export const getEpisodesById = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch episodes' });
     }
 };
-// module.exports = {
-//     getEpisodesByFeedId,
-// }
+export const search = async (req, res) => {
+    const { term } = req.body;
+    console.log('search term', term);
+    try {
+        const podcastData = await searchPodcastIndex(term);
+        res.status(200).json({
+            data: podcastData,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching episodes:', error);
+        res.status(500).json({ error: 'Failed to fetch episodes' });
+    }
+};
+export const getEpisodeById = async (req, res) => {
+    const id = req.params.id;
+    console.log('pocast episode id', id);
+    try {
+        const podcastData = await podcastEpisodeById(id);
+        res.status(200).json({
+            data: podcastData,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching episodes:', error);
+        res.status(500).json({ error: 'Failed to fetch episodes' });
+    }
+};
+export const getPodcastById = async (req, res) => {
+    const feedId = req.params.feedId;
+    console.log('pocast episode id', feedId);
+    try {
+        const podcastData = await podcastByFeedId(feedId);
+        res.status(200).json({
+            data: podcastData,
+        });
+    }
+    catch (error) {
+        console.error('Error fetching episodes:', error);
+        res.status(500).json({ error: 'Failed to fetch episodes' });
+    }
+};

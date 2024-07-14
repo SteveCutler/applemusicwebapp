@@ -134,45 +134,37 @@ const PodcastEpisode = () => {
                         headerTime
                 ).toString()
 
-                const episodesResponse = await axios.get(
-                    `https://api.podcastindex.org/api/1.0/episodes/byid?id=${id}&pretty`,
+                const episodesResponse = await fetch(
+                    `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episode/${id}`,
+
                     {
                         headers: {
-                            'User-Agent': 'AppleMusicDashboard/1.0',
-                            'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
-                            'X-Auth-Date': headerTime,
-                            Authorization: hash,
+                            'Content-type': 'application/json',
                         },
-                        params: {
-                            fulltext: true,
-                            max: 10,
-                        },
+                        credentials: 'include',
                     }
                 )
-                const episode: podcastEpisode = episodesResponse.data.episode
+                const episodeData = await episodesResponse.json()
+                const episode: podcastEpisode = await episodeData.data.episode
 
                 console.log('episode', episode)
 
                 setPodcastEpisode(episode)
                 if (episode) {
                     try {
-                        const infoResponse = await axios.get(
-                            `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${episode.feedId}&pretty`,
+                        const infoResponse = await fetch(
+                            `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-podcast/${episode.feedId}`,
+
                             {
                                 headers: {
-                                    'User-Agent': 'AppleMusicDashboard/1.0',
-                                    'X-Auth-Key': import.meta.env
-                                        .VITE_PODCASTINDEX_KEY,
-                                    'X-Auth-Date': headerTime,
-                                    Authorization: hash,
+                                    'Content-type': 'application/json',
                                 },
-                                params: {
-                                    fulltext: true,
-                                    max: 10,
-                                },
+                                credentials: 'include',
                             }
                         )
-                        const info = infoResponse.data.feed
+                        const infoData = await infoResponse.json()
+                        const info = infoData.data.feed
+                        console.log('info', info)
 
                         setPodcastInfo(info)
                     } catch (error) {

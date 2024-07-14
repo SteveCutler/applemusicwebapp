@@ -27,6 +27,7 @@ router.post('/get-ratings', protectRoute, getRatings);
 router.post('/get-library', protectRoute, getLibrary);
 //Resolve URL redirect
 router.get('/resolve-url', async (req, res) => {
+    console.log('resolving url');
     const url = req.query.url;
     if (typeof url !== 'string') {
         return res.status(400).send('Invalid URL');
@@ -36,7 +37,18 @@ router.get('/resolve-url', async (req, res) => {
         res.json({ finalUrl: response.request.res.responseUrl });
     }
     catch (error) {
-        console.error('Error resolving URL:', error);
+        console.error('Error resolving URL:', error.message);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+            console.error('Response status:', error.response.status);
+            console.error('Response headers:', error.response.headers);
+        }
+        else if (error.request) {
+            console.error('Request made but no response received:', error.request);
+        }
+        else {
+            console.error('Error in setting up the request:', error.message);
+        }
         res.status(500).send('Error resolving URL');
     }
 });
