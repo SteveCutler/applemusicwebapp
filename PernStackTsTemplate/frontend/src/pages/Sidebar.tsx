@@ -29,8 +29,9 @@ import FetchRecommendations from '../components/Apple/FetchRecommendations'
 import { FaPodcast } from 'react-icons/fa'
 
 const Sidebar = () => {
-    FetchRecentlyAddedToLib()
-    FetchRecentHistory()
+    // FetchRecentlyAddedToLib()
+
+    // FetchRecentHistory()
     const [isHovered, setIsHovered] = useState(false)
 
     const style = { fontSize: '1.5rem' }

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { FaCaretDown, FaCaretUp, FaCirclePlay } from 'react-icons/fa6'
 import { useStore } from '../../store/store'
 import parse from 'html-react-parser'
+import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 interface listItemProp {
     podcast: podcastEpisode
@@ -37,11 +38,14 @@ interface podcastEpisode {
 }
 
 const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
-    const { darkMode, queueToggle, playPodcast } = useStore(state => ({
-        queueToggle: state.queueToggle,
-        playPodcast: state.playPodcast,
-        darkMode: state.darkMode,
-    }))
+    const { darkMode, queueToggle, playPodcast, podcastProgress } = useStore(
+        state => ({
+            queueToggle: state.queueToggle,
+            playPodcast: state.playPodcast,
+            darkMode: state.darkMode,
+            podcastProgress: state.podcastProgress,
+        })
+    )
 
     const [expandDescription, setExpandDescription] = useState(false)
 
@@ -53,7 +57,8 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                 podcast.feedImage,
                 podcast.title,
                 title,
-                id
+                id,
+                podcast.id
             )
         }
     }
@@ -78,9 +83,24 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
             return `${hours}h${minutes}m`
         }
     }
+
+    const getEpisodeProgress = (episodeId, listenedEpisodes) => {
+        const episode = listenedEpisodes.find(
+            episode => episode.episodeId === episodeId
+        )
+        return episode ? episode.progress : 0
+    }
+
+    const progressPercent = getEpisodeProgress(
+        String(podcast.id),
+        podcastProgress
+    )
+
+    const progress = Number(progressPercent)
+
     return (
         <div
-            className={`flex flex-col gap-2 select-none ${darkMode ? 'text-white bg-slate-700' : 'text-black bg-slate-300'} rounded-lg p-3 my-2 w-full`}
+            className={`flex flex-col gap-2  select-none ${darkMode ? 'text-white bg-slate-700' : 'text-black bg-slate-300'} rounded-lg p-3 my-2 w-full`}
         >
             <div className="flex items-end px-3 pb-3 gap-2  ">
                 <img src={podcast.feedImage} style={{ height: '70px' }} />
@@ -95,7 +115,24 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                         >
                             <FaCirclePlay style={styleButton} />
                         </div>
-                        <div>{formatTime(podcast.duration)}</div>
+                        <div className="flex items-center gap-2">
+                            {formatTime(podcast.duration)}
+                            {progress !== 0 && (
+                                <div className=" text-blue-500 w-fit p-1 font-semibold text-md  flex m-0 p-0">
+                                    {progress < 99 ? (
+                                        <span> {String(progress)}%</span>
+                                    ) : (
+                                        <span>
+                                            {
+                                                <BsFillPatchCheckFill
+                                                    style={style}
+                                                />
+                                            }
+                                        </span>
+                                    )}
+                                </div>
+                            )}
+                        </div>
                     </div>
                     <div>{podcast.datePublishedPretty}</div>
                 </div>

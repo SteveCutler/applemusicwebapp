@@ -102,7 +102,7 @@ const EditPlaylist = () => {
 
     const initialize = async () => {
         let musicKitLoaded = false
-        if (musicKitLoaded === false) {
+        if (!musicKitInstance) {
             console.log('Initializing MusicKit...')
             await authorizeMusicKit()
             musicKitLoaded = true

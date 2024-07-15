@@ -9,9 +9,9 @@ const SidebarSongHistory = () => {
         currentSongId: state.currentSongId,
     }))
 
-    FetchRecentHistory()
     useEffect(() => {
-        if (!recentHistory) {
+        if (recentHistory.length < 1) {
+            FetchRecentHistory()
         }
     }, [recentHistory])
 

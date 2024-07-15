@@ -202,6 +202,10 @@ const Podcast = () => {
         if (!podcastInfo) {
             fetchPodcastData()
         }
+
+        if (!progressLoaded) {
+            fetchPodcastProgress()
+        }
     }, [id])
 
     const {
@@ -215,8 +219,12 @@ const Podcast = () => {
         isPlaying,
         playlist,
         setPlaylist,
+        progressLoaded,
+        fetchPodcastProgress,
     } = useStore(state => ({
         playPodcast: state.playPodcast,
+        progressLoaded: state.progressLoaded,
+        fetchPodcastProgress: state.fetchPodcastProgress,
         podcastUrl: state.podcastUrl,
         setSearchTerm: state.setSearchTerm,
         darkMode: state.darkMode,
@@ -241,7 +249,8 @@ const Podcast = () => {
                 podcastEpisodes[0].feedImage,
                 podcastEpisodes[0].title,
                 podcastInfo.title,
-                podcastInfo.id
+                podcastInfo.id,
+                podcastEpisodes[0].id
             )
         }
     }

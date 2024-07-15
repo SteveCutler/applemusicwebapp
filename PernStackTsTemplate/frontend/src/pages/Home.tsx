@@ -40,8 +40,6 @@ const Home = () => {
 
     useEffect(() => {
         if (!musicKitInstance || !appleMusicToken) {
-            console.log('music kit', musicKitInstance)
-            console.log('music token', appleMusicToken)
             initialize()
         }
     }, [setBackendToken, musicKitInstance, appleMusicToken])

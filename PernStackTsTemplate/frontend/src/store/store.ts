@@ -456,6 +456,12 @@ type podSub = {
     artwork: string
 }
 
+type podcastProgress = {
+    episodeId: number
+    progress: string
+    completed: boolean
+}
+
 // STATE INTERFACE
 
 interface State {
@@ -514,6 +520,9 @@ interface State {
     podSubs: podSub[] | null
     recentEps: podcastEpisode[] | null
     epId: number
+    podcastPlayerInit: boolean
+    progressLoaded: boolean
+    podcastProgress: podcastProgress[] | null
 }
 
 interface Actions {
@@ -599,6 +608,10 @@ interface Actions {
     setPodcastMuted: (toggle: boolean) => void
     setPodSubs: (subs: podSub[] | null) => void
     setRecentEps: (eps: podcastEpisode[] | null) => void
+    setAudioListeners: () => void
+    saveEpisodeProgress: (currentProgress: string, episodeId: number) => void
+    setPodcastProgress: (podcastProgress: podcastProgress[] | null) => void
+    fetchPodcastProgress: () => void
 }
 
 type Store = State & Actions
@@ -658,14 +671,131 @@ export const useStore = create<Store>((set, get) => ({
     scrubPod: null,
     podcastMuted: false,
     podcastAudio: new Audio(),
+    podcastPlayerInit: false,
     podcastVolume: 0.75,
     podSubs: null,
     recentEps: null,
+    progressLoaded: false,
+    podcastProgress: null,
 
     // Actions
 
     setRecentEps: (eps: podcastEpisode[] | null) => set({ recentEps: eps }),
+    setPodcastProgress: (podcastProgress: podcastProgress[] | null) =>
+        set({ podcastProgress }),
+    fetchPodcastProgress: async () => {
+        const { backendToken } = get()
+        const userId = backendToken
+        try {
+            const response = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-progress',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ userId }),
+                    credentials: 'include',
+                }
+            )
+            const data = await response.json()
+            console.log('podcast Progress', data)
+            set({ progressLoaded: true, podcastProgress: data })
+        } catch (error: any) {
+            console.error('error retrievein podcast progress: ', error)
+        }
+    },
     setPodSubs: (subs: podSub[] | null) => set({ podSubs: subs }),
+    saveEpisodeProgress: async (episodeProgress: string, id: number) => {
+        const { backendToken } = get()
+        const userId = backendToken
+        const episodeId = String(id)
+        const progress = Number(episodeProgress)
+        try {
+            const response = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/save-progress',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ episodeId, progress, userId }),
+                    credentials: 'include',
+                }
+            )
+            if (!response.ok) {
+                throw new Error('Failed to save progress')
+            }
+        } catch (error) {
+            console.error('Error saving episode progress:', error)
+        }
+    },
+
+    setAudioListeners: () => {
+        const {
+            podcastAudio,
+            podcastPlayerInit,
+            saveEpisodeProgress,
+            isPlayingPodcast,
+        } = get()
+
+        if (!podcastPlayerInit) {
+            podcastAudio.addEventListener('pause', () => {
+                const { podcastDuration, isPlayingPodcast, currentTime, epId } =
+                    get()
+                if (isPlayingPodcast) {
+                    const currentProgress =
+                        (currentTime / podcastDuration) * 100
+
+                    saveEpisodeProgress(currentProgress.toFixed(0), epId)
+                }
+            })
+            podcastAudio.addEventListener('ended', () => {
+                const { podcastDuration, isPlayingPodcast, currentTime, epId } =
+                    get()
+                if (isPlayingPodcast) {
+                    const currentProgress =
+                        (currentTime / podcastDuration) * 100
+
+                    saveEpisodeProgress(currentProgress.toFixed(0), epId)
+                }
+            })
+            // podcastAudio.addEventListener('seeked', () => {
+            //     const { podcastDuration, isPlayingPodcast, currentTime, epId } =
+            //         get()
+            //     if (isPlayingPodcast) {
+            //         const currentProgress =
+            //             (currentTime / podcastDuration) * 100
+
+            //         saveEpisodeProgress(currentProgress.toFixed(0), epId)
+            //     }
+            // })
+            podcastAudio.addEventListener('stalled', () => {
+                const { podcastDuration, isPlayingPodcast, currentTime, epId } =
+                    get()
+                if (isPlayingPodcast) {
+                    const currentProgress =
+                        (currentTime / podcastDuration) * 100
+
+                    saveEpisodeProgress(currentProgress.toFixed(0), epId)
+                }
+            })
+            // podcastAudio.addEventListener('timeupdate', () => {
+            //     saveEpisodeProgress(currentProgress, epId)
+            // })
+            // podcastAudio.addEventListener('seeking', () => {
+            //     const { podcastDuration, isPlayingPodcast, currentTime, epId } =
+            //         get()
+            //     if (isPlayingPodcast) {
+            //         const currentProgress =
+            //             (currentTime / podcastDuration) * 100
+
+            //         saveEpisodeProgress(currentProgress.toFixed(0), epId)
+            //     }
+            // })
+            set({ podcastPlayerInit: true })
+        }
+    },
 
     setPodcastVolume: (vol: number) => {
         const { podcastAudio } = get()
@@ -727,6 +857,7 @@ export const useStore = create<Store>((set, get) => ({
         set(state => ({ currentTime: state.podcastAudio.currentTime })),
 
     setScrubPod: (time: number | null) => set({ scrubPod: time }),
+
     seekPodcast: (time: number) => {
         set(state => {
             state.podcastAudio.currentTime = time
@@ -735,6 +866,7 @@ export const useStore = create<Store>((set, get) => ({
         })
         set({ scrubPod: null })
     },
+
     playPodcast: async (
         url,
         time,
@@ -744,7 +876,16 @@ export const useStore = create<Store>((set, get) => ({
         showId,
         epId
     ) => {
-        const { musicKitInstance } = get()
+        const {
+            musicKitInstance,
+            podcastPlayerInit,
+            setAudioListeners,
+            podcastProgress,
+            podcastAudio,
+        } = get()
+        if (!podcastPlayerInit) {
+            setAudioListeners()
+        }
 
         if (musicKitInstance) {
             set({ isPlaying: false })
@@ -768,9 +909,20 @@ export const useStore = create<Store>((set, get) => ({
 
         const finalUrl = await fetchFinalUrl(url)
 
-        // console.log('finalUrl', finalUrl)
+        const getEpisodeProgress = (episodeId, listenedEpisodes) => {
+            const episode = listenedEpisodes.find(
+                episode => episode.episodeId === episodeId
+            )
+            return episode ? episode.progress : 0
+        }
 
-        set({ currentTime: 0 })
+        const progressPercent = getEpisodeProgress(
+            String(epId),
+            podcastProgress
+        )
+
+        const progress = Number(time) * Number(progressPercent) * 0.01
+        podcastAudio.currentTime = progress
         // console.log(url, time, artUrl, trackName, collectionName)
         set(state => {
             if (state.podcastAudio) {
@@ -808,12 +960,12 @@ export const useStore = create<Store>((set, get) => ({
         set(state => {
             if (state.podcastAudio) {
                 state.podcastAudio.pause()
-                state.podcastAudio.currentTime = 0
+                // state.podcastAudio.currentTime = 0
             }
             return {
                 isPlayingPodcast: false,
                 podcastUrl: '',
-                podcastDuration: 0,
+                // podcastDuration: 0,
                 podcastArtist: '',
                 podcastEpTitle: '',
                 showId: 0,
@@ -1207,7 +1359,23 @@ export const useStore = create<Store>((set, get) => ({
                 music.addEventListener(
                     'playbackStateDidChange',
                     ({ oldState, state }: any) => {
-                        stopPodcast()
+                        const {
+                            saveEpisodeProgress,
+                            podcastDuration,
+                            isPlayingPodcast,
+                            currentTime,
+                            epId,
+                        } = get()
+
+                        if (isPlayingPodcast) {
+                            const currentProgress =
+                                (currentTime / podcastDuration) * 100
+                            saveEpisodeProgress(
+                                currentProgress.toFixed(0),
+                                epId
+                            )
+                            stopPodcast()
+                        }
 
                         console.log(
                             `Changed the playback state from ${oldState} to ${state}`

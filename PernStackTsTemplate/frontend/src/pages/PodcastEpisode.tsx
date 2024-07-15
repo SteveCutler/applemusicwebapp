@@ -231,7 +231,8 @@ const PodcastEpisode = () => {
                 podcastEpisode.feedImage,
                 podcastEpisode.title,
                 podcastInfo.title,
-                podcastInfo.id
+                podcastInfo.id,
+                podcastEpisode.id
             )
         }
     }

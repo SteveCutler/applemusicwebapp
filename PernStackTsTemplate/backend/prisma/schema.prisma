@@ -52,7 +52,7 @@ model Episode {
   description     String?
   audioUrl        String @unique
   releaseDate     DateTime
-  listenedEpisodes ListenedEpisode[]
+
 }
 
 model Subscription {
@@ -71,7 +71,7 @@ model ListenedEpisode {
   completed Boolean  @default(false)
 
   user      User     @relation(fields: [userId], references: [id])
-  episode   Episode  @relation(fields: [episodeId], references: [id])
+
 
   @@unique([userId, episodeId])
 }

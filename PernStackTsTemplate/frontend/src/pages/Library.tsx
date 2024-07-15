@@ -69,13 +69,13 @@ const Library = () => {
 
     const initialize = async () => {
         let musicKitLoaded = false
-        if (musicKitLoaded === false) {
+        if (!musicKitInstance) {
             console.log('Initializing MusicKit...')
             await authorizeMusicKit()
             musicKitLoaded = true
         }
 
-        if (!appleMusicToken && musicKitLoaded) {
+        if (!appleMusicToken && musicKitInstance) {
             console.log('fetching Apple token...')
             await fetchAppleToken()
         }

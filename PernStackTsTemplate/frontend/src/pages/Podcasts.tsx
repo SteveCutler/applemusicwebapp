@@ -86,8 +86,12 @@ const Podcasts = () => {
         setRecentEps,
         queueToggle,
         setPodSubs,
+        progressLoaded,
+        fetchPodcastProgress,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        progressLoaded: state.progressLoaded,
+        fetchPodcastProgress: state.fetchPodcastProgress,
         recentEps: state.recentEps,
         setRecentEps: state.setRecentEps,
         queueToggle: state.queueToggle,
@@ -247,6 +251,9 @@ const Podcasts = () => {
         }
         if (!recentEps && podSubs) {
             getRecentEps()
+        }
+        if (!progressLoaded) {
+            fetchPodcastProgress()
         }
     }, [podSubs])
 

@@ -39,6 +39,29 @@ type AlbumType = {
     type: string
 }
 
+type RecentlyAddedItem = AlbumType | playlist | StationType | Song
+
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
 type playlist = {
     attributes: {
         artwork?: {
@@ -56,6 +79,50 @@ type playlist = {
     }
     href: string
     id: string
+    type: string
+}
+
+type AttributeObject = {
+    artistName: String
+    artwork: ArtworkObject
+    dateAdded: String
+    genreNames: Array<String>
+    name: String
+    releasedDate: String
+    trackCount: Number
+}
+
+type ArtworkObject = {
+    height: Number
+    width: Number
+    url: String
+}
+interface Album {
+    id: string
+    albumId: string
+    name: string
+    artistName: string
+    artworkUrl: string
+    trackCount: number
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
     type: string
 }
 
@@ -91,22 +158,6 @@ interface StationType {
     }
     id: String
     type: string
-}
-
-type AttributeObject = {
-    artistName: String
-    artwork: ArtworkObject
-    dateAdded: String
-    genreNames: Array<String>
-    name: String
-    releasedDate: String
-    trackCount: Number
-}
-
-type ArtworkObject = {
-    height: Number
-    width: Number
-    url: String
 }
 
 type podcastInfo = {
@@ -200,8 +251,17 @@ const AppleDashboard = () => {
         setRecommendations,
         moreLikeRecommendations,
         appleMusicToken,
+        progressLoaded,
+        podcastProgress,
+        fetchPodcastProgress,
         stationsForYou,
+        setRecentlyAddedToLib,
     } = useStore(state => ({
+        progressLoaded: state.progressLoaded,
+        setRecentlyAddedToLib: state.setRecentlyAddedToLib,
+        recentlyAddedToLib: state.recentlyAddedToLib,
+        podcastProgress: state.podcastProgress,
+        fetchPodcastProgress: state.fetchPodcastProgress,
         podSubs: state.podSubs,
         setPersonalizedPlaylists: state.setPersonalizedPlaylists,
         setPodSubs: state.setPodSubs,
@@ -212,7 +272,7 @@ const AppleDashboard = () => {
         recentEps: state.recentEps,
         backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
-        recentlyAddedToLib: state.recentlyAddedToLib,
+
         darkMode: state.darkMode,
         moreLikeRecommendations: state.moreLikeRecommendations,
         themedRecommendations: state.themedRecommendations,
@@ -361,17 +421,8 @@ const AppleDashboard = () => {
                         queryParameters
                     )
 
-                    // if (!res.ok) {
-                    //     console.log('error: ', res.body)
-                    // }
-                    // console.log(res)
-
                     const data = await res.data.data
-                    console.log('recommendations: ', data)
-                    // console.log(
-                    //     'first group: ',
-                    //     data[0].relationships.contents.data
-                    // )
+                    console.log('loading recommendations: ', data)
 
                     setPersonalizedPlaylists(data[0])
 
@@ -400,12 +451,8 @@ const AppleDashboard = () => {
             }
         }
 
-        if (musicKitInstance && !recommendations && appleMusicToken) {
-            fetchRecommendations()
-        }
-    }, [musicKitInstance])
+        const recent: RecentlyAddedItem[] = []
 
-    useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
                 const ids = podSubs.map(pod => pod.id).join()
@@ -438,7 +485,7 @@ const AppleDashboard = () => {
                         }
                     })
 
-                    console.log('eps data', filteredEps)
+                    // console.log('eps data', filteredEps)
                     const recent = filteredEps
                         .map((ep: podcastEpisode) => {
                             const oneWeekInSeconds = 604800
@@ -464,7 +511,7 @@ const AppleDashboard = () => {
                     )
                     // console.log('sorted eps', sortedEps)
                     // Filter out null values
-                    console.log('sorted', sortedEps)
+                    // console.log('sorted', sortedEps)
 
                     setRecentEps(sortedEps)
                 } catch (error) {
@@ -500,6 +547,38 @@ const AppleDashboard = () => {
                 toast.error('Error retrieving podcasts..')
             }
         }
+
+        const fetchRecentlyAddedToLib = async (url: string) => {
+            if (musicKitInstance) {
+                try {
+                    // console.log(music)
+                    const queryParameters = { l: 'en-us', limit: 10 }
+                    const res = await musicKitInstance.api.music(
+                        url,
+                        queryParameters
+                    )
+
+                    if (res.status !== 200) {
+                        // console.log('error: ', res.body)
+                    }
+
+                    const data: RecentlyAddedItem[] = await res.data.data
+                    recent.push(...data)
+
+                    if (res.data.next && recent.length <= 20) {
+                        await fetchRecentlyAddedToLib(res.data.next)
+                    } else {
+                        setRecentlyAddedToLib(recent)
+                    }
+                } catch (error: any) {
+                    console.error(error)
+                }
+            }
+        }
+
+        if (musicKitInstance && recentlyAddedToLib.length < 1) {
+            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
+        }
         if (!podSubs) {
             getSubs()
         }
@@ -507,17 +586,21 @@ const AppleDashboard = () => {
             getRecentEps()
         }
 
+        if (!podcastProgress) {
+            fetchPodcastProgress()
+        }
         if (!musicKitInstance) {
             authorizeMusicKit()
-            // FetchHeavyRotation()
-            //     FetchRecentlyPlayed()
-            //     FetchRecommendations()
         }
-    }, [podSubs, musicKitInstance])
 
-    // console.log('recommendations: ', recommendations)
+        if (!recommendations) {
+            fetchRecommendations()
+        }
+    }, [musicKitInstance, podcastProgress])
 
-    // const { recommendations } = FetchRecommendations()
+    console.log('recently added to lib: ', recentlyAddedToLib)
+
+    // const { recommendations } = recently()
 
     return (
         <div
@@ -528,6 +611,14 @@ const AppleDashboard = () => {
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
+                />
+            )}
+            {recentlyAddedToLib.length > 1 && (
+                <DropdownDisplay
+                    object={recentlyAddedToLib.slice(0, 15)}
+                    sliceNumber={sliceNumber}
+                    noTitle={true}
+                    title={'Recently Added to Library'}
                 />
             )}
             {recommendations &&

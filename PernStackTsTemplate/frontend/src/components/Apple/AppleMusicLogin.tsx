@@ -11,23 +11,25 @@ const AppleMusicLogin = () => {
         fetchAppleToken,
         generateAppleToken,
         authorizeMusicKit,
-        musicInstance,
+        musicKitInstance,
         backendToken,
         appleMusicToken,
     } = useStore(state => ({
         fetchAppleToken: state.fetchAppleToken,
         authorizeMusicKit: state.authorizeMusicKit,
-        musicInstance: state.musicKitInstance,
+        musicKitInstance: state.musicKitInstance,
         generateAppleToken: state.generateAppleToken,
         backendToken: state.backendToken,
         appleMusicToken: state.appleMusicToken,
     }))
     // const { musicUserToken, setMusicUserToken } = useMusicTokenContext()
     //const musicKitLoaded = useMusicKit()
-    authorizeMusicKit()
+    if (!musicKitInstance) {
+        authorizeMusicKit()
+    }
     //const [musicUserToken, setMusicUserToken] = useState<string | null>(null)
     // const { authUser } = useAuthContext()
-    console.log('music instance: ', musicInstance)
+    console.log('music instance: ', musicKitInstance)
     console.log('backend token: ', backendToken)
     console.log('backend token: ', backendToken)
     if (!backendToken) {
@@ -36,7 +38,7 @@ const AppleMusicLogin = () => {
     //const userId = backendToken
     useEffect(() => {
         const initialize = async () => {
-            if (musicInstance && backendToken) {
+            if (musicKitInstance && backendToken && !appleMusicToken) {
                 fetchAppleToken()
                 if (!appleMusicToken) {
                     await generateAppleToken()
@@ -46,7 +48,7 @@ const AppleMusicLogin = () => {
         if (!appleMusicToken) {
             initialize()
         }
-    }, [musicInstance, backendToken, fetchAppleToken, generateAppleToken])
+    }, [musicKitInstance, backendToken, fetchAppleToken, generateAppleToken])
 
     // const createToken = async () => {
     //     if (!musicKitLoaded) {

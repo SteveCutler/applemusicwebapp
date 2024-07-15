@@ -70,7 +70,7 @@ function App() {
                 setBackendToken(authToken)
             } catch (error) {}
         }
-    }, [authorizeBackend, appleMusicToken, backendToken])
+    }, [])
 
     // if (isCheckingAuth) {
     //     return <div>Loading...</div>

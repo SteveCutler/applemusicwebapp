@@ -121,8 +121,8 @@ export const fetchEpisodes = async (req, res) => {
 // Track listening progress
 export const trackProgress = async (req, res) => {
     try {
-        const { episodeId, progress } = req.body;
-        const userId = req.user.id;
+        const { episodeId, progress, userId } = req.body;
+        console.log('episodeId', episodeId, 'progress', progress, 'userId', userId);
         const listenedEpisode = await prisma.listenedEpisode.upsert({
             where: {
                 userId_episodeId: {
@@ -138,6 +138,26 @@ export const trackProgress = async (req, res) => {
             },
         });
         res.status(200).json(listenedEpisode);
+    }
+    catch (error) {
+        console.error('Error tracking progress:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+export const retrieveProgress = async (req, res) => {
+    try {
+        const { userId } = req.body;
+        const listenedEpisodes = await prisma.listenedEpisode.findMany({
+            where: {
+                userId,
+            },
+            select: {
+                episodeId: true,
+                progress: true,
+                completed: true,
+            },
+        });
+        res.status(200).json(listenedEpisodes);
     }
     catch (error) {
         console.error('Error tracking progress:', error);
