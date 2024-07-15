@@ -743,9 +743,8 @@ export const useStore = create<Store>((set, get) => ({
         const { musicKitInstance } = get()
 
         if (musicKitInstance) {
-            ;(musicKitInstance.playbackState == 2 ||
-                musicKitInstance.playbackState == 3) &&
-                musicKitInstance.stop()
+            set({ isPlaying: false })
+            musicKitInstance.playbackState !== 0 && musicKitInstance.stop()
         }
 
         const fetchFinalUrl = async (initialUrl: string) => {

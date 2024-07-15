@@ -130,6 +130,7 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
     const styleButton = { fontSize: '2rem', color: 'dodgerblue' }
 
     const handlePlayPodcast = async () => {
+        console.log('podcast', podcast, 'podcast show tile', podcast.showTitle)
         if (podcast && podcast.showTitle) {
             playPodcast(
                 podcast.enclosureUrl,

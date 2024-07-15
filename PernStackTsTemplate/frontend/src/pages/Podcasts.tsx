@@ -98,15 +98,6 @@ const Podcasts = () => {
 
     const [loading, setLoading] = useState(false)
 
-    function isWithinLastWeek(datePublished: number) {
-        const currentTime = Math.floor(Date.now() / 1000) // Current time in Unix timestamp
-        const oneWeekInSeconds = 604800 // One week in seconds
-
-        // Check if the date is within the last week
-
-        return currentTime - datePublished
-    }
-
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
     const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
@@ -124,6 +115,14 @@ const Podcasts = () => {
         sliceNumber = 4 // For md screens and larger
     } else {
         sliceNumber = 2 // For small screens
+    }
+    function isWithinLastWeek(datePublished: number) {
+        const currentTime = Math.floor(Date.now() / 1000) // Current time in Unix timestamp
+        const oneWeekInSeconds = 604800 // One week in seconds
+
+        // Check if the date is within the last week
+
+        return currentTime - datePublished
     }
 
     function getTimeDifference(datePublished: number) {
@@ -143,63 +142,11 @@ const Podcasts = () => {
         }
     }
 
-    // const fetchMostRecentEp = async (id: string) => {
-    //     try {
-    //         const key = import.meta.env.VITE_PODCASTINDEX_KEY
-    //         const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
-
-    //         if (!key || !secret) {
-    //             console.error('Podcast Index API key or secret is not set')
-    //             return
-    //         }
-
-    //         const headerTime = Math.floor(Date.now() / 1000)
-    //         const hashInput = key + secret + headerTime
-
-    //         const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
-
-    //         const response = await axios.get(
-    //             `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}`,
-    //             {
-    //                 headers: {
-    //                     'X-Auth-Key': key,
-    //                     'X-Auth-Date': headerTime,
-    //                     Authorization: hash,
-    //                 },
-    //                 params: {
-    //                     fulltext: true,
-    //                 },
-    //             }
-    //         )
-    //         console.log('episodes', response)
-    //         // const episode: podcastEpisode = episodesResponse.data.items[0]
-
-    //         const time = isWithinLastWeek(episode.datePublished)
-    //         const oneWeekInSeconds = 604800
-    //         if (time < oneWeekInSeconds) {
-    //             const newEpisode = {
-    //                 ...episode,
-    //                 released: getTimeDifference(episode.datePublished),
-    //                 timeSinceRelease: time,
-    //             }
-    //             return newEpisode
-    //         } else {
-    //             return null
-    //         }
-
-    //         // return episodes[0]
-    //     } catch (error: any) {
-    //         console.error(error)
-    //     }
-    // }
-
     useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
                 const ids = podSubs.map(pod => pod.id).join()
                 console.log('ids', ids)
-                // const id = podSubs[0].id.toString()
-                // console.log('id', id.toString())
 
                 try {
                     const response = await fetch(
@@ -216,6 +163,7 @@ const Podcasts = () => {
 
                     let eps = await response.json()
                     const epsData = eps.data.items
+                    console.log('eps data', epsData)
                     const filteredEps: podcastEpisode[] = []
                     const feedIdSet: Set<string> = new Set()
 
@@ -226,7 +174,6 @@ const Podcasts = () => {
                         }
                     })
 
-                    console.log('eps data', filteredEps)
                     const recent = filteredEps
                         .map((ep: podcastEpisode) => {
                             const oneWeekInSeconds = 604800

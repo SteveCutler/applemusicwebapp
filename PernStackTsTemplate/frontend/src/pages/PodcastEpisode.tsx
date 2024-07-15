@@ -302,7 +302,7 @@ const PodcastEpisode = () => {
                                 {id && (
                                     <PodcastOptionsModal
                                         big={true}
-                                        id={podcastEpisode.feedId}
+                                        id={podcastEpisode.feedId.toString()}
                                     />
                                 )}
                             </div>

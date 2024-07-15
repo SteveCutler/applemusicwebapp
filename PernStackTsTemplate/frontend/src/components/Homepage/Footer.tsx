@@ -325,9 +325,7 @@ function Footer() {
                     e.target.tagName !== 'INPUT' &&
                     e.target.tagName !== 'TEXTAREA'
                 ) {
-                    isPlayingPodcast
-                        ? playPauseHandlerPodcast()
-                        : playPauseHandler()
+                    playPauseHandlerPodcast()
                 }
             }
         }
@@ -354,8 +352,8 @@ function Footer() {
     const goToPodcast = () => {
         navigate(`/podcast/${showId}`)
     }
-    const style = { fontSize: '3em' }
-    const styleSmall = { fontSize: '2em' }
+    const style = { fontSize: '2.2em' }
+    const styleSmall = { fontSize: '1.5em' }
 
     function convertMillisecondsToMinutesAndSeconds(ms: number) {
         const minutes = Math.floor(ms / 60000)
@@ -371,7 +369,10 @@ function Footer() {
     }
 
     return (
-        <div className="footer px-5 flex items-center justify-between bg-gradient-to-b  from-gray-900 to-black">
+        <div
+            className="footer px-5 flex items-center justify-between bg-gradient-to-b  from-gray-900 to-black"
+            style={{ maxHeight: '75px' }}
+        >
             <div className="flex justify-between items-center mt-3 w-full">
                 <div className="flex gap-2 justify-start w-1/4">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
@@ -400,7 +401,7 @@ function Footer() {
                             />
                         )
                     )}
-                    <div className="flex flex-col w-full justify-center items-start text-xs font-normal">
+                    <div className="flex flex-col w-full justify-center  items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <>
                                 <div
@@ -485,15 +486,30 @@ function Footer() {
                             <TbRewindBackward15 style={styleSmall} />
                         </button>
                         <button
-                            className={`flex items-center rounded-full justify-center ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'disabled'} hover:text-white active:scale-95`}
+                            className={`flex items-center rounded-full justify-center ${!musicKitInstance?.nowPlayingItem && 'hidden'} hover:text-white active:scale-95`}
                             onClick={e =>
                                 isPlayingPodcast
                                     ? playPauseHandlerPodcast()
                                     : playPauseHandler()
                             }
                         >
-                            {musicKitInstance?.playbackState == 2 ||
-                            !podcastAudio.paused ? (
+                            {musicKitInstance?.playbackState !== 0 &&
+                            musicKitInstance?.playbackState !== 1 &&
+                            musicKitInstance?.playbackState !== 3 ? (
+                                <FaRegCirclePause style={style} />
+                            ) : (
+                                <FaCirclePlay style={style} />
+                            )}
+                        </button>
+                        <button
+                            className={`flex items-center rounded-full justify-center ${!isPlayingPodcast && 'hidden'} hover:text-white active:scale-95`}
+                            onClick={e =>
+                                isPlayingPodcast
+                                    ? playPauseHandlerPodcast()
+                                    : playPauseHandler()
+                            }
+                        >
+                            {!podcastAudio.paused && !podcastAudio.ended ? (
                                 <FaRegCirclePause style={style} />
                             ) : (
                                 <FaCirclePlay style={style} />
@@ -559,7 +575,7 @@ function Footer() {
                             )}
                         </button>
                     </div>
-                    <div className="flex justify-center items-center ">
+                    <div className="flex justify-end items-end ">
                         <div
                             className="h-full w-fit font-semibold select-none -translate-y-2 flex justify-center items-center"
                             style={{ width: '100px' }}
@@ -577,7 +593,7 @@ function Footer() {
                                   : ''}
                         </div>
 
-                        <div className="w-full flex">
+                        <div className="w-full flex translate-y-2">
                             <Timeline />
                         </div>
                         <div
