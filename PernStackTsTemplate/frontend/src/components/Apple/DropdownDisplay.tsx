@@ -288,7 +288,6 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                 .map((item, index: number) => (
                                     <PodcastItem
                                         key={index}
-                                        recent={true}
                                         podcast={item}
                                         width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                     />

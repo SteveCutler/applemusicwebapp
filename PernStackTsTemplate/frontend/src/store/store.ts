@@ -453,7 +453,7 @@ type RecentlyAddedItem = AlbumType | playlist | StationType | Song
 type podSub = {
     title: string
     id: string
-    image: string
+    artwork: string
 }
 
 // STATE INTERFACE
@@ -513,6 +513,7 @@ interface State {
     podcastMuted: boolean
     podSubs: podSub[] | null
     recentEps: podcastEpisode[] | null
+    epId: number
 }
 
 interface Actions {
@@ -582,7 +583,8 @@ interface Actions {
         artUrl: string,
         trackName: string,
         collectionCensoredName: string,
-        showId: number
+        showId: number,
+        episodeId: number
     ) => void
 
     stopPodcast: () => void
@@ -652,6 +654,7 @@ export const useStore = create<Store>((set, get) => ({
     podcastEpTitle: '',
     podcastArtUrl: '',
     showId: 0,
+    epId: 0,
     scrubPod: null,
     podcastMuted: false,
     podcastAudio: new Audio(),
@@ -738,7 +741,8 @@ export const useStore = create<Store>((set, get) => ({
         artUrl,
         trackName,
         collectionName,
-        showId
+        showId,
+        epId
     ) => {
         const { musicKitInstance } = get()
 
@@ -789,6 +793,7 @@ export const useStore = create<Store>((set, get) => ({
                 podcastEpTitle: trackName,
                 podcastArtUrl: artUrl,
                 showId,
+                epId,
             }
         })
     },

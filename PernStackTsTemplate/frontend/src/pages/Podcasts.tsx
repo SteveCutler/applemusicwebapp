@@ -165,6 +165,9 @@ const Podcasts = () => {
                     const epsData = eps.data.items
                     console.log('eps data', epsData)
                     const filteredEps: podcastEpisode[] = []
+
+                    console.log('filtered eps', filteredEps, 'podSubs', podSubs)
+
                     const feedIdSet: Set<string> = new Set()
 
                     epsData.forEach(ep => {
@@ -173,6 +176,8 @@ const Podcasts = () => {
                             filteredEps.push(ep)
                         }
                     })
+
+                    podSubs.forEach
 
                     const recent = filteredEps
                         .map((ep: podcastEpisode) => {
@@ -228,7 +233,7 @@ const Podcasts = () => {
                 )
 
                 const data = await response.json()
-
+                console.log('podSubs', data)
                 setPodSubs(data)
                 setLoading(false)
             } catch (error) {
@@ -250,23 +255,18 @@ const Podcasts = () => {
     }
     return (
         <div className={`flex flex-col`}>
-            {recentEps && (
-                <DropdownDisplay
-                    podcast={true}
-                    object={recentEps}
-                    sliceNumber={sliceNumber}
-                />
-            )}
-
             {podSubs && (
-                <div
-                    className={`text-xl font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
-                >
-                    <div className="px-5">Subscriptions</div>
-                </div>
-            )}
-            <div className="flex flex-wrap justify-center w-fit gap-1 ">
-                {podSubs &&
+                <div className="flex flex-wrap justify-center w-fit gap-1 ">
+                    <DropdownDisplay
+                        object={podSubs}
+                        podcastShow={true}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={'Podcast Subscriptions'}
+
+                        // shrink={searchFilters.length < 2}
+                    />
+                    {/* {podSubs &&
                     podSubs.map((sub, index) => (
                         <PodcastItem
                             key={index}
@@ -274,8 +274,16 @@ const Podcasts = () => {
                             sub={true}
                             width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                         />
-                    ))}
-            </div>
+                    ))} */}
+                </div>
+            )}
+            {recentEps && (
+                <DropdownDisplay
+                    podcast={true}
+                    object={recentEps}
+                    sliceNumber={sliceNumber}
+                />
+            )}
         </div>
     )
 }

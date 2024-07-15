@@ -120,7 +120,7 @@ const Sidebar = () => {
         // }
     }, [appleMusicToken])
 
-    const [viewType, setViewType] = useState('likes')
+    const [viewType, setViewType] = useState('history')
 
     return (
         <>

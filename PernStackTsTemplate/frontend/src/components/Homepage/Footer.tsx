@@ -28,6 +28,7 @@ function Footer() {
         podcastDuration,
         stopPodcast,
         showId,
+        epId,
         podcastUrl,
         currentElapsedTime,
         albumArtUrl,
@@ -45,6 +46,7 @@ function Footer() {
         podcastArtUrl,
     } = useStore(state => ({
         podcastArtist: state.podcastArtist,
+        epId: state.epId,
         currentTime: state.currentTime,
         podcastAudio: state.podcastAudio,
         podcastEpTitle: state.podcastEpTitle,
@@ -352,6 +354,9 @@ function Footer() {
     const goToPodcast = () => {
         navigate(`/podcast/${showId}`)
     }
+    const goToPodcastEpisode = () => {
+        navigate(`/podcast-episode/${epId}`)
+    }
     const style = { fontSize: '2.2em' }
     const styleSmall = { fontSize: '1.5em' }
 
@@ -440,7 +445,7 @@ function Footer() {
                                 <div className="font-semibold   w-full h-full  flex-col flex justify-around">
                                     <div
                                         className="hover:text-white hover:cursor-pointer w-fit h-fit"
-                                        onClick={goToPodcast}
+                                        onClick={goToPodcastEpisode}
                                     >
                                         {podcastEpTitle}
                                     </div>
@@ -460,8 +465,8 @@ function Footer() {
                 {/* {podcastDuration && isPlayingPodcast && (
                     <div>{podcastDuration}</div>
                 )} */}
-                <div className="flex flex-col justify-center items-between  w-1/2 mx-auto">
-                    <div className="flex gap-1 mx-auto w-1/4 justify-center ">
+                <div className="flex flex-col  justify-center mx-auto items-center w-1/2 ">
+                    <div className="flex translate-x-5 mx-auto w-1/4 justify-center ">
                         <button
                             className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {
@@ -530,11 +535,15 @@ function Footer() {
                             <IoPlayForwardCircleSharp style={style} />
                         </button>
                         <button
-                            className={`${repeat && 'text-blue-600'} ${!isPlayingPodcast && 'hidden'} flex rounded-full mx-2 font-bold hover:text-white items-center justify-center active:scale-95`}
+                            className={`${repeat && 'text-blue-600'} ${!isPlayingPodcast && 'hidden'} flex rounded-full mx-2  font-bold hover:text-white items-center justify-center active:scale-95`}
                             onClick={e => {
                                 e.preventDefault()
                                 switch (playbackSpeed) {
                                     case 1:
+                                        setPlaybackSpeed(1.25)
+                                        podcastAudio.playbackRate = 1.25
+                                        break
+                                    case 1.25:
                                         setPlaybackSpeed(1.5)
                                         podcastAudio.playbackRate = 1.5
                                         break
@@ -575,9 +584,9 @@ function Footer() {
                             )}
                         </button>
                     </div>
-                    <div className="flex justify-end items-end ">
+                    <div className="flex w-full items-end justify-center">
                         <div
-                            className="h-full w-fit font-semibold select-none -translate-y-2 flex justify-center items-center"
+                            className="h-full w-full font-semibold select-none -translate-y-2 flex justify-center items-center"
                             style={{ width: '100px' }}
                         >
                             {isPlayingPodcast
@@ -592,9 +601,10 @@ function Footer() {
                                     )
                                   : ''}
                         </div>
-
-                        <div className="w-full flex translate-y-2">
-                            <Timeline />
+                        <div className="flex justify-center w-full items-end ">
+                            <div className="w-full flex justify-center translate-y-2">
+                                <Timeline />
+                            </div>
                         </div>
                         <div
                             className="h-full font-semibold w-fit select-none -translate-y-2 flex justify-center items-center"

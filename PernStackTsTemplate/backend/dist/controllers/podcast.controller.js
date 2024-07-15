@@ -157,7 +157,7 @@ export const getSubs = async (req, res) => {
         const subs = subscriptions.map(sub => ({
             title: sub.podcast.title,
             id: sub.podcast.podcastIndexId,
-            image: sub.podcast.artworkUrl,
+            artwork: sub.podcast.artworkUrl,
         }));
         res.status(200).json(subs);
     }

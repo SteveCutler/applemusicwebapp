@@ -130,14 +130,27 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
     const styleButton = { fontSize: '2rem', color: 'dodgerblue' }
 
     const handlePlayPodcast = async () => {
+        const res = await fetch(
+            `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-podcast/${podcast.feedId}`,
+
+            {
+                headers: {
+                    'Content-type': 'application/json',
+                },
+                credentials: 'include',
+            }
+        )
+        const showData = await res.json()
+        const showTitle = showData.data.feed.title
         console.log('podcast', podcast, 'podcast show tile', podcast.showTitle)
-        if (podcast && podcast.showTitle) {
+        if (podcast && showTitle) {
             playPodcast(
                 podcast.enclosureUrl,
                 podcast.duration,
                 podcast.feedImage,
                 podcast.title,
-                podcast.showTitle,
+                showTitle,
+                podcast.feedId,
                 podcast.id
             )
         }
