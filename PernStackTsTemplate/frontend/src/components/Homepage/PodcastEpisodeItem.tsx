@@ -233,7 +233,9 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                     </h2>
 
                     {progress !== 0 && (
-                        <div className=" text-blue-500 w-fit p-1 font-bold text-sm  flex m-0 p-0">
+                        <div
+                            className={` ${darkMode ? 'text-blue-400 ' : 'text-blue-900 '}w-fit p-1 font-bold text-sm  flex m-0 p-0`}
+                        >
                             {progress < 99 ? (
                                 <div>{String(progress)}%</div>
                             ) : (

@@ -456,7 +456,7 @@ type podSub = {
     artwork: string
 }
 
-type podcastProgress = {
+type podCompletion = {
     episodeId: number
     progress: string
     completed: boolean
@@ -522,7 +522,7 @@ interface State {
     epId: number
     podcastPlayerInit: boolean
     progressLoaded: boolean
-    podcastProgress: podcastProgress[] | null
+    podcastProgress: podCompletion[] | null
 }
 
 interface Actions {
@@ -610,7 +610,7 @@ interface Actions {
     setRecentEps: (eps: podcastEpisode[] | null) => void
     setAudioListeners: () => void
     saveEpisodeProgress: (currentProgress: string, episodeId: number) => void
-    setPodcastProgress: (podcastProgress: podcastProgress[] | null) => void
+    setPodcastProgress: (podcastProgress: podCompletion[] | null) => void
     fetchPodcastProgress: () => void
 }
 
@@ -681,7 +681,7 @@ export const useStore = create<Store>((set, get) => ({
     // Actions
 
     setRecentEps: (eps: podcastEpisode[] | null) => set({ recentEps: eps }),
-    setPodcastProgress: (podcastProgress: podcastProgress[] | null) =>
+    setPodcastProgress: (podcastProgress: podCompletion[] | null) =>
         set({ podcastProgress }),
     fetchPodcastProgress: async () => {
         const { backendToken } = get()
@@ -707,7 +707,7 @@ export const useStore = create<Store>((set, get) => ({
     },
     setPodSubs: (subs: podSub[] | null) => set({ podSubs: subs }),
     saveEpisodeProgress: async (episodeProgress: string, id: number) => {
-        const { backendToken } = get()
+        const { backendToken, podcastProgress } = get()
         const userId = backendToken
         const episodeId = String(id)
         const progress = Number(episodeProgress)
@@ -723,6 +723,16 @@ export const useStore = create<Store>((set, get) => ({
                     credentials: 'include',
                 }
             )
+            set({
+                podcastProgress: [
+                    ...podcastProgress,
+                    {
+                        episodeId: Number(episodeId),
+                        progress: String(progress),
+                        completed: progress > 99,
+                    },
+                ],
+            })
             if (!response.ok) {
                 throw new Error('Failed to save progress')
             }
@@ -883,6 +893,7 @@ export const useStore = create<Store>((set, get) => ({
             podcastProgress,
             podcastAudio,
         } = get()
+
         if (!podcastPlayerInit) {
             setAudioListeners()
         }
@@ -920,13 +931,22 @@ export const useStore = create<Store>((set, get) => ({
             String(epId),
             podcastProgress
         )
+        console.log('progress percent', progressPercent)
 
         const progress = Number(time) * Number(progressPercent) * 0.01
-        podcastAudio.currentTime = progress
+        podcastAudio.addEventListener('loadedmetadata', () => {
+            podcastAudio.currentTime = progress
+        })
+
         // console.log(url, time, artUrl, trackName, collectionName)
         set(state => {
             if (state.podcastAudio) {
                 state.podcastAudio.src = finalUrl
+                // state.podcastAudio.onplay = () => {
+                //     set({
+                //         currentTime: progress,
+                //     })
+                // }
                 state.podcastAudio.play()
                 state.podcastAudio.ontimeupdate = () => {
                     set({
@@ -939,7 +959,7 @@ export const useStore = create<Store>((set, get) => ({
             return {
                 isPlayingPodcast: true,
                 podcastUrl: url,
-
+                currentTime: state.podcastAudio.currentTime,
                 podcastDuration: time,
                 podcastArtist: collectionName,
                 podcastEpTitle: trackName,
