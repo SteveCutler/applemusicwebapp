@@ -126,6 +126,7 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
     // const [playlistData, setPlaylistData] = useState<Song[]>([])
 
     const [isHovered, setIsHovered] = useState(false)
+    const [progress, setProgress] = useState<number | null>(null)
 
     // console.log('albumArtUrl: ', albumArtUrl)
     const navigate = useNavigate()
@@ -166,19 +167,21 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
     }
     const style = { fontSize: '1.4rem' }
 
-    const getEpisodeProgress = (episodeId, listenedEpisodes) => {
-        const episode = listenedEpisodes.find(
-            episode => episode.episodeId === episodeId
+    useEffect(() => {
+        const getEpisodeProgress = (episodeId, listenedEpisodes) => {
+            const episode = listenedEpisodes.find(
+                episode => episode.episodeId === episodeId
+            )
+            return episode ? episode.progress : 0
+        }
+
+        const progressPercent = getEpisodeProgress(
+            String(podcast.id),
+            podcastProgress
         )
-        return episode ? episode.progress : 0
-    }
 
-    const progressPercent = getEpisodeProgress(
-        String(podcast.id),
-        podcastProgress
-    )
-
-    const progress = Number(progressPercent)
+        setProgress(Number(progressPercent))
+    }, [podcastProgress])
 
     return (
         <div
@@ -200,6 +203,21 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                     >
                         {podcast.released}
                     </h3>
+                )}
+                {progress !== 0 && (
+                    <div
+                        className={` text-blue-400  w-fit absolute top-2 right-2 font-bold text-sm  flex m-0 p-0`}
+                    >
+                        {progress < 99 ? (
+                            <div className="drop-shadow-md">
+                                {String(progress)}%
+                            </div>
+                        ) : (
+                            <div className="drop-shadow-md">
+                                {<BsFillPatchCheckFill style={style} />}
+                            </div>
+                        )}
+                    </div>
                 )}
 
                 <div
@@ -232,19 +250,6 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                         {podcast.title}
                     </h2>
 
-                    {progress !== 0 && (
-                        <div
-                            className={` ${darkMode ? 'text-blue-400 ' : 'text-blue-900 '}w-fit p-1 font-bold text-sm  flex m-0 p-0`}
-                        >
-                            {progress < 99 ? (
-                                <div>{String(progress)}%</div>
-                            ) : (
-                                <div>
-                                    {<BsFillPatchCheckFill style={style} />}
-                                </div>
-                            )}
-                        </div>
-                    )}
                     <div></div>
                 </div>
             </div>

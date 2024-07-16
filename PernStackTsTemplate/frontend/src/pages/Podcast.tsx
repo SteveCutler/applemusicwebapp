@@ -146,43 +146,38 @@ const Podcast = () => {
                         headerTime
                 ).toString()
 
-                const infoResponse = await axios.get(
-                    `https://api.podcastindex.org/api/1.0/podcasts/byfeedid?id=${id}&pretty`,
+                const infoResponse = await fetch(
+                    `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-podcast/${id}`,
+
                     {
                         headers: {
-                            'User-Agent': 'AppleMusicDashboard/1.0',
-                            'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
-                            'X-Auth-Date': headerTime,
-                            Authorization: hash,
+                            'Content-type': 'application/json',
                         },
-                        params: {
-                            fulltext: true,
-                            max: 10,
-                        },
+                        credentials: 'include',
                     }
                 )
 
-                const episodesResponse = await axios.get(
-                    `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
+                const episodesResponse = await fetch(
+                    `https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/get-episodes/${id}`,
+
                     {
+                        method: 'POST',
                         headers: {
-                            'User-Agent': 'AppleMusicDashboard/1.0',
-                            'X-Auth-Key': import.meta.env.VITE_PODCASTINDEX_KEY,
-                            'X-Auth-Date': headerTime,
-                            Authorization: hash,
+                            'Content-type': 'application/json',
                         },
-                        params: {
-                            fulltext: true,
-                            max: 10,
-                        },
+                        credentials: 'include',
                     }
                 )
-                // console.log('podcast response', response)
-                const episodes: podcastEpisode[] = episodesResponse.data.items
+                const episodeData = await episodesResponse.json()
+                const episodes: podcastEpisode[] = episodeData.data.items
 
-                const info: podcastInfo = infoResponse.data.feed
+                const infoData = await infoResponse.json()
 
-                console.log('episodes', episodes)
+                const info: podcastInfo = infoData.data.feed
+                // console.log('podcast response', infoData.data.feed)
+                // console.log('episodes response', episodeData.data.episode)
+
+                // console.log('episodes', episodes)
 
                 setPodcastEpisodes(episodes)
                 // const info = data.shift(0)

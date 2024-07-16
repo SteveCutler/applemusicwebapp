@@ -935,7 +935,9 @@ export const useStore = create<Store>((set, get) => ({
 
         const progress = Number(time) * Number(progressPercent) * 0.01
         podcastAudio.addEventListener('loadedmetadata', () => {
-            podcastAudio.currentTime = progress
+            progress < 100
+                ? (podcastAudio.currentTime = progress)
+                : (podcastAudio.currentTime = 0)
         })
 
         // console.log(url, time, artUrl, trackName, collectionName)
