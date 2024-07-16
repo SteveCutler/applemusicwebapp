@@ -28,6 +28,111 @@ import FetchRecentlyPlayed from '../components/Apple/FetchRecentlyPlayed'
 import FetchRecommendations from '../components/Apple/FetchRecommendations'
 import { FaPodcast } from 'react-icons/fa'
 
+type AlbumType = {
+    attributes: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releasedDate: string
+        trackCount: number
+    }
+    id: string
+    type: string
+}
+
+type RecentlyAddedItem = AlbumType | playlist | StationType | Song
+
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
+type playlist = {
+    attributes: {
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+        description?: string
+        curatorName?: string
+        canEdit: boolean
+        playlistType?: string
+        dataAdded: string
+        isPublic: boolean
+        lastModifiedDate: string
+        name: string
+    }
+    href: string
+    id: string
+    type: string
+}
+
+type AttributeObject = {
+    artistName: String
+    artwork: ArtworkObject
+    dateAdded: String
+    genreNames: Array<String>
+    name: String
+    releasedDate: String
+    trackCount: Number
+}
+
+type ArtworkObject = {
+    height: Number
+    width: Number
+    url: String
+}
+interface Album {
+    id: string
+    albumId: string
+    name: string
+    artistName: string
+    artworkUrl: string
+    trackCount: number
+}
+
+interface StationType {
+    attributes: {
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        mediaKind: string
+        name: string
+        url: string
+        playParams: {
+            format: string
+            id: string
+            kind: string
+            stationHash: string
+        }
+    }
+    id: String
+    type: string
+}
+
 const Sidebar = () => {
     // FetchRecentlyAddedToLib()
 
@@ -50,8 +155,12 @@ const Sidebar = () => {
         setAlbums,
         fetchAppleToken,
         appleMusicToken,
+        setRecentlyAddedToLib,
+        recentlyAddedToLib,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        setRecentlyAddedToLib: state.setRecentlyAddedToLib,
+        recentlyAddedToLib: state.recentlyAddedToLib,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
         fetchAppleToken: state.fetchAppleToken,
@@ -95,6 +204,8 @@ const Sidebar = () => {
         }
     }
 
+    const recent: RecentlyAddedItem[] = []
+
     // if (appleMusicToken && backendToken) {
     //     FetchHeavyRotation()
     //     FetchRecentlyPlayed()
@@ -110,6 +221,37 @@ const Sidebar = () => {
     }
 
     useEffect(() => {
+        const fetchRecentlyAddedToLib = async (url: string) => {
+            if (musicKitInstance) {
+                try {
+                    // console.log(music)
+                    const queryParameters = { l: 'en-us', limit: 10 }
+                    const res = await musicKitInstance.api.music(
+                        url,
+                        queryParameters
+                    )
+
+                    if (res.status !== 200) {
+                        // console.log('error: ', res.body)
+                    }
+
+                    const data: RecentlyAddedItem[] = await res.data.data
+                    recent.push(...data)
+
+                    if (res.data.next && recent.length <= 20) {
+                        await fetchRecentlyAddedToLib(res.data.next)
+                    } else {
+                        setRecentlyAddedToLib(recent)
+                    }
+                } catch (error: any) {
+                    console.error(error)
+                }
+            }
+        }
+
+        if (musicKitInstance && recentlyAddedToLib.length < 1) {
+            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
+        }
         if (!musicKitInstance) {
             authorizeMusicKit()
         }
