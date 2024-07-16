@@ -14,6 +14,36 @@ import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.p
 import { RiForward15Line } from 'react-icons/ri'
 import { TbRewindBackward15 } from 'react-icons/tb'
 import { useEffect, useState } from 'react'
+import { PiHeartFill, PiHeart } from 'react-icons/pi'
+import toast from 'react-hot-toast'
+
+interface songDetailsObject {
+    songId: string
+    songName?: string
+    artistName?: string
+    albumName?: string
+    artworkUrl?: string
+}
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
 
 function Footer() {
     const {
@@ -32,6 +62,7 @@ function Footer() {
         podcastUrl,
         currentElapsedTime,
         albumArtUrl,
+        favouriteSongs,
         musicKitInstance,
         shuffle,
         setShuffle,
@@ -44,8 +75,15 @@ function Footer() {
         podcastEpTitle,
         currentTime,
         podcastArtUrl,
+        appleMusicToken,
+        backendToken,
+        setFavouriteSongs,
     } = useStore(state => ({
         podcastArtist: state.podcastArtist,
+        setFavouriteSongs: state.setFavouriteSongs,
+        favouriteSongs: state.favouriteSongs,
+        appleMusicToken: state.appleMusicToken,
+        backendToken: state.backendToken,
         epId: state.epId,
         currentTime: state.currentTime,
         podcastAudio: state.podcastAudio,
@@ -373,6 +411,228 @@ function Footer() {
         return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
     }
 
+    // Logic for adding song to library and favourites
+
+    const prepareSongDetails = (songs: Array<Song>) => {
+        console.log('preparing songs', songs)
+        try {
+            return songs.map(song => ({
+                songId: song.id,
+                songName: song.attributes.name,
+                artistName: song.attributes.artistName,
+                durationInMillis: song.attributes.durationInMillis,
+                albumName: song.attributes.albumName,
+                artworkUrl: song.attributes.artwork?.url,
+                catalogId: song.attributes.playParams.catalogId,
+            }))
+        } catch (error: any) {
+            console.error(error)
+        }
+    }
+
+    const userId = backendToken
+
+    const addToFavourites = async (songDetails: Array<songDetailsObject>) => {
+        console.log('song details: ', songDetails)
+        try {
+            const res = await fetch(
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/add-songs-to-ratings',
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        songDetails,
+                    }),
+                    credentials: 'include',
+                }
+            )
+
+            // const data = await res.json();
+            if (res.status === 200) {
+                console.log('saved rating succesfully')
+            }
+
+            // setAlbums(data.albums);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const addFavorite = async (song: Song) => {
+        console.log('object: ', song)
+
+        if (!musicKitInstance) {
+            return
+        }
+        if (!appleMusicToken) {
+            toast.error('Apple Music Token is missing')
+            fetch
+            return
+        }
+
+        const url = `https://api.music.apple.com/v1/me/ratings/${song.type}/${song.id}`
+
+        try {
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${
+                        import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                    }`,
+                    'Music-User-Token': appleMusicToken, // Add Music User Token here
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'rating',
+                    attributes: {
+                        value: 1,
+                    },
+                }),
+            })
+
+            //api.music.apple.com/v1/me/ratings/albums/1138988512
+
+            // console.log('response: ', response)
+
+            if (response.status === 200) {
+                toast.success(`${name} added to favorites`)
+                if (song.type === 'songs' || song.type === 'library-songs') {
+                    const songData = prepareSongDetails([song])
+
+                    addToFavourites(songData)
+                    setFavouriteSongs([...favouriteSongs, song])
+                } else if (
+                    song.type === 'albums' ||
+                    song.type === 'library-albums'
+                ) {
+                    if (song.id.startsWith('l')) {
+                        try {
+                            const res = await musicKitInstance.api.music(
+                                `/v1/me/library/albums/${song.id}/tracks`
+                            )
+
+                            console.log(res)
+
+                            const data: Array<Song> = await res.data.data
+                            // let ids: Array<string> = []
+                            // data.map(item => ids.push(item.id))
+                            const songData = prepareSongDetails(data)
+
+                            addToFavourites(songData)
+                            setFavouriteSongs([...favouriteSongs, song])
+                            return
+                        } catch (error: any) {
+                            console.error(error)
+                        }
+                    } else {
+                        try {
+                            const queryParameters = { l: 'en-us' }
+                            const res = await musicKitInstance.api.music(
+                                `/v1/catalog//ca/albums/${song.id}/tracks`,
+
+                                queryParameters
+                            )
+
+                            console.log(res)
+
+                            const data: Array<Song> = await res.data.data
+                            const songData = prepareSongDetails(data)
+
+                            addToFavourites(songData)
+                            return
+                        } catch (error: any) {
+                            console.error(error)
+                        }
+                    }
+                }
+            } else {
+                toast.error(`Error adding ${name} to favorites...`)
+            }
+        } catch (error) {
+            toast.error(`Error adding ${name} to favorites...`)
+        }
+    }
+
+    const addDislike = async (song: Song) => {
+        if (!musicKitInstance) {
+            return
+        }
+        if (!appleMusicToken) {
+            toast.error('Apple Music Token is missing')
+            return
+        }
+
+        try {
+            const response = await fetch(
+                `https://api.music.apple.com/v1/me/ratings/${song.type}/${song.id}`,
+                {
+                    method: 'PUT',
+
+                    headers: {
+                        Authorization: `Bearer ${
+                            import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                        }`,
+                        'Music-User-Token': appleMusicToken, // Add Music User Token here
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: 'rating',
+                        attributes: {
+                            value: -1,
+                        },
+                    }),
+                }
+            )
+
+            //api.music.apple.com/v1/me/ratings/albums/1138988512
+
+            console.log('response: ', response)
+
+            if (response.status === 200) {
+                toast.success(`${name} added to dislikes`)
+            } else {
+                toast.error(`Error adding ${name} to dislikes...`)
+            }
+        } catch (error) {
+            toast.error(`Error adding ${name} to dislikes...`)
+        }
+    }
+
+    const addToLibrary = async (song: Song) => {
+        console.log('song', song)
+        if (!musicKitInstance) {
+            return
+        }
+        if (
+            song.id.startsWith('l') ||
+            song.id.startsWith('i') ||
+            (song.id.startsWith('p') && !song.id.startsWith('pl'))
+        ) {
+            toast.error(`${name} is already in your library!`)
+            return
+        }
+        try {
+            const params = { [song.type]: [song.id] }
+            const queryParameters = { ids: params }
+            const { response } = await musicKitInstance.api.music(
+                '/v1/me/library',
+                queryParameters,
+                { fetchOptions: { method: 'POST' } }
+            )
+
+            if ((await response.status) === 202) {
+                toast.success(`${name} added to library!`)
+                return
+            }
+        } catch (error) {
+            toast.error(`Error adding ${name} to library...`)
+            return
+        }
+    }
+
     return (
         <div
             className="footer px-5 flex items-center justify-between bg-gradient-to-b  from-gray-900 to-black"
@@ -408,10 +668,10 @@ function Footer() {
                     )}
                     <div className="flex flex-col w-full justify-center  items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
-                            <>
+                            <div className="flex items-center">
                                 <div
                                     onClick={goToAlbum}
-                                    className="font-semibold hover:cursor-pointer hover:text-white w-full flex-col"
+                                    className="font-semibold hover:cursor-pointer hover:text-white w-full flex-col flex"
                                 >
                                     <div>
                                         {
@@ -426,20 +686,76 @@ function Footer() {
                                                     ?.nowPlayingItemIndex
                                             ].attributes.albumName}
                                     </div>
-                                </div>
-                                <div
-                                    className="flex items-center gap-2"
-                                    onClick={goToAlbum}
-                                >
-                                    <div className="hover:cursor-pointer hover:text-white">
-                                        {musicKitInstance.queue.items &&
-                                            musicKitInstance.queue.items[
-                                                musicKitInstance
-                                                    ?.nowPlayingItemIndex
-                                            ].attributes.artistName}
+                                    <div
+                                        className=" items-center gap-2"
+                                        onClick={goToAlbum}
+                                    >
+                                        <div className="hover:cursor-pointer hover:text-white">
+                                            {musicKitInstance.queue.items &&
+                                                musicKitInstance.queue.items[
+                                                    musicKitInstance
+                                                        ?.nowPlayingItemIndex
+                                                ].attributes.artistName}
+                                        </div>
                                     </div>
                                 </div>
-                            </>
+                                {musicKitInstance?.queue.items &&
+                                    musicKitInstance?.queue.items[
+                                        musicKitInstance?.nowPlayingItemIndex
+                                    ] && (
+                                        <div
+                                            className="hover:text-white ps-2 hover:active:scale-90"
+                                            onClick={() => {
+                                                const object =
+                                                    musicKitInstance?.queue
+                                                        .items[
+                                                        musicKitInstance
+                                                            ?.nowPlayingItemIndex
+                                                    ]
+
+                                                const song: Song = {
+                                                    id: object.id,
+                                                    href: object.attributes.url,
+                                                    type: 'songs',
+                                                    attributes: {
+                                                        id: object.id,
+                                                        name: object.attributes
+                                                            .name,
+                                                        trackNumber:
+                                                            object.attributes
+                                                                .trackNumber,
+
+                                                        artistName:
+                                                            object.attributes
+                                                                .artistName,
+                                                        albumName:
+                                                            object.attributes
+                                                                .albumName,
+                                                        durationInMillis:
+                                                            object.attributes
+                                                                .durationInMillis,
+
+                                                        artwork: {
+                                                            bgColor:
+                                                                object
+                                                                    .attributes
+                                                                    .artwork
+                                                                    ?.bgColor,
+                                                            url: object
+                                                                .attributes
+                                                                .artwork?.url,
+                                                        },
+                                                    },
+                                                }
+
+                                                addFavorite(song)
+                                                addToLibrary(song)
+                                            }}
+                                        >
+                                            <PiHeartFill style={styleSmall} />
+                                        </div>
+                                    )}
+                            </div>
                         ) : isPlayingPodcast ? (
                             <>
                                 <div className="font-semibold   w-full h-full  flex-col flex justify-around">

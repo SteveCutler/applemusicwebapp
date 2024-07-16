@@ -363,7 +363,7 @@ const Sidebar = () => {
                         <p className="p-2">Playlists</p>
                     </NavLink>
 
-                    <NavLink
+                    {/* <NavLink
                         to="/favourites"
                         title="favourites"
                         className={({ isActive }) =>
@@ -374,7 +374,7 @@ const Sidebar = () => {
                     >
                         <FaHeartbeat />
                         <p className="p-2">Favs</p>
-                    </NavLink>
+                    </NavLink> */}
 
                     {/* <NavLink
                         to="/"
