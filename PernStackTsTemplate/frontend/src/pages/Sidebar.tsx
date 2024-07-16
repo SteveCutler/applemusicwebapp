@@ -181,7 +181,7 @@ const Sidebar = () => {
                         <FaSearch />
                         <p className="p-2">Search</p>
                     </NavLink>
-                    {/* <NavLink
+                    <NavLink
                         to="/library"
                         title="library"
                         className={({ isActive }) =>
@@ -192,7 +192,7 @@ const Sidebar = () => {
                     >
                         <LuLibrary />
                         <p className="p-2">Library</p>
-                    </NavLink> */}
+                    </NavLink>
 
                     <NavLink
                         to="/podcasts"

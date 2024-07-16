@@ -82,6 +82,9 @@ const Library = () => {
     }
 
     useEffect(() => {
+        if (!albums) {
+            fetchLibrary()
+        }
         if (!musicKitInstance || !appleMusicToken) {
             initialize()
         }
@@ -182,17 +185,37 @@ const Library = () => {
     const style = { fontSize: '2.5rem' }
 
     const loadMoreAlbums = useCallback(() => {
-        setPage(prevPage => prevPage + 1)
+        setPage(prevPage => {
+            console.log('Loading more albums, new page:', prevPage + 1)
+            return prevPage + 1
+        })
     }, [])
+
+    useEffect(() => {
+        console.log('Page updated:', page)
+    }, [page])
+
+    useEffect(() => {
+        if (librarySearchTerm === '') {
+            setLibrarySearchResults(albums)
+        } else {
+            const searchResults: Album[] | null = albums
+                ? albums.filter(
+                      album =>
+                          album.attributes.name
+                              .toLowerCase()
+                              .includes(librarySearchTerm.toLowerCase()) ||
+                          album.attributes.artistName
+                              .toLowerCase()
+                              .includes(librarySearchTerm.toLowerCase())
+                  )
+                : null
+            setLibrarySearchResults(searchResults)
+        }
+    }, [librarySearchTerm, albums])
 
     return (
         <div className="flex-col w-full h-full">
-            {/* <h1
-                className={`text-center text-5xl ${darkMode ? 'text-slate-200' : 'text-black'} italic p-4 font-bold mx-auto`}
-            >
-                Library
-            </h1> */}
-
             <div
                 className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
             >
@@ -217,30 +240,6 @@ const Library = () => {
                             <IoGridOutline style={style} />
                         )}
                     </span>
-                    {/* <button
-                        disabled={loading}
-                        onClick={updateLibrary}
-                        className="btn btn-primary rounded-full"
-                        title="Refresh library"
-                    >
-                        <IoMdRefreshCircle style={style} />
-                    </button> */}
-                    {/* <button
-                        disabled={loading}
-                        onClick={getRatedSongs}
-                        className="btn btn-primary rounded-full"
-                        title="Check for Song ratings"
-                    >
-                        <GiLoveSong style={style} />
-                    </button>
-                    <button
-                        disabled={loading}
-                        onClick={getRatedAlbums}
-                        className="btn btn-primary rounded-full"
-                        title="Check for Song ratings"
-                    >
-                        <GiLoveSong style={style} />
-                    </button> */}
                 </div>
             </div>
             <div className="flex-col pt-10 justify-center w-full px-3 mx-0 ">

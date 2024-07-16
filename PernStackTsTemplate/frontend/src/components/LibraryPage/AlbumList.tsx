@@ -1,21 +1,7 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useRef, useCallback } from 'react'
 import { useStore } from '../../store/store'
 import AlbumItem from '../Homepage/AlbumItem'
 import AlbumRow from './AlbumRow'
-
-type AlbumType = {
-    attributes: {
-        artistName: string
-        artwork?: { height: number; width: number; url?: string }
-        dateAdded: string
-        genreNames: Array<string>
-        name: string
-        releaseDate: string
-        trackCount: number
-    }
-    id: string
-    type: string
-}
 
 interface Album {
     attributes: {
@@ -48,6 +34,9 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
             if (observer.current) observer.current.disconnect()
             observer.current = new IntersectionObserver(entries => {
                 if (entries[0].isIntersecting) {
+                    console.log(
+                        'Last album is intersecting, loading more albums'
+                    )
                     loadMoreAlbums()
                 }
             })
@@ -55,8 +44,6 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
         },
         [loadMoreAlbums]
     )
-
-    // const width = queueToggle ? 'w-1/4 p-1 ' : 'w-1/6 p-1'
 
     if (gridDisplay) {
         return (
@@ -66,12 +53,13 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                         if (albums.length === index + 1) {
                             return (
                                 <div
-                                    className="last-album"
+                                    // className="last-album"
                                     ref={lastAlbumElementRef}
-                                    key={album.id}
+                                    key={index}
                                 >
                                     <AlbumItem
                                         albumItem={album}
+                                        key={index}
                                         lib={true}
                                         width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                                     />
@@ -80,7 +68,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                         } else {
                             return (
                                 <AlbumItem
-                                    key={album.id}
+                                    key={index}
                                     albumItem={album}
                                     lib={true}
                                     width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
