@@ -5,11 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 
 type SignupInputs = {
-    fullName: string
-    username: string
-    password: string
-    confirmPassword: string
-    email: string
+    signupPassword: string
+    signupconfirmPassword: string
+    signupEmail: string
 }
 
 const useSignup = () => {
@@ -29,6 +27,7 @@ const useSignup = () => {
     const navigate = useNavigate()
 
     const signup = async (inputs: SignupInputs) => {
+        const { signupPassword, signupconfirmPassword, signupEmail } = inputs
         try {
             setLoading(true)
             const res = await fetch(
@@ -38,7 +37,11 @@ const useSignup = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(inputs),
+                    body: JSON.stringify({
+                        password: signupPassword,
+                        confirmPassword: signupconfirmPassword,
+                        email: signupEmail,
+                    }),
                     credentials: 'include',
                 }
             )

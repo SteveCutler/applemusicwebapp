@@ -19,8 +19,6 @@ const protectRoute = async (req, res, next) => {
             where: { id: decoded.userId },
             select: {
                 id: true,
-                username: true,
-                fullName: true,
                 email: true,
             },
         });

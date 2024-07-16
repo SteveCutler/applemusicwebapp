@@ -7,10 +7,9 @@ import generateToken from '../utils/generateToken.js'
 
 export const signup = async (req: Request, res: Response) => {
     try {
-        const { fullName, username, password, confirmPassword, email } =
-            req.body
+        const { password, confirmPassword, email } = req.body
 
-        if (!fullName || !username || !password || !confirmPassword || !email) {
+        if (!password || !confirmPassword || !email) {
             return res.status(400).json({ error: 'Please fill in all fields' })
         }
 
@@ -31,8 +30,6 @@ export const signup = async (req: Request, res: Response) => {
 
         const newUser = await prisma.user.create({
             data: {
-                fullName,
-                username,
                 password: hashedPassword,
                 email,
             },
@@ -44,8 +41,6 @@ export const signup = async (req: Request, res: Response) => {
 
             res.status(201).json({
                 id: newUser.id,
-                fullName: newUser.fullName,
-                username: newUser.username,
                 email: newUser.email,
             })
         } else {
@@ -82,8 +77,7 @@ export const login = async (req: Request, res: Response) => {
 
         res.status(200).json({
             id: user.id,
-            fullName: user.fullName,
-            username: user.username,
+
             email: user.email,
             appleMusicToken: appleMusicToken,
         })
@@ -114,8 +108,7 @@ export const getMe = async (req: Request, res: Response) => {
 
         res.status(200).json({
             id: user.id,
-            fullName: user.fullName,
-            username: user.username,
+
             email: user.email,
         })
     } catch (error: any) {

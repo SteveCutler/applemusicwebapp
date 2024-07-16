@@ -6,8 +6,6 @@ import useSignup from '../hooks/auth/useSignup'
 
 const SignUp = () => {
     const [inputs, setInputs] = useState({
-        fullName: '',
-        username: '',
         password: '',
         confirmPassword: '',
         email: '',
@@ -38,45 +36,6 @@ const SignUp = () => {
                 </h1> */}
 
                 <form className="font-bold gap-5" onSubmit={handleSubmitForm}>
-                    <div className="pb-8">
-                        {/* <label className="label p-2">
-                            <span className="text-base label-text ">
-                                Full Name
-                            </span>
-                        </label> */}
-                        <input
-                            type="text"
-                            placeholder="Enter full name"
-                            className="w-full input bg-white text-black input-bordered  h-10"
-                            value={inputs.fullName}
-                            onChange={e =>
-                                setInputs({
-                                    ...inputs,
-                                    fullName: e.target.value,
-                                })
-                            }
-                        />
-                    </div>
-
-                    <div className="pb-8">
-                        {/* <label className="label p-2 ">
-                            <span className="text-base label-text text-white">
-                                Username
-                            </span>
-                        </label> */}
-                        <input
-                            type="text"
-                            placeholder="Enter username"
-                            className="w-full input bg-white text-black input-bordered h-10"
-                            value={inputs.username}
-                            onChange={e =>
-                                setInputs({
-                                    ...inputs,
-                                    username: e.target.value,
-                                })
-                            }
-                        />
-                    </div>
                     <div className="pb-8">
                         {/* <label className="label p-2 ">
                             <span className="text-base label-text text-white">

@@ -4,8 +4,8 @@ import bcryptjs from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 export const signup = async (req, res) => {
     try {
-        const { fullName, username, password, confirmPassword, email } = req.body;
-        if (!fullName || !username || !password || !confirmPassword || !email) {
+        const { password, confirmPassword, email } = req.body;
+        if (!password || !confirmPassword || !email) {
             return res.status(400).json({ error: 'Please fill in all fields' });
         }
         if (password !== confirmPassword) {
@@ -20,8 +20,6 @@ export const signup = async (req, res) => {
         const hashedPassword = await bcryptjs.hash(password, salt);
         const newUser = await prisma.user.create({
             data: {
-                fullName,
-                username,
                 password: hashedPassword,
                 email,
             },
@@ -31,8 +29,6 @@ export const signup = async (req, res) => {
             generateToken(newUser.id, res);
             res.status(201).json({
                 id: newUser.id,
-                fullName: newUser.fullName,
-                username: newUser.username,
                 email: newUser.email,
             });
         }
@@ -61,8 +57,6 @@ export const login = async (req, res) => {
         generateToken(user.id, res);
         res.status(200).json({
             id: user.id,
-            fullName: user.fullName,
-            username: user.username,
             email: user.email,
             appleMusicToken: appleMusicToken,
         });
@@ -92,8 +86,6 @@ export const getMe = async (req, res) => {
         }
         res.status(200).json({
             id: user.id,
-            fullName: user.fullName,
-            username: user.username,
             email: user.email,
         });
     }

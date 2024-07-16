@@ -23,9 +23,7 @@ export const saveToken = async (userToken: string, userId: String | null) => {
             }
         )
         // const data = await res.json()
-        if (!res.ok) {
-            toast.error('Issue saving token')
-        }
+
         // console.log(res)
         const data = await res.json()
         console.log('data: ', data)

@@ -160,7 +160,7 @@ export const retrieveProgress = async (req, res) => {
         res.status(200).json(listenedEpisodes);
     }
     catch (error) {
-        console.error('Error tracking progress:', error);
+        console.error('Error retrieving progress:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };

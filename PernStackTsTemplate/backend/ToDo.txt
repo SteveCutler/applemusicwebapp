@@ -6,6 +6,12 @@ I also don't need my favourites algorithm calculation as most users (anyone with
 
 the itunes library api provides a lot better datapoints for library images, playcounts, last play date etc, all this can be used to create recommendations from library (first I could just cycle through recommending albums or songs that have been played a lot by user, could also recommend things that have a lot of plays but the latest play date is not for a while, a 'Jump back in' recommmendation)
 
+itunes library api only works in desktop app context - nevermind.
+
+using start and the hardware playback buttons to control playback
+library albums artwork not updating properly
+add favourite button to footer
+issue playing library albums from sidebar
 
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
