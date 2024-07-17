@@ -192,10 +192,6 @@ const Library = () => {
     }, [])
 
     useEffect(() => {
-        console.log('Page updated:', page)
-    }, [page])
-
-    useEffect(() => {
         if (librarySearchTerm === '') {
             setLibrarySearchResults(albums)
         } else {
@@ -214,52 +210,62 @@ const Library = () => {
         }
     }, [librarySearchTerm, albums])
 
-    return (
-        <div className="flex-col w-full h-full">
-            <div
-                className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
-            >
-                <form className="p-3 w-full" action="">
-                    <input
-                        type="text"
-                        value={librarySearchTerm}
-                        onChange={e => onChange(e)}
-                        ref={inputRef}
-                        placeholder="Filter library..."
-                        className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-3/3' : 'w-2/3'} text-slate-600 bg-white`}
-                    />
-                </form>
-                <div className="flex w-full justify-end pe-3 items-center  gap-1">
-                    <span
-                        className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
-                        onClick={toggleGrid}
-                    >
-                        {gridDisplay ? (
-                            <IoGrid style={style} />
-                        ) : (
-                            <IoGridOutline style={style} />
-                        )}
-                    </span>
+    if (albums && albums.length == 0) {
+        return (
+            <div className="flex-col flex items-center w-full h-full">
+                <button className="btn text-white  btn-info">
+                    Load Library
+                </button>
+            </div>
+        )
+    } else {
+        return (
+            <div className="flex-col w-full h-full">
+                <div
+                    className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
+                >
+                    <form className="p-3 w-full" action="">
+                        <input
+                            type="text"
+                            value={librarySearchTerm}
+                            onChange={e => onChange(e)}
+                            ref={inputRef}
+                            placeholder="Filter library..."
+                            className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-3/3' : 'w-2/3'} text-slate-600 bg-white`}
+                        />
+                    </form>
+                    <div className="flex w-full justify-end pe-3 items-center  gap-1">
+                        <span
+                            className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
+                            onClick={toggleGrid}
+                        >
+                            {gridDisplay ? (
+                                <IoGrid style={style} />
+                            ) : (
+                                <IoGridOutline style={style} />
+                            )}
+                        </span>
+                    </div>
+                </div>
+                <div className="flex-col pt-10 justify-center w-full px-3 mx-0 ">
+                    {librarySearchResults ? (
+                        <AlbumList
+                            albums={librarySearchResults.slice(
+                                0,
+                                page * itemsPerPage
+                            )}
+                            loadMoreAlbums={loadMoreAlbums}
+                        />
+                    ) : (
+                        <div className="text-black text-center font-bold flex justify-center mx-auto w-full pt-10 text-2xl">
+                            Loading library...
+                        </div>
+                    )}
+                    {error && <div>Error</div>}
                 </div>
             </div>
-            <div className="flex-col pt-10 justify-center w-full px-3 mx-0 ">
-                {librarySearchResults ? (
-                    <AlbumList
-                        albums={librarySearchResults.slice(
-                            0,
-                            page * itemsPerPage
-                        )}
-                        loadMoreAlbums={loadMoreAlbums}
-                    />
-                ) : (
-                    <div className="text-black text-center font-bold flex justify-center mx-auto w-full pt-10 text-2xl">
-                        Loading library...
-                    </div>
-                )}
-                {error && <div>Error</div>}
-            </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Library

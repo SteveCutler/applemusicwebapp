@@ -349,23 +349,19 @@ function Footer() {
         }
     }
 
-    const playPauseHandler = () => {
-        musicKitInstance?.playbackState == 2
-            ? musicKitInstance?.pause()
-            : musicKitInstance?.playbackState == 3 && musicKitInstance?.play()
-    }
-
-    const playPauseHandlerPodcast = () => {
-        podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
-    }
     useEffect(() => {
         const handleKeyDown = (e: any) => {
             if (e.code === 'Space') {
+                event.preventDefault()
                 if (
                     e.target.tagName !== 'INPUT' &&
                     e.target.tagName !== 'TEXTAREA'
                 ) {
-                    playPauseHandlerPodcast()
+                    console.log('space bar')
+                    musicKitInstance?.playbackState === 2 ||
+                    musicKitInstance?.playbackState === 3
+                        ? playPauseHandler()
+                        : playPauseHandlerPodcast()
                 }
             }
         }
@@ -375,6 +371,17 @@ function Footer() {
             document.removeEventListener('keydown', handleKeyDown)
         }
     }, [])
+
+    const playPauseHandler = () => {
+        console.log('play pause music    ')
+        musicKitInstance?.playbackState == 2
+            ? musicKitInstance?.pause()
+            : musicKitInstance?.playbackState == 3 && musicKitInstance?.play()
+    }
+
+    const playPauseHandlerPodcast = () => {
+        podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+    }
 
     const playPrev = e => {
         e.preventDefault()
@@ -652,7 +659,7 @@ function Footer() {
                         <img
                             src={podcastArtUrl}
                             alt="album image"
-                            style={{ width: '70px' }}
+                            style={{ width: '60px' }}
                             className="hover:scale-105"
                             onClick={goToPodcast}
                         />
@@ -661,7 +668,7 @@ function Footer() {
                             <img
                                 src={defaultPlaylistArtwork}
                                 alt="album image"
-                                style={{ width: '70px' }}
+                                style={{ width: '60px' }}
                                 className="hover:scale-105"
                             />
                         )
@@ -808,11 +815,11 @@ function Footer() {
                         </button>
                         <button
                             className={`flex items-center rounded-full justify-center ${!musicKitInstance?.nowPlayingItem && 'hidden'} hover:text-white active:scale-95`}
-                            onClick={e =>
-                                isPlayingPodcast
-                                    ? playPauseHandlerPodcast()
-                                    : playPauseHandler()
-                            }
+                            onClick={e => {
+                                e.preventDefault()
+                                console.log('firing play pause')
+                                playPauseHandler()
+                            }}
                         >
                             {musicKitInstance?.playbackState !== 0 &&
                             musicKitInstance?.playbackState !== 1 &&
@@ -824,11 +831,11 @@ function Footer() {
                         </button>
                         <button
                             className={`flex items-center rounded-full justify-center ${!isPlayingPodcast && 'hidden'} hover:text-white active:scale-95`}
-                            onClick={e =>
-                                isPlayingPodcast
-                                    ? playPauseHandlerPodcast()
-                                    : playPauseHandler()
-                            }
+                            onClick={e => {
+                                console.log('firing playpause podcast')
+                                e.preventDefault()
+                                playPauseHandlerPodcast()
+                            }}
                         >
                             {!podcastAudio.paused && !podcastAudio.ended ? (
                                 <FaRegCirclePause style={style} />

@@ -224,3 +224,35 @@ export const podcastByFeedId = async (id: string) => {
         throw new Error('Failed to fetch podcast data')
     }
 }
+export const podcastByFeedUrl = async (feedUrl: string) => {
+    try {
+        const headers = generateAuthHeaders()
+        const response = await axios.get(
+            `https://api.podcastindex.org/api/1.0/podcasts/byfeedurl?url=${encodeURIComponent(feedUrl)}`,
+            {
+                headers,
+            }
+        )
+
+        const podcastData = await response.data
+        const podcast: podcastInfo = podcastData.feed
+
+        // Check if podcast.id is undefined
+        if (!podcast.id) {
+            console.error('Podcast ID is undefined')
+            return null // or throw new Error('Podcast ID is undefined')
+        }
+
+        return {
+            podcastIndexId: String(podcast.id),
+            rssFeedUrl: podcast.url,
+            title: podcast.title,
+            description: podcast.description,
+            artworkUrl: podcast.image,
+            categories: podcast.categories || [],
+        }
+    } catch (error) {
+        console.error('Error fetching podcast from PodcastIndex:', error)
+        throw new Error('Failed to fetch podcast data')
+    }
+}

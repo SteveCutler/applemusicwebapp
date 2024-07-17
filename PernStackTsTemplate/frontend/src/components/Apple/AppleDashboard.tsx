@@ -596,7 +596,7 @@ const AppleDashboard = () => {
         if (!recommendations) {
             fetchRecommendations()
         }
-    }, [musicKitInstance, podcastProgress])
+    }, [musicKitInstance, podcastProgress, appleMusicToken])
 
     console.log('recently added to lib: ', recentlyAddedToLib)
 

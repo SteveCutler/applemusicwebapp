@@ -11,6 +11,8 @@ import {
     getEpisodeById,
     retrieveProgress,
     getPodcastById,
+    getPodcastByUrl,
+    addImportedPodcastSubs,
 } from '../controllers/podcast.controller.js'
 import protectRoute from '../middleware/protectRoute.js'
 
@@ -29,6 +31,8 @@ router.post('/remove-sub', protectRoute, removeSub)
 router.get('/episode/:id', protectRoute, getEpisodeById)
 // // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episode/:id
 router.get('/get-podcast/:feedId', protectRoute, getPodcastById)
+// // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/podcast-by-url
+router.post('/podcast-by-url/', protectRoute, getPodcastByUrl)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress
 router.post('/save-progress', protectRoute, trackProgress)
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress

@@ -8,6 +8,7 @@ import PodcastEpisode from './PodcastEpisode'
 import PodcastEpisodeItem from '../components/Homepage/PodcastEpisodeItem'
 import DropdownDisplay from '../components/Apple/DropdownDisplay'
 import { useMediaQuery } from 'react-responsive'
+import ImportPodcasts from '../components/Homepage/ImportPodcasts'
 
 type podcastInfo = {
     artwork: string
@@ -148,7 +149,7 @@ const Podcasts = () => {
 
     useEffect(() => {
         const getRecentEps = async () => {
-            if (podSubs) {
+            if (podSubs && podSubs.length >= 1) {
                 const ids = podSubs.map(pod => pod.id).join()
                 console.log('ids', ids)
 
@@ -249,7 +250,7 @@ const Podcasts = () => {
         if (!podSubs) {
             getSubs()
         }
-        if (!recentEps && podSubs) {
+        if (!recentEps && podSubs && podSubs.length >= 1) {
             getRecentEps()
         }
         if (!progressLoaded) {
@@ -262,7 +263,27 @@ const Podcasts = () => {
     }
     return (
         <div className={`flex flex-col`}>
-            {podSubs && (
+            {podSubs && podSubs.length == 0 && (
+                <>
+                    <div className="bg-blue-500 text-white font-semibold p-3 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
+                        <div>
+                            Use the search page to find and subscribe to
+                            podcasts{' '}
+                        </div>
+                        <div>- or -</div>
+                        <div>
+                            Import an OPML of podcasts from one of these apps:{' '}
+                        </div>
+                        <ol>
+                            <li>Apple Podcasts</li>
+                            <li>Spotify</li>
+                            <li>Google Podcasts</li>
+                        </ol>
+                        <ImportPodcasts />
+                    </div>
+                </>
+            )}
+            {podSubs && podSubs.length >= 1 && (
                 <div className="flex flex-wrap justify-center w-fit gap-1 ">
                     <DropdownDisplay
                         object={podSubs}

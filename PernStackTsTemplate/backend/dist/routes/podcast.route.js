@@ -1,7 +1,7 @@
 import express from 'express';
 import { subscribePodcast, trackProgress, 
 // fetchRecentEpisodes,
-search, getSubs, removeSub, getRecentEpisodes, getEpisodeById, retrieveProgress, getPodcastById, } from '../controllers/podcast.controller.js';
+search, getSubs, removeSub, getRecentEpisodes, getEpisodeById, retrieveProgress, getPodcastById, getPodcastByUrl, } from '../controllers/podcast.controller.js';
 import protectRoute from '../middleware/protectRoute.js';
 const app = express();
 app.use(express.json());
@@ -16,6 +16,8 @@ router.post('/remove-sub', protectRoute, removeSub);
 router.get('/episode/:id', protectRoute, getEpisodeById);
 // // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/episode/:id
 router.get('/get-podcast/:feedId', protectRoute, getPodcastById);
+// // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/podcast-by-url
+router.post('/podcast-by-url/', protectRoute, getPodcastByUrl);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress
 router.post('/save-progress', protectRoute, trackProgress);
 // https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/track-progress

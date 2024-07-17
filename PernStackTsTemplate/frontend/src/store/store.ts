@@ -1396,6 +1396,7 @@ export const useStore = create<Store>((set, get) => ({
                                 currentProgress.toFixed(0),
                                 epId
                             )
+                            set({ isPlayingPodcast: false })
                             stopPodcast()
                         }
 

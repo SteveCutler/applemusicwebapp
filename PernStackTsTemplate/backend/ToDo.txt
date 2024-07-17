@@ -12,6 +12,11 @@ using start and the hardware playback buttons to control playback
 library albums artwork not updating properly
 add favourite button to footer
 issue playing library albums from sidebar
+fix sizing of single objects on search page
+create scrpt for importing opml podcast subscription lists
+figure out best way of importing library to database - handle on frontend or backend?
+add podcast import feature to settings as well so you can always do this
+also add apple auth adn other features, dark mode etc.
 
 
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
