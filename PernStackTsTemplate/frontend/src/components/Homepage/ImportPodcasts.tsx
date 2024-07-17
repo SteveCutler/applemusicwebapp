@@ -11,6 +11,9 @@ const ImportPodcasts = () => {
         backendToken: state.backendToken,
         setPodSubs: state.setPodSubs,
     }))
+    const [uploading, setUploading] = useState(false)
+    const [success, setSuccess] = useState(false)
+    const [failure, setFailure] = useState(false)
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files) {
@@ -43,13 +46,12 @@ const ImportPodcasts = () => {
             setPodSubs(data)
         } catch (error) {
             console.error('Error subscribing to podcast:', error)
-
-            toast.error('Error retrieving podcasts..')
         }
     }
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault()
+        setUploading(true)
         if (!file) return
 
         const reader = new FileReader()
@@ -102,12 +104,22 @@ const ImportPodcasts = () => {
                     const data = await response.json()
                     console.log('response data', data)
                     if (response.status == 200) {
+                        setUploading(false)
+                        setSuccess(true)
                         getSubs()
+                    } else {
+                        setUploading(false)
+
+                        setFailure(true)
                     }
                 } catch (error) {
+                    setFailure(true)
+                    setUploading(false)
                     console.error('Error importing podcasts', error)
                 }
             } else {
+                setFailure(true)
+                setUploading(false)
                 console.error('No valid feeds found in the OPML file')
             }
         }
@@ -119,7 +131,14 @@ const ImportPodcasts = () => {
             Upload the OPML file:
             <form
                 className="flex flex-col justify-center mt-5 items-center w-full mx-auto gap-1"
-                onSubmit={handleSubmit}
+                onSubmit={e => {
+                    success
+                        ? e.preventDefault()
+                        : uploading
+                          ? e.preventDefault()
+                          : e.preventDefault()
+                    handleSubmit(e)
+                }}
             >
                 <div>
                     <input
@@ -130,10 +149,16 @@ const ImportPodcasts = () => {
                     />
                 </div>
                 <button
-                    className="rounded-full block w-full mt-5 bg-white p-1 text-blue-400 hover:text-blue-600  active:scale-95"
+                    className={`rounded-full block w-full mt-5 bg-white p-1 ${success ? 'text-green-400 hover:cursor-default ' : failure ? 'text-red-500 ' : uploading ? 'text-blue-400 ' : 'text-blue-400 hover:text-blue-600  active:scale-95'} `}
                     type="submit"
                 >
-                    Upload
+                    {success
+                        ? 'success!'
+                        : failure
+                          ? 'error'
+                          : uploading
+                            ? 'uploading...'
+                            : 'Upload'}
                 </button>
             </form>
         </div>

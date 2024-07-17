@@ -111,7 +111,7 @@ const Library = () => {
         }
     }, [musicKitInstance, appleMusicToken, albums, librarySearchTerm])
 
-    const updateLibrary = async () => {
+    const syncLibrary = async () => {
         setLoading(true)
         try {
             const res = await fetch(
@@ -213,8 +213,14 @@ const Library = () => {
     if (albums && albums.length == 0) {
         return (
             <div className="flex-col flex items-center w-full h-full">
-                <button className="btn text-white  btn-info">
-                    Load Library
+                <button
+                    onClick={e => {
+                        loading ? e.preventDefault() : e.preventDefault()
+                        syncLibrary()
+                    }}
+                    className={`rounded-full py-2 px-4 ${loading ? 'hover:cursor-normal' : 'hover:bg-blue-600 active:scale-95'}  text-md font-bold bg-blue-500 text-white  btn-info`}
+                >
+                    {loading ? 'syncing...' : 'Sync Library'}
                 </button>
             </div>
         )

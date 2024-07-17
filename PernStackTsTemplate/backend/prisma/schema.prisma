@@ -59,6 +59,8 @@ model Subscription {
   podcastId String
   user      User   @relation(fields: [userId], references: [id])
   podcast   Podcast @relation(fields: [podcastId], references: [id])
+
+   @@unique([userId, podcastId])
 }
 
 model ListenedEpisode {
