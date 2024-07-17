@@ -303,7 +303,7 @@ const Sidebar = () => {
                     <NavLink
                         to="/"
                         className={({ isActive }) =>
-                            `flex w-full  px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-start ps-28 items-center ${
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }
@@ -317,7 +317,7 @@ const Sidebar = () => {
                         to="/search"
                         title="search"
                         className={({ isActive }) =>
-                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-start  ps-28 items-center ${
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center  items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }
@@ -329,7 +329,7 @@ const Sidebar = () => {
                         to="/library"
                         title="library"
                         className={({ isActive }) =>
-                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-start ps-28 items-center ${
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }
@@ -342,7 +342,7 @@ const Sidebar = () => {
                         to="/podcasts"
                         title="podcasts"
                         className={({ isActive }) =>
-                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-start ps-28 items-center ${
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }
@@ -356,7 +356,7 @@ const Sidebar = () => {
                         to="/playlist-display"
                         title="playlists"
                         className={({ isActive }) =>
-                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-start ps-28 items-center ${
+                            `flex w-full mx-auto px-3 hover:text-slate-100 select-none cursor-default rounded-xl justify-center items-center ${
                                 isActive ? 'text-white' : ''
                             }`
                         }

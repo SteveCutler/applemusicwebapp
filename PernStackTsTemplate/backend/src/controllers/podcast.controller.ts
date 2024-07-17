@@ -113,22 +113,31 @@ export const addImportedPodcastSubs = async (podcasts: any, userId: string) => {
                 },
             })
 
+            // Check if the subscription exists
+            const subscriptionExists = await prisma.subscription.findUnique({
+                where: {
+                    userId_podcastId: {
+                        userId,
+                        podcastId: podcastData.id,
+                    },
+                },
+            })
+
+            // Create subscription if it doesn't exist
+            if (!subscriptionExists) {
+                await prisma.subscription.create({
+                    data: {
+                        userId,
+                        podcastId: podcastData.id,
+                    },
+                })
+            }
+
             return podcastData
         })
 
         const podcastsData = await Promise.all(upsertPodcastPromises)
-
-        const subscriptionPromises = podcastsData.map(async podcast => {
-            return await prisma.subscription.create({
-                data: {
-                    userId,
-                    podcastId: podcast.id,
-                },
-            })
-        })
-
-        const subscriptions = await Promise.all(subscriptionPromises)
-        return subscriptions
+        return podcastsData
     } catch (error) {
         console.error('Error subscribing to podcasts:', error)
         throw new Error('Failed to subscribe to podcasts')
