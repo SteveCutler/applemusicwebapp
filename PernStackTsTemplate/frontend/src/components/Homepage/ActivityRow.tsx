@@ -266,7 +266,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
-                                    50
+                                    100
                                 )}
                                 style={{ maxWidth: '50px' }}
                             />
@@ -352,8 +352,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
-                                    50
+                                    100
                                 )}
+                                style={{ width: '50px' }}
                             />
                         ) : (
                             <img src={defaultPic} width="50px" />
@@ -430,7 +431,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
-                                    50
+                                    100
                                 )}
                                 style={{ width: '50px' }}
                             />
@@ -507,8 +508,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             <img
                                 src={constructImageUrl(
                                     item.attributes.artwork?.url,
-                                    50
+                                    100
                                 )}
+                                style={{ width: '50px' }}
                             />
                         ) : (
                             <img src={defaultPic} width="50px" />

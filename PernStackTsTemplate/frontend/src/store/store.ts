@@ -1380,7 +1380,7 @@ export const useStore = create<Store>((set, get) => ({
                         if (displayArt) {
                             const displayArtUrl = constructImageUrl(
                                 displayArt,
-                                50
+                                100
                             )
                             useStore.setState({ albumArtUrl: displayArtUrl })
                         } else {
