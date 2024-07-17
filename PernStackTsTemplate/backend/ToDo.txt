@@ -5,15 +5,19 @@ I can basically completely get rid of my library song album processing informati
 I also don't need my favourites algorithm calculation as most users (anyone with ios17 and up have a favourites song playlist.)
 
 the itunes library api provides a lot better datapoints for library images, playcounts, last play date etc, all this can be used to create recommendations from library (first I could just cycle through recommending albums or songs that have been played a lot by user, could also recommend things that have a lot of plays but the latest play date is not for a while, a 'Jump back in' recommmendation)
-
 itunes library api only works in desktop app context - nevermind.
+
+when you log in you have to refresh for musickit to load
+I should probably switch all musickit calls to back end for security?
+
+add route to add private podcast rss feed to subscription
 
 using start and the hardware playback buttons to control playback
 library albums artwork not updating properly
-add favourite button to footer
+
 issue playing library albums from sidebar
 fix sizing of single objects on search page
-create scrpt for importing opml podcast subscription lists
+
 figure out best way of importing library to database - handle on frontend or backend?
 add podcast import feature to settings as well so you can always do this
 also add apple auth adn other features, dark mode etc.
@@ -22,7 +26,7 @@ also add apple auth adn other features, dark mode etc.
 WORK ON BACK END, MAKE SURE EACH APPLE ACCOUNT IS HOOKED UP TO ONLY ITS INDIVIDUAL ACCOUNT, ETC
 
 Major problems:
-album art issue with library
+
 storefront selection, storage, retrieval and insertion in calls 
 create a settings page where this and certain music kit settings can be changed, autofade, bitrate, explicit songs, etc.
 Song page api calls?
