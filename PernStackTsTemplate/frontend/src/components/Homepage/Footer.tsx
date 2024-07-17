@@ -647,8 +647,8 @@ function Footer() {
             className="footer px-5 flex items-center overflow-hidden justify-between bg-gradient-to-b  from-gray-900 to-black"
             style={{ maxHeight: '75px' }}
         >
-            <div className="flex justify-between  items-center my-1 w-full">
-                <div className="flex gap-2 justify-start, items-center  w-1/4">
+            <div className="flex justify-between   items-center my-1 w-full">
+                <div className="flex gap-2 justify-start  w-1/4 items-center  ">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
                         <img
                             src={albumArtUrl}
@@ -670,17 +670,18 @@ function Footer() {
                             <img
                                 src={defaultPlaylistArtwork}
                                 alt="album image"
-                                style={{ width: '60px' }}
+                                style={{ width: '60px', height: '60px' }}
                                 className="hover:scale-105"
                             />
                         )
                     )}
-                    <div className="flex flex-col  justify-center   items-start text-xs font-normal">
+
+                    <div className="flex flex-col  justify-center w-full  items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <div className="flex items-center">
                                 <div
                                     onClick={goToAlbum}
-                                    className="font-semibold hover:cursor-pointer  hover:text-white w-full flex-col flex"
+                                    className="font-semibold  truncate w-full flex-col flex-shrink flex justify-around"
                                 >
                                     <div>
                                         {
@@ -766,22 +767,20 @@ function Footer() {
                                     )}
                             </div>
                         ) : isPlayingPodcast ? (
-                            <>
-                                <div className="font-semibold w-1/4  h-full  flex-col flex justify-around">
-                                    <div
-                                        className="hover:text-white  hover:cursor-pointer truncate h-fit"
-                                        onClick={goToPodcastEpisode}
-                                    >
-                                        {podcastEpTitle}
-                                    </div>
-                                    <div
-                                        className="hover:text-white hover:cursor-pointer truncate w-fit h-fit"
-                                        onClick={goToPodcast}
-                                    >
-                                        {podcastArtist}
-                                    </div>
+                            <div className="font-semibold  truncate w-full flex-col flex-shrink flex justify-around">
+                                <div
+                                    className="hover:text-white  hover:cursor-pointer truncate   h-fit"
+                                    onClick={goToPodcastEpisode}
+                                >
+                                    {podcastEpTitle}
                                 </div>
-                            </>
+                                <div
+                                    className="hover:text-white hover:cursor-pointer truncate  h-fit"
+                                    onClick={goToPodcast}
+                                >
+                                    {podcastArtist}
+                                </div>
+                            </div>
                         ) : (
                             <span className="flex flex-grow w-full"></span>
                         )}
@@ -911,7 +910,7 @@ function Footer() {
                     </div>
                     <div className="flex w-full items-end justify-center">
                         <div
-                            className="h-full w-full font-semibold select-none -translate-y-2 flex justify-center items-center"
+                            className="h-full w-full font-semibold select-none  flex justify-center items-center"
                             style={{ width: '100px' }}
                         >
                             {isPlayingPodcast
@@ -932,7 +931,7 @@ function Footer() {
                             </div>
                         </div>
                         <div
-                            className="h-full font-semibold w-fit select-none -translate-y-2 flex justify-center items-center"
+                            className="h-full font-semibold w-fit select-none  flex justify-center items-center"
                             style={{ width: '100px' }}
                         >
                             {isPlayingPodcast

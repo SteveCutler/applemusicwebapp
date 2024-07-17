@@ -71,7 +71,7 @@ const Timeline = () => {
                               ? currentTime.toFixed(0)
                               : '0'
                     }
-                    className="range range-xs mb-5 range-info flex"
+                    className="range range-xs mb-2 range-info flex"
                     onChange={handleScrub}
                     onMouseUp={e => {
                         handleScrubEnd(e)
