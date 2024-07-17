@@ -157,9 +157,11 @@ const Sidebar = () => {
         appleMusicToken,
         setRecentlyAddedToLib,
         recentlyAddedToLib,
+        isAuthorized,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
         setRecentlyAddedToLib: state.setRecentlyAddedToLib,
+        isAuthorized: state.isAuthorized,
         recentlyAddedToLib: state.recentlyAddedToLib,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -255,13 +257,13 @@ const Sidebar = () => {
         if (!musicKitInstance) {
             authorizeMusicKit()
         }
-        if (!appleMusicToken) {
+        if (!appleMusicToken && musicKitInstance) {
             fetchAppleToken()
         }
         // if (!albums && appleMusicToken) {
         //     fetchLibrary()
         // }
-    }, [appleMusicToken])
+    }, [appleMusicToken, musicKitInstance, isAuthorized])
 
     const [viewType, setViewType] = useState('history')
 

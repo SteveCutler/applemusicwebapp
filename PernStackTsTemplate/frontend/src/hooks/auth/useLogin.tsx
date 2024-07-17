@@ -55,9 +55,9 @@ const useLogin = () => {
             localStorage.setItem('backendToken', data.id)
             setBackendToken(data.id)
             console.log('fetching apple token')
-            await fetchAppleToken()
+            fetchAppleToken()
 
-            await authorizeMusicKit()
+            authorizeMusicKit()
             setAuthorized(true)
             toast.success('Logged in successfully')
 

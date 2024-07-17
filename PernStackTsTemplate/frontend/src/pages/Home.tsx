@@ -42,7 +42,7 @@ const Home = () => {
         if (!musicKitInstance || !appleMusicToken) {
             initialize()
         }
-    }, [setBackendToken, musicKitInstance, appleMusicToken])
+    }, [setBackendToken, musicKitInstance, appleMusicToken, isAuthorized])
 
     if (!appleMusicToken) {
         return (

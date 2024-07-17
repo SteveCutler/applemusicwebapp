@@ -256,8 +256,10 @@ const AppleDashboard = () => {
         fetchPodcastProgress,
         stationsForYou,
         setRecentlyAddedToLib,
+        isAuthorized,
     } = useStore(state => ({
         progressLoaded: state.progressLoaded,
+        isAuthorized: state.isAuthorized,
         setRecentlyAddedToLib: state.setRecentlyAddedToLib,
         recentlyAddedToLib: state.recentlyAddedToLib,
         podcastProgress: state.podcastProgress,
@@ -593,10 +595,16 @@ const AppleDashboard = () => {
             authorizeMusicKit()
         }
 
-        if (!recommendations) {
+        if (!recommendations && musicKitInstance && appleMusicToken) {
             fetchRecommendations()
         }
-    }, [musicKitInstance, podcastProgress, appleMusicToken])
+    }, [
+        musicKitInstance,
+        podcastProgress,
+        appleMusicToken,
+        isAuthorized,
+        podSubs,
+    ])
 
     console.log('recently added to lib: ', recentlyAddedToLib)
 
