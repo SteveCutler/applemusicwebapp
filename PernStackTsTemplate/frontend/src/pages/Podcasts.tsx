@@ -265,20 +265,32 @@ const Podcasts = () => {
         <div className={`flex flex-col`}>
             {podSubs && podSubs.length == 0 && (
                 <>
-                    <div className="bg-blue-500 text-white font-semibold p-3 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
+                    <div className="text-3xl font-bold text-black pb-7">
+                        You're not subscribed to any podcasts yet!
+                    </div>
+                    <div className="bg-blue-500 text-white text-md font-semibold p-5 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
                         <div>
                             Use the search page to find and subscribe to
                             podcasts{' '}
                         </div>
                         <div>- or -</div>
-                        <div>
-                            Import an OPML of podcasts from one of these apps:{' '}
+                        <div className="max-w-96">
+                            Follow the directions below to Import a list of your
+                            podcast subscriptions from apple podcasts:
                         </div>
-                        <ol>
-                            <li>Apple Podcasts</li>
-                            <li>Spotify</li>
-                            <li>Google Podcasts</li>
-                        </ol>
+                        <div className="border-2 max-w-96 border-white rounded-lg p-5">
+                            Use this tool to export a list of your podcast
+                            subscriptions and upload it below
+                            <a
+                                href="https://www.icloud.com/shortcuts/44009520675540d7945263e088f6e915"
+                                target="_blank" // Optional: Opens the link in a new tab
+                                rel="noopener noreferrer" // Optional: Adds security for external links
+                                className="block bg-white hover:text-blue-600  active:scale-95 text-blue-400 p-1 mt-3 text-md rounded-full" // Replace with your button styles
+                            >
+                                Podcast Export Tool
+                            </a>
+                        </div>
+
                         <ImportPodcasts />
                     </div>
                 </>

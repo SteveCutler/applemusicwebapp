@@ -90,7 +90,7 @@ const Login = () => {
                             </span>
                         </label> */}
                             <input
-                                type="password"
+                                type="text"
                                 placeholder="Enter Password"
                                 className="w-full input bg-white text-black input-bordered h-10"
                                 value={signUpInputs.signupPassword}
@@ -110,7 +110,7 @@ const Login = () => {
                             </span>
                         </label> */}
                             <input
-                                type="password"
+                                type="text"
                                 placeholder="Confirm Password"
                                 className="w-full input bg-white text-black input-bordered h-10"
                                 value={signUpInputs.signupconfirmPassword}

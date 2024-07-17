@@ -156,7 +156,8 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         >
             {song.attributes.artwork?.url ? (
                 <img
-                    src={constructImageUrl(song.attributes.artwork?.url, 50)}
+                    src={constructImageUrl(song.attributes.artwork?.url, 100)}
+                    style={{ width: '60px' }}
                     className="pe-2 w-1/4"
                 />
             ) : (

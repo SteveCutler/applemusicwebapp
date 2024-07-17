@@ -397,13 +397,13 @@ const Sidebar = () => {
                         {/* likes */}
                         {/* activity */}
                         {/* history */}
-                        <div
+                        {/* <div
                             className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'likes' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}
                             onClick={() => setViewType('likes')}
                             title="Likes"
                         >
                             <FaHeartbeat style={style} />
-                        </div>
+                        </div> */}
 
                         <div
                             className={`flex w-1/4 justify-center hover:cursor-default  rounded-t-md py-1 gap-1 ${viewType === 'history' ? 'bg-slate-700' : 'hover:bg-slate-800'}`}

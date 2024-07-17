@@ -166,15 +166,40 @@ const FetchArtistData = (id: string | undefined) => {
 
             try {
                 if (id.startsWith('r')) {
-                    console.log(`${id} start with 'r'`)
                     try {
-                        const res = await musicKitInstance.api.music(
-                            `/v1/me/library/artists/${id}`
+                        console.log(`${id} start with 'r'`)
+                        const catId = await musicKitInstance.api.music(
+                            `/v1/me/library/artists/${id}/catalog`
                         )
 
-                        const data: Artist = await res.data.data[0]
+                        // const catData = await catId.json()
 
-                        setArtistData(data)
+                        if (catId.response.status === 200) {
+                            try {
+                                const res = await musicKitInstance.api.music(
+                                    `/v1/catalog/ca/artists/${catId.data.data[0].id}`
+                                )
+
+                                const data: Artist = await res.data.data[0]
+
+                                setArtistData(data)
+                            } catch (error: any) {
+                                console.error(error)
+                                setError(error)
+                            } finally {
+                                setLoading(false)
+                            }
+                        } else {
+                            const res = await musicKitInstance.api.music(
+                                `/v1/me/library/artists/${id}`
+                            )
+
+                            console.log('artist data', catData)
+
+                            const data: Artist = await res.data.data[0]
+
+                            setArtistData(data)
+                        }
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -204,7 +229,9 @@ const FetchArtistData = (id: string | undefined) => {
             }
         }
 
-        fetchArtistData()
+        if (!artistData) {
+            fetchArtistData()
+        }
     }, [musicKitInstance, id, authorizeMusicKit])
 
     return {

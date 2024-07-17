@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { useParams } from 'react-router-dom'
 import useFetchArtistData from '../hooks/ArtistPage/FetchArtistData'
@@ -49,17 +49,30 @@ const Artist = () => {
     }))
     const { Id } = useParams<{ Id: string }>()
     const { artistData } = useFetchArtistData(Id)
-    const { artistAlbumData } = useFetchArtistAlbumData(Id)
-    // const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
-    const { featuredPlaylistsData } = useFetchArtistFeaturedPlaylistsData(Id)
-    // const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
-    const { latestReleaseData } = useFetchArtistLatestReleaseData(Id)
-    const { similarArtistsData } = useFetchArtistSimilarArtistsData(Id)
-    // const { singlesData } = useFetchArtistSinglesData(Id)
-    const { topSongsData } = useFetchArtistTopSongsData(Id)
-    const { featuredAlbumsData } = useFetchFeaturedAlbumsData(Id)
 
-    console.log('latestReleaseData', latestReleaseData)
+    const [artistAlbumData, setArtistAlbumData] = useState(null)
+    // console.log('artistData:', artistData)
+    if (artistData) {
+        const { artistAlbumData } = useFetchArtistAlbumData(artistData.id)
+        console.log('artist album data', artistAlbumData)
+        setArtistAlbumData(artistAlbumData)
+        // const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
+        const { featuredPlaylistsData } = useFetchArtistFeaturedPlaylistsData(
+            artistData.id
+        )
+        // const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
+        const { latestReleaseData } = useFetchArtistLatestReleaseData(
+            artistData.id
+        )
+        const { similarArtistsData } = useFetchArtistSimilarArtistsData(
+            artistData.id
+        )
+        // const { singlesData } = useFetchArtistSinglesData(Id)
+        const { topSongsData } = useFetchArtistTopSongsData(artistData.id)
+        const { featuredAlbumsData } = useFetchFeaturedAlbumsData(artistData.id)
+    }
+
+    // console.log('latestReleaseData', latestReleaseData)
     //console.log('artistData: ', artistData[0])
     const initialize = async () => {
         if (!musicKitInstance) {
@@ -86,9 +99,9 @@ const Artist = () => {
     }
 
     const loadPlayer = async () => {
-        if (topSongsData) {
-            setPlaylist(topSongsData, 0, true)
-        }
+        // if (topSongsData) {
+        //     setPlaylist(topSongsData, 0, true)
+        // }
         // await retrieveAlbumTracks()
     }
 
@@ -110,7 +123,7 @@ const Artist = () => {
                     </div>
                     <div className="md:flex-row w-full gap-4 flex flex-col justify-around  items-start">
                         <div className="flex-col flex  w-full relative ">
-                            {artistData.attributes.artwork.url ? (
+                            {artistData.attributes.artwork ? (
                                 <img
                                     className="pb-5 w-full"
                                     src={constructImageUrl(

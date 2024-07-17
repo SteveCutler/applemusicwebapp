@@ -236,7 +236,7 @@ const Search = () => {
                         onChange={e => onChange(e)}
                         ref={inputRef}
                         placeholder="What do you want to listen to?..."
-                        className="border rounded-full px-4 py-2 w-1/3 text-slate-600 bg-white"
+                        className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-3/4' : 'w-1/2'}  text-slate-600 bg-white`}
                     />
                 </form>
                 <div className="gap-1 flex h-fit pe-5 ">
