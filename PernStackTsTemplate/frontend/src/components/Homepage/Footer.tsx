@@ -78,7 +78,9 @@ function Footer() {
         appleMusicToken,
         backendToken,
         setFavouriteSongs,
+        podcastProgress,
     } = useStore(state => ({
+        podcastProgress: state.podcastProgress,
         podcastArtist: state.podcastArtist,
         setFavouriteSongs: state.setFavouriteSongs,
         favouriteSongs: state.favouriteSongs,
@@ -642,11 +644,11 @@ function Footer() {
 
     return (
         <div
-            className="footer px-5 flex items-center justify-between bg-gradient-to-b  from-gray-900 to-black"
+            className="footer px-5 flex items-center overflow-hidden justify-between bg-gradient-to-b  from-gray-900 to-black"
             style={{ maxHeight: '75px' }}
         >
-            <div className="flex justify-between items-center mt-3 w-full">
-                <div className="flex gap-2 justify-start w-1/4">
+            <div className="flex justify-between  items-center my-1 w-full">
+                <div className="flex gap-2 justify-start, items-center  w-1/4">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
                         <img
                             src={albumArtUrl}
@@ -659,7 +661,7 @@ function Footer() {
                         <img
                             src={podcastArtUrl}
                             alt="album image"
-                            style={{ width: '60px' }}
+                            style={{ width: '60px', height: '60px' }}
                             className="hover:scale-105"
                             onClick={goToPodcast}
                         />
@@ -673,12 +675,12 @@ function Footer() {
                             />
                         )
                     )}
-                    <div className="flex flex-col w-full justify-center  items-start text-xs font-normal">
+                    <div className="flex flex-col  justify-center   items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <div className="flex items-center">
                                 <div
                                     onClick={goToAlbum}
-                                    className="font-semibold hover:cursor-pointer hover:text-white w-full flex-col flex"
+                                    className="font-semibold hover:cursor-pointer  hover:text-white w-full flex-col flex"
                                 >
                                     <div>
                                         {
@@ -697,7 +699,7 @@ function Footer() {
                                         className=" items-center gap-2"
                                         onClick={goToAlbum}
                                     >
-                                        <div className="hover:cursor-pointer hover:text-white">
+                                        <div className="hover:cursor-pointer truncate hover:text-white">
                                             {musicKitInstance.queue.items &&
                                                 musicKitInstance.queue.items[
                                                     musicKitInstance
@@ -765,15 +767,15 @@ function Footer() {
                             </div>
                         ) : isPlayingPodcast ? (
                             <>
-                                <div className="font-semibold   w-full h-full  flex-col flex justify-around">
+                                <div className="font-semibold w-1/4  h-full  flex-col flex justify-around">
                                     <div
-                                        className="hover:text-white hover:cursor-pointer w-fit h-fit"
+                                        className="hover:text-white  hover:cursor-pointer truncate h-fit"
                                         onClick={goToPodcastEpisode}
                                     >
                                         {podcastEpTitle}
                                     </div>
                                     <div
-                                        className="hover:text-white hover:cursor-pointer w-fit h-fit"
+                                        className="hover:text-white hover:cursor-pointer truncate w-fit h-fit"
                                         onClick={goToPodcast}
                                     >
                                         {podcastArtist}
@@ -789,7 +791,7 @@ function Footer() {
                     <div>{podcastDuration}</div>
                 )} */}
                 <div className="flex flex-col  justify-center mx-auto items-center w-1/2 ">
-                    <div className="flex translate-x-5 mx-auto w-1/4 justify-center ">
+                    <div className="flex translate-x-4 translate-y-1 mx-auto w-1/4 justify-center ">
                         <button
                             className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {

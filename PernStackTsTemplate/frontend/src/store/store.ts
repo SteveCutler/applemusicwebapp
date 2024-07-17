@@ -723,19 +723,46 @@ export const useStore = create<Store>((set, get) => ({
                     credentials: 'include',
                 }
             )
-            set({
-                podcastProgress: [
-                    ...podcastProgress,
-                    {
-                        episodeId: Number(episodeId),
-                        progress: String(progress),
-                        completed: progress > 99,
-                    },
-                ],
-            })
+
             if (!response.ok) {
                 throw new Error('Failed to save progress')
             }
+
+            set(state => {
+                const existingIndex = state.podcastProgress.findIndex(
+                    episode => String(episode.episodeId) === episodeId
+                )
+
+                let updatedPodcastProgress
+
+                if (existingIndex !== -1) {
+                    // Update the existing progress
+                    updatedPodcastProgress = state.podcastProgress.map(
+                        (episode, index) =>
+                            index === existingIndex
+                                ? {
+                                      ...episode,
+                                      progress: String(progress),
+                                      completed: progress > 99,
+                                  }
+                                : episode
+                    )
+                } else {
+                    // Add new progress
+                    updatedPodcastProgress = [
+                        ...state.podcastProgress,
+                        {
+                            episodeId: String(episodeId),
+                            progress: String(progress),
+                            completed: progress > 99,
+                        },
+                    ]
+                }
+
+                return {
+                    podcastProgress: updatedPodcastProgress,
+                }
+            })
         } catch (error) {
             console.error('Error saving episode progress:', error)
         }
@@ -890,7 +917,7 @@ export const useStore = create<Store>((set, get) => ({
             musicKitInstance,
             podcastPlayerInit,
             setAudioListeners,
-            podcastProgress,
+
             podcastAudio,
         } = get()
 
@@ -927,15 +954,19 @@ export const useStore = create<Store>((set, get) => ({
             return episode ? episode.progress : 0
         }
 
-        const progressPercent = getEpisodeProgress(
-            String(epId),
-            podcastProgress
-        )
-        console.log('progress percent', progressPercent)
-
-        const progress = Number(time) * Number(progressPercent) * 0.01
         podcastAudio.addEventListener('loadedmetadata', () => {
-            progress < 100
+            const { podcastProgress } = get()
+
+            console.log('podcast progress', podcastProgress)
+
+            const progressPercent = getEpisodeProgress(
+                String(epId),
+                podcastProgress
+            )
+            const progress = Number(time) * Number(progressPercent) * 0.01
+            console.log('progress', progress)
+
+            Number(progressPercent) < 100
                 ? (podcastAudio.currentTime = progress)
                 : (podcastAudio.currentTime = 0)
         })
@@ -949,7 +980,6 @@ export const useStore = create<Store>((set, get) => ({
                 //         currentTime: progress,
                 //     })
                 // }
-                state.podcastAudio.play()
                 state.podcastAudio.ontimeupdate = () => {
                     set({
                         currentTime: state.podcastAudio.currentTime,
@@ -957,6 +987,7 @@ export const useStore = create<Store>((set, get) => ({
                         queueToggle: false,
                     })
                 }
+                state.podcastAudio.play()
             }
             return {
                 isPlayingPodcast: true,
