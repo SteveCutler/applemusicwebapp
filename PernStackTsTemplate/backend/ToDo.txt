@@ -2,101 +2,42 @@
 Investigate the itunes library api provides a lot better datapoints for library images, playcounts, last play date etc, all this can be used to create recommendations from library (first I could just cycle through recommending albums or songs that have been played a lot by user, could also recommend things that have a lot of plays but the latest play date is not for a while, a 'Jump back in' recommmendation)
 itunes library api only works in desktop app context - nevermind.
 
+-OPTIMIZE - are there profiling tools for this?
+-redesign track display
+-make all the areas scroll seperately
+-add autoplay feature to podcasts?
 -add loading animations to EVERYTHING
 -when you log in you have to refresh for musickit to load
-I should probably switch all musickit calls to back end for security?
-add to queue
-add route to add private podcast rss feed to subscription
-
-using start and the hardware playback buttons to control playback
-library albums artwork not updating properly
-
-issue playing library albums from sidebar
-fix sizing of single objects on search page
-
-figure out best way of importing library to database - handle on frontend or backend?
-
-
-
-Major problems:
-artist page
-
-Song page api calls?
-
-
-create settings page and data for the user - defaults on signup, etc.
-various musicplayer options, location, syncing library options, dark mode
-
-add to queue/ play next functionality on modal
-
-add api calls to stations & songs pages 
-
-redesign toast
-
-add drag and drop feature to playlist creation
-
-
-
-THINGS TO FOCUS ON
-add feature for users to follow artist - checks if they have anything new and displays on homepage
-Create stacks functionality (playlist composed of multiple albumIds)
-
-pull more historical data and do something interesting with that.
+-I should probably switch all musickit calls to back end for security?
+-add to queue/play next feature in modal
+-add route to add private podcast rss feed to subscriptions
+-investigate if theres a way to add podcast recommendations
+-using start and the hardware playback buttons to control playback
+-library albums artwork not updating properly when filtering
+-issue playing library albums from sidebar
+-fix sizing of single objects on search page
+- issues with artist page & library artist ID
+-do more work on settings page: add dark mode settings, bitrate options, dark mode
+-add api calls to stations & songs pages 
+- redesign toast/figure out when is appropriate to display them
+-add drag and drop feature to playlist creation
 work on search page - design, search hints, etc
-create a settings page
-
-investigate adding friends?
-
-
-like/follow artist
-ACTIVITY Page, most recently followed artists, top release or recent releases from them, recent liked songs, recent liked albums
-
-
-things open up in the middle area
-WHAT I NEED TO DO BEFORE I CAN LAUNCH
-add more datapoints to homepage (make sure I have all of them)
-
-
-
--create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
-
-
-
-
-
-log out button
-
-
-**add search hints in a modal that dropdown as you type - select one and it sets that as the search term/executes searches
-**fix issue on library page of making sure only the album playing changes to the play sign
-
-add default image for artist, song playlist etc
-
-----
-
-
-
-** add display for album image in the 'more like this album' display bar
-
-** make sure the song history updates every time a song finishes and add a cool bubble animation where the new song pops in
-
+**add search hints in a search page that dropdown as you type - select one and it sets that as the search term/executes searches
 ** sort playlists by most recently played
-
-
-
-
-follow artist?
-
-
 add different display options for library (artist, album, song, genre?)
+-perfect 'play to pause' symbol, play/pause handler fuctionality
 
+
+
+
+add feature for users to follow artist - checks if they have anything new and displays on homepage
+pull more historical data and do something interesting with that.
+investigate adding friends?
+-create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
+add default image for artist, song playlist etc
 ** create playlist, add to playlist etc.
-
 ** add functionality to playlist play buttons on homepage (if type === playlists or something)
-
-FEATURE IDEAS:
 -recommendations based on heavy rotation albums
 -wayback playback: pick a time in history and highlight your top albums of the time
 -in general get the historical plays information and do some interesting things with it
--suggested playlist based on library listens
 -when the new mix drops make it a feature at the top of the page for the first day 
