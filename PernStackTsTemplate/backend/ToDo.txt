@@ -26,6 +26,9 @@ work on search page - design, search hints, etc
 ** sort playlists by most recently played
 add different display options for library (artist, album, song, genre?)
 -perfect 'play to pause' symbol, play/pause handler fuctionality
+-move music kit calls to backend?
+-redesign play/options buttons
+-add pagination to podcast pages/filtering for episodes
 
 
 

@@ -37,16 +37,16 @@ interface Song {
 const Song = () => {
     const location = useLocation()
     const song: Song = location.state.song
-    console.log('song received: ', song)
+    // console.log('song received: ', song)
 
     if (!song) {
         // Handle the case where the song object is not passed correctly
         return <div>Song not found</div>
     }
 
-    console.log('song object: ', song)
+    // console.log('song object: ', song)
     const { songId, type } = useParams<{ songId: string; type: string }>()
-    console.log(type)
+    // console.log(type)
     const { trackAlbumData, trackArtistData, loading, error } =
         FetchSongData(songId)
     const {
@@ -81,7 +81,11 @@ const Song = () => {
     const loadPlayer = async () => {
         // console.log('track data: ', song.relationships.tracks.data)
         if (song) {
-            setPlaylist([song], 0, true)
+            await musicKitInstance.setQueue({
+                song: song.id,
+                startWith: 0,
+                startPlaying: true,
+            })
         }
         // await retrieveAlbumTracks()
     }

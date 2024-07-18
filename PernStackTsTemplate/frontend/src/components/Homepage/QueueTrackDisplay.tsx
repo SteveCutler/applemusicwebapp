@@ -127,7 +127,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
     }
 
     const style = { fontSize: '1.5rem', color: 'dodgerblue' }
-    console.log('song sending: ', makeSong(song))
+    // console.log('song sending: ', makeSong(song))
 
     return (
         <Link

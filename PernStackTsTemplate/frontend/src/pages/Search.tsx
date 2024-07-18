@@ -195,7 +195,7 @@ const Search = () => {
                         podcast =>
                             // podcast.priority > 0 &&
                             // podcast.dead == 0 &&
-                            podcast.parseErrors == 0 &&
+                            podcast.podcast.parseErrors == 0 &&
                             podcast.locked == 0 &&
                             podcast.crawlErrors == 0 &&
                             podcast.episodeCount >= 1
@@ -316,6 +316,7 @@ const Search = () => {
                     className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
                 >
                     {searchResults.podcasts &&
+                        searchResults.podcasts.data.length > 0 &&
                         (searchFilters.length == 0 ||
                             searchFilters.includes('podcasts')) && (
                             <DropdownDisplay

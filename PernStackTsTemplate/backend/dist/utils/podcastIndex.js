@@ -64,6 +64,7 @@ export const fetchRecentEpisodes = async (feedId) => {
             headers,
             params: {
                 fulltext: true,
+                max: 400,
             },
         });
         const podcasts = await response.data;

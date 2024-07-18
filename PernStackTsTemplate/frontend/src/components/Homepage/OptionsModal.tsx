@@ -120,6 +120,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         backendToken,
     } = useStore(state => ({
         darkMode: state.darkMode,
+
         fetchAppleToken: state.fetchAppleToken,
         libraryPlaylists: state.libraryPlaylists,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -537,6 +538,32 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         }
     }
 
+    const playNext = async (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+        e.preventDefault()
+        e.stopPropagation() // Prevents the click from propagating to the parent elements
+
+        console.log('play next', object)
+        console.log('musickitinstance', musicKitInstance.queue.items)
+
+        const currentQueue = musicKitInstance.queue.items.map(item => {
+            return item.id
+        })
+        console.log('queue items', currentQueue)
+        const items = [object.id, ...currentQueue]
+        console.log('new Queue', items)
+        await musicKitInstance.setQueue({ songs: items })
+
+        // console.log('play next list', musicKitInstance.queue.items)
+        // .then(function (queue) {
+        //     toast.success('Playing next')
+        //     console.log('Item prepended to queue:', queue)
+        // })
+        // .catch(function (error) {
+        //     toast.error('Error')
+        //     console.error('Error prepending to queue:', error)
+        // })
+        // set({ playlist: currentQueue })
+    }
     const handleClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         e.preventDefault()
         e.stopPropagation() // Prevents the click from propagating to the parent elements
@@ -611,6 +638,20 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             />
                         </a>
                     </li>
+                    {/* <li
+                        onClick={e => {
+                            // addToLibrary(e)
+                            playNext(e)
+                            setIsOpen(!isOpen)
+                        }}
+                        className=" justify-center items-center "
+                    >
+                        <div
+                            className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                        >
+                            Play Next
+                        </div>
+                    </li> */}
                     <li
                         onClick={e => {
                             addToLibrary(e)

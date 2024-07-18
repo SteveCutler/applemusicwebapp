@@ -95,7 +95,7 @@ const Track: React.FC<TrackPropTypes> = ({
 
     const initializeMusic = () => {
         if (albumTracks) {
-            console.log('album tracks ', albumTracks)
+            // console.log('album tracks ', albumTracks)
             setPlaylist(albumTracks, index, true)
         }
     }

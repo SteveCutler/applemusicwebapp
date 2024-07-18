@@ -7,7 +7,7 @@ import useFetchArtistSimilarArtistsData from '../hooks/ArtistPage/FetchArtistSim
 import TrackDisplay from '../components/AlbumPage/TrackDisplay'
 import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/store'
 import {
     FaCaretDown,
@@ -95,10 +95,51 @@ interface podcastEpisode {
 }
 
 const Podcast = () => {
+    const {
+        setSearchTerm,
+        playPodcast,
+        podcastUrl,
+        musicKitInstance,
+        darkMode,
+        authorizeMusicKit,
+        queueToggle,
+        isPlaying,
+        playlist,
+        setPlaylist,
+        progressLoaded,
+        fetchPodcastProgress,
+    } = useStore(state => ({
+        playPodcast: state.playPodcast,
+        progressLoaded: state.progressLoaded,
+        fetchPodcastProgress: state.fetchPodcastProgress,
+        podcastUrl: state.podcastUrl,
+        setSearchTerm: state.setSearchTerm,
+        darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
+        authorizeMusicKit: state.authorizeMusicKit,
+        musicKitInstance: state.musicKitInstance,
+        isPlaying: state.isPlaying,
+        playlist: state.playlist,
+        setPlaylist: state.setPlaylist,
+    }))
+
     const [podcastInfo, setPodcastInfo] = useState<podcastInfo | null>(null)
     const [loading, setLoading] = useState(false)
     const [podcastEpisodes, setPodcastEpisodes] =
         useState<Array<podcastEpisode> | null>(null)
+    const [visibleEpisodes, setVisibleEpisodes] = useState<
+        Array<podcastEpisode>
+    >([])
+    const [page, setPage] = useState(1)
+    const [episodeSearchTerm, setEpisodeSearchTerm] = useState<string | null>(
+        null
+    )
+    const [episodeSearchResults, setEpisodeSearchResults] = useState<
+        podcastEpisode[] | null
+    >(null)
+
+    const observer = useRef<IntersectionObserver | null>(null)
+    const loadMoreRef = useRef<HTMLDivElement>(null)
 
     const { id } = useParams<{ id: string }>()
 
@@ -174,17 +215,11 @@ const Podcast = () => {
                 const infoData = await infoResponse.json()
 
                 const info: podcastInfo = infoData.data.feed
-                // console.log('podcast response', infoData.data.feed)
-                // console.log('episodes response', episodeData.data.episode)
 
-                // console.log('episodes', episodes)
-
+                console.log('episodes', episodes)
                 setPodcastEpisodes(episodes)
-                // const info = data.shift(0)
-                // const episodes = data
+                // setVisibleEpisodes(episodes.slice(0, 10))
 
-                // console.log('info: ', info)
-                // console.log('episodes: ', episodes)
                 setPodcastInfo(info)
             } catch (error) {
                 console.error('Error fetching podcast details:', error)
@@ -203,33 +238,52 @@ const Podcast = () => {
         }
     }, [id])
 
-    const {
-        setSearchTerm,
-        playPodcast,
-        podcastUrl,
-        musicKitInstance,
-        darkMode,
-        authorizeMusicKit,
-        queueToggle,
-        isPlaying,
-        playlist,
-        setPlaylist,
-        progressLoaded,
-        fetchPodcastProgress,
-    } = useStore(state => ({
-        playPodcast: state.playPodcast,
-        progressLoaded: state.progressLoaded,
-        fetchPodcastProgress: state.fetchPodcastProgress,
-        podcastUrl: state.podcastUrl,
-        setSearchTerm: state.setSearchTerm,
-        darkMode: state.darkMode,
-        queueToggle: state.queueToggle,
-        authorizeMusicKit: state.authorizeMusicKit,
-        musicKitInstance: state.musicKitInstance,
-        isPlaying: state.isPlaying,
-        playlist: state.playlist,
-        setPlaylist: state.setPlaylist,
-    }))
+    useEffect(() => {
+        if (observer.current) observer.current.disconnect()
+        const loadMoreEpisodes = () => {
+            console.log('slicing podcast episodes')
+            const newPage = page + 1
+            const newVisibleEpisodes = podcastEpisodes.slice(0, newPage * 10)
+            setVisibleEpisodes(newVisibleEpisodes)
+            setPage(newPage)
+        }
+        observer.current = new IntersectionObserver(entries => {
+            if (entries[0].isIntersecting && podcastEpisodes) {
+                loadMoreEpisodes()
+            }
+        })
+        if (loadMoreRef.current) observer.current.observe(loadMoreRef.current)
+    }, [visibleEpisodes, podcastEpisodes])
+
+    useEffect(() => {
+        const filterEpisodes = () => {
+            const searchResults: podcastEpisode[] = podcastEpisodes.filter(
+                ep =>
+                    ep.title
+                        .toLowerCase()
+                        .includes(episodeSearchTerm.toLowerCase()) ||
+                    ep.description
+                        .toLowerCase()
+                        .includes(episodeSearchTerm.toLowerCase())
+            )
+
+            searchResults.length > 0
+                ? setEpisodeSearchResults(searchResults)
+                : setEpisodeSearchResults(null)
+        }
+
+        if (episodeSearchTerm) {
+            filterEpisodes()
+        } else {
+            setEpisodeSearchTerm(null)
+            setEpisodeSearchResults(null)
+        }
+    }, [
+        podcastEpisodes,
+        visibleEpisodes,
+        episodeSearchTerm,
+        episodeSearchResults,
+    ])
 
     const styleButton = { fontSize: '1.5rem', color: 'dodgerblue' }
     const styleButtonBig = { fontSize: '3rem', color: 'dodgerblue' }
@@ -267,7 +321,7 @@ const Podcast = () => {
                 <h1 className="text-xl w-1/2 font-bold select-none">Podcast</h1>
             </div>
             <div
-                className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-5 justify-around  items-start`}
+                className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-3 justify-around  items-start`}
             >
                 <div
                     className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
@@ -383,18 +437,61 @@ const Podcast = () => {
                     </div>
                 )}
             </div>
-            <div className="flex-col flex w-11/12">
-                {podcastEpisodes &&
-                    podcastInfo &&
-                    podcastEpisodes.map((episode, index) => (
-                        <PodcastListItem
-                            key={index}
-                            podcast={episode}
-                            title={podcastInfo.title}
-                            id={podcastInfo.id}
-                        />
-                    ))}
-            </div>
+
+            {episodeSearchTerm && episodeSearchResults ? (
+                <div className="flex-col flex w-11/12">
+                    {visibleEpisodes && (
+                        <form className="p-3 w-full" action="">
+                            <input
+                                type="text"
+                                value={episodeSearchTerm}
+                                onChange={e =>
+                                    setEpisodeSearchTerm(e.target.value)
+                                }
+                                placeholder="Filter episodes..."
+                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
+                            />
+                        </form>
+                    )}
+                    {episodeSearchTerm &&
+                        podcastInfo &&
+                        episodeSearchResults.map((episode, index) => (
+                            <PodcastListItem
+                                key={index}
+                                podcast={episode}
+                                title={podcastInfo.title}
+                                id={podcastInfo.id}
+                            />
+                        ))}
+                </div>
+            ) : (
+                <div className="flex-col flex w-11/12">
+                    {visibleEpisodes && (
+                        <form className="p-3 w-full" action="">
+                            <input
+                                type="text"
+                                value={episodeSearchTerm}
+                                onChange={e =>
+                                    setEpisodeSearchTerm(e.target.value)
+                                }
+                                placeholder="Filter episodes..."
+                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
+                            />
+                        </form>
+                    )}
+                    {visibleEpisodes &&
+                        podcastInfo &&
+                        visibleEpisodes.map((episode, index) => (
+                            <PodcastListItem
+                                key={index}
+                                podcast={episode}
+                                title={podcastInfo.title}
+                                id={podcastInfo.id}
+                            />
+                        ))}
+                    <div ref={loadMoreRef} style={{ height: '1px' }} />
+                </div>
+            )}
         </div>
     )
 }

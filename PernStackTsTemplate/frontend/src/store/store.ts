@@ -112,9 +112,14 @@ interface MusickitInstance {
     shuffleMode: () => void
     isPlaying: boolean
     changeToMediaItem: (index: number) => Promise<void>
+    queue: {
+        prepend: (object: any) => void
+        items: Song[]
+    }
     Queue: {
         items?: any
     }
+
     volume: number
     currentPlaybackTime: () => void
     seekToTime: (elapsedTime: number) => Promise<void>
@@ -125,6 +130,7 @@ interface MusickitInstance {
         nowPlayingItem: MusicKitDescriptor
         queue: QueueMethods
         shuffleMode: string
+        setQueue: (options: SetQueueOptions) => Promise<void>
     }
     setQueue: (options: SetQueueOptions) => Promise<void>
     playbackState: number
@@ -754,7 +760,7 @@ export const useStore = create<Store>((set, get) => ({
                         {
                             episodeId: String(episodeId),
                             progress: String(progress),
-                            completed: progress > 99,
+                            completed: progress > 98,
                         },
                     ]
                 }
@@ -1438,23 +1444,13 @@ export const useStore = create<Store>((set, get) => ({
                     }
                 )
                 music.addEventListener('queueItemsDidChange', () => {
-                    console.log('stopping podcast')
+                    // console.log('stopping podcast')
 
                     if (music) {
                         const currentQueue = music.queue.items
                         set({ playlist: currentQueue })
                     }
                 })
-
-                // music.addEventListener('queueEnded', () => {
-                //     console.log('Queue ended, enabling autoplay')
-                // })
-
-                // music.addEventListener('nowPlayingItemDidChange', () => {
-                //     if (music) {
-                //         updateState()
-                //     }
-                // })
 
                 music.addEventListener('playbackTimeDidChange', () => {
                     if (music) {

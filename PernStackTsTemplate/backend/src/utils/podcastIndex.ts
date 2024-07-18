@@ -146,6 +146,7 @@ export const fetchRecentEpisodes = async (feedId: string) => {
                 headers,
                 params: {
                     fulltext: true,
+                    max: 400,
                 },
             }
         )
