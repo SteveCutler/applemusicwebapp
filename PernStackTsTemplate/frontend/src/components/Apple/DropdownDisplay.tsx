@@ -9,6 +9,7 @@ import { useStore } from '../../store/store'
 import PodcastEpisode from '../../pages/PodcastEpisode'
 import PodcastEpisodeItem from '../Homepage/PodcastEpisodeItem'
 import PodcastItem from '../Homepage/PodcastItem'
+import GradientAnimation from '../Homepage/GradientAnimation'
 
 interface podcastEpisode {
     dateCrawled: number
@@ -208,6 +209,7 @@ interface recoProps {
     title?: string
     podcastShow?: boolean
     shrink?: boolean
+    loading?: boolean
 }
 
 const DropdownDisplay: React.FC<recoProps> = ({
@@ -218,6 +220,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
     title,
     podcastShow,
     shrink,
+    loading,
 }) => {
     const style = { fontSize: '1.5rem' }
 
@@ -239,144 +242,160 @@ const DropdownDisplay: React.FC<recoProps> = ({
 
     // console.log('object:', object, 'sliceNunber:', sliceNumber)
     const [expand, setExpand] = useState(false)
-
-    return (
-        <div className="">
-            {podcast ? (
-                <div
-                    className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
-                >
-                    <h2 className=" px-5 text-xl font-bold">Recent Updates</h2>
-                </div>
-            ) : object &&
-              moreLikeAlbumImage &&
-              object.attributes.title.contentIds ? (
-                <div
-                    className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
-                >
-                    <div className="px-5">
-                        <img src={constructImageUrl(moreLikeAlbumImage, 75)} />
-                    </div>
-                    <h2 className="text-xl   font-bold">
-                        {object.attributes.title.stringForDisplay}
-                    </h2>
-                </div>
-            ) : !noTitle && object ? (
-                <div
-                    className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
-                >
-                    <h2 className=" px-5 text-xl font-bold">
-                        {object.attributes.title.stringForDisplay}
-                    </h2>
-                </div>
-            ) : (
-                title && (
+    if (loading) {
+        return <GradientAnimation />
+    } else {
+        return (
+            <div className="">
+                {podcast ? (
                     <div
                         className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
                     >
-                        <h2 className=" px-5 text-xl font-bold">{title}</h2>
+                        <h2 className=" px-5 text-xl font-bold">
+                            Recent Updates
+                        </h2>
                     </div>
-                )
-            )}
-            {object && (
-                <div className="flex flex-col mb-10  rounded-xl w-fit">
-                    {podcastShow ? (
-                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
-                            {object
-                                // .slice(0, 15)
-                                .slice(0, expand ? object.length : sliceNumber)
-                                .map((item, index: number) => (
-                                    <PodcastItem
-                                        key={index}
-                                        podcast={item}
-                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
-                                    />
-                                ))}
+                ) : object &&
+                  moreLikeAlbumImage &&
+                  object.attributes.title.contentIds ? (
+                    <div
+                        className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                    >
+                        <div className="px-5">
+                            <img
+                                src={constructImageUrl(moreLikeAlbumImage, 75)}
+                            />
                         </div>
-                    ) : podcast ? (
-                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
-                            {object
-                                // .slice(0, 15)
-                                .slice(0, expand ? object.length : sliceNumber)
-                                .map((item, index: number) => (
-                                    <PodcastEpisodeItem
-                                        key={index}
-                                        recent={true}
-                                        podcast={item}
-                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
-                                    />
-                                ))}
+                        <h2 className="text-xl   font-bold">
+                            {object.attributes.title.stringForDisplay}
+                        </h2>
+                    </div>
+                ) : !noTitle && object ? (
+                    <div
+                        className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                    >
+                        <h2 className=" px-5 text-xl font-bold">
+                            {object.attributes.title.stringForDisplay}
+                        </h2>
+                    </div>
+                ) : (
+                    title && (
+                        <div
+                            className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                        >
+                            <h2 className=" px-5 text-xl font-bold">{title}</h2>
                         </div>
-                    ) : (
-                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
-                            {object
-                                // .slice(0, 15)
-                                .slice(0, expand ? object.length : sliceNumber)
-                                .map(item =>
-                                    item.type === 'library-playlists' ||
-                                    item.type === 'playlists' ? (
-                                        <PlaylistItem
-                                            playlistItem={item}
-                                            carousel={true}
+                    )
+                )}
+                {object && (
+                    <div className="flex flex-col mb-10  rounded-xl w-fit">
+                        {podcastShow ? (
+                            <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                                {object
+                                    // .slice(0, 15)
+                                    .slice(
+                                        0,
+                                        expand ? object.length : sliceNumber
+                                    )
+                                    .map((item, index: number) => (
+                                        <PodcastItem
+                                            key={index}
+                                            podcast={item}
                                             width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                         />
-                                    ) : item.type === 'stations' ? (
-                                        <StationItem
-                                            stationItem={item}
-                                            carousel={true}
-                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                    ))}
+                            </div>
+                        ) : podcast ? (
+                            <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                                {object
+                                    // .slice(0, 15)
+                                    .slice(
+                                        0,
+                                        expand ? object.length : sliceNumber
+                                    )
+                                    .map((item, index: number) => (
+                                        <PodcastEpisodeItem
+                                            key={index}
+                                            recent={true}
+                                            podcast={item}
+                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
                                         />
-                                    ) : item.type === 'songs' ||
-                                      item.type === 'library-songs' ? (
-                                        <SongItem
-                                            song={item}
-                                            carousel={true}
-                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 ' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
-                                        />
-                                    ) : item.type === 'artists' ||
-                                      item.type === 'library-artists' ? (
-                                        <ArtistItem
-                                            carousel={true}
-                                            artist={item}
-                                            width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
-                                        />
-                                    ) : (
-                                        item.attributes && (
-                                            <AlbumItem
-                                                albumItem={item}
+                                    ))}
+                            </div>
+                        ) : (
+                            <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                                {object
+                                    // .slice(0, 15)
+                                    .slice(
+                                        0,
+                                        expand ? object.length : sliceNumber
+                                    )
+                                    .map(item =>
+                                        item.type === 'library-playlists' ||
+                                        item.type === 'playlists' ? (
+                                            <PlaylistItem
+                                                playlistItem={item}
                                                 carousel={true}
                                                 width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                             />
+                                        ) : item.type === 'stations' ? (
+                                            <StationItem
+                                                stationItem={item}
+                                                carousel={true}
+                                                width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                            />
+                                        ) : item.type === 'songs' ||
+                                          item.type === 'library-songs' ? (
+                                            <SongItem
+                                                song={item}
+                                                carousel={true}
+                                                width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 ' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                            />
+                                        ) : item.type === 'artists' ||
+                                          item.type === 'library-artists' ? (
+                                            <ArtistItem
+                                                carousel={true}
+                                                artist={item}
+                                                width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                            />
+                                        ) : (
+                                            item.attributes && (
+                                                <AlbumItem
+                                                    albumItem={item}
+                                                    carousel={true}
+                                                    width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                                />
+                                            )
                                         )
-                                    )
-                                )}
-                        </div>
-                    )}
+                                    )}
+                            </div>
+                        )}
 
-                    {object && object.length > sliceNumber && (
-                        <button
-                            onClick={e => {
-                                e.preventDefault()
-                                setExpand(!expand)
-                            }}
-                            className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
-                        >
-                            {expand ? (
-                                <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
-                                    <FaCaretUp style={style} />
-                                </div>
-                            ) : (
-                                <div className="mx-auto flex-col justify-center items-center flex text-slate-300 font-bold text-sm">
-                                    See more
-                                    <FaCaretDown style={style} />
-                                </div>
-                            )}
-                        </button>
-                    )}
-                </div>
-            )}
-        </div>
-    )
+                        {object && object.length > sliceNumber && (
+                            <button
+                                onClick={e => {
+                                    e.preventDefault()
+                                    setExpand(!expand)
+                                }}
+                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
+                            >
+                                {expand ? (
+                                    <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">
+                                        <FaCaretUp style={style} />
+                                    </div>
+                                ) : (
+                                    <div className="mx-auto flex-col justify-center items-center flex text-slate-300 font-bold text-sm">
+                                        See more
+                                        <FaCaretDown style={style} />
+                                    </div>
+                                )}
+                            </button>
+                        )}
+                    </div>
+                )}
+            </div>
+        )
+    }
 }
 
 export default DropdownDisplay

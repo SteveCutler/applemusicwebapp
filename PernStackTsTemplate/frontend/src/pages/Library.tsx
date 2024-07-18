@@ -44,6 +44,12 @@ const Library = () => {
     >(albums)
     const userId = backendToken
 
+    const [libSuccess, setLibSuccess] = useState(false)
+    const [lib, setLib] = useState(false)
+    const [loadingLibraryError, setLoadingLibraryError] = useState<
+        boolean | null
+    >(null)
+
     const fetchLibrary = async () => {
         console.log('fetching library...')
         setLoading(true)
@@ -127,9 +133,11 @@ const Library = () => {
             const data = await res.json()
             setAlbums(data.albums)
             setLoading(false)
+            setLibSuccess(true)
         } catch (error) {
             setError('Failed to fetch albums')
             setLoading(false)
+            setLoadingLibraryError(true)
         }
     }
 
@@ -218,9 +226,15 @@ const Library = () => {
                         loading ? e.preventDefault() : e.preventDefault()
                         syncLibrary()
                     }}
-                    className={`rounded-full py-2 px-4 ${loading ? 'hover:cursor-normal' : 'hover:bg-blue-600 active:scale-95'}  text-md font-bold bg-blue-500 text-white  btn-info`}
+                    className={`rounded-full py-2 px-4 ${libSuccess ? 'bg-white text-green-500' : loadingLibraryError ? 'bg-white text-red-500' : loading ? 'hover:cursor-normal bg-blue-500 text-white' : 'hover:bg-blue-600 bg-blue-500 text-white active:scale-95'}  text-md font-bold    btn-info`}
                 >
-                    {loading ? 'syncing...' : 'Sync Library'}
+                    {libSuccess
+                        ? 'success!'
+                        : loadingLibraryError
+                          ? 'error'
+                          : loading
+                            ? 'syncing...'
+                            : 'Sync Library'}
                 </button>
             </div>
         )

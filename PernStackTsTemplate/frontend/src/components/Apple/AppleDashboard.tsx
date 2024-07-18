@@ -20,6 +20,7 @@ import DropdownDisplay from './DropdownDisplay'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import CryptoJS from 'crypto-js'
+import GradientAnimation from '../Homepage/GradientAnimation'
 
 type AlbumType = {
     attributes: {
@@ -295,6 +296,7 @@ const AppleDashboard = () => {
     const [moreThemed, setMoreThemed] = useState(false)
     const [moreHeavyRotation, setMoreHeavyRotation] = useState(false)
     const [moreMadeForYou, setMoreMadeForYou] = useState(false)
+    const [loadingPodcasts, setLoadingPodcasts] = useState(false)
 
     const style = { fontSize: '1.5rem' }
 
@@ -457,6 +459,7 @@ const AppleDashboard = () => {
 
         const getRecentEps = async () => {
             if (podSubs) {
+                setLoadingPodcasts(true)
                 const ids = podSubs.map(pod => pod.id).join()
                 console.log('ids', ids)
                 // const id = podSubs[0].id.toString()
@@ -516,7 +519,9 @@ const AppleDashboard = () => {
                     // console.log('sorted', sortedEps)
 
                     setRecentEps(sortedEps)
+                    setLoadingPodcasts(false)
                 } catch (error) {
+                    setLoadingPodcasts(false)
                     console.error(error)
                 }
             }
@@ -614,13 +619,22 @@ const AppleDashboard = () => {
         <div
             className={`h-100vh flex-col flex-grow ${darkMode ? 'text-slate-200' : 'text-slate-800'}  relative z-10 flex justify-center `}
         >
-            {recentEps && (
+            {/* {loadingPodcasts && (
                 <DropdownDisplay
+                    
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
                 />
-            )}
+            )} */}
+
+            <DropdownDisplay
+                loading={loadingPodcasts}
+                podcast={true}
+                object={recentEps}
+                sliceNumber={sliceNumber}
+            />
+
             {recentlyAddedToLib.length > 1 && (
                 <DropdownDisplay
                     object={recentlyAddedToLib.slice(0, 15)}

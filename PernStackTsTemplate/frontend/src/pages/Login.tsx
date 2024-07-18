@@ -37,32 +37,33 @@ const Login = () => {
     // const handleSubmitForm = async (e: React.FormEvent) => {
     //     e.preventDefault()
     //     login(email, password)
+
     // }
 
     if (signUp) {
         return (
-            <div className="flex flex-col h-full -translate-y-10 items-center justify-center min-w-96 mx-auto">
+            <div className="flex flex-col absolute top-40  h-full  min-w-96 mx-auto">
                 {/* <img
                 src={MusLogo}
                 width="200"
                 className="flex select-none  mx-auto justify-center"
             /> */}
                 <img
-                    src="/MusLogo.png?url"
+                    src={MusLogo}
                     width="150"
                     className="flex select-none  mx-auto justify-center"
                 />
-                <div className="w-full rounded-lg   p-6 shadow-md   ">
+                <div className="w-full rounded-lg   px-6 shadow-md   ">
                     {/* <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
                     <span className="text-blue-500"> Sign Up</span>{' '}
                     <img src={spiralFavicon} style={{ width: '40px' }} />
                 </h1> */}
 
                     <form
-                        className="font-bold gap-5"
+                        className="font-bold"
                         // onSubmit={handleSignUpSubmitForm}
                     >
-                        <div className="pb-8">
+                        <div className="py-8">
                             {/* <label className="label p-2 ">
                             <span className="text-base label-text text-white">
                                 Email
@@ -127,7 +128,7 @@ const Login = () => {
                             onClick={() => {
                                 setSignUp(false)
                             }}
-                            className="text-sm font-bold select-none hover:text-blue-600 mt-2 inline-block text-slate-300"
+                            className="text-sm font-bold select-none hover:text-blue-600 mt-2  inline-block text-slate-300"
                         >
                             Already have an account?
                         </div>
@@ -149,13 +150,13 @@ const Login = () => {
         )
     } else {
         return (
-            <div className="flex flex-col h-full -translate-y-10 items-center justify-center min-w-96 mx-auto">
+            <div className="flex absolute top-40 flex-col h-full  min-w-96 mx-auto">
                 <img
-                    src="/MusLogo.png?url"
+                    src={MusLogo}
                     width="150"
                     className="flex select-none  mx-auto justify-center"
                 />
-                <div className="w-full p-6 rounded-lg text-black  bg-clip-padding ">
+                <div className="w-full px-6 rounded-lg text-black  bg-clip-padding ">
                     {/* <h1 className="text-3xl font-bold flex justify-center items-center text-center text-black">
                     <span className="text-blue-500 select-none">Login</span>
                     <img src={spiralFavicon} style={{ width: '40px' }} />
@@ -165,7 +166,7 @@ const Login = () => {
                         className="font-bold"
                         // onSubmit={handleSubmitForm}
                     >
-                        <div className="py-7">
+                        <div className="py-8">
                             {/* <label className="label p-2 ">
                             <span className="text-white font-bold">Email</span>
                         </label> */}
@@ -206,7 +207,7 @@ const Login = () => {
                             onClick={() => {
                                 setSignUp(true)
                             }}
-                            className="text-sm  select-none  text-slate-300 font-bold hover:text-blue-600 mt-2 py-3 inline-block"
+                            className="text-sm  select-none  text-slate-300 font-bold hover:text-blue-600 py-5  inline-block"
                         >
                             {"Don't"} have an account?
                         </div>
