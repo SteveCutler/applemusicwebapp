@@ -347,7 +347,7 @@ const Album = () => {
                                 className="w-full"
                                 src={constructImageUrl(
                                     albumData.attributes.artwork.url,
-                                    500
+                                    1000
                                 )}
                                 alt=""
                             />

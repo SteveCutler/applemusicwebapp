@@ -71,10 +71,12 @@ const Track: React.FC<TrackPropTypes> = ({
         currentSongDuration,
         currentSongId,
         playlist,
+        darkMode,
 
         setPlaylist,
     } = useStore(state => ({
         switchTrack: state.switchTrack,
+        darkMode: state.darkMode,
         currentElapsedTime: state.currentElapsedTime,
         pauseSong: state.pauseSong,
 
@@ -211,13 +213,13 @@ const Track: React.FC<TrackPropTypes> = ({
                 },
             }}
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-b-2 w-full  ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-300 select-none hover:bg-slate-800 ${isPlaying && song.id === currentSongId ? `bg-slate-900` : `bg-black`}  p-2 justify-between items-center border-slate-700`}
+            className={`flex border-x-2 w-full border-b-2 ${first && 'border-y-2 rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} ${darkMode ? 'text-slate-100 hover:text-slate-500 border-slate-200' : 'text-slate-900 hover:text-slate-700 border-black'}  select-none  ${isPlaying && song.id === currentSongId ? `` : ``}  p-1 font-normal justify-between items-center `}
         >
             <div
                 className={
-                    isPlaying && song.id === currentSongId
-                        ? 'font-bold text-slate-200'
-                        : 'font-bold text-slate-500'
+                    darkMode
+                        ? 'font-bold text-slate-100'
+                        : 'font-bold text-slate-800'
                 }
             >
                 {timeLeft()}
@@ -227,8 +229,8 @@ const Track: React.FC<TrackPropTypes> = ({
                     className={` truncate
                         ${
                             isPlaying && song.id === currentSongId
-                                ? 'font-bold text-slate-300'
-                                : 'font-semibold'
+                                ? ' text-slate-300'
+                                : ''
                         }
                         w-full flex justify-start
                     `}
