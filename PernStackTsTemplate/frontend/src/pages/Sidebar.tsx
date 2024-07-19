@@ -269,7 +269,7 @@ const Sidebar = () => {
 
     return (
         <>
-            <div className="flex-col m-1 flex  select-none h-full ">
+            <div className="flex-col m-1 flex   select-none h-full ">
                 <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto  border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : darkMode ? `text-white` : `text-black`} absolute top-2 right-4 flex items-center`}

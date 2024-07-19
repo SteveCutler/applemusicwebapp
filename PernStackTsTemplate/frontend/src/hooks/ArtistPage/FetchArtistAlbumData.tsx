@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
+import AlbumItem from '../../components/Homepage/AlbumItem'
 
 type playlist = {
     attributes: {
@@ -144,12 +145,12 @@ type AlbumType = {
         releaseDate: String
         trackCount: Number
     }
-    id: String
+    id: string
     href?: string
     type: string
 }
 
-const FetchArtistData = (id: string | undefined) => {
+const ArtistAlbumData = ({ id }) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -157,12 +158,15 @@ const FetchArtistData = (id: string | undefined) => {
         useState<Array<AlbumType> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, queueToggle, darkMode } =
+        useStore(state => ({
+            musicKitInstance: state.musicKitInstance,
+            queueToggle: state.queueToggle,
+            darkMode: state.darkMode,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        }))
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -176,9 +180,10 @@ const FetchArtistData = (id: string | undefined) => {
             if (!musicKitInstance || !id) {
                 return
             }
+            console.log('id', id)
 
             try {
-                if (id.startsWith('r')) {
+                if (id && id.startsWith('r')) {
                     console.log(`${id} start with 'r'`)
                     try {
                         const albumRes = await musicKitInstance.api.music(
@@ -224,11 +229,33 @@ const FetchArtistData = (id: string | undefined) => {
         fetchArtistAlbumData()
     }, [musicKitInstance, id, authorizeMusicKit])
 
-    return {
-        artistAlbumData,
-        loading,
-        error,
-    }
+    return (
+        <>
+            {artistAlbumData && (
+                <h2
+                    className={`mx-3 px-3 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                >
+                    Albums:
+                </h2>
+            )}
+            {artistAlbumData && (
+                <div className="w-full justify-left flex flex-wrap">
+                    {artistAlbumData.map(album => (
+                        <>
+                            <AlbumItem
+                                albumItem={album}
+                                width={
+                                    queueToggle
+                                        ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                        : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                }
+                            />
+                        </>
+                    ))}
+                </div>
+            )}
+        </>
+    )
 }
 
-export default FetchArtistData
+export default ArtistAlbumData

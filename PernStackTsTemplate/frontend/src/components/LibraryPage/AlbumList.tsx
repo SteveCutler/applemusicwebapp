@@ -87,7 +87,7 @@ const AlbumList: React.FC<AlbumListProps> = ({ albums, loadMoreAlbums }) => {
                     if (albums.length === index + 1) {
                         return (
                             <div
-                                className="last-album"
+                                // className="last-album"
                                 ref={lastAlbumElementRef}
                                 key={album.id}
                             >

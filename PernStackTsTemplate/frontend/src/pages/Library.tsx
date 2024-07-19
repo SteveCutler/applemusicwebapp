@@ -115,7 +115,13 @@ const Library = () => {
                 : null
             setLibrarySearchResults(searchResults)
         }
-    }, [musicKitInstance, appleMusicToken, albums, librarySearchTerm])
+    }, [
+        musicKitInstance,
+        appleMusicToken,
+        albums,
+        librarySearchTerm,
+        librarySearchResults,
+    ])
 
     const syncLibrary = async () => {
         setLoading(true)

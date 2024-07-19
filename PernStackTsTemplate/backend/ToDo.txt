@@ -14,12 +14,13 @@ itunes library api only works in desktop app context - nevermind.
 -investigate if theres a way to add podcast recommendations
 -using start and the hardware playback buttons to control playback
 -library albums artwork not updating properly when filtering
--issue playing library albums from sidebar
+    >add sorting functionality
+-add feature that transitions between night and dark mode gradually over time based on timezone
 -fix sizing of single objects on search page
-- issues with artist page & library artist ID
+-issues with artist page & library artist ID
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
 -add api calls to stations & songs pages 
-- redesign toast/figure out when is appropriate to display them
+-redesign toast/figure out when is appropriate to display them
 -add drag and drop feature to playlist creation
 work on search page - design, search hints, etc
 **add search hints in a search page that dropdown as you type - select one and it sets that as the search term/executes searches
@@ -28,7 +29,8 @@ add different display options for library (artist, album, song, genre?)
 -perfect 'play to pause' symbol, play/pause handler fuctionality
 -move music kit calls to backend?
 -redesign play/options buttons
--add pagination to podcast pages/filtering for episodes
+-add favourites functionality
+
 
 
 

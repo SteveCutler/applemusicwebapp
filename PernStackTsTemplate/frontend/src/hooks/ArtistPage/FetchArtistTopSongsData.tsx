@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
+import TrackDisplay from '../../components/AlbumPage/TrackDisplay'
 
 type AlbumType = {
     attributes?: AttributeObject
@@ -138,7 +139,7 @@ type AlbumData = {
     type: string
 }
 
-const FetchArtistData = (id: string | undefined) => {
+const ArtistTopSongs = ({ id }) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -208,12 +209,14 @@ const FetchArtistData = (id: string | undefined) => {
         fetchArtistData()
     }, [musicKitInstance, id, authorizeMusicKit])
 
-    return {
-        topSongsData,
-
-        loading,
-        error,
-    }
+    return (
+        topSongsData && (
+            <div className=" justify-start w-full">
+                {' '}
+                <TrackDisplay albumTracks={topSongsData} />
+            </div>
+        )
+    )
 }
 
-export default FetchArtistData
+export default ArtistTopSongs

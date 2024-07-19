@@ -278,6 +278,11 @@ const Podcast = () => {
             setEpisodeSearchTerm(null)
             setEpisodeSearchResults(null)
         }
+
+        if (episodeSearchTerm == '') {
+            setEpisodeSearchTerm(null)
+            setEpisodeSearchResults(null)
+        }
     }, [
         podcastEpisodes,
         visibleEpisodes,
@@ -438,7 +443,26 @@ const Podcast = () => {
                 )}
             </div>
 
-            {episodeSearchTerm && episodeSearchResults ? (
+            {episodeSearchTerm && !episodeSearchResults ? (
+                <div>
+                    {visibleEpisodes && (
+                        <form className="p-3 w-full" action="">
+                            <input
+                                type="text"
+                                value={episodeSearchTerm}
+                                onChange={e =>
+                                    setEpisodeSearchTerm(e.target.value)
+                                }
+                                placeholder="Filter episodes..."
+                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
+                            />
+                        </form>
+                    )}
+                    <div className="text-2xl font-bold">
+                        No results for search term
+                    </div>
+                </div>
+            ) : episodeSearchTerm && episodeSearchResults ? (
                 <div className="flex-col flex w-11/12">
                     {visibleEpisodes && (
                         <form className="p-3 w-full" action="">

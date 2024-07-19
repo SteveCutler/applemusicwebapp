@@ -252,7 +252,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                         className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
                     >
                         <h2 className=" px-5 text-xl font-bold">
-                            Recent Updates
+                            Recent Podcasts
                         </h2>
                     </div>
                 ) : object &&

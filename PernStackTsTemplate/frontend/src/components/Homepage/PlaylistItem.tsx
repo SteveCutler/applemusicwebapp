@@ -202,7 +202,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  h-full flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  flex-col justify-between ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'} ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-800 hover:text-slate-200'}   rounded-3xl flex `}
             onClick={handleNavigation}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

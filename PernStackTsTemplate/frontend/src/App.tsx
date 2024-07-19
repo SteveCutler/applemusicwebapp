@@ -89,7 +89,7 @@ function App() {
         >
             <div className="flex flex-grow ">
                 {backendToken && (
-                    <div className="sidebar overflow-y-auto  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12  h-1/2 ">
+                    <div className="sidebar  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12 overflow-y-auto h-1/2 ">
                         <Sidebar />
                     </div>
                 )}
@@ -127,7 +127,7 @@ function App() {
                             element={backendToken ? <NewPlaylist /> : <Login />}
                         />
                         <Route
-                            path="/artist/:Id"
+                            path="/artist/:id"
                             element={backendToken ? <Artist /> : <Login />}
                         />
                         <Route

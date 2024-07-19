@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
+import AlbumItem from '../../components/Homepage/AlbumItem'
 
 type AlbumType = {
     attributes?: AttributeObject
@@ -139,7 +140,7 @@ type AlbumData = {
     type: string
 }
 
-const FetchArtistData = (id: string | undefined) => {
+const ArtistLatestRelease = ({ id }) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -147,12 +148,15 @@ const FetchArtistData = (id: string | undefined) => {
         useState<Array<AlbumData> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, darkMode, queueToggle } =
+        useStore(state => ({
+            musicKitInstance: state.musicKitInstance,
+            darkMode: state.darkMode,
+            queueToggle: state.queueToggle,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        }))
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -190,12 +194,11 @@ const FetchArtistData = (id: string | undefined) => {
                         const latestRelease = await musicKitInstance.api.music(
                             `/v1/catalog/ca/artists/${id}/view/latest-release`
                         )
+                        console.log('latest release', latestRelease)
 
-                        if (latestRelease.status === 200) {
-                            const latestReleaseData: Array<AlbumData> =
-                                await latestRelease.data.data
-                            setLatestReleaseData(latestReleaseData)
-                        }
+                        const latestReleaseData: Array<AlbumData> =
+                            await latestRelease.data.data
+                        setLatestReleaseData(latestReleaseData)
                     } catch (error: any) {
                         console.error(error)
                         setError(error)
@@ -213,11 +216,41 @@ const FetchArtistData = (id: string | undefined) => {
         fetchArtistData()
     }, [musicKitInstance, id, authorizeMusicKit])
 
-    return {
-        latestReleaseData,
-        loading,
-        error,
-    }
+    return (
+        latestReleaseData && (
+            <div className="w-full flex-col flex  justify-center">
+                <h2
+                    className={`pb-3  text-center text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
+                >
+                    Latest Release:
+                </h2>
+                <div className=" gap-1 justify-center  flex flex-wrap">
+                    {latestReleaseData.map(album => (
+                        <>
+                            <AlbumItem
+                                albumItem={album}
+                                width={
+                                    queueToggle
+                                        ? ' w-full md:w-3/4'
+                                        : ' w-full md:w-3/4'
+                                }
+                                releaseDate={album.attributes.releaseDate}
+                            />
+                        </>
+                        // <p className="">{album.attributes.name}</p>
+                    ))}
+                    <div className="w-1/2 flex ">
+                        {latestReleaseData[0].attributes.editorialNotes
+                            ? latestReleaseData[0].attributes.editorialNotes
+                                  .standard ??
+                              latestReleaseData[0].attributes.editorialNotes
+                                  .short
+                            : ''}
+                    </div>
+                </div>
+            </div>
+        )
+    )
 }
 
-export default FetchArtistData
+export default ArtistLatestRelease

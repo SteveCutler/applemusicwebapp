@@ -56,6 +56,7 @@ const SidebarPlaylists = () => {
                 // console.log('User Playlists:', playlists)
 
                 setLibraryPlaylists(playlists)
+                console.log('library playlists', playlists)
             } catch (error: any) {
                 console.error(error)
                 // setError(error)

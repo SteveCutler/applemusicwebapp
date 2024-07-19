@@ -433,6 +433,7 @@ const AppleDashboard = () => {
                     const newList = [
                         data[1],
                         data[6],
+                        data[0],
                         data[11],
                         data[10],
                         data[12],
@@ -443,7 +444,7 @@ const AppleDashboard = () => {
                         data[4],
                         data[5],
                         data[13],
-                        data[0],
+
                         data[3],
                     ]
 

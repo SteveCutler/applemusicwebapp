@@ -354,11 +354,11 @@ function Footer() {
     useEffect(() => {
         const handleKeyDown = (e: any) => {
             if (e.code === 'Space') {
-                event.preventDefault()
                 if (
                     e.target.tagName !== 'INPUT' &&
                     e.target.tagName !== 'TEXTAREA'
                 ) {
+                    event.preventDefault()
                     console.log('space bar')
                     musicKitInstance?.playbackState === 2 ||
                     musicKitInstance?.playbackState === 3

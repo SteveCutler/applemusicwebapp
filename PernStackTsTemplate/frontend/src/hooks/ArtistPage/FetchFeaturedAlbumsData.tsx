@@ -139,7 +139,7 @@ type AlbumData = {
     type: string
 }
 
-const FetchArtistData = (id: string | undefined) => {
+const ArtistFeaturedAlbums = ({ id }) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
 
@@ -218,4 +218,4 @@ const FetchArtistData = (id: string | undefined) => {
     }
 }
 
-export default FetchArtistData
+export default ArtistFeaturedAlbums

@@ -20,6 +20,63 @@ import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ArtistItem from '../components/Homepage/ArtistItem'
 import PlaylistItem from '../components/Homepage/PlaylistItem'
+import ArtistAlbumData from '../hooks/ArtistPage/FetchArtistAlbumData'
+import ArtistFeaturedPlaylist from '../hooks/ArtistPage/FetchArtistFeaturedPlaylistsData'
+import ArtistTopSongs from '../hooks/ArtistPage/FetchArtistTopSongsData'
+import ArtistSimilarArtists from '../hooks/ArtistPage/FetchArtistSimilarArtistsData'
+import ArtistLatestRelease from '../hooks/ArtistPage/FetchArtistLatestReleaseData'
+import ArtistAppearsOnAlbums from '../hooks/ArtistPage/FetchArtistAppearsOnAlbumsData'
+
+interface Song {
+    id: string
+    href?: string
+    type: string
+    attributes: {
+        id?: string
+        name: string
+        trackNumber: number
+        artistName: string
+        albumName: string
+        durationInMillis: number
+        playParams: {
+            catalogId: string
+        }
+        artwork?: {
+            bgColor: string
+            url: string
+        }
+    }
+}
+
+type Artist = {
+    attributes: {
+        editorialNotes?: {
+            standard?: string
+            short?: string
+        }
+        artwork: {
+            bgColor: string
+            url: string
+        }
+        genreNames: Array<string>
+        name: string
+        url: string
+    }
+    relationships?: {
+        albums?: {
+            href: string
+            data: Array<AlbumRelationships>
+        }
+    }
+    id: string
+    type: string
+}
+
+type AlbumRelationships = {
+    href: string
+    id: string
+    type: string
+}
 
 const Artist = () => {
     const {
@@ -47,50 +104,143 @@ const Artist = () => {
         fetchAppleToken: state.fetchAppleToken,
         appleMusicToken: state.appleMusicToken,
     }))
-    const { Id } = useParams<{ Id: string }>()
-    const { artistData } = useFetchArtistData(Id)
+    const { id } = useParams<{ id: string }>()
+    // const { artistData } = useFetchArtistData(Id)
 
-    const [artistAlbumData, setArtistAlbumData] = useState(null)
-    // console.log('artistData:', artistData)
-    if (artistData) {
-        const { artistAlbumData } = useFetchArtistAlbumData(artistData.id)
-        console.log('artist album data', artistAlbumData)
-        setArtistAlbumData(artistAlbumData)
-        // const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
-        const { featuredPlaylistsData } = useFetchArtistFeaturedPlaylistsData(
-            artistData.id
-        )
-        // const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
-        const { latestReleaseData } = useFetchArtistLatestReleaseData(
-            artistData.id
-        )
-        const { similarArtistsData } = useFetchArtistSimilarArtistsData(
-            artistData.id
-        )
-        // const { singlesData } = useFetchArtistSinglesData(Id)
-        const { topSongsData } = useFetchArtistTopSongsData(artistData.id)
-        const { featuredAlbumsData } = useFetchFeaturedAlbumsData(artistData.id)
-    }
-
-    // console.log('latestReleaseData', latestReleaseData)
-    //console.log('artistData: ', artistData[0])
-    const initialize = async () => {
-        if (!musicKitInstance) {
-            console.log('Initializing MusicKit...')
-            await authorizeMusicKit()
-        }
-
-        if (!appleMusicToken && musicKitInstance) {
-            console.log('fetching Apple token...')
-            await fetchAppleToken()
-        }
-    }
+    const [artistData, setArtistData] = useState<Artist | null>(null)
+    const [artistDataLoading, setArtistDataLoading] = useState(false)
+    const [artistDataError, setArtistDataError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!musicKitInstance || !appleMusicToken) {
-            initialize()
+        const fetchArtistData = async () => {
+            if (!musicKitInstance) {
+                authorizeMusicKit()
+            }
+            if (!musicKitInstance || !id) {
+                return
+            }
+            setArtistDataLoading(true)
+
+            try {
+                if (id.startsWith('r')) {
+                    try {
+                        console.log(`${id} start with 'r'`)
+                        const catId = await musicKitInstance.api.music(
+                            `/v1/me/library/artists/${id}/catalog`
+                        )
+
+                        // const catData = await catId.json()
+
+                        if (catId.response.status === 200) {
+                            try {
+                                const res = await musicKitInstance.api.music(
+                                    `/v1/catalog/ca/artists/${catId.data.data[0].id}`
+                                )
+
+                                const data: Artist = await res.data.data[0]
+                                console.log('data', data)
+                                setArtistData(data)
+                                setArtistDataLoading(false)
+                            } catch (error: any) {
+                                console.error(error)
+                                setArtistDataError(error)
+                                setArtistDataLoading(false)
+                            } finally {
+                                setArtistDataLoading(false)
+                            }
+                        } else {
+                            const res = await musicKitInstance.api.music(
+                                `/v1/me/library/artists/${id}`
+                            )
+
+                            const data: Artist = await res.data.data[0]
+
+                            setArtistData(data)
+                            setArtistDataLoading(false)
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                        setArtistDataError(error)
+                        setArtistDataLoading(false)
+                    } finally {
+                        setArtistDataLoading(false)
+                    }
+                } else {
+                    try {
+                        const res = await musicKitInstance.api.music(
+                            `/v1/catalog/ca/artists/${id}`
+                        )
+
+                        const data: Artist = await res.data.data[0]
+                        console.log('data', data)
+                        setArtistData(data)
+                    } catch (error: any) {
+                        console.error(error)
+                        setArtistDataError(error)
+                    } finally {
+                        setArtistDataLoading(false)
+                    }
+                }
+            } catch (error: any) {
+                console.error(error)
+                setArtistDataLoading(false)
+            } finally {
+                setArtistDataLoading(false)
+            }
         }
-    }, [musicKitInstance])
+
+        fetchArtistData()
+    }, [musicKitInstance, id])
+
+    // const [artistAlbumData, setArtistAlbumData] = useState(null)
+    // console.log('artistData:', artistData)
+
+    // console.log('latestReleaseData', latestReleaseData)
+    // console.log('artistData: ', artistData[0])
+    // const [topSongs, setTopSongs] = useState<Song[] | null>(null)
+    // const [latestRelease, setLatestRelease] = useState<any | null>(null)
+    // const { latestReleaseData } = useFetchArtistLatestReleaseData(artistData.id)
+    // setLatestRelease(latestReleaseData)
+    // const { topSongsData } = useFetchArtistTopSongsData(artistData.id)
+    // setTopSongs(topSongsData)
+
+    // const initialize = async () => {
+    //     if (!musicKitInstance) {
+    //         console.log('Initializing MusicKit...')
+    //         authorizeMusicKit()
+    //     }
+
+    //     if (!appleMusicToken && musicKitInstance) {
+    //         console.log('fetching Apple token...')
+    //         fetchAppleToken()
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if (!musicKitInstance || !appleMusicToken) {
+    //         initialize()
+    //     }
+    //     if (artistData) {
+    //         const { artistAlbumData } = useFetchArtistAlbumData(artistData.id)
+    //         console.log('artist album data', artistAlbumData)
+    //         // setArtistAlbumData(artistAlbumData)
+    //         // const { appearsOnAlbumsData } = useFetchArtistAppearsOnAlbumsData(Id)
+    //         const { featuredPlaylistsData } =
+    //             useFetchArtistFeaturedPlaylistsData(artistData.id)
+    //         // const { compilationAlbumsData } = useFetchArtistCompilationAlbumsData(Id)
+
+    //         const { similarArtistsData } = useFetchArtistSimilarArtistsData(
+    //             artistData.id
+    //         )
+    //         // const { singlesData } = useFetchArtistSinglesData(Id)
+    //         const { featuredAlbumsData } = useFetchFeaturedAlbumsData(
+    //             artistData.id
+    //         )
+    //     }
+
+    //     if (artistData) {
+    //     }
+    // }, [musicKitInstance, artistData])
 
     const constructImageUrl = (url: string, size: number) => {
         return url
@@ -107,62 +257,79 @@ const Artist = () => {
 
     const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
 
-    return (
-        <>
-            {artistData && (
-                <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-full w-full">
-                    <ScrollToTop />
-                    <div className="flex justify-between w-full ">
-                        <div className=" w-1/2 flex">
-                            <h1
-                                className={`text-5xl font-bold ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}
-                            >
-                                {artistData.attributes.name}
-                            </h1>
-                        </div>
-                    </div>
-                    <div className="md:flex-row w-full gap-4 flex flex-col justify-around  items-start">
-                        <div className="flex-col flex  w-full relative ">
-                            {artistData.attributes.artwork ? (
-                                <img
-                                    className="pb-5 w-full"
-                                    src={constructImageUrl(
-                                        artistData.attributes.artwork.url,
-                                        600
-                                    )}
-                                />
-                            ) : (
-                                <img
-                                    className="pb-5 w-full"
-                                    src={defaultPlaylistArtwork}
-                                />
-                            )}
-
-                            {topSongsData && (
-                                <div
-                                    className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
-                                    onClick={async e => {
-                                        e.preventDefault()
-                                        e.stopPropagation() // Prevents the link's default behavior
-                                        // await FetchAlbumData(albumId)
-                                        // handlePlayPause()
-
-                                        await loadPlayer()
-                                    }}
+    if (artistDataLoading) {
+        return <div>Loading</div>
+    } else if (!artistDataError) {
+        return (
+            <>
+                {artistData && (
+                    <div className="m-5 gap-4 p-5 flex-col justify-start pt-0 mt-0 items-start flex h-full w-full">
+                        <ScrollToTop />
+                        <div className="flex justify-between w-full ">
+                            <div className=" flex">
+                                <h1
+                                    className={`text-5xl font-bold ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}
                                 >
-                                    {isPlaying &&
-                                    musicKitInstance?.nowPlayingItem &&
-                                    playlist === topSongsData ? (
-                                        <FaRegCirclePause style={styleButton} />
-                                    ) : (
-                                        <FaCirclePlay style={styleButton} />
-                                    )}
-                                </div>
-                            )}
+                                    {artistData.attributes.name}
+                                </h1>
+                            </div>
+                        </div>
+                        <div className="md:flex-row  gap-4 flex flex-col justify-around  items-start">
+                            <div className="flex-col flex  w-full md:w-1/2 relative ">
+                                {artistData.attributes.artwork ? (
+                                    <img
+                                        className="pb-5 w-full"
+                                        src={constructImageUrl(
+                                            artistData.attributes.artwork.url,
+                                            700
+                                        )}
+                                    />
+                                ) : (
+                                    <img
+                                        className="pb-5 w-full"
+                                        src={defaultPlaylistArtwork}
+                                    />
+                                )}
 
-                            {artistData.attributes.editorialNotes && (
+                                {artistData && (
+                                    <div
+                                        className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                                        onClick={async e => {
+                                            e.preventDefault()
+                                            e.stopPropagation() // Prevents the link's default behavior
+                                            // await FetchAlbumData(albumId)
+                                            // handlePlayPause()
+
+                                            await loadPlayer()
+                                        }}
+                                    >
+                                        {/* {isPlaying &&
+                                        musicKitInstance?.nowPlayingItem &&
+                                        playlist === topSongs ? (
+                                            <FaRegCirclePause
+                                                style={styleButton}
+                                            />
+                                        ) : (
+                                            <FaCirclePlay style={styleButton} />
+                                        )} */}
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex-col w-full md:w-1/2">
                                 <div
-                                    className={`flex w-full mx-3 px-3 pb-5 text-3xl ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}
+                                    className={` w-full ${darkMode ? 'text-slate-200' : 'text-slate-800'} text-lg font-bold flex justify-start md:justify-end  items-end`}
+                                >
+                                    {' '}
+                                    TOP SONGS
+                                </div>
+                                <ArtistTopSongs id={artistData.id} />
+                            </div>
+                        </div>
+                        {artistData.attributes.editorialNotes && (
+                            <div className="md:flex-row flex-col flex w-full  items-center">
+                                <div
+                                    className={`  w-full md:w-1/2 pb-5 text-3xl ${darkMode ? 'text-slate-100' : 'text-black'}`}
                                 >
                                     {artistData.attributes.editorialNotes
                                         .standard
@@ -171,178 +338,23 @@ const Artist = () => {
                                         : artistData.attributes.editorialNotes
                                               .short}
                                 </div>
-                            )}
-                        </div>
-
-                        <div className="flex-col w-full md:w-1/2">
-                            <div
-                                className={` w-full ${darkMode ? 'text-slate-200' : 'text-slate-800'} text-lg font-bold flex justify-start md:justify-end  items-end`}
-                            >
-                                {' '}
-                                TOP SONGS
-                            </div>
-                            {topSongsData && (
-                                <div className=" justify-start">
-                                    {' '}
-                                    <TrackDisplay albumTracks={topSongsData} />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* {topSongsData && (
-                        <div className="w-full gap-4 mx-3 px-3 ">
-                            <>
-                                <DisplayRow
-                                    title={'Top Songs:'}
-                                    albums={topSongsData}
-                                />
-                            </>
-                        </div>
-                    )} */}
-
-                    {/* {featuredAlbumsData && (
-                        <div className="w-full gap-4 mx-3 px-3   ">
-                            <>
-                                <DisplayRow
-                                    title={'Featured Albums:'}
-                                    albums={featuredAlbumsData}
-                                />
-                            </>
-                        </div>
-                    )} */}
-
-                    {latestReleaseData && (
-                        <div className="w-full flex-col flex  justify-center">
-                            <h2
-                                className={`pb-3  text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
-                            >
-                                Latest Release:
-                            </h2>
-                            <div className=" gap-1 justify-left  flex flex-wrap">
-                                {latestReleaseData.map(album => (
-                                    <>
-                                        <AlbumItem
-                                            albumItem={album}
-                                            width={
-                                                queueToggle
-                                                    ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
-                                                    : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
-                                            }
-                                            releaseDate={
-                                                album.attributes.releaseDate
-                                            }
-                                        />
-                                    </>
-                                    // <p className="">{album.attributes.name}</p>
-                                ))}
-                                <div className="w-1/2 flex">
-                                    {latestReleaseData[0].attributes
-                                        .editorialNotes
-                                        ? latestReleaseData[0].attributes
-                                              .editorialNotes.standard ??
-                                          latestReleaseData[0].attributes
-                                              .editorialNotes.short
-                                        : ''}
+                                <div className="w-full md:w-1/2">
+                                    <ArtistLatestRelease id={artistData.id} />
                                 </div>
                             </div>
-                        </div>
-                    )}
-
-                    {artistAlbumData && (
-                        <h2
-                            className={`mx-3 px-3 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
-                        >
-                            Albums:
-                        </h2>
-                    )}
-                    {artistAlbumData && (
-                        <div className="w-full justify-left flex flex-wrap">
-                            {artistAlbumData.map(album => (
-                                <>
-                                    <AlbumItem
-                                        albumItem={album}
-                                        width={
-                                            queueToggle
-                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
-                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
-                                        }
-                                    />
-                                </>
-                                // <p className="">{album.attributes.name}</p>
-                            ))}
-                        </div>
-                    )}
-
-                    {similarArtistsData && (
-                        <h2
-                            className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
-                        >
-                            Similar Artists:
-                        </h2>
-                    )}
-
-                    {similarArtistsData && (
-                        <div className="w-full justify-left flex flex-wrap">
-                            {similarArtistsData.map(album => (
-                                <>
-                                    <ArtistItem
-                                        artist={album}
-                                        width={
-                                            queueToggle
-                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
-                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
-                                        }
-                                    />
-                                </>
-                            ))}
-                        </div>
-                        // <div className="w-full gap-1 justify-center flex    ">
-                        //     <>
-                        //         <DisplayRow
-                        //             title={'Similar Artists:'}
-                        //             albums={similarArtistsData}
-
-                        //         />
-                        //     </>
-                        // </div>
-                    )}
-                    {featuredPlaylistsData && (
-                        <h2
-                            className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
-                        >
-                            Featured Playlists:
-                        </h2>
-                    )}
-                    {featuredPlaylistsData && (
-                        <div className="w-full justify-left flex flex-wrap">
-                            {featuredPlaylistsData.map(album => (
-                                <>
-                                    <PlaylistItem
-                                        playlistItem={album}
-                                        width={
-                                            queueToggle
-                                                ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
-                                                : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
-                                        }
-                                    />
-                                </>
-                            ))}
-                        </div>
-                    )}
-
-                    {/* <div className=" w-full gap-1 justify-center flex ">
-                        {featuredPlaylistsData && (
-                            <DisplayRow
-                                title="Featured Playlists:"
-                                albums={featuredPlaylistsData}
-                            />
                         )}
-                    </div> */}
-                </div>
-            )}
-        </>
-    )
+
+                        <ArtistAlbumData id={artistData.id} />
+
+                        <ArtistFeaturedPlaylist id={artistData.id} />
+
+                        <ArtistSimilarArtists id={artistData.id} />
+                        <ArtistAppearsOnAlbums id={artistData.id} />
+                    </div>
+                )}
+            </>
+        )
+    }
 }
 
 export default Artist
