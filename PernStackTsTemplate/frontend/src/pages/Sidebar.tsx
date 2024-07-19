@@ -160,10 +160,12 @@ const Sidebar = () => {
         appleMusicToken,
         setRecentlyAddedToLib,
         recentlyAddedToLib,
+        isPlayingPodcast,
         isAuthorized,
         setQueueToggle,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        isPlayingPodcast: state.isPlayingPodcast,
         setQueueToggle: state.setQueueToggle,
         setRecentlyAddedToLib: state.setRecentlyAddedToLib,
         isAuthorized: state.isAuthorized,
@@ -279,10 +281,9 @@ const Sidebar = () => {
                 <div className="  flex-col py-3  bg-black rounded-lg w-full mb-1 mx-auto  border-slate-600 font-semibold text-slate-300 text-2xl items-center  justify-start text-center">
                     <div
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : darkMode ? `text-white` : `text-black`} absolute top-2 right-4 flex items-center`}
-                        title="Log out"
                     >
                         <div
-                            className={` ${queueToggle && 'hidden'} hover:cursor-pointer hover:text-slate-500`}
+                            className={` ${queueToggle && 'hidden'} ${isPlayingPodcast && 'hidden'} hover:cursor-pointer hover:text-slate-500`}
                             title="toggle queue"
                             onClick={() => {
                                 setQueueToggle()

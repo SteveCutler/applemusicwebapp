@@ -560,18 +560,26 @@ const AppleDashboard = () => {
             if (musicKitInstance) {
                 try {
                     // console.log(music)
-                    const queryParameters = { l: 'en-us', limit: 10 }
+                    const queryParameters = {
+                        l: 'en-us',
+                        limit: 10,
+                        headers: {
+                            Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
+                            'Music-User-Token': appleMusicToken,
+                        },
+                    }
                     const res = await musicKitInstance.api.music(
                         url,
                         queryParameters
                     )
 
-                    if (res.status !== 200) {
-                        // console.log('error: ', res.body)
-                    }
+                    // if (res.status !== 200) {
+
+                    // }
 
                     const data: RecentlyAddedItem[] = await res.data.data
                     recent.push(...data)
+                    console.log('recent', recent)
 
                     if (res.data.next && recent.length <= 20) {
                         await fetchRecentlyAddedToLib(res.data.next)
@@ -584,7 +592,14 @@ const AppleDashboard = () => {
             }
         }
 
-        if (musicKitInstance && recentlyAddedToLib.length < 1) {
+        if (!musicKitInstance || !appleMusicToken) {
+            authorizeMusicKit()
+        }
+        if (
+            musicKitInstance &&
+            appleMusicToken &&
+            recentlyAddedToLib.length < 1
+        ) {
             fetchRecentlyAddedToLib('/v1/me/library/recently-added')
         }
         if (!podSubs) {
@@ -597,9 +612,6 @@ const AppleDashboard = () => {
         if (!podcastProgress) {
             fetchPodcastProgress()
         }
-        if (!musicKitInstance) {
-            authorizeMusicKit()
-        }
 
         if (!recommendations && musicKitInstance && appleMusicToken) {
             fetchRecommendations()
@@ -610,6 +622,8 @@ const AppleDashboard = () => {
         appleMusicToken,
         isAuthorized,
         podSubs,
+        recentlyAddedToLib,
+        recommendations,
     ])
 
     console.log('recently added to lib: ', recentlyAddedToLib)

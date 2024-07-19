@@ -162,7 +162,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
             console.log('running image retrieval')
             retrieveMoreLikeImage()
         }
-    }, [])
+    }, [reco])
 
     // console.log('reco:', reco, 'sliceNunber:', sliceNumber)
     const [expand, setExpand] = useState(false)

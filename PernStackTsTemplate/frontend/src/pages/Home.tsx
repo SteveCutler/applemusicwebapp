@@ -28,14 +28,14 @@ const Home = () => {
     }))
 
     const initialize = async () => {
-        // if (!appleMusicToken && musicKitInstance) {
-        //     console.log('fetching Apple token...')
-        //     await fetchAppleToken()
-        // }
         if (!musicKitInstance) {
             console.log('Initializing MusicKit...')
-            await authorizeMusicKit()
+            authorizeMusicKit()
         }
+        // if (!appleMusicToken && musicKitInstance) {
+        //     console.log('fetching Apple token...')
+        //     fetchAppleToken()
+        // }
     }
 
     useEffect(() => {

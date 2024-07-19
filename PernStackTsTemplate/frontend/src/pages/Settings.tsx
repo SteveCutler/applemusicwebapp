@@ -62,7 +62,7 @@ const Settings = () => {
                 </h1>
                 <div
                     onClick={logout}
-                    className="rounded-full w-fit select-none hover:bg-red-500 hover:cursor-pointer text-white p-2 bg-red-400"
+                    className="rounded-lg shadow-md active:scale-95 w-fit select-none hover:bg-red-500 hover:cursor-pointer text-white p-2 bg-red-400"
                 >
                     Logout
                 </div>
@@ -79,7 +79,7 @@ const Settings = () => {
                           : e.preventDefault()
                     syncLibrary()
                 }}
-                className={`rounded-full py-2 w-96 px-4 ${loadingLibrary ? 'hover:cursor-default' : libSuccess ? '' : 'hover:bg-blue-600 hover:cursor-default active:scale-95'} ${libSuccess ? 'bg-white text-green-400' : ''} text-md font-bold bg-blue-500 text-white  btn-info`}
+                className={`rounded-full py-2 w-96 px-4 ${loadingLibrary ? 'hover:cursor-default' : libSuccess ? '' : 'hover:bg-blue-600 hover:cursor-default active:scale-95'} ${libSuccess ? 'bg-white text-green-400' : ''} text-md font-bold hover:cursor-pointer bg-blue-500 text-white  btn-info`}
             >
                 {libSuccess
                     ? 'success!'

@@ -197,7 +197,7 @@ const PlaylistDisplay = () => {
             {personalizedPlaylists && (
                 <>
                     <div
-                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 border-b-2 mt-7 mb-2 pb-1 text-xl`}
+                        className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 border-b-2 mt-0 mb-2 pb-1 text-xl`}
                     >
                         <p className="px-5 italic">Made for You</p>
                     </div>

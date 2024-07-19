@@ -152,6 +152,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
                             }}
                         >
                             {isPlaying &&
+                            musicKitInstance?.nowPlayingItem &&
                             musicKitInstance?.nowPlayingItem.id === song.id ? (
                                 <FaRegCirclePause style={style} />
                             ) : (
