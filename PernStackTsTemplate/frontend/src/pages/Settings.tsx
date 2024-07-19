@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useStore } from '../store/store'
 import ImportPodcasts from '../components/Homepage/ImportPodcasts'
+import useLogout from '../hooks/auth/useLogout'
 
 const Settings = () => {
     const {
@@ -49,17 +50,25 @@ const Settings = () => {
             setLoadingLibrary(false)
         }
     }
+    const { logout } = useLogout()
 
     return (
         <div
             className={`flex-col font-semibold flex w-11/12 gap-5 ${darkMode ? 'text-white' : 'text-black'} justify-start`}
         >
-            <h1 className="text-3xl w-11/12 mx-auto font-bold italic">
-                Account Settings
-            </h1>
+            <div className="w-full flex justify-between ">
+                <h1 className="text-3xl w-11/12 mx-auto font-bold italic">
+                    Account Settings
+                </h1>
+                <div
+                    onClick={logout}
+                    className="rounded-full w-fit select-none hover:bg-red-500 hover:cursor-pointer text-white p-2 bg-red-400"
+                >
+                    Logout
+                </div>
+            </div>
             <div>Dark mode</div>
 
-            <div>music kit bitate</div>
             <div className="text-xl font-bold italic">Sync Library</div>
             <button
                 onClick={e => {

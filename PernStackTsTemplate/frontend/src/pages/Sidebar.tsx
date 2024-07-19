@@ -20,6 +20,7 @@ import { TbHistory } from 'react-icons/tb'
 import { MdLibraryMusic } from 'react-icons/md'
 import { IoLibrary } from 'react-icons/io5'
 import { RiPlayListFill, RiPlayListAddLine } from 'react-icons/ri'
+import { MdOutlineLogin } from 'react-icons/md'
 import { MdOutlineDarkMode } from 'react-icons/md'
 import { MdDarkMode, MdSunny } from 'react-icons/md'
 import FetchRecentlyAddedToLib from '../components/Apple/FetchRecentlyAddedToLib'
@@ -276,7 +277,7 @@ const Sidebar = () => {
                         title="Log out"
                     >
                         <div
-                            className=" hover:cursor-pointer hover:text-slate-500"
+                            className={` ${queueToggle && 'hidden'} hover:cursor-pointer hover:text-slate-500`}
                             title="toggle dark mode"
                             onClick={() => {
                                 {
@@ -290,15 +291,15 @@ const Sidebar = () => {
                         </div>
                         <Link
                             to="/settings"
-                            className=" hover:cursor-pointer hover:text-slate-500"
+                            className={`hover:cursor-pointer ${queueToggle && 'hidden'} hover:text-slate-500`}
                             title="settings"
                         >
                             <IoSettingsSharp />
                         </Link>
 
-                        <div className="hover:text-slate-500" title="logout">
+                        {/* <div className="hover:text-slate-500" title="logout">
                             <LogoutButton />
-                        </div>
+                        </div> */}
                     </div>
                     <NavLink
                         to="/"
