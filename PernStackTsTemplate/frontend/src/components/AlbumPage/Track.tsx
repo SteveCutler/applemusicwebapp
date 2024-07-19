@@ -227,11 +227,7 @@ const Track: React.FC<TrackPropTypes> = ({
             <div className="flex justify-start truncate w-full ps-5 gap-1">
                 <div
                     className={` truncate
-                        ${
-                            isPlaying && song.id === currentSongId
-                                ? ' text-slate-300'
-                                : ''
-                        }
+                        ${darkMode ? ' text-slate-200' : 'text-black'}
                         w-full flex justify-start
                     `}
                 >

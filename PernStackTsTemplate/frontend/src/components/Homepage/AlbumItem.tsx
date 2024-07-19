@@ -70,9 +70,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     }))
 
     const [isHovered, setIsHovered] = useState(false)
-    const [artworkUrl, setArtworkUrl] = useState(
-        albumItem.attributes?.artwork?.url
-    )
+    const [artworkUrl, setArtworkUrl] = useState<string | null>(null)
     const navigate = useNavigate()
 
     const fetchNewArtworkUrl = async () => {
@@ -110,10 +108,11 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
             }
         }
 
+        setArtworkUrl(albumItem.attributes?.artwork?.url)
         if (lib) {
             checkArtworkUrl()
         }
-    }, [artworkUrl, lib])
+    }, [albumItem, lib])
 
     const playData = async () => {
         if (musicKitInstance) {

@@ -249,9 +249,9 @@ const Library = () => {
     } else {
         return (
             <div className="flex-col w-full h-full">
-                <button onClick={getSongs} className="btn btn-info">
+                {/* <button onClick={getSongs} className="btn btn-info">
                     Get songs
-                </button>
+                </button> */}
                 <div
                     className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
                 >
