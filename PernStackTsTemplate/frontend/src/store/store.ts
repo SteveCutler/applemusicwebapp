@@ -530,6 +530,7 @@ interface State {
     progressLoaded: boolean
     podcastProgress: podCompletion[] | null
     storefront: string | null
+    queueOpen: boolean
 }
 
 interface Actions {
@@ -685,6 +686,7 @@ export const useStore = create<Store>((set, get) => ({
     progressLoaded: false,
     podcastProgress: null,
     storefront: null,
+    queueOpen: false,
 
     // Actions
 
@@ -1425,8 +1427,14 @@ export const useStore = create<Store>((set, get) => ({
                             podcastDuration,
                             isPlayingPodcast,
                             currentTime,
+                            queueToggle,
+                            queueOpen,
                             epId,
                         } = get()
+
+                        if (!queueOpen) {
+                            set({ queueToggle: true, queueOpen: true })
+                        }
 
                         if (isPlayingPodcast) {
                             const currentProgress =

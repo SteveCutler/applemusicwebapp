@@ -197,7 +197,7 @@ const Search = () => {
                         podcast =>
                             // podcast.priority > 0 &&
                             // podcast.dead == 0 &&
-                            podcast.podcast.parseErrors == 0 &&
+                            podcast.parseErrors == 0 &&
                             podcast.locked == 0 &&
                             podcast.crawlErrors == 0 &&
                             podcast.episodeCount >= 1
@@ -327,7 +327,6 @@ const Search = () => {
                                 sliceNumber={sliceNumber}
                                 noTitle={true}
                                 title={'Podcasts'}
-                                shrink={searchFilters.length < 2}
                             />
                         )}
                 </div>
@@ -343,13 +342,10 @@ const Search = () => {
                                 sliceNumber={sliceNumber}
                                 noTitle={true}
                                 title={'Artists'}
-                                shrink={searchFilters.length < 2}
                             />
                         )}
                 </div>
-                <div
-                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
-                >
+                <div className={`flex-col w-full  mx-3 mb-4 px-3`}>
                     {searchResults.albums &&
                         (searchFilters.length == 0 ||
                             searchFilters.includes('albums')) && (
@@ -358,7 +354,6 @@ const Search = () => {
                                 sliceNumber={sliceNumber}
                                 noTitle={true}
                                 title={'Albums'}
-                                shrink={searchFilters.length < 2}
                             />
                         )}
                 </div>
@@ -373,7 +368,6 @@ const Search = () => {
                                 sliceNumber={sliceNumber}
                                 noTitle={true}
                                 title={'Songs'}
-                                shrink={searchFilters.length < 2}
                             />
                         )}
                 </div>
