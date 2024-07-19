@@ -28,6 +28,8 @@ import FetchHeavyRotation from '../components/Apple/FetchHeavyRotation'
 import FetchRecentlyPlayed from '../components/Apple/FetchRecentlyPlayed'
 import FetchRecommendations from '../components/Apple/FetchRecommendations'
 import { FaPodcast } from 'react-icons/fa'
+import { TbLayoutSidebarLeftCollapse } from 'react-icons/tb'
+import QueueDisplay from '../components/Homepage/QueueDisplay'
 
 type AlbumType = {
     attributes: {
@@ -159,8 +161,10 @@ const Sidebar = () => {
         setRecentlyAddedToLib,
         recentlyAddedToLib,
         isAuthorized,
+        setQueueToggle,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        setQueueToggle: state.setQueueToggle,
         setRecentlyAddedToLib: state.setRecentlyAddedToLib,
         isAuthorized: state.isAuthorized,
         recentlyAddedToLib: state.recentlyAddedToLib,
@@ -267,6 +271,7 @@ const Sidebar = () => {
     }, [appleMusicToken, musicKitInstance, isAuthorized])
 
     const [viewType, setViewType] = useState('history')
+    const styleButton = { fontSize: '1.8rem' }
 
     return (
         <>
@@ -276,6 +281,15 @@ const Sidebar = () => {
                         className={`gap-2 pb-2 ${queueToggle ? `text-white` : darkMode ? `text-white` : `text-black`} absolute top-2 right-4 flex items-center`}
                         title="Log out"
                     >
+                        <div
+                            className={` ${queueToggle && 'hidden'} hover:cursor-pointer hover:text-slate-500`}
+                            title="toggle queue"
+                            onClick={() => {
+                                setQueueToggle()
+                            }}
+                        >
+                            <TbLayoutSidebarLeftCollapse style={styleButton} />
+                        </div>
                         <div
                             className={` ${queueToggle && 'hidden'} hover:cursor-pointer hover:text-slate-500`}
                             title="toggle dark mode"

@@ -953,16 +953,6 @@ function Footer() {
                 </div>
             </div>
             <div className="flex items-center justify-end mx-5">
-                <button
-                    className={`${queueToggle && 'text-blue-600'} ${isPlayingPodcast && 'hidden'} *:flex rounded-full items-center pe-10 justify-end active:scale-95`}
-                    title="Display Queue"
-                    onClick={e => {
-                        e.preventDefault()
-                        handleQueueToggle(e)
-                    }}
-                >
-                    <FaListOl style={styleSmall} />
-                </button>
                 <VolumeSlider />
             </div>
         </div>
