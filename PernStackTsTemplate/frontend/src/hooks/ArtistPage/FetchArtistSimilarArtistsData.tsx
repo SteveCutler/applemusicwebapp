@@ -3,6 +3,8 @@ import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 import ArtistItem from '../../components/Homepage/ArtistItem'
+import { useMediaQuery } from 'react-responsive'
+import DropdownDisplay from '../../components/Apple/DropdownDisplay'
 
 type AlbumType = {
     attributes?: AttributeObject
@@ -157,6 +159,25 @@ const ArtistSimilarArtists = ({ id }) => {
             setAlbumData: state.setAlbumData,
         }))
 
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
+    }
+
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -216,12 +237,20 @@ const ArtistSimilarArtists = ({ id }) => {
     return (
         similarArtistsData && (
             <div className="w-full justify-left flex flex-col flex-wrap">
-                <h2
+                <div className=" ">
+                    <DropdownDisplay
+                        object={similarArtistsData}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={'Similar Artists'}
+                    />
+                </div>
+                {/* <h2
                     className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                 >
                     Similar Artists:
-                </h2>
-                <div className="flex flex-wrap">
+                </h2> */}
+                {/* <div className="flex flex-wrap">
                     {similarArtistsData.map(artist => (
                         <>
                             <ArtistItem
@@ -234,7 +263,21 @@ const ArtistSimilarArtists = ({ id }) => {
                             />
                         </>
                     ))}
-                </div>
+                </div> */}
+                {/* <div className="flex flex-wrap">
+                    {similarArtistsData.map(artist => (
+                        <>
+                            <ArtistItem
+                                artist={artist}
+                                width={
+                                    queueToggle
+                                        ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
+                                        : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
+                                }
+                            />
+                        </>
+                    ))}
+                </div> */}
             </div>
         )
     )

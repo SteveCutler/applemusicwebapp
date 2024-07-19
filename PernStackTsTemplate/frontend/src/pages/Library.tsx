@@ -147,11 +147,11 @@ const Library = () => {
         }
     }
 
-    const getRatedSongs = async () => {
+    const getSongs = async () => {
         setLoading(true)
         try {
             const res = await fetch(
-                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-song-ratings',
+                'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/fetch-songs',
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -159,6 +159,8 @@ const Library = () => {
                     credentials: 'include',
                 }
             )
+            const data = await res.json()
+            console.log('songs data', data)
 
             setLoading(false)
         } catch (error) {
@@ -247,6 +249,9 @@ const Library = () => {
     } else {
         return (
             <div className="flex-col w-full h-full">
+                <button onClick={getSongs} className="btn btn-info">
+                    Get songs
+                </button>
                 <div
                     className={`flex justify-between w-11/12 pb-2 ${darkMode ? 'text-white border-white' : 'text-black border-black'} border-b-2 mx-auto items-center gap-2`}
                 >

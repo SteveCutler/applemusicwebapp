@@ -4,28 +4,24 @@ import useMusicKit from './LoadMusickit'
 import { useStore } from '../../store/store'
 
 type AlbumTypeObject = {
-    attributes?: AttributeObject
-    relationships?: RelationshipObject
-    id: string
-}
-
-type AttributeObject = {
-    artistName: string
-    artwork?: {
-        height: Number
-        width: Number
-        url: string
+    attributes?: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: number
     }
-    dateAdded: string
-    genreNames: Array<string>
-    name: string
-    releaseDate: string
-    trackCount: Number
-}
-
-type RelationshipObject = {
-    tracks: TracksObject
-    artists?: { data: ArtistObject[] }
+    relationships?: {
+        tracks?: TracksObject
+        artists?: { data: ArtistObject[] }
+    }
+    id: string
 }
 
 type ArtistObject = {
@@ -64,15 +60,12 @@ const FetchAlbumData = (albumId: string | undefined, type?: string) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [artistId, setArtistId] = useState<String | null>(null)
-
+    const [albumData, setAlbumData] = useState<AlbumTypeObject | null>(null)
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, albumData, setAlbumData } =
-        useStore(state => ({
-            musicKitInstance: state.musicKitInstance,
-            authorizeMusicKit: state.authorizeMusicKit,
-            albumData: state.albumData,
-            setAlbumData: state.setAlbumData,
-        }))
+    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        authorizeMusicKit: state.authorizeMusicKit,
+    }))
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -126,7 +119,7 @@ const FetchAlbumData = (albumId: string | undefined, type?: string) => {
 
                         const data: AlbumTypeObject = await res.data.data[0]
 
-                        console.log('data: ', data)
+                        console.log('album data: ', data)
 
                         setAlbumData(data)
                         setArtistId(artistId)

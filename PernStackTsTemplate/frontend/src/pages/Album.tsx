@@ -17,6 +17,9 @@ import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import OptionsModal from '../components/Homepage/OptionsModal'
 import ArtistItem from '../components/Homepage/ArtistItem'
 import PlaylistItem from '../components/Homepage/PlaylistItem'
+import ArtistSimilarArtists from '../hooks/ArtistPage/FetchArtistSimilarArtistsData'
+import FetchFeaturedAlbums from '../hooks/AlbumPage/FetchFeaturedAlbums'
+import FetchRecommendedAlbums from '../hooks/AlbumPage/FetchRecommendedAlbums'
 
 type AlbumType = {
     attributes: {
@@ -92,22 +95,80 @@ type AlbumRelationships = {
     type: string
 }
 
+type AlbumTypeObject = {
+    attributes?: {
+        artistName: string
+        artwork?: {
+            height: number
+            width: number
+            url: string
+        }
+        dateAdded: string
+        genreNames: Array<string>
+        name: string
+        releaseDate: string
+        trackCount: number
+    }
+    relationships?: {
+        tracks?: TracksObject
+        artists?: { data: ArtistObject[] }
+    }
+    id: string
+}
+
+type ArtistObject = {
+    id: string
+}
+
+type TracksObject = {
+    data: Array<Track>
+}
+type Track = {
+    attributes: TrackAttributeObject
+}
+
+type TrackAttributeObject = {
+    artistName: string
+    artwork: {
+        height: Number
+        width: Number
+        url: string
+    }
+    dateAdded: string
+    genreNames: Array<string>
+    durationInMillis: Number
+    name: string
+    releasedDate: string
+    trackCount: Number
+    playParams: {
+        catalogId: string
+        id: string
+        isLibrary: Boolean
+        kind: string
+    }
+}
+
 const Album = () => {
     const { albumId, type } = useParams<{ albumId: string; type: string }>()
 
-    const { albumData, artistId, loading, error } = useFetchAlbumData(
-        albumId,
-        type
-    )
+    // const { albumData, artistId, loading, error } = useFetchAlbumData(
+    //     albumId,
+    //     type
+    // )
+
+    const [artistId, setArtistId] = useState<string | null>(null)
+    const [albumData, setAlbumData] = useState<AlbumTypeObject | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
 
     // console.log('album data: ', albumData?.relationships?.tracks.data)
-    const { relatedAlbums } = FetchRelatedAlbums(albumId)
-    const { appearsOn } = FetchAppearsOn(albumId)
-    const [similarArtistsData, setSimilarArtistsData] =
-        useState<Array<Artist> | null>(null)
+    // const { relatedAlbums } = FetchRelatedAlbums(albumId)
+    // const { appearsOn } = FetchAppearsOn(albumId)
+    // const [similarArtistsData, setSimilarArtistsData] =
+    //     useState<Array<Artist> | null>(null)
 
-    const [featuredAlbumsData, setFeaturedAlbumsData] =
-        useState<Array<AlbumType> | null>(null)
+    // const [featuredAlbumsData, setFeaturedAlbumsData] =
+    //     useState<Array<AlbumType> | null>(null)
     const {
         setSearchTerm,
         musicKitInstance,
@@ -129,59 +190,75 @@ const Album = () => {
     }))
 
     useEffect(() => {
-        const fetchFeaturedAlbums = async () => {
+        const fetchAlbumData = async () => {
             if (!musicKitInstance) {
                 await authorizeMusicKit()
                 return
             }
-            if (!artistId) {
+            if (!musicKitInstance || !albumId) {
                 return
             }
-            if (type !== 'lib') {
-                try {
-                    const featuredAlbums = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
-                    )
-
-                    const featuredAlbumsData: Array<AlbumType> =
-                        await featuredAlbums.data.data
-                    setFeaturedAlbumsData(featuredAlbumsData)
-                } catch (error: any) {
-                    console.error(error)
-                }
-            }
-        }
-
-        const fetchSimilarArtist = async () => {
-            if (!musicKitInstance) {
-                authorizeMusicKit()
-                return
-            }
-            if (!artistId) {
-                return
-            }
-
+            setLoading(true)
             try {
-                const similarArtists = await musicKitInstance.api.music(
-                    `/v1/catalog/ca/artists/${artistId}/view/similar-artists`
-                )
-                console.log('similarArtist: ', similarArtists)
+                if (albumId.startsWith('l')) {
+                    try {
+                        const res = await musicKitInstance.api.music(
+                            `/v1/me/library/albums/${albumId}`
+                        )
+                        const artistRes = await musicKitInstance.api.music(
+                            `/v1/me/library/albums/${albumId}/artists`
+                        )
 
-                const similarArtistsData: Array<Artist> =
-                    await similarArtists.data.data
-                setSimilarArtistsData(similarArtistsData)
+                        const artistId = await artistRes.data.data[0].id
+
+                        const data: AlbumTypeObject[] = await res.data.data
+                        console.log('album data:', data)
+                        setAlbumData(data[0])
+                        setArtistId(artistId)
+                    } catch (error: any) {
+                        console.error(error)
+                        setError(error)
+                    } finally {
+                        setLoading(false)
+                    }
+                } else {
+                    try {
+                        const queryParameters = { l: 'en-us' }
+                        const res = await musicKitInstance.api.music(
+                            `/v1/catalog/ca/albums/${albumId}`,
+
+                            queryParameters
+                        )
+                        const artistRes = await musicKitInstance.api.music(
+                            `/v1/catalog/ca/albums/${albumId}/artists`,
+
+                            queryParameters
+                        )
+
+                        const artistId = await artistRes.data.data[0].id
+
+                        const data: AlbumTypeObject = await res.data.data[0]
+
+                        console.log('album data: ', data)
+
+                        setAlbumData(data)
+                        setArtistId(artistId)
+                    } catch (error: any) {
+                        console.error(error)
+                        setError(error)
+                    } finally {
+                        setLoading(false)
+                    }
+                }
             } catch (error: any) {
                 console.error(error)
+            } finally {
+                setLoading(false)
             }
         }
 
-        if (!featuredAlbumsData) {
-            fetchFeaturedAlbums()
-        }
-        if (!similarArtistsData) {
-            fetchSimilarArtist()
-        }
-    }, [artistId, musicKitInstance])
+        fetchAlbumData()
+    }, [albumId, musicKitInstance])
 
     const constructImageUrl = (url: string, size: number) => {
         return url
@@ -260,7 +337,7 @@ const Album = () => {
                     )}
                 </div>
                 <div
-                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex  justify-around  items-start`}
+                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-10  justify-around  items-start`}
                 >
                     <div
                         className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
@@ -319,43 +396,14 @@ const Album = () => {
                     </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
                 </div>
+                {/* <FetchRecommendedAlbums albumId={albumData.id} /> */}
+                <FetchFeaturedAlbums artistId={artistId} type={type} />
+                <FetchRelatedAlbums albumId={albumData.id} />
 
-                {relatedAlbums && (
-                    <h2
-                        className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
-                    >
-                        Check out these similar albums:
-                    </h2>
-                )}
-                {relatedAlbums && (
-                    <div className="w-full justify-left flex flex-wrap">
-                        {relatedAlbums.map(album => (
-                            <>
-                                <AlbumItem
-                                    albumItem={album}
-                                    width={
-                                        queueToggle
-                                            ? ' w-full p-1 pb-2 sm:w-1/2 lg:w-1/3 xl:w-1/4'
-                                            : ' w-1/2 p-1 pb-2 sm:w-1/4 md:w-1/5 lg:w-1/6'
-                                    }
-                                    releaseDate={album.attributes.releaseDate}
-                                />
-                            </>
-                            // <p className="">{album.attributes.name}</p>
-                        ))}
-                    </div>
-                )}
+                <ArtistSimilarArtists id={artistId} />
+                <FetchAppearsOn albumId={albumData.id} />
 
-                {/* {relatedAlbums && (
-                    <div className="w-full flex  mx-auto overflow-auto">
-                        <DisplayRow
-                            title={'Similar Albums:'}
-                            albums={relatedAlbums}
-                        />
-                    </div>
-                )} */}
-
-                {featuredAlbumsData && (
+                {/* {featuredAlbumsData && (
                     <h2
                         className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                     >
@@ -379,9 +427,9 @@ const Album = () => {
                             // <p className="">{album.attributes.name}</p>
                         ))}
                     </div>
-                )}
+                )} */}
 
-                {similarArtistsData && (
+                {/* {similarArtistsData && (
                     <h2
                         className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                     >
@@ -404,9 +452,9 @@ const Album = () => {
                             // <p className="">{album.attributes.name}</p>
                         ))}
                     </div>
-                )}
+                )} */}
 
-                {appearsOn && (
+                {/* {appearsOn && (
                     <h2
                         className={`p-1 pt-5 pb-2 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                     >
@@ -429,7 +477,7 @@ const Album = () => {
                             // <p className="">{album.attributes.name}</p>
                         ))}
                     </div>
-                )}
+                )} */}
             </div>
         )
     }

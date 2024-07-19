@@ -56,21 +56,28 @@ type ArtworkObject = {
     url: string
 }
 
-const FetchAppearsOn = ({ albumId }) => {
+interface relatedAlbumsProps {
+    albumId: string
+}
+
+const FetchRecommendedAlbums: React.FC<relatedAlbumsProps> = ({ albumId }) => {
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        appleMusicToken,
+        queueToggle,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        appleMusicToken: state.appleMusicToken,
+        queueToggle: state.queueToggle,
+        authorizeMusicKit: state.authorizeMusicKit,
+    }))
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
-    const [appearsOn, setAppearsOn] = useState<string | null>(null)
-
-    // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, queueToggle } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            queueToggle: state.queueToggle,
-            authorizeMusicKit: state.authorizeMusicKit,
-        })
+    const [recommendedAlbums, setRecommendedAlbums] = useState<string | null>(
+        null
     )
-    // const musicKitInstance = useStore(state => state.musicKitInstance)
-    // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
+
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
     const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
@@ -90,21 +97,34 @@ const FetchAppearsOn = ({ albumId }) => {
         sliceNumber = 2 // For small screens
     }
 
-    const fetchAppearsOn = async () => {
+    // const musicKitLoaded = useMusicKit()
+
+    // const musicKitInstance = useStore(state => state.musicKitInstance)
+    // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
+
+    const fetchRelatedAlbums = async () => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
             return
         }
         setLoading(true)
+        console.log('album id', albumId)
 
         try {
-            const res = await musicKitInstance?.api.music(
-                `v1/catalog/ca/albums/${albumId}/view/appears-on`
+            const res = await fetch(
+                `https://api.music.apple.com/v1/me/recommendations/${albumId}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
+                        'Music-User-Token': appleMusicToken,
+                    },
+                }
             )
+            const data = await res.json()
+            console.log('recommended albums:', data)
+            // const relatedAlbums = await data.data.data
 
-            const data = await res.data.data
-
-            setAppearsOn(data)
+            // setRecommendedAlbums(relatedAlbums)
         } catch (error: any) {
             console.error(error)
             setError(error)
@@ -113,21 +133,21 @@ const FetchAppearsOn = ({ albumId }) => {
         }
     }
     useEffect(() => {
-        fetchAppearsOn()
+        fetchRelatedAlbums()
     }, [musicKitInstance])
 
     return (
-        appearsOn && (
+        recommendedAlbums && (
             <div className="">
                 <DropdownDisplay
-                    object={appearsOn}
+                    object={recommendedAlbums}
                     sliceNumber={sliceNumber}
                     noTitle={true}
-                    title={'Album Appears On'}
+                    title={'Recommended Albums'}
                 />
             </div>
         )
     )
 }
 
-export default FetchAppearsOn
+export default FetchRecommendedAlbums

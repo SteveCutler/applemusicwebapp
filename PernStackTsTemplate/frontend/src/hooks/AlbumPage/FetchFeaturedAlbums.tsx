@@ -56,12 +56,15 @@ type ArtworkObject = {
     url: string
 }
 
-const FetchAppearsOn = ({ albumId }) => {
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<string | null>(null)
-    const [appearsOn, setAppearsOn] = useState<string | null>(null)
+interface relatedAlbumsProps {
+    artistId: string
+    type: string
+}
 
-    // const musicKitLoaded = useMusicKit()
+const FetchFeaturedAlbums: React.FC<relatedAlbumsProps> = ({
+    artistId,
+    type,
+}) => {
     const { musicKitInstance, authorizeMusicKit, queueToggle } = useStore(
         state => ({
             musicKitInstance: state.musicKitInstance,
@@ -69,8 +72,12 @@ const FetchAppearsOn = ({ albumId }) => {
             authorizeMusicKit: state.authorizeMusicKit,
         })
     )
-    // const musicKitInstance = useStore(state => state.musicKitInstance)
-    // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<string | null>(null)
+    const [featuredAlbums, setFeaturedAlbums] = useState<AlbumType[] | null>(
+        null
+    )
+
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
     const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
@@ -90,44 +97,48 @@ const FetchAppearsOn = ({ albumId }) => {
         sliceNumber = 2 // For small screens
     }
 
-    const fetchAppearsOn = async () => {
+    // const musicKitLoaded = useMusicKit()
+
+    // const musicKitInstance = useStore(state => state.musicKitInstance)
+    // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
+
+    const fetchFeaturedAlbums = async () => {
         if (!musicKitInstance) {
             await authorizeMusicKit()
             return
         }
         setLoading(true)
 
-        try {
-            const res = await musicKitInstance?.api.music(
-                `v1/catalog/ca/albums/${albumId}/view/appears-on`
-            )
+        if (type !== 'lib') {
+            try {
+                const featuredAlbums = await musicKitInstance.api.music(
+                    `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
+                )
 
-            const data = await res.data.data
-
-            setAppearsOn(data)
-        } catch (error: any) {
-            console.error(error)
-            setError(error)
-        } finally {
-            setLoading(false)
+                const featuredAlbumsData: Array<AlbumType> =
+                    await featuredAlbums.data.data
+                setFeaturedAlbums(featuredAlbumsData)
+            } catch (error: any) {
+                console.error(error)
+            }
         }
     }
     useEffect(() => {
-        fetchAppearsOn()
+        fetchFeaturedAlbums()
     }, [musicKitInstance])
 
     return (
-        appearsOn && (
+        featuredAlbums && (
             <div className="">
                 <DropdownDisplay
-                    object={appearsOn}
+                    object={featuredAlbums}
                     sliceNumber={sliceNumber}
                     noTitle={true}
-                    title={'Album Appears On'}
+                    title={'Featured Albums'}
                 />
             </div>
         )
     )
 }
 
-export default FetchAppearsOn
+export default FetchFeaturedAlbums

@@ -265,9 +265,13 @@ export const fetchAndSaveSongs = async (
             const data = res.data
             songs.push(...data.data)
 
-            if (data.next) {
-                await fetchSongs(`https://api.music.apple.com${data.next}`)
-            }
+            // if (data.next) {
+            //     await fetchSongs(`https://api.music.apple.com${data.next}`)
+            // }
+            // return {
+            //     songs: songs,
+            //     message: 'Songs saved successfully!',
+            // }
         } catch (error) {
             console.error('Failed to fetch songs:', error)
             if (!responseSent) {
@@ -328,6 +332,7 @@ export const fetchAndSaveSongs = async (
         }
 
         res.status(200).json({
+            songs: songs,
             message: 'Songs saved successfully!',
         })
     } catch (error) {

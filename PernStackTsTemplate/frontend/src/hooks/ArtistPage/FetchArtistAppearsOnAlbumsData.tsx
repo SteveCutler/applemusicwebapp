@@ -3,6 +3,8 @@ import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 import AlbumItem from '../../components/Homepage/AlbumItem'
+import DropdownDisplay from '../../components/Apple/DropdownDisplay'
+import { useMediaQuery } from 'react-responsive'
 
 type AlbumType = {
     attributes?: AttributeObject
@@ -161,6 +163,25 @@ const ArtistAppearsOnAlbums = ({ id }) => {
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
+    }
+
     useEffect(() => {
         const fetchArtistData = async () => {
             if (!musicKitInstance) {
@@ -219,7 +240,15 @@ const ArtistAppearsOnAlbums = ({ id }) => {
     return (
         appearsOnAlbumsData && (
             <>
-                {appearsOnAlbumsData && (
+                <div className=" ">
+                    <DropdownDisplay
+                        object={appearsOnAlbumsData}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={' Appears on These Albums'}
+                    />
+                </div>
+                {/* {appearsOnAlbumsData && (
                     <h2
                         className={`mx-3 px-3 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                     >
@@ -241,7 +270,7 @@ const ArtistAppearsOnAlbums = ({ id }) => {
                             </>
                         ))}
                     </div>
-                )}
+                )} */}
             </>
         )
     )

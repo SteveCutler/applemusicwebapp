@@ -4,6 +4,8 @@ import useMusicKit from '../../components/Apple/LoadMusickit'
 import { useStore } from '../../store/store'
 import DisplayRow from '../../components/Homepage/DisplayRow'
 import PlaylistItem from '../../components/Homepage/PlaylistItem'
+import DropdownDisplay from '../../components/Apple/DropdownDisplay'
+import { useMediaQuery } from 'react-responsive'
 
 type AlbumType = {
     attributes?: AttributeObject
@@ -158,6 +160,25 @@ const ArtistFeaturedPlaylist = ({ id }) => {
             setAlbumData: state.setAlbumData,
         }))
 
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
+    }
+
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -219,12 +240,12 @@ const ArtistFeaturedPlaylist = ({ id }) => {
     return (
         featuredPlaylistsData && (
             <div className="w-full justify-left  flex flex-col ">
-                <h2
+                {/* <h2
                     className={`p-1 pb-0 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                 >
                     Featured Playlists:
-                </h2>
-                <div className="flex  flex-wrap">
+                </h2> */}
+                {/* <div className="flex  flex-wrap">
                     {featuredPlaylistsData.map(album => (
                         <>
                             <PlaylistItem
@@ -237,6 +258,14 @@ const ArtistFeaturedPlaylist = ({ id }) => {
                             />
                         </>
                     ))}
+                </div> */}
+                <div className=" ">
+                    <DropdownDisplay
+                        object={featuredPlaylistsData}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={'Featured Playlists'}
+                    />
                 </div>
             </div>
         )

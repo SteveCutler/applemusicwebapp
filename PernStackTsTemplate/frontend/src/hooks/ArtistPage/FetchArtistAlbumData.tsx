@@ -3,6 +3,8 @@ import useMusicKit from '../../components/Apple/LoadMusickit'
 // import { useMusickitContext } from '../../context/MusickitContext'
 import { useStore } from '../../store/store'
 import AlbumItem from '../../components/Homepage/AlbumItem'
+import { useMediaQuery } from 'react-responsive'
+import DropdownDisplay from '../../components/Apple/DropdownDisplay'
 
 type playlist = {
     attributes: {
@@ -171,6 +173,25 @@ const ArtistAlbumData = ({ id }) => {
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
+    }
+
     useEffect(() => {
         const fetchArtistAlbumData = async () => {
             if (!musicKitInstance) {
@@ -231,7 +252,15 @@ const ArtistAlbumData = ({ id }) => {
 
     return (
         <>
-            {artistAlbumData && (
+            <div className=" ">
+                <DropdownDisplay
+                    object={artistAlbumData}
+                    sliceNumber={sliceNumber}
+                    noTitle={true}
+                    title={'Albums'}
+                />
+            </div>
+            {/* {artistAlbumData && (
                 <h2
                     className={`mx-3 px-3 text-xl ${darkMode ? 'text-slate-200' : 'text-slate-800'} font-bold`}
                 >
@@ -253,7 +282,7 @@ const ArtistAlbumData = ({ id }) => {
                         </>
                     ))}
                 </div>
-            )}
+            )} */}
         </>
     )
 }
