@@ -16,11 +16,11 @@ itunes library api only works in desktop app context - nevermind.
 -library albums artwork not updating properly when filtering
     >add sorting functionality
 -add feature that transitions between night and dark mode gradually over time based on timezone
--change album page to be like artist page and investigate song and station page api calls
+
 -fix sizing of single objects on search page
--issues with artist page & library artist ID
+
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
--add api calls to stations & songs pages 
+
 -redesign toast/figure out when is appropriate to display them
 -add drag and drop feature to playlist creation
 work on search page - design, search hints, etc
@@ -31,7 +31,7 @@ add different display options for library (artist, album, song, genre?)
 -move music kit calls to backend?
 -redesign play/options buttons
 -add favourites functionality
--handle storefront variable properly
+
 
 
 

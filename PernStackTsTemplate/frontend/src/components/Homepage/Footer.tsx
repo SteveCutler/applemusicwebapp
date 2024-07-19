@@ -685,18 +685,20 @@ function Footer() {
                                     onClick={goToAlbum}
                                     className="font-semibold  truncate w-full flex-col flex-shrink flex justify-around"
                                 >
-                                    <div>
-                                        {
-                                            musicKitInstance?.nowPlayingItem
-                                                .attributes.name
-                                        }
-                                    </div>
-                                    <div>
-                                        {musicKitInstance.queue.items &&
-                                            musicKitInstance.queue.items[
-                                                musicKitInstance
-                                                    ?.nowPlayingItemIndex
-                                            ].attributes.albumName}
+                                    <div className="hover:cursor-pointer hover:text-white">
+                                        <div>
+                                            {
+                                                musicKitInstance?.nowPlayingItem
+                                                    .attributes.name
+                                            }
+                                        </div>
+                                        <div>
+                                            {musicKitInstance.queue.items &&
+                                                musicKitInstance.queue.items[
+                                                    musicKitInstance
+                                                        ?.nowPlayingItemIndex
+                                                ].attributes.albumName}
+                                        </div>
                                     </div>
                                     <div
                                         className=" items-center gap-2"

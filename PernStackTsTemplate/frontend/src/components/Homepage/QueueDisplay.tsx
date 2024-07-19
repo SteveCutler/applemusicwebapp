@@ -97,23 +97,35 @@ const QueueDisplay = () => {
                             </>
                         )}
                 </div>
-                <div className="pt-3 ">
-                    <h1 className="text-3xl pb-3  font-bold text-white">
-                        Coming up:
-                    </h1>
-                    {playlist &&
-                        musicKitInstance?.nowPlayingItem &&
-                        musicKitInstance.queue.items
-                            .slice(musicKitInstance?.nowPlayingItemIndex + 1)
-                            .map((song, index) => (
-                                <QueueTrackDisplay
-                                    key={index}
-                                    song={song}
-                                    index={index}
-                                    // albumId={song}
-                                />
-                            ))}
-                </div>
+                {playlist &&
+                musicKitInstance?.queue.items &&
+                musicKitInstance?.nowPlayingItem ? (
+                    <div className="pt-3 ">
+                        <h1 className="text-3xl pb-3  font-bold text-white">
+                            Coming up:
+                        </h1>
+                        {playlist &&
+                            musicKitInstance?.nowPlayingItem &&
+                            musicKitInstance.queue.items
+                                .slice(
+                                    musicKitInstance?.nowPlayingItemIndex + 1
+                                )
+                                .map((song, index) => (
+                                    <QueueTrackDisplay
+                                        key={index}
+                                        song={song}
+                                        index={index}
+                                        // albumId={song}
+                                    />
+                                ))}
+                    </div>
+                ) : (
+                    <div className="pt-3 ">
+                        <h1 className="text-3xl pb-3  font-bold text-white">
+                            Queue empty
+                        </h1>
+                    </div>
+                )}
             </div>
         </div>
     )

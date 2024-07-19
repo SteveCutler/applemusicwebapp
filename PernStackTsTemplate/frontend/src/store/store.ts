@@ -981,6 +981,35 @@ export const useStore = create<Store>((set, get) => ({
                 : (podcastAudio.currentTime = 0)
         })
 
+        if ('mediaSession' in navigator) {
+            navigator.mediaSession.setActionHandler('play', () => {
+                podcastAudio.play()
+            })
+
+            navigator.mediaSession.setActionHandler('pause', () => {
+                podcastAudio.pause()
+            })
+
+            navigator.mediaSession.setActionHandler(
+                'previoustrack',
+                details => {
+                    podcastAudio.currentTime -= 15
+                }
+            )
+
+            navigator.mediaSession.setActionHandler('nexttrack', details => {
+                podcastAudio.currentTime += 15
+            })
+
+            // navigator.mediaSession.setActionHandler('nexttrack', () => {
+            //     // Implement previous track logic
+            // })
+
+            // navigator.mediaSession.setActionHandler('nexttrack', () => {
+            //     // Implement next track logic
+            // })
+        }
+
         // console.log(url, time, artUrl, trackName, collectionName)
         set(state => {
             if (state.podcastAudio) {
