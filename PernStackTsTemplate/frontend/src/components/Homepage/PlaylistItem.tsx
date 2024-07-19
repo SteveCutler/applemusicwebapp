@@ -87,12 +87,13 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
     const {
         isPlaying,
         authorizeMusicKit,
-
+        storefront,
         queueToggle,
         darkMode,
         playlist,
         musicKitInstance,
     } = useStore(state => ({
+        storefront: state.storefront,
         playlistData: state.playlistData,
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
@@ -131,7 +132,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                 try {
                     // const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/playlists/${playlistItem.id}/tracks`
+                        `/v1/catalog/${storefront}/playlists/${playlistItem.id}/tracks`
                     )
 
                     const data: Song[] = await res.data.data

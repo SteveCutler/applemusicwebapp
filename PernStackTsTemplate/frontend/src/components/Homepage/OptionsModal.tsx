@@ -118,9 +118,10 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         libraryPlaylists,
         appleMusicToken,
         backendToken,
+        storefront,
     } = useStore(state => ({
         darkMode: state.darkMode,
-
+        storefront: state.storefront,
         fetchAppleToken: state.fetchAppleToken,
         libraryPlaylists: state.libraryPlaylists,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -305,7 +306,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         const catalogId = await catRes.data.data[0].id
 
                         const res = await musicKitInstance?.api.music(
-                            `/v1/catalog//ca/albums/${catalogId}/tracks`
+                            `/v1/catalog//${storefront}/albums/${catalogId}/tracks`
                         )
 
                         const trackData = await res.data.data
@@ -348,7 +349,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance?.api.music(
-                            `/v1/catalog//ca/albums/${object.id}/tracks`,
+                            `/v1/catalog//${storefront}/albums/${object.id}/tracks`,
 
                             queryParameters
                         )
@@ -467,7 +468,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         try {
                             const queryParameters = { l: 'en-us' }
                             const res = await musicKitInstance.api.music(
-                                `/v1/catalog//ca/albums/${object.id}/tracks`,
+                                `/v1/catalog//${storefront}/albums/${object.id}/tracks`,
 
                                 queryParameters
                             )

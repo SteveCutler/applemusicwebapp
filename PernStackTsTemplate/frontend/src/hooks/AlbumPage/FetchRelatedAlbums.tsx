@@ -61,13 +61,13 @@ interface relatedAlbumsProps {
 }
 
 const FetchRelatedAlbums: React.FC<relatedAlbumsProps> = ({ albumId }) => {
-    const { musicKitInstance, authorizeMusicKit, queueToggle } = useStore(
-        state => ({
+    const { musicKitInstance, authorizeMusicKit, storefront, queueToggle } =
+        useStore(state => ({
+            storefront: state.storefront,
             musicKitInstance: state.musicKitInstance,
             queueToggle: state.queueToggle,
             authorizeMusicKit: state.authorizeMusicKit,
-        })
-    )
+        }))
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [relatedAlbums, setRelatedAlbums] = useState<string | null>(null)
@@ -106,7 +106,7 @@ const FetchRelatedAlbums: React.FC<relatedAlbumsProps> = ({ albumId }) => {
 
         try {
             const res = await musicKitInstance?.api.music(
-                `v1/catalog/ca/albums/${albumId}/view/related-albums`
+                `v1/catalog/${storefront}/albums/${albumId}/view/related-albums`
             )
 
             const relatedAlbums = await res.data.data

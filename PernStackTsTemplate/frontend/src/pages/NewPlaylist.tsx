@@ -52,8 +52,10 @@ const NewPlaylist = () => {
         authorizeMusicKit,
         libraryPlaylists,
         darkMode,
+        storefront,
     } = useStore(state => ({
         appleMusicToken: state.appleMusicToken,
+        storefront: state.storefront,
         fetchAppleToken: state.fetchAppleToken,
         darkMode: state.darkMode,
         musicKitInstance: state.musicKitInstance,
@@ -111,7 +113,7 @@ const NewPlaylist = () => {
                     }
 
                     const response = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/search`,
+                        `/v1/catalog/${storefront}/search`,
                         queryParameters
                     )
                     // console.log(response)
@@ -236,7 +238,7 @@ const NewPlaylist = () => {
                     const catalogId = await catRes.data.data[0].id
 
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//ca/albums/${catalogId}/tracks`
+                        `/v1/catalog//${storefront}/albums/${catalogId}/tracks`
                     )
 
                     const data = await res.data.data
@@ -249,7 +251,7 @@ const NewPlaylist = () => {
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//ca/albums/${albumId}/tracks`,
+                        `/v1/catalog//${storefront}/albums/${albumId}/tracks`,
 
                         queryParameters
                     )

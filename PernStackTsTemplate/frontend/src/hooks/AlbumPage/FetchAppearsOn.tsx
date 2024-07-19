@@ -62,13 +62,13 @@ const FetchAppearsOn = ({ albumId }) => {
     const [appearsOn, setAppearsOn] = useState<string | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, queueToggle } = useStore(
-        state => ({
+    const { musicKitInstance, authorizeMusicKit, queueToggle, storefront } =
+        useStore(state => ({
             musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
             queueToggle: state.queueToggle,
             authorizeMusicKit: state.authorizeMusicKit,
-        })
-    )
+        }))
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
@@ -99,7 +99,7 @@ const FetchAppearsOn = ({ albumId }) => {
 
         try {
             const res = await musicKitInstance?.api.music(
-                `v1/catalog/ca/albums/${albumId}/view/appears-on`
+                `v1/catalog/${storefront}/albums/${albumId}/view/appears-on`
             )
 
             const data = await res.data.data

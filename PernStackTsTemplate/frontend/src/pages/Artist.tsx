@@ -89,10 +89,12 @@ const Artist = () => {
         darkMode,
         isPlaying,
         playlist,
+        storefront,
         pauseSong,
         playSong,
     } = useStore(state => ({
         setPlaylist: state.setPlaylist,
+        storefront: state.storefront,
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         pauseSong: state.pauseSong,
@@ -134,7 +136,7 @@ const Artist = () => {
                         if (catId.response.status === 200) {
                             try {
                                 const res = await musicKitInstance.api.music(
-                                    `/v1/catalog/ca/artists/${catId.data.data[0].id}`
+                                    `/v1/catalog/${storefront}/artists/${catId.data.data[0].id}`
                                 )
 
                                 const data: Artist = await res.data.data[0]
@@ -168,7 +170,7 @@ const Artist = () => {
                 } else {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/ca/artists/${id}`
+                            `/v1/catalog/${storefront}/artists/${id}`
                         )
 
                         const data: Artist = await res.data.data[0]

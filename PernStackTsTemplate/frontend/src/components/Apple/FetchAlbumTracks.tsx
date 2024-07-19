@@ -54,12 +54,15 @@ type ArtworkObject = {
 
 const FetchAlbumTracks = async (albumId: string | undefined) => {
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        })
+    )
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -93,7 +96,7 @@ const FetchAlbumTracks = async (albumId: string | undefined) => {
             try {
                 const queryParameters = { l: 'en-us' }
                 const res = await musicKitInstance.api.music(
-                    `/v1/catalog//ca/albums/${albumId}/tracks`,
+                    `/v1/catalog//${storefront}/albums/${albumId}/tracks`,
 
                     queryParameters
                 )

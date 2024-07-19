@@ -43,11 +43,13 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
         setPlaylistData,
         authorizeMusicKit,
         play,
+        storefront,
         playlistData,
         musicKitInstance,
     } = useStore(state => ({
         isPlaying: state.isPlaying,
         playlistData: state.playlistData,
+        storefront: state.storefront,
         currentSongId: state.currentSongId,
         musicKitInstance: state.musicKitInstance,
         setPlaylistData: state.setPlaylistData,
@@ -76,7 +78,7 @@ const PlaylistRow: React.FC<playlistProps> = ({ name, id, index }) => {
                 try {
                     const queryParameters = { l: 'en-us' }
                     const trackRes = await musicKitInstance?.api.music(
-                        `/v1/catalog/ca/playlists/${id}/tracks`,
+                        `/v1/catalog/${storefront}/playlists/${id}/tracks`,
 
                         queryParameters
                     )

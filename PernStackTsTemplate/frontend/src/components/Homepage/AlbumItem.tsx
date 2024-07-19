@@ -54,10 +54,12 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
         darkMode,
         playSong,
         pause,
+        storefront,
         playlist,
         musicKitInstance,
     } = useStore(state => ({
         darkMode: state.darkMode,
+        storefront: state.storefront,
         backendToken: state.backendToken,
         isPlaying: state.isPlaying,
         pause: state.pauseSong,
@@ -169,7 +171,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 navigate(`/album/${albumItem.id}`)
             } else {
                 const artistRes = await musicKitInstance?.api.music(
-                    `/v1/catalog/ca/albums/${albumItem.id}/artists`
+                    `/v1/catalog/${storefront}/albums/${albumItem.id}/artists`
                 )
 
                 const artistId = await artistRes.data.data[0].id

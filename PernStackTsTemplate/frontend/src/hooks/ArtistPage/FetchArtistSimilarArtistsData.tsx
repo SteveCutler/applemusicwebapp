@@ -149,15 +149,21 @@ const ArtistSimilarArtists = ({ id }) => {
         useState<Array<Artist> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, darkMode, queueToggle } =
-        useStore(state => ({
-            musicKitInstance: state.musicKitInstance,
-            darkMode: state.darkMode,
-            queueToggle: state.queueToggle,
-            authorizeMusicKit: state.authorizeMusicKit,
-            albumData: state.albumData,
-            setAlbumData: state.setAlbumData,
-        }))
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        storefront,
+        darkMode,
+        queueToggle,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        storefront: state.storefront,
+        darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
+        authorizeMusicKit: state.authorizeMusicKit,
+        albumData: state.albumData,
+        setAlbumData: state.setAlbumData,
+    }))
 
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
@@ -211,7 +217,7 @@ const ArtistSimilarArtists = ({ id }) => {
                 } else {
                     try {
                         const similarArtists = await musicKitInstance.api.music(
-                            `/v1/catalog/ca/artists/${id}/view/similar-artists`
+                            `/v1/catalog/${storefront}/artists/${id}/view/similar-artists`
                         )
 
                         const similarArtistsData: Array<Artist> =

@@ -147,12 +147,15 @@ const ArtistFeaturedAlbums = ({ id }) => {
         useState<Array<AlbumData> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        })
+    )
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -187,7 +190,7 @@ const ArtistFeaturedAlbums = ({ id }) => {
                 } else {
                     try {
                         const featuredAlbums = await musicKitInstance.api.music(
-                            `/v1/catalog/ca/artists/${id}/view/featured-albums`
+                            `/v1/catalog/${storefront}/artists/${id}/view/featured-albums`
                         )
 
                         const featuredAlbumsData: Array<AlbumData> =

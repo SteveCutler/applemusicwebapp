@@ -144,12 +144,15 @@ const FetchArtistData = (id: string | undefined) => {
     const [artistData, setArtistData] = useState<Artist | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        })
+    )
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -177,7 +180,7 @@ const FetchArtistData = (id: string | undefined) => {
                         if (catId.response.status === 200) {
                             try {
                                 const res = await musicKitInstance.api.music(
-                                    `/v1/catalog/ca/artists/${catId.data.data[0].id}`
+                                    `/v1/catalog/${storefront}/artists/${catId.data.data[0].id}`
                                 )
 
                                 const data: Artist = await res.data.data[0]
@@ -209,7 +212,7 @@ const FetchArtistData = (id: string | undefined) => {
                 } else {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/ca/artists/${id}`
+                            `/v1/catalog/${storefront}/artists/${id}`
                         )
 
                         const data: Artist = await res.data.data[0]

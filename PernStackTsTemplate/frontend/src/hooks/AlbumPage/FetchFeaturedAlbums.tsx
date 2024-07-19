@@ -65,13 +65,13 @@ const FetchFeaturedAlbums: React.FC<relatedAlbumsProps> = ({
     artistId,
     type,
 }) => {
-    const { musicKitInstance, authorizeMusicKit, queueToggle } = useStore(
-        state => ({
+    const { musicKitInstance, authorizeMusicKit, storefront, queueToggle } =
+        useStore(state => ({
             musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
             queueToggle: state.queueToggle,
             authorizeMusicKit: state.authorizeMusicKit,
-        })
-    )
+        }))
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<string | null>(null)
     const [featuredAlbums, setFeaturedAlbums] = useState<AlbumType[] | null>(
@@ -112,7 +112,7 @@ const FetchFeaturedAlbums: React.FC<relatedAlbumsProps> = ({
         if (type !== 'lib') {
             try {
                 const featuredAlbums = await musicKitInstance.api.music(
-                    `/v1/catalog/ca/artists/${artistId}/view/featured-albums`
+                    `/v1/catalog/${storefront}/artists/${artistId}/view/featured-albums`
                 )
 
                 const featuredAlbumsData: Array<AlbumType> =

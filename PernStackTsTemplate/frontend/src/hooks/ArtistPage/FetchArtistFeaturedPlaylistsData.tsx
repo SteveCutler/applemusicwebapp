@@ -150,15 +150,21 @@ const ArtistFeaturedPlaylist = ({ id }) => {
         useState<Array<playlist> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, queueToggle, darkMode } =
-        useStore(state => ({
-            musicKitInstance: state.musicKitInstance,
-            queueToggle: state.queueToggle,
-            darkMode: state.darkMode,
-            authorizeMusicKit: state.authorizeMusicKit,
-            albumData: state.albumData,
-            setAlbumData: state.setAlbumData,
-        }))
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        storefront,
+        queueToggle,
+        darkMode,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        queueToggle: state.queueToggle,
+        storefront: state.storefront,
+        darkMode: state.darkMode,
+        authorizeMusicKit: state.authorizeMusicKit,
+        albumData: state.albumData,
+        setAlbumData: state.setAlbumData,
+    }))
 
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
@@ -214,7 +220,7 @@ const ArtistFeaturedPlaylist = ({ id }) => {
                     try {
                         const featuredPlaylists =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/ca/artists/${id}/view/featured-playlists`
+                                `/v1/catalog/${storefront}/artists/${id}/view/featured-playlists`
                             )
 
                         const featuredPlaylistsData: Array<playlist> =

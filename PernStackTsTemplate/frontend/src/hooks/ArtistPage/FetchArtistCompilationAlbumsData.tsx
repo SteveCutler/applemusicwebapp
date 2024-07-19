@@ -147,12 +147,15 @@ const FetchArtistData = (id: string | undefined) => {
         useState<Array<AlbumData> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
-        musicKitInstance: state.musicKitInstance,
-        authorizeMusicKit: state.authorizeMusicKit,
-        albumData: state.albumData,
-        setAlbumData: state.setAlbumData,
-    }))
+    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
+        state => ({
+            musicKitInstance: state.musicKitInstance,
+            storefront: state.storefront,
+            authorizeMusicKit: state.authorizeMusicKit,
+            albumData: state.albumData,
+            setAlbumData: state.setAlbumData,
+        })
+    )
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -189,7 +192,7 @@ const FetchArtistData = (id: string | undefined) => {
                     try {
                         const compilationAlbums =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/ca/artists/${id}/view/compilation-albums`
+                                `/v1/catalog/${storefront}/artists/${id}/view/compilation-albums`
                             )
 
                         const compilationAlbumsData: Array<AlbumData> =

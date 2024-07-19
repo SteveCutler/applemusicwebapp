@@ -85,9 +85,11 @@ const Search = () => {
         queueToggle,
         setSearchResults,
         authorizeMusicKit,
+        storefront,
         musicKitInstance,
     } = useStore(state => ({
         searchTerm: state.searchTerm,
+        storefront: state.storefront,
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -167,7 +169,7 @@ const Search = () => {
                         l: 'en-us',
                     }
                     const response = await musicKitInstance.api.music(
-                        `/v1/catalog/ca/search`,
+                        `/v1/catalog/${storefront}/search`,
                         queryParameters
                     )
                     const musicData = await response.data.results

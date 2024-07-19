@@ -148,15 +148,21 @@ const ArtistLatestRelease = ({ id }) => {
         useState<Array<AlbumData> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, darkMode, queueToggle } =
-        useStore(state => ({
-            musicKitInstance: state.musicKitInstance,
-            darkMode: state.darkMode,
-            queueToggle: state.queueToggle,
-            authorizeMusicKit: state.authorizeMusicKit,
-            albumData: state.albumData,
-            setAlbumData: state.setAlbumData,
-        }))
+    const {
+        musicKitInstance,
+        authorizeMusicKit,
+        storefront,
+        darkMode,
+        queueToggle,
+    } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        storefront: state.storefront,
+        darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
+        authorizeMusicKit: state.authorizeMusicKit,
+        albumData: state.albumData,
+        setAlbumData: state.setAlbumData,
+    }))
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -192,7 +198,7 @@ const ArtistLatestRelease = ({ id }) => {
                 } else {
                     try {
                         const latestRelease = await musicKitInstance.api.music(
-                            `/v1/catalog/ca/artists/${id}/view/latest-release`
+                            `/v1/catalog/${storefront}/artists/${id}/view/latest-release`
                         )
                         console.log('latest release', latestRelease)
 
