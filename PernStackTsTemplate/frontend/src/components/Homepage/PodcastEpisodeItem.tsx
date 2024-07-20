@@ -127,6 +127,7 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
 
     const [isHovered, setIsHovered] = useState(false)
     const [progress, setProgress] = useState<number | null>(null)
+    const [loading, setLoading] = useState(true)
 
     // console.log('albumArtUrl: ', albumArtUrl)
     const navigate = useNavigate()
@@ -192,11 +193,17 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
             title={`${podcast.title}`}
         >
             <div className="relative z-1 w-full h-fit shadow-lg">
-                {podcast.feedImage ? (
-                    <img src={podcast.feedImage} />
-                ) : (
-                    <img src={defaultPlaylistArtwork} />
-                )}
+                {loading ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <img src={defaultPlaylistArtwork} />
+                        {/* Replace with a loader if you have one */}
+                    </div>
+                ) : null}
+                <img
+                    src={podcast.feedImage || defaultPlaylistArtwork}
+                    onLoad={() => setLoading(false)}
+                    style={{ display: loading ? 'none' : 'block' }}
+                />
                 {podcast.released && (
                     <h3
                         className={`truncate absolute bottom-3 right-3 px-1 py-1 bg-blue-400 font-semibold rounded-lg text-sm ${darkMode ? ' text-black' : ' text-white'}`}

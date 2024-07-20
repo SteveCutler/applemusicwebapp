@@ -7,6 +7,7 @@ import toast from 'react-hot-toast'
 import { FaCirclePlay } from 'react-icons/fa6'
 import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
 import { useMediaQuery } from 'react-responsive'
+import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
 
 type RecommendationType = {
     attributes: {
@@ -89,9 +90,15 @@ const PlaylistDisplay = () => {
         appleMusicToken,
         personalizedPlaylists,
         fetchAppleToken,
+        recommendations,
+        setPersonalizedPlaylists,
+        setRecommendations,
         darkMode,
     } = useStore(state => ({
         queueToggle: state.queueToggle,
+        setPersonalizedPlaylists: state.setPersonalizedPlaylists,
+        recommendations: state.recommendations,
+        setRecommendations: state.setRecommendations,
         darkMode: state.darkMode,
         libraryPlaylists: state.libraryPlaylists,
         musicKitInstance: state.musicKitInstance,
@@ -102,6 +109,8 @@ const PlaylistDisplay = () => {
     }))
 
     const [personal, setPersonal] = useState<RecommendationType | null>(null)
+
+    const [loadingRecommendations, setLoadingRecommendations] = useState(true)
 
     const constructImageUrl = (url: String, size: Number) => {
         return url
@@ -184,6 +193,59 @@ const PlaylistDisplay = () => {
         }
     }
 
+    useEffect(() => {
+        const fetchRecommendations = async () => {
+            if (musicKitInstance) {
+                try {
+                    const queryParameters = {
+                        l: 'en-us',
+                        limit: 20,
+                    }
+                    const res = await musicKitInstance.api.music(
+                        '/v1/me/recommendations/',
+                        queryParameters
+                    )
+
+                    const data = await res.data.data
+                    console.log('loading recommendations: ', data)
+
+                    setPersonalizedPlaylists(data[0])
+
+                    const newList = [
+                        data[1],
+                        data[6],
+                        data[0],
+                        data[11],
+                        data[10],
+                        data[12],
+                        data[8],
+                        data[9],
+                        data[7],
+                        data[2],
+                        data[4],
+                        data[5],
+                        data[13],
+
+                        data[3],
+                    ]
+
+                    setRecommendations(newList)
+                    setLoadingRecommendations(false)
+                } catch (error: any) {
+                    console.error(error)
+                    setLoadingRecommendations(false)
+                    // setError(error)
+                }
+            }
+        }
+
+        if (!recommendations && musicKitInstance && appleMusicToken) {
+            fetchRecommendations()
+        } else {
+            setLoadingRecommendations(false)
+        }
+    }, [musicKitInstance, appleMusicToken, recommendations])
+
     // useEffect(() => {
     //     if (personalizedPlaylists && !personal) {
     //         setPersonal(personalizedPlaylists)
@@ -194,7 +256,7 @@ const PlaylistDisplay = () => {
 
     return (
         <>
-            {personalizedPlaylists && (
+            {personalizedPlaylists ? (
                 <>
                     <div
                         className={`text-left font-bold ${darkMode ? 'text-slate-200 border-white ' : ' text-black border-black'}  w-11/12 border-b-2 mt-0 mb-2 pb-1 text-xl`}
@@ -207,6 +269,8 @@ const PlaylistDisplay = () => {
                         sliceNumber={sliceNumber}
                     />
                 </>
+            ) : (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             )}
             <button
                 className="btn btn-primary  mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"

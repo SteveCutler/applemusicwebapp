@@ -4,6 +4,9 @@ import { GiLoveSong } from 'react-icons/gi'
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
 import { IoGridOutline, IoGrid } from 'react-icons/io5'
+import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
+import { useMediaQuery } from 'react-responsive'
+import SkeletonItem from '../components/Homepage/SkeletonItem'
 
 const Library = () => {
     const [loading, setLoading] = useState<boolean>(false)
@@ -36,6 +39,25 @@ const Library = () => {
         albums: state.albums,
         setAlbums: state.setAlbums,
     }))
+
+    const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
+    const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
+    const isXLarge = useMediaQuery({ query: '(min-width: 1280px)' })
+    const is2XLarge = useMediaQuery({ query: '(min-width: 1536px)' })
+
+    let sliceNumber
+
+    if (is2XLarge) {
+        sliceNumber = queueToggle ? 9 : 11 // For 2xl screens and larger
+    } else if (isXLarge) {
+        sliceNumber = queueToggle ? 3 : 5 // For 2xl screens and larger
+    } else if (isLarge) {
+        sliceNumber = 3 // For xl screens and larger
+    } else if (isMedium) {
+        sliceNumber = 4 // For md screens and larger
+    } else {
+        sliceNumber = 2 // For small screens
+    }
 
     const inputRef = useRef<HTMLInputElement>(null)
     const [librarySearchTerm, setLibrarySearchTerm] = useState('')
@@ -288,8 +310,19 @@ const Library = () => {
                             loadMoreAlbums={loadMoreAlbums}
                         />
                     ) : (
-                        <div className="text-black text-center font-bold flex justify-center mx-auto w-full pt-10 text-2xl">
-                            Loading library...
+                        <div className=" flex w-full flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                            {Array.from({ length: sliceNumber * 2 }).map(
+                                (_, index) => (
+                                    <SkeletonItem
+                                        key={index}
+                                        width={` ${
+                                            queueToggle
+                                                ? 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12'
+                                                : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12'
+                                        } `}
+                                    />
+                                )
+                            )}
                         </div>
                     )}
                     {error && <div>Error</div>}

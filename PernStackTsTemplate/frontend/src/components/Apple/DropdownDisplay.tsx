@@ -10,6 +10,7 @@ import PodcastEpisode from '../../pages/PodcastEpisode'
 import PodcastEpisodeItem from '../Homepage/PodcastEpisodeItem'
 import PodcastItem from '../Homepage/PodcastItem'
 import GradientAnimation from '../Homepage/GradientAnimation'
+import SkeletonItem from '../Homepage/SkeletonItem'
 
 interface podcastEpisode {
     dateCrawled: number

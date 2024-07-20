@@ -9,6 +9,7 @@ import PodcastEpisodeItem from '../components/Homepage/PodcastEpisodeItem'
 import DropdownDisplay from '../components/Apple/DropdownDisplay'
 import { useMediaQuery } from 'react-responsive'
 import ImportPodcasts from '../components/Homepage/ImportPodcasts'
+import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
 
 type podcastInfo = {
     artwork: string
@@ -101,7 +102,9 @@ const Podcasts = () => {
         backendToken: state.backendToken,
     }))
 
-    const [loading, setLoading] = useState(false)
+    const [loadingSubs, setLoadingSubs] = useState(true)
+    const [loadingRecent, setLoadingRecent] = useState(true)
+    const [loadingProgress, setLoadingProgress] = useState(true)
 
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
@@ -212,14 +215,15 @@ const Podcasts = () => {
                     console.log('sorted', sortedEps)
 
                     setRecentEps(sortedEps)
+                    setLoadingRecent(false)
                 } catch (error) {
                     console.error(error)
+                    setLoadingRecent(false)
                 }
             }
         }
 
         const getSubs = async () => {
-            setLoading(true)
             const userId = backendToken
             try {
                 const response = await fetch(
@@ -240,27 +244,32 @@ const Podcasts = () => {
                 const data = await response.json()
                 console.log('podSubs', data)
                 setPodSubs(data)
-                setLoading(false)
+                setLoadingSubs(false)
             } catch (error) {
                 console.error('Error subscribing to podcast:', error)
-                setLoading(false)
+                setLoadingSubs(false)
                 toast.error('Error retrieving podcasts..')
             }
         }
         if (!podSubs) {
             getSubs()
+        } else {
+            setLoadingSubs(false)
         }
         if (!recentEps && podSubs && podSubs.length >= 1) {
             getRecentEps()
+        } else {
+            setLoadingRecent(false)
         }
         if (!progressLoaded) {
+            setLoadingProgress
             fetchPodcastProgress()
+            setLoadingProgress(false)
+        } else {
+            setLoadingProgress(false)
         }
     }, [podSubs])
 
-    if (loading) {
-        return <div>loading</div>
-    }
     return (
         <div className={`flex flex-col`}>
             {podSubs && podSubs.length == 0 && (
@@ -295,7 +304,9 @@ const Podcasts = () => {
                     </div>
                 </>
             )}
-            {podSubs && podSubs.length >= 1 && (
+            {loadingSubs ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : !loadingSubs && podSubs.length >= 1 ? (
                 <div className="flex flex-wrap justify-center w-fit gap-1 ">
                     <DropdownDisplay
                         object={podSubs}
@@ -316,14 +327,16 @@ const Podcasts = () => {
                         />
                     ))} */}
                 </div>
-            )}
-            {recentEps && (
+            ) : null}
+            {loadingRecent || loadingSubs || loadingProgress || !recentEps ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : !loadingRecent && !loadingSubs && !loadingProgress ? (
                 <DropdownDisplay
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
                 />
-            )}
+            ) : null}
         </div>
     )
 }

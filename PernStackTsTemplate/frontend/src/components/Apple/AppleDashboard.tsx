@@ -21,6 +21,7 @@ import axios from 'axios'
 import toast from 'react-hot-toast'
 import CryptoJS from 'crypto-js'
 import GradientAnimation from '../Homepage/GradientAnimation'
+import SkeletonDropdownDisplay from './SkeletonDropdownDisplay'
 
 type AlbumType = {
     attributes: {
@@ -296,7 +297,9 @@ const AppleDashboard = () => {
     const [moreThemed, setMoreThemed] = useState(false)
     const [moreHeavyRotation, setMoreHeavyRotation] = useState(false)
     const [moreMadeForYou, setMoreMadeForYou] = useState(false)
-    const [loadingPodcasts, setLoadingPodcasts] = useState(false)
+    const [loadingPodcasts, setLoadingPodcasts] = useState(true)
+    const [loadingRecent, setLoadingRecent] = useState(true)
+    const [loadingRecommendations, setLoadingRecommendations] = useState(true)
 
     const style = { fontSize: '1.5rem' }
 
@@ -365,6 +368,62 @@ const AppleDashboard = () => {
     }
 
     useEffect(() => {
+        const recent: RecentlyAddedItem[] = []
+
+        const fetchRecentlyAddedToLib = async (url: string) => {
+            if (musicKitInstance) {
+                try {
+                    // console.log(music)
+
+                    const queryParameters = {
+                        l: 'en-us',
+                        limit: 10,
+                        headers: {
+                            Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
+                            'Music-User-Token': appleMusicToken,
+                        },
+                    }
+                    const res = await musicKitInstance.api.music(
+                        url,
+                        queryParameters
+                    )
+
+                    // if (res.status !== 200) {
+
+                    // }
+
+                    const data: RecentlyAddedItem[] = await res.data.data
+                    recent.push(...data)
+                    console.log('recent', recent)
+
+                    if (res.data.next && recent.length <= 20) {
+                        await fetchRecentlyAddedToLib(res.data.next)
+                    } else {
+                        setRecentlyAddedToLib(recent)
+                        setLoadingRecent(false)
+                    }
+                } catch (error: any) {
+                    console.error(error)
+                    setLoadingRecent(false)
+                }
+            }
+        }
+
+        if (!musicKitInstance || !appleMusicToken) {
+            authorizeMusicKit()
+        }
+        if (
+            musicKitInstance &&
+            appleMusicToken &&
+            recentlyAddedToLib.length < 1
+        ) {
+            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
+        } else {
+            setLoadingRecent(false)
+        }
+    }, [musicKitInstance, appleMusicToken, isAuthorized, recentlyAddedToLib, ,])
+
+    useEffect(() => {
         const fetchRecommendations = async () => {
             if (musicKitInstance) {
                 try {
@@ -401,18 +460,25 @@ const AppleDashboard = () => {
                     ]
 
                     setRecommendations(newList)
+                    setLoadingRecommendations(false)
                 } catch (error: any) {
                     console.error(error)
+                    setLoadingRecommendations(false)
                     // setError(error)
                 }
             }
         }
 
-        const recent: RecentlyAddedItem[] = []
+        if (!recommendations && musicKitInstance && appleMusicToken) {
+            fetchRecommendations()
+        } else {
+            setLoadingRecommendations(false)
+        }
+    }, [musicKitInstance, appleMusicToken, isAuthorized, recommendations])
 
+    useEffect(() => {
         const getRecentEps = async () => {
             if (podSubs) {
-                setLoadingPodcasts(true)
                 const ids = podSubs.map(pod => pod.id).join()
                 console.log('ids', ids)
                 // const id = podSubs[0].id.toString()
@@ -508,75 +574,19 @@ const AppleDashboard = () => {
             }
         }
 
-        const fetchRecentlyAddedToLib = async (url: string) => {
-            if (musicKitInstance) {
-                try {
-                    // console.log(music)
-                    const queryParameters = {
-                        l: 'en-us',
-                        limit: 10,
-                        headers: {
-                            Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
-                            'Music-User-Token': appleMusicToken,
-                        },
-                    }
-                    const res = await musicKitInstance.api.music(
-                        url,
-                        queryParameters
-                    )
-
-                    // if (res.status !== 200) {
-
-                    // }
-
-                    const data: RecentlyAddedItem[] = await res.data.data
-                    recent.push(...data)
-                    console.log('recent', recent)
-
-                    if (res.data.next && recent.length <= 20) {
-                        await fetchRecentlyAddedToLib(res.data.next)
-                    } else {
-                        setRecentlyAddedToLib(recent)
-                    }
-                } catch (error: any) {
-                    console.error(error)
-                }
-            }
-        }
-
-        if (!musicKitInstance || !appleMusicToken) {
-            authorizeMusicKit()
-        }
-        if (
-            musicKitInstance &&
-            appleMusicToken &&
-            recentlyAddedToLib.length < 1
-        ) {
-            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
-        }
         if (!podSubs) {
             getSubs()
         }
         if (!recentEps && podSubs) {
             getRecentEps()
+        } else {
+            setLoadingPodcasts(false)
         }
 
         if (!podcastProgress) {
             fetchPodcastProgress()
         }
-
-        if (!recommendations && musicKitInstance && appleMusicToken) {
-            fetchRecommendations()
-        }
-    }, [
-        musicKitInstance,
-        podcastProgress,
-        appleMusicToken,
-        isAuthorized,
-        podSubs,
-        recentlyAddedToLib,
-        recommendations,
-    ])
+    }, [podcastProgress, podSubs, recentEps])
 
     console.log('recently added to lib: ', recentlyAddedToLib)
 
@@ -594,30 +604,38 @@ const AppleDashboard = () => {
                     sliceNumber={sliceNumber}
                 />
             )} */}
+            {/* <SkeletonDropdownDisplay sliceNumber={sliceNumber} /> */}
 
-            <DropdownDisplay
-                loading={loadingPodcasts}
-                podcast={true}
-                object={recentEps}
-                sliceNumber={sliceNumber}
-            />
-
-            {recentlyAddedToLib.length > 1 && (
+            {loadingRecent ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : !loadingRecent && recentlyAddedToLib.length >= 1 ? (
                 <DropdownDisplay
                     object={recentlyAddedToLib.slice(0, 15)}
                     sliceNumber={sliceNumber}
                     noTitle={true}
                     title={'Recently Added to Library'}
                 />
+            ) : null}
+            {!recentEps ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : (
+                <DropdownDisplay
+                    podcast={true}
+                    object={recentEps}
+                    sliceNumber={sliceNumber}
+                />
             )}
-            {recommendations &&
+            {loadingRecommendations ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : recommendations ? (
                 recommendations.map((reco, index) => (
                     <RecommendationDisplay
                         key={index}
                         reco={reco}
                         sliceNumber={sliceNumber}
                     />
-                ))}
+                ))
+            ) : null}
         </div>
     )
 }
