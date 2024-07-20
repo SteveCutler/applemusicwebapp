@@ -72,6 +72,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     }))
 
     const [isHovered, setIsHovered] = useState(false)
+    const [loading, setLoading] = useState(true)
     const [artworkUrl, setArtworkUrl] = useState<string | null>(null)
     const navigate = useNavigate()
 

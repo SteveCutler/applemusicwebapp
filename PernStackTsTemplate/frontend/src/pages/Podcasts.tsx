@@ -105,6 +105,11 @@ const Podcasts = () => {
     const [loadingSubs, setLoadingSubs] = useState(true)
     const [loadingRecent, setLoadingRecent] = useState(true)
     const [loadingProgress, setLoadingProgress] = useState(true)
+    const [searching, setSearching] = useState(false)
+    const [searchTerm, setSearchTerm] = useState<string | null>(null)
+    const [searchResults, setSearchResults] = useState<podcastInfo[] | null>(
+        null
+    )
 
     const isMedium = useMediaQuery({ query: '(min-width: 768px)' })
     const isLarge = useMediaQuery({ query: '(min-width: 1024px)' })
@@ -149,6 +154,67 @@ const Podcasts = () => {
             return '<1h'
         }
     }
+
+    useEffect(() => {
+        const delayDebounceFn = setTimeout(async () => {
+            if (searchTerm) {
+                try {
+                    // const term = searchTerm
+
+                    const podcastResponse = await fetch(
+                        'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/search',
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                term: searchTerm,
+                            }),
+                            credentials: 'include',
+                        }
+                    )
+                    const podcastData = await podcastResponse.json()
+
+                    const podcasts: podcastInfo[] = podcastData.data.feeds
+                    // const data = await podcastResponse.data
+                    console.log('podcast response', podcasts)
+                    if (podcasts.length == 0) {
+                        setSearchResults(null)
+                        setSearching(false)
+                    } else {
+                        const filteredPodcast = podcasts.filter(
+                            podcast =>
+                                // podcast.priority > 0 &&
+                                // podcast.dead == 0 &&
+                                podcast.parseErrors == 0 &&
+                                podcast.locked == 0 &&
+                                podcast.crawlErrors == 0 &&
+                                podcast.episodeCount >= 1
+                        )
+
+                        const sortedFilteredPodcasts = filteredPodcast.sort(
+                            (a, b) => b.priority - a.priority
+                        )
+
+                        setSearching(false)
+                        setSearchResults(sortedFilteredPodcasts)
+                    }
+
+                    // console.log('search data:', searchResults)
+                } catch (error: any) {
+                    setSearching(false)
+                    console.error(error)
+                }
+            }
+        }, 300) // 500ms debounce
+        if (searchTerm === '') {
+            setSearchResults(null)
+            setSearching(false)
+        }
+
+        return () => clearTimeout(delayDebounceFn)
+    }, [searchTerm])
 
     useEffect(() => {
         const getRecentEps = async () => {
@@ -270,8 +336,45 @@ const Podcasts = () => {
         }
     }, [podSubs])
 
+    const onChange = (e: any) => {
+        setSearchTerm(e.target.value)
+        setSearching(true)
+    }
+
     return (
         <div className={`flex flex-col`}>
+            <form className="m-3 p-3 w-full" action="">
+                <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={e => onChange(e)}
+                    placeholder="Search for podcasts..."
+                    className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-3/4' : 'w-1/2'}  text-slate-600 bg-white`}
+                />
+            </form>
+            {searchTerm && searching ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : searchTerm && searchResults ? (
+                <div className={`flex flex-wrap justify-center w-full gap-1`}>
+                    <DropdownDisplay
+                        object={searchResults}
+                        podcastShow={true}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={'Search Results'}
+                    />
+                </div>
+            ) : (
+                searchTerm &&
+                !searching &&
+                !searchResults && (
+                    <div
+                        className={`flex w-11/12 justify-center text-xl italic text-black font-bold py-20  gap-1`}
+                    >
+                        No results for that search!
+                    </div>
+                )
+            )}
             {podSubs && podSubs.length == 0 && (
                 <>
                     <div className="text-3xl font-bold text-black pb-7">
@@ -279,7 +382,7 @@ const Podcasts = () => {
                     </div>
                     <div className="bg-blue-500 text-white text-md font-semibold p-5 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
                         <div>
-                            Use the search page to find and subscribe to
+                            Use the search function to find and subscribe to
                             podcasts{' '}
                         </div>
                         <div>- or -</div>

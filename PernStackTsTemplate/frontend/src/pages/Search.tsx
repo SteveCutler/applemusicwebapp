@@ -11,44 +11,7 @@ import CryptoJS from 'crypto-js'
 import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
 import { useMediaQuery } from 'react-responsive'
 import DropdownDisplay from '../components/Apple/DropdownDisplay'
-
-type podcastInfo = {
-    artwork: string
-    author: string
-    categories: {
-        [key: number]: string
-    }
-    contentType: string
-    crawlErrors: number
-    dead: number
-    description: string
-    episodeCount: number
-    explicit: boolean
-    generator: string
-    id: number
-    image: string
-    imageUrlHash: number
-    inPollingQueue: number
-    itunesId: number
-    language: string
-    lastCrawlTime: number
-    lastGoodHttpStatusTime: number
-    lastHttpStatus: number
-    lastParseTime: number
-    lastUpdateTime: number
-    link: string
-    locked: number
-    medium: string
-    newestItemPubdate: number
-    originalUrl: string
-    ownerName: string
-    parseErrors: number
-    podcastGuid: string
-    priority: number
-    title: string
-    type: number
-    url: string
-}
+import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
 
 type Artist = {
     attributes: {
@@ -102,6 +65,7 @@ const Search = () => {
     const [searchFilters, setSearchFilters] = useState<Array<string>>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [searching, setSearching] = useState(false)
     const inputRef = useRef<HTMLInputElement>(null)
 
     const onChange = (e: any) => {
@@ -158,7 +122,7 @@ const Search = () => {
 
         const delayDebounceFn = setTimeout(async () => {
             if (searchTerm && musicKitInstance) {
-                setLoading(true)
+                setSearching(true)
 
                 try {
                     // const term = searchTerm
@@ -174,52 +138,18 @@ const Search = () => {
                     )
                     const musicData = await response.data.results
 
-                    const podcastResponse = await fetch(
-                        'https://mus-backend-b262ef3b1b65.herokuapp.com/api/podcast/search',
-                        {
-                            method: 'POST',
-                            headers: {
-                                'Content-type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                term: searchTerm,
-                            }),
-                            credentials: 'include',
-                        }
-                    )
-                    const podcastData = await podcastResponse.json()
-
-                    const podcasts: podcastInfo[] = podcastData.data.feeds
-                    // const data = await podcastResponse.data
-                    console.log('podcast response', podcasts)
-
-                    const filteredPodcast = podcasts.filter(
-                        podcast =>
-                            // podcast.priority > 0 &&
-                            // podcast.dead == 0 &&
-                            podcast.parseErrors == 0 &&
-                            podcast.locked == 0 &&
-                            podcast.crawlErrors == 0 &&
-                            podcast.episodeCount >= 1
-                    )
-
-                    const sortedFilteredPodcasts = filteredPodcast.sort(
-                        (a, b) => b.priority - a.priority
-                    )
-
                     setSearchResults({
                         ...musicData,
-                        podcasts: { data: sortedFilteredPodcasts },
                     })
+                    setSearching(false)
                     // console.log('search data:', searchResults)
                 } catch (error: any) {
                     console.error(error)
+                    setSearching(false)
                     setError(error)
-                } finally {
-                    setLoading(false)
                 }
             }
-        }, 250) // 500ms debounce
+        }, 200) // 500ms debounce
         if (searchTerm === '') {
             setSearchResults({})
         }
@@ -242,7 +172,7 @@ const Search = () => {
                     />
                 </form>
                 <div className="gap-1 flex h-fit pe-5 ">
-                    <button
+                    {/* <button
                         className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('podcasts') ? 'bg-blue-400' : ''}`}
                         onClick={e => {
                             e.preventDefault()
@@ -259,7 +189,7 @@ const Search = () => {
                         }}
                     >
                         Podcasts
-                    </button>
+                    </button> */}
                     <button
                         className={` border-2 border-white  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full ${searchFilters.includes('artists') ? 'bg-blue-400' : ''}`}
                         onClick={e => {
@@ -313,8 +243,11 @@ const Search = () => {
                 </div>
             </div>
             {/*  */}
-            <div className="flex flex-wrap w-full justify-center mx-3 px-3">
-                <div
+            {searching ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : (
+                <div className="flex flex-wrap w-full justify-center mx-3 px-3">
+                    {/* <div
                     className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
                 >
                     {searchResults.podcasts &&
@@ -329,49 +262,50 @@ const Search = () => {
                                 title={'Podcasts'}
                             />
                         )}
-                </div>
+                </div> */}
 
-                <div
-                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
-                >
-                    {searchResults.artists &&
-                        (searchFilters.length == 0 ||
-                            searchFilters.includes('artists')) && (
-                            <DropdownDisplay
-                                object={searchResults.artists.data}
-                                sliceNumber={sliceNumber}
-                                noTitle={true}
-                                title={'Artists'}
-                            />
-                        )}
+                    <div
+                        className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                    >
+                        {searchResults.artists &&
+                            (searchFilters.length == 0 ||
+                                searchFilters.includes('artists')) && (
+                                <DropdownDisplay
+                                    object={searchResults.artists.data}
+                                    sliceNumber={sliceNumber}
+                                    noTitle={true}
+                                    title={'Artists'}
+                                />
+                            )}
+                    </div>
+                    <div className={`flex-col w-full  mx-3 mb-4 px-3`}>
+                        {searchResults.albums &&
+                            (searchFilters.length == 0 ||
+                                searchFilters.includes('albums')) && (
+                                <DropdownDisplay
+                                    object={searchResults.albums.data}
+                                    sliceNumber={sliceNumber}
+                                    noTitle={true}
+                                    title={'Albums'}
+                                />
+                            )}
+                    </div>
+                    <div
+                        className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
+                    >
+                        {searchResults.songs &&
+                            (searchFilters.length == 0 ||
+                                searchFilters.includes('songs')) && (
+                                <DropdownDisplay
+                                    object={searchResults.songs.data}
+                                    sliceNumber={sliceNumber}
+                                    noTitle={true}
+                                    title={'Songs'}
+                                />
+                            )}
+                    </div>
                 </div>
-                <div className={`flex-col w-full  mx-3 mb-4 px-3`}>
-                    {searchResults.albums &&
-                        (searchFilters.length == 0 ||
-                            searchFilters.includes('albums')) && (
-                            <DropdownDisplay
-                                object={searchResults.albums.data}
-                                sliceNumber={sliceNumber}
-                                noTitle={true}
-                                title={'Albums'}
-                            />
-                        )}
-                </div>
-                <div
-                    className={`flex-col w-full ${searchFilters.length < 2 ? '' : '2xl:w-5/12'} mx-3 mb-4 px-3`}
-                >
-                    {searchResults.songs &&
-                        (searchFilters.length == 0 ||
-                            searchFilters.includes('songs')) && (
-                            <DropdownDisplay
-                                object={searchResults.songs.data}
-                                sliceNumber={sliceNumber}
-                                noTitle={true}
-                                title={'Songs'}
-                            />
-                        )}
-                </div>
-            </div>
+            )}
         </div>
     )
 }

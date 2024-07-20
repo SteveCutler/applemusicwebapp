@@ -247,7 +247,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
     const [expand, setExpand] = useState(false)
 
     return (
-        <div className="">
+        <div className="w-full ">
             {podcast ? (
                 <div
                     className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
@@ -289,9 +289,9 @@ const DropdownDisplay: React.FC<recoProps> = ({
                 )
             )}
             {object && (
-                <div className="flex flex-col mb-10  rounded-xl w-fit">
+                <div className="flex flex-col mb-10  rounded-xl w-full">
                     {podcastShow ? (
-                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                        <div className=" flex flex-wrap px-2 justify-center w-full gap-y-10 mx-auto gap-1">
                             {object
                                 // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)
@@ -299,7 +299,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                     <PodcastItem
                                         key={index}
                                         podcast={item}
-                                        width={` ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
+                                        width={` w-96 ${queueToggle ? (shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12') : shrink ? 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12 '} `}
                                     />
                                 ))}
                         </div>

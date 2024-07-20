@@ -85,6 +85,7 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
     // const [playlistData, setPlaylistData] = useState<Song[]>([])
 
     const [isHovered, setIsHovered] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     // console.log('albumArtUrl: ', albumArtUrl)
     const navigate = useNavigate()
@@ -102,13 +103,24 @@ const PodcastItem: React.FC<podcastProp> = ({ podcast, width, sub }) => {
             title={`${podcast.title}`}
         >
             <div className="relative z-1 w-full h-fit shadow-lg">
-                {sub ? (
-                    <img src={podcast.image} style={{ width: '600px' }} />
-                ) : podcast.artwork ? (
-                    <img src={podcast.artwork} style={{ width: '600px' }} />
-                ) : (
-                    <img src={defaultPlaylistArtwork} />
-                )}
+                {loading ? (
+                    <div className="w-full h-full flex items-center justify-center">
+                        <img
+                            src={defaultPlaylistArtwork}
+                            className="animation-pulse"
+                        />
+                        {/* Replace with a loader if you have one */}
+                    </div>
+                ) : null}
+                <img
+                    src={
+                        podcast.image ||
+                        podcast.artwork ||
+                        defaultPlaylistArtwork
+                    }
+                    onLoad={() => setLoading(false)}
+                    style={{ display: loading ? 'none' : 'block' }}
+                />
 
                 <div
                     className={`transform p-1 absolute bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
