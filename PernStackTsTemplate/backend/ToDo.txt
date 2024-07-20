@@ -13,11 +13,14 @@ itunes library api only works in desktop app context - nevermind.
 -add route to add private podcast rss feed to subscriptions
 -investigate if theres a way to add podcast recommendations
 -using start and the hardware playback buttons to control playback
--library albums artwork not updating properly when filtering
-    >add sorting functionality
+-add sorting functionality to library? - sort by albumName, artistName etc? list view?
 -add feature that transitions between night and dark mode gradually over time based on timezone
-
+-search page needs to be seriously optimized
+-library page needs work especially rows. should I try to emulate old itunes display?
+    >sorting options for album title, artist name, genre, etc
 -fix sizing of single objects on search page
+-change endpoint for most recent podcasts to use the podcastapi recent episodes endpoint
+-figure out whats going on with storefront code generation - how to create and save it automatically?
 
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
 
@@ -31,6 +34,8 @@ add different display options for library (artist, album, song, genre?)
 -move music kit calls to backend?
 -redesign play/options buttons
 -add favourites functionality
+-add account email verification? password changing mechanics
+-handle auth data
 
 
 

@@ -364,54 +364,6 @@ const AppleDashboard = () => {
         }
     }
 
-    const fetchMostRecentEp = async (id: string, title: string) => {
-        try {
-            const headerTime = Math.floor(Date.now() / 1000)
-            const key = import.meta.env.VITE_PODCASTINDEX_KEY
-            const secret = import.meta.env.VITE_PODCASTINDEX_SECRET
-
-            // Ensure concatenation is correct
-            const hashInput = key + secret + headerTime
-            const hash = CryptoJS.SHA1(hashInput).toString(CryptoJS.enc.Hex)
-
-            const episodesResponse = await axios.get(
-                `https://api.podcastindex.org/api/1.0/episodes/byfeedid?id=${id}&pretty`,
-                {
-                    headers: {
-                        'User-Agent': 'AppleMusicDashboard/1.0',
-                        'X-Auth-Key': key,
-                        'X-Auth-Date': headerTime,
-                        Authorization: hash,
-                    },
-                    params: {
-                        fulltext: true,
-                        max: 10,
-                    },
-                }
-            )
-            console.log('api test', episodesResponse)
-            const episode: podcastEpisode = episodesResponse.data.items[0]
-
-            const time = isWithinLastWeek(episode.datePublished)
-            const oneWeekInSeconds = 604800
-            if (time < oneWeekInSeconds) {
-                const newEpisode = {
-                    ...episode,
-                    released: getTimeDifference(episode.datePublished),
-                    timeSinceRelease: time,
-                    showTitle: title,
-                }
-                return newEpisode
-            } else {
-                return null
-            }
-
-            // return episodes[0]
-        } catch (error: any) {
-            console.error('podcast fetch error', error)
-        }
-    }
-
     useEffect(() => {
         const fetchRecommendations = async () => {
             if (musicKitInstance) {
