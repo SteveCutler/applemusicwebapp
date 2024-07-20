@@ -51,9 +51,13 @@ const Login = () => {
                 <img
                     src={MusLogo}
                     width="150"
-                    className="flex select-none  mx-auto justify-center"
+                    className="flex image-select-none  mx-auto justify-center"
+                    draggable="false"
                 />
-                <div className="w-full rounded-lg   px-6 shadow-md   ">
+                <div className="w-full rounded-lg   px-6  ">
+                    <div className="text-white text-lg select-none font-semibold italic flex justify-center w-full">
+                        APPLE MUSIC + PODCASTS
+                    </div>
                     {/* <h1 className="text-3xl font-bold flex  justify-center  items-center text-center text-black ">
                     <span className="text-blue-500"> Sign Up</span>{' '}
                     <img src={spiralFavicon} style={{ width: '40px' }} />
@@ -154,9 +158,13 @@ const Login = () => {
                 <img
                     src={MusLogo}
                     width="150"
-                    className="flex select-none  mx-auto justify-center"
+                    className="flex image-select-none  mx-auto justify-center"
+                    draggable="false"
                 />
                 <div className="w-full px-6 rounded-lg text-black  bg-clip-padding ">
+                    <div className="text-white text-lg select-none font-semibold italic flex justify-center w-full">
+                        APPLE MUSIC + PODCASTS
+                    </div>
                     {/* <h1 className="text-3xl font-bold flex justify-center items-center text-center text-black">
                     <span className="text-blue-500 select-none">Login</span>
                     <img src={spiralFavicon} style={{ width: '40px' }} />

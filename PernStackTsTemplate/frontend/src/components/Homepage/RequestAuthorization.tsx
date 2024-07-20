@@ -2,6 +2,7 @@ import React from 'react'
 import { useStore } from '../../store/store'
 import saveToken from '../Apple/saveToken'
 import toast from 'react-hot-toast'
+import { FaApple } from 'react-icons/fa'
 const AuthorizeButton = () => {
     const {
         authorizeMusicKit,
@@ -25,8 +26,14 @@ const AuthorizeButton = () => {
         }
     }
 
+    const style = { fontSize: '1.3rem', transform: 'translateY(-2px)' }
+
     return (
-        <button onClick={handleAuthorization} className="btn btn-primary">
+        <button
+            onClick={handleAuthorization}
+            className="rounded-full bg-white flex active:scale-95 items-center justify-center gap-1 text-black p-2 px-4 font-semibold hover:shadow-lg text-sm w-56"
+        >
+            <FaApple style={style} />
             Authorize Apple Music
         </button>
     )

@@ -616,14 +616,16 @@ const AppleDashboard = () => {
                     title={'Recently Added to Library'}
                 />
             ) : null}
-            {!recentEps ? (
+            {!recentEps && loadingRecent ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : (
+            ) : recentEps ? (
                 <DropdownDisplay
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
                 />
+            ) : (
+                !recentEps && !loadingRecent && null
             )}
             {loadingRecommendations ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />

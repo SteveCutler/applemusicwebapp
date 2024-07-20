@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../store/store'
 import ImportPodcasts from '../components/Homepage/ImportPodcasts'
 import useLogout from '../hooks/auth/useLogout'
+import { FaRegArrowAltCircleDown } from 'react-icons/fa'
 
 const Settings = () => {
     const {
@@ -52,6 +53,8 @@ const Settings = () => {
     }
     const { logout } = useLogout()
 
+    const style = { fontSize: '2rem', color: 'lightgreen' }
+
     return (
         <div
             className={`flex-col font-semibold flex w-11/12 gap-5 ${darkMode ? 'text-white' : 'text-black'} justify-start`}
@@ -92,8 +95,8 @@ const Settings = () => {
 
             <div className="text-xl font-bold italic">Podcast Import</div>
             <div className="border-2 max-w-96 bg-blue-500 text-white border-white rounded-lg p-5">
-                Use this tool to export a list of your podcast subscriptions and
-                upload it below
+                You can use this tool to export your podcast subscriptions from
+                Apple Podcasts and upload it below
                 <a
                     href="https://www.icloud.com/shortcuts/44009520675540d7945263e088f6e915"
                     target="_blank" // Optional: Opens the link in a new tab
@@ -102,6 +105,9 @@ const Settings = () => {
                 >
                     Podcast Export Tool
                 </a>
+            </div>
+            <div className="max-w-96 flex items-center justify-center">
+                <FaRegArrowAltCircleDown style={style} />
             </div>
             <div className="flex justify-start w-fit">
                 <ImportPodcasts />

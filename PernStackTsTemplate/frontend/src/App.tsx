@@ -88,12 +88,12 @@ function App() {
             }`}
         >
             <div className="flex flex-grow ">
-                {backendToken && (
+                {backendToken && appleMusicToken && (
                     <div className="sidebar  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12 overflow-y-auto h-1/2 ">
                         <Sidebar />
                     </div>
                 )}
-                {backendToken && (
+                {backendToken && appleMusicToken && (
                     <div className="">
                         <Header />
                     </div>
@@ -115,83 +115,166 @@ function App() {
                         <Route
                             path="/signup"
                             element={
-                                backendToken ? <Navigate to="/" /> : <SignUp />
+                                backendToken && !appleMusicToken ? (
+                                    <SignUp />
+                                ) : (
+                                    <Navigate to="/" />
+                                )
                             }
                         />
                         <Route
                             path="/search/"
-                            element={backendToken ? <Search /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Search />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/new-playlist/"
-                            element={backendToken ? <NewPlaylist /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <NewPlaylist />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/artist/:id"
-                            element={backendToken ? <Artist /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Artist />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/login"
                             element={
-                                backendToken ? <Navigate to="/" /> : <Login />
+                                backendToken && appleMusicToken ? (
+                                    <Navigate to="/" />
+                                ) : (
+                                    <Login />
+                                )
                             }
                         />
                         <Route
                             path="/library"
-                            element={backendToken ? <Library /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Library />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/settings"
-                            element={backendToken ? <Settings /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Settings />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/podcasts"
-                            element={backendToken ? <Podcasts /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Podcasts />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/podcast/:id"
-                            element={backendToken ? <Podcast /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Podcast />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/podcast-episode/:id"
                             element={
-                                backendToken ? <PodcastEpisode /> : <Login />
+                                backendToken && appleMusicToken ? (
+                                    <PodcastEpisode />
+                                ) : (
+                                    <Login />
+                                )
                             }
                         />
                         <Route
                             path="/playlist-display"
                             element={
-                                backendToken ? <PlaylistDisplay /> : <Login />
+                                backendToken && appleMusicToken ? (
+                                    <PlaylistDisplay />
+                                ) : (
+                                    <Login />
+                                )
                             }
                         />
                         <Route
                             path="/favourites"
-                            element={backendToken ? <Favourites /> : <Login />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Favourites />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route path="/stacks" element={<Stacks />} />
                         <Route
                             path="/album/:albumId/:type?"
-                            element={<Album />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Album />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route
                             path="/station/:stationId/:type?"
-                            element={<Station />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Station />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                         <Route path="/song/:songId/:type?" element={<Song />} />
 
                         <Route
                             path="/playlist/:playlistId"
-                            element={<Playlist />}
+                            element={
+                                backendToken && appleMusicToken ? (
+                                    <Playlist />
+                                ) : (
+                                    <Login />
+                                )
+                            }
                         />
                     </Routes>
                 </div>
-                {queueToggle && backendToken && (
+                {queueToggle && backendToken && appleMusicToken && (
                     <div className="sidebar w-3/12 2xl:w-2/12  rounded-lg m-1 h-fit bg-black">
                         <QueueDisplay />
                     </div>
                 )}
             </div>
             {backendToken &&
+                appleMusicToken &&
                 (isPlayingPodcast || musicKitInstance?.playbackState !== 0) && (
                     <div className="flex-shrink-0 z-20 sticky  flex bottom-0">
                         <Footer />

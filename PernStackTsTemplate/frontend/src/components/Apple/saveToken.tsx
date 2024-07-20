@@ -30,8 +30,8 @@ export const saveToken = async (userToken: string, userId: String | null) => {
 
         toast.success('Apple auth saved succesfully')
     } catch (error) {
-        console.error(error)
-        toast.error('Issue saving token')
+        // console.error(error)
+        // toast.error('Issue saving token')
     }
 }
 export default saveToken
