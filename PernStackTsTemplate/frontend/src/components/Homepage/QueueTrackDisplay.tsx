@@ -1,9 +1,10 @@
 import React from 'react'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import OptionsModal from './OptionsModal'
+import { Navigate } from 'react-router-dom'
 
 interface playlistProps {
     song: Song
@@ -40,6 +41,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         isPlaying,
         currentSongId,
         playlist,
+        authorizeMusicKit,
 
         switchTrack,
         setPlaylist,
@@ -48,6 +50,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         musicKitInstance,
     } = useStore(state => ({
         isPlaying: state.isPlaying,
+        authorizeMusicKit: state.authorizeMusicKit,
         currentSongId: state.currentSongId,
         musicKitInstance: state.musicKitInstance,
         setPlaylist: state.setPlaylist,
@@ -120,6 +123,8 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         }
     }
 
+    const navigate = useNavigate()
+
     const constructImageUrl = (url: string, size: number) => {
         return url
             .replace('{w}', size.toString())
@@ -127,31 +132,108 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
     }
 
     const style = { fontSize: '1.5rem', color: 'dodgerblue' }
+
+    const handleClick = async () => {
+        if (!musicKitInstance) {
+            await authorizeMusicKit()
+            return
+        }
+        if (!musicKitInstance || !song.id) {
+            return
+        }
+
+        console.log(
+            'musicKitInstance.storefrontId',
+            musicKitInstance.storefrontId
+        )
+
+        try {
+            // console.log('music kit instance and album id')
+            // console.log('music kit instance: ', musicKitInstance)
+            console.log('songId: ', song.id)
+
+            if (song.id.startsWith('i')) {
+                try {
+                    //track data api call
+                    const res = await musicKitInstance.api.music(
+                        `/v1/me/library/songs/${song.id}/catalog`
+                    )
+                    // track album data api call
+
+                    const catSongId = await res.data.data[0].id
+
+                    const resAlbum = await musicKitInstance.api.music(
+                        `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/albums`
+                    )
+                    // const resArtist = await musicKitInstance.api.music(
+                    //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/artists`
+                    // )
+
+                    // const resAlbum = await musicKitInstance.api.music(
+                    //     `/v1/me/library/songs/${songId}/albums`
+                    // )
+                    // const resArtist = await musicKitInstance.api.music(
+                    //     `/v1/me/library/songs/${songId}/artists`
+                    // )
+
+                    // console.log('track album: ', await resAlbum)
+
+                    const trackAlbumData = await resAlbum.data.data[0]
+                    // const trackArtistData = await resArtist.data.data[0]
+
+                    console.log('track album data: ', trackAlbumData)
+                    // console.log('track artist data: ', trackArtistData)
+
+                    const data: Song = await res.data.data[0]
+                    console.log(res)
+                    navigate(`/album/${trackAlbumData.id}`)
+
+                    // return { data, trackAlbumData }
+                    // setTrackAlbumData(trackAlbumData)
+                } catch (error: any) {
+                    console.error(error)
+                }
+            } else {
+                try {
+                    console.log('fetching song data')
+                    // const queryParameters = { l: 'en-us' }
+                    // const res = await musicKitInstance.api.music(
+                    //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${songId}`,
+
+                    //     queryParameters
+                    // )
+
+                    const resAlbum = await musicKitInstance.api.music(
+                        `/v1/catalog/${musicKitInstance.musicKitInstance.storefrontIdId}/songs/${song.id}/albums`
+                    )
+                    // const resArtist = await musicKitInstance.api.music(
+                    //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${song.id}/artists`
+                    // )
+
+                    // console.log('track album: ', await resAlbum)
+                    const trackAlbumData = await resAlbum.data.data[0]
+                    // const trackArtistData = await resArtist.data.data[0]
+                    navigate(`/album/${trackAlbumData.id}`)
+                    // const data: Song = await res.data.data[0]
+
+                    // console.log('song data: ', data)
+                    // return { data, trackAlbumData }
+                    // setTrackAlbumData(trackAlbumData)
+
+                    // setSongData(data)
+                } catch (error: any) {
+                    console.error(error)
+                }
+            }
+        } catch (error: any) {
+            console.error(error)
+        }
+    }
     // console.log('song sending: ', makeSong(song))
 
     return (
-        <Link
-            to={`/song/${song.id}`}
-            state={{
-                song: {
-                    id: song.id,
-                    href: song.attributes.url,
-                    type: 'songs',
-                    attributes: {
-                        id: song.id,
-                        name: song.attributes.name,
-                        trackNumber: song.attributes.trackNumber,
-                        artistName: song.attributes.artistName,
-                        albumName: song.attributes.albumName,
-                        durationInMillis: song.attributes.durationInMillis,
-
-                        artwork: {
-                            bgColor: song.attributes.artwork?.bgColor,
-                            url: song.attributes.artwork?.url,
-                        },
-                    },
-                },
-            }}
+        <div
+            onClick={handleClick}
             className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
         >
             {song.attributes.artwork?.url ? (
@@ -194,7 +276,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                 className="transform hover:scale-110 items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
                 onClick={async e => {
                     e.preventDefault()
-                    e.stopPropagation() // Prevents the link's default behavior
+                    e.stopPropagation() // Prevents the d's default behavior
                     // await FetchAlbumData(albumId)
                     // handlePlayPause()
 
@@ -208,7 +290,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     <FaCirclePlay style={style} />
                 )}
             </div>
-        </Link>
+        </div>
     )
 }
 

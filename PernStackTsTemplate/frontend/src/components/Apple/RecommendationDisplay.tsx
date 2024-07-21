@@ -92,14 +92,12 @@ const RecommendationDisplay: React.FC<recoProps> = ({
 }) => {
     const style = { fontSize: '1.5rem' }
 
-    const { queueToggle, darkMode, musicKitInstance, storefront } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            storefront: state.storefront,
-            darkMode: state.darkMode,
-            queueToggle: state.queueToggle,
-        })
-    )
+    const { queueToggle, darkMode, musicKitInstance } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+
+        darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
+    }))
 
     const constructImageUrl = (url: String, size: Number) => {
         return url
@@ -135,7 +133,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                         try {
                             const queryParameters = { l: 'en-us' }
                             const res = await musicKitInstance?.api.music(
-                                `/v1/catalog/${storefront}/albums/${reco.attributes.title.contentIds[0]}`,
+                                `/v1/catalog/${musicKitInstance.storefrontId}/albums/${reco.attributes.title.contentIds[0]}`,
 
                                 queryParameters
                             )

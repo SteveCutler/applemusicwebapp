@@ -43,13 +43,13 @@ const FetchSongData = (songId: string | undefined) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         songData,
         setSongData,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
-        storefront: state.storefront,
+
         songData: state.songData,
         setSongData: state.setSongData,
     }))
@@ -82,10 +82,10 @@ const FetchSongData = (songId: string | undefined) => {
                         const catSongId = await res.data.data[0].id
 
                         const resAlbum = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/songs/${catSongId}/albums`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/albums`
                         )
                         const resArtist = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/songs/${catSongId}/artists`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/artists`
                         )
 
                         // const resAlbum = await musicKitInstance.api.music(
@@ -120,16 +120,16 @@ const FetchSongData = (songId: string | undefined) => {
                         console.log('fetching song data')
                         // const queryParameters = { l: 'en-us' }
                         // const res = await musicKitInstance.api.music(
-                        //     `/v1/catalog/${storefront}/songs/${songId}`,
+                        //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${songId}`,
 
                         //     queryParameters
                         // )
 
                         const resAlbum = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/songs/${songId}/albums`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${songId}/albums`
                         )
                         const resArtist = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/songs/${songId}/artists`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${songId}/artists`
                         )
 
                         // console.log('track album: ', await resAlbum)

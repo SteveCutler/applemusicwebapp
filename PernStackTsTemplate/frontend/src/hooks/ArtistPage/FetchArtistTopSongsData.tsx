@@ -146,15 +146,13 @@ const ArtistTopSongs = ({ id }) => {
     const [topSongsData, setTopSongsData] = useState<Array<Song> | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            authorizeMusicKit: state.authorizeMusicKit,
-            storefront: state.storefront,
-            albumData: state.albumData,
-            setAlbumData: state.setAlbumData,
-        })
-    )
+    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+        authorizeMusicKit: state.authorizeMusicKit,
+
+        albumData: state.albumData,
+        setAlbumData: state.setAlbumData,
+    }))
 
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
@@ -189,7 +187,7 @@ const ArtistTopSongs = ({ id }) => {
                 } else {
                     try {
                         const topSongs = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/artists/${id}/view/top-songs`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/top-songs`
                         )
 
                         const topSongsData: Array<Song> =

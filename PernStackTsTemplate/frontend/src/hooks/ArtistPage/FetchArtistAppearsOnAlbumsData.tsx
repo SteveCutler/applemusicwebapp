@@ -153,12 +153,12 @@ const ArtistAppearsOnAlbums = ({ id }) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         darkMode,
         queueToggle,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
-        storefront: state.storefront,
+
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -220,7 +220,7 @@ const ArtistAppearsOnAlbums = ({ id }) => {
                     try {
                         const appearsOnAlbums =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/${storefront}/artists/${id}/view/appears-on-albums`
+                                `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/appears-on-albums`
                             )
 
                         const appearsOnAlbumsData: Array<AlbumData> =

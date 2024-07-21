@@ -75,7 +75,7 @@ function Footer() {
         podcastEpTitle,
         currentTime,
         podcastArtUrl,
-        storefront,
+
         appleMusicToken,
         backendToken,
         setFavouriteSongs,
@@ -83,7 +83,7 @@ function Footer() {
     } = useStore(state => ({
         podcastProgress: state.podcastProgress,
         podcastArtist: state.podcastArtist,
-        storefront: state.storefront,
+
         setFavouriteSongs: state.setFavouriteSongs,
         favouriteSongs: state.favouriteSongs,
         appleMusicToken: state.appleMusicToken,
@@ -162,10 +162,10 @@ function Footer() {
                     const catSongId = await res.data.data[0].id
 
                     const resAlbum = await musicKitInstance?.api.music(
-                        `/v1/catalog/${storefront}/songs/${catSongId}/albums`
+                        `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/albums`
                     )
                     // const resArtist = await musicKitInstance?.api.music(
-                    //     `/v1/catalog/${storefront}/songs/${catSongId}/artists`
+                    //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/artists`
                     // )
 
                     // const trackArtistData = await resArtist.data.data[0]
@@ -204,10 +204,10 @@ function Footer() {
             } else {
                 try {
                     const resAlbum = await musicKitInstance?.api.music(
-                        `/v1/catalog/${storefront}/songs/${musicKitInstance?.nowPlayingItem.id}/albums`
+                        `/v1/catalog/${musicKitInstance.storefrontId}/songs/${musicKitInstance?.nowPlayingItem.id}/albums`
                     )
                     // const resArtist = await musicKitInstance?.api.music(
-                    //     `/v1/catalog/${storefront}/songs/${musicKitInstance?.nowPlayingItem.id}/artists`
+                    //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${musicKitInstance?.nowPlayingItem.id}/artists`
                     // )
 
                     const trackAlbumData = await resAlbum.data.data[0]
@@ -267,10 +267,10 @@ function Footer() {
                         const catSongId = await res.data.data[0].id
 
                         // const resAlbum = await musicKitInstance?.api.music(
-                        //     `/v1/catalog/${storefront}/songs/${catSongId}/albums`
+                        //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/albums`
                         // )
                         const resArtist = await musicKitInstance?.api.music(
-                            `/v1/catalog/${storefront}/songs/${catSongId}/artists`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${catSongId}/artists`
                         )
 
                         const trackArtistData = await resArtist.data.data[0]
@@ -304,10 +304,10 @@ function Footer() {
                 } else {
                     try {
                         const resAlbum = await musicKitInstance?.api.music(
-                            `/v1/catalog/${storefront}/songs/${musicKitInstance?.nowPlayingItem.id}/albums`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/songs/${musicKitInstance?.nowPlayingItem.id}/albums`
                         )
                         // const resArtist = await musicKitInstance?.api.music(
-                        //     `/v1/catalog/${storefront}/songs/${musicKitInstance?.nowPlayingItem.id}/artists`
+                        //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${musicKitInstance?.nowPlayingItem.id}/artists`
                         // )
 
                         // const trackAlbumData = await resAlbum.data.data[0]
@@ -341,7 +341,7 @@ function Footer() {
 
             // try {
             //     const artistRes = await musicKitInstance.api.music(
-            //         `/v1/catalog/${storefront}/albums/${musicKitInstance?.nowPlayingItem.container.id}/artists`
+            //         `/v1/catalog/${musicKitInstance.storefrontId}/albums/${musicKitInstance?.nowPlayingItem.container.id}/artists`
             //     )
 
             //     const artistId = await artistRes.data.data[0].id
@@ -542,7 +542,7 @@ function Footer() {
                         try {
                             const queryParameters = { l: 'en-us' }
                             const res = await musicKitInstance.api.music(
-                                `/v1/catalog//${storefront}/albums/${song.id}/tracks`,
+                                `/v1/catalog//${musicKitInstance.storefrontId}/albums/${song.id}/tracks`,
 
                                 queryParameters
                             )

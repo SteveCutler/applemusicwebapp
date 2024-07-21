@@ -153,13 +153,13 @@ const ArtistFeaturedPlaylist = ({ id }) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         queueToggle,
         darkMode,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
         queueToggle: state.queueToggle,
-        storefront: state.storefront,
+
         darkMode: state.darkMode,
         authorizeMusicKit: state.authorizeMusicKit,
         albumData: state.albumData,
@@ -220,7 +220,7 @@ const ArtistFeaturedPlaylist = ({ id }) => {
                     try {
                         const featuredPlaylists =
                             await musicKitInstance.api.music(
-                                `/v1/catalog/${storefront}/artists/${id}/view/featured-playlists`
+                                `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/featured-playlists`
                             )
 
                         const featuredPlaylistsData: Array<playlist> =

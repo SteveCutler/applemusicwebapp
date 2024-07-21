@@ -85,11 +85,11 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
         playSong,
         pause,
         musicKitInstance,
-        storefront,
+
         authorizeMusicKit,
     } = useStore(state => ({
         setTrackData: state.setTrackData,
-        storefront: state.storefront,
+
         trackData: state.trackData,
         isPlaying: state.isPlaying,
         musicKitInstance: state.musicKitInstance,
@@ -149,7 +149,7 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//${storefront}/albums/${albumItem.id}/tracks`,
+                        `/v1/catalog//${musicKitInstance.storefrontId}/albums/${albumItem.id}/tracks`,
 
                         queryParameters
                     )

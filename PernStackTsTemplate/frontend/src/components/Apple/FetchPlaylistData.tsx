@@ -51,7 +51,6 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
     // const musicKitLoaded = useMusicKit()
     const musicKitInstance = useStore(state => state.musicKitInstance)
     const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
-    const storefront = useStore(state => state.storefront)
 
     useEffect(() => {
         const fetchPlaylistData = async () => {
@@ -72,12 +71,12 @@ const FetchPlaylistData = (playlistId: string | undefined) => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const trackRes = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/playlists/${playlistId}/tracks`,
+                            `/v1/catalog/${musicKitInstance.storefrontId}/playlists/${playlistId}/tracks`,
 
                             queryParameters
                         )
                         const playlistRes = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/playlists/${playlistId}/`,
+                            `/v1/catalog/${musicKitInstance.storefrontId}/playlists/${playlistId}/`,
 
                             queryParameters
                         )

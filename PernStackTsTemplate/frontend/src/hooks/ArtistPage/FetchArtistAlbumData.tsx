@@ -163,12 +163,12 @@ const ArtistAlbumData = ({ id }) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         queueToggle,
         darkMode,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
-        storefront: state.storefront,
+
         queueToggle: state.queueToggle,
         darkMode: state.darkMode,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -232,7 +232,7 @@ const ArtistAlbumData = ({ id }) => {
                 } else {
                     try {
                         const albumRes = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/artists/${id}/albums`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/albums`
                         )
 
                         const albumData: Array<AlbumType> =

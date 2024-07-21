@@ -85,6 +85,7 @@ interface MusickitInstance {
     api: {
         music: (endpoint: string, options?: object) => Promise<any>
     }
+    storefrontId: string
     PlayerShuffleMode: {
         off: string
         songs: string
@@ -529,7 +530,7 @@ interface State {
     podcastPlayerInit: boolean
     progressLoaded: boolean
     podcastProgress: podCompletion[] | null
-    storefront: string | null
+    storefrontId: string | null
     queueOpen: boolean
 }
 
@@ -685,7 +686,7 @@ export const useStore = create<Store>((set, get) => ({
     recentEps: null,
     progressLoaded: false,
     podcastProgress: null,
-    storefront: null,
+    storefrontId: null,
     queueOpen: false,
 
     // Actions
@@ -1504,16 +1505,6 @@ export const useStore = create<Store>((set, get) => ({
 
                 set({ musicKitInstance: music })
                 console.log('MusicKit instance: ', music)
-
-                const { musicKitInstance } = get()
-                // Example usage:
-                if (musicKitInstance) {
-                    const storefrontCookie = localStorage.getItem(
-                        'music.w5y3b689nm.itua'
-                    )
-                    set({ storefront: storefrontCookie })
-                    // console.log('storefront cookie', storefrontCookie) // This will print the value of the cookie
-                }
 
                 // if (appleMusicToken) {
                 //     music.setMusicUserToken(appleMusicToken)

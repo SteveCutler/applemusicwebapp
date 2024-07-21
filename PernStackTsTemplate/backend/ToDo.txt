@@ -20,7 +20,7 @@ itunes library api only works in desktop app context - nevermind.
     >sorting options for album title, artist name, genre, etc
 -fix sizing of single objects on search page
 -change endpoint for most recent podcasts to use the podcastapi recent episodes endpoint
--figure out whats going on with storefront code generation - how to create and save it automatically?
+-figure out whats going on with musicKitInstance.storefrontId code generation - how to create and save it automatically?
 
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
 
@@ -40,8 +40,9 @@ add different display options for library (artist, album, song, genre?)
 -auth issues:
     make sure token retrieval and saving is working as expected
     investigate why refresh is necessary after logging in
-    
+    verify email?
 
+-do more work on settings page, its a mess
 
 
 

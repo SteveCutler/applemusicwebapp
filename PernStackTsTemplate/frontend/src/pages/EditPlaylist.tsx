@@ -72,10 +72,9 @@ const EditPlaylist = () => {
         musicKitInstance,
         authorizeMusicKit,
         libraryPlaylists,
-        storefront,
     } = useStore(state => ({
         appleMusicToken: state.appleMusicToken,
-        storefront: state.storefront,
+
         fetchAppleToken: state.fetchAppleToken,
         musicKitInstance: state.musicKitInstance,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -137,7 +136,7 @@ const EditPlaylist = () => {
                     }
 
                     const response = await musicKitInstance.api.music(
-                        `/v1/catalog/${storefront}/search`,
+                        `/v1/catalog/${musicKitInstance.storefrontId}/search`,
                         queryParameters
                     )
                     // console.log(response)
@@ -249,7 +248,7 @@ const EditPlaylist = () => {
                     const catalogId = await catRes.data.data[0].id
 
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//${storefront}/albums/${catalogId}/tracks`
+                        `/v1/catalog//${musicKitInstance.storefrontId}/albums/${catalogId}/tracks`
                     )
 
                     const data = await res.data.data
@@ -262,7 +261,7 @@ const EditPlaylist = () => {
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//${storefront}/albums/${albumId}/tracks`,
+                        `/v1/catalog//${musicKitInstance.storefrontId}/albums/${albumId}/tracks`,
 
                         queryParameters
                     )

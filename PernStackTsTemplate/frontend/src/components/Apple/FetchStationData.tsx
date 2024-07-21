@@ -74,13 +74,11 @@ const FetchStationData = (stationId: string | undefined) => {
     const [stationData, setStationData] = useState<StationType | null>(null)
 
     // const musicKitLoaded = useMusicKit()
-    const { musicKitInstance, authorizeMusicKit, storefront } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            storefront: state.storefront,
-            authorizeMusicKit: state.authorizeMusicKit,
-        })
-    )
+    const { musicKitInstance, authorizeMusicKit } = useStore(state => ({
+        musicKitInstance: state.musicKitInstance,
+
+        authorizeMusicKit: state.authorizeMusicKit,
+    }))
     // const musicKitInstance = useStore(state => state.musicKitInstance)
     // const authorizeMusicKit = useStore(state => state.authorizeMusicKit)
 
@@ -102,7 +100,7 @@ const FetchStationData = (stationId: string | undefined) => {
                 if (stationId.startsWith('ra.u')) {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/stations/${stationId}`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/stations/${stationId}`
                         )
 
                         const data = await res.data.data
@@ -118,7 +116,7 @@ const FetchStationData = (stationId: string | undefined) => {
                 } else {
                     try {
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/stations/${stationId}`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/stations/${stationId}`
                         )
 
                         // console.log(res)

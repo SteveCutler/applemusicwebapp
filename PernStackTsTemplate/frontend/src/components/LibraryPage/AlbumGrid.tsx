@@ -51,12 +51,12 @@ const AlbumGrid: React.FC<AlbumProps> = ({
         playSong,
         pause,
         musicKitInstance,
-        storefront,
+
         authorizeMusicKit,
     } = useStore(state => ({
         isPlaying: state.isPlaying,
         musicKitInstance: state.musicKitInstance,
-        storefront: state.storefront,
+
         authorizeMusicKit: state.authorizeMusicKit,
         albumData: state.albumData,
         setAlbumData: state.setAlbumData,
@@ -107,7 +107,7 @@ const AlbumGrid: React.FC<AlbumProps> = ({
                 try {
                     const queryParameters = { l: 'en-us' }
                     const res = await musicKitInstance.api.music(
-                        `/v1/catalog//${storefront}/albums/${albumId}/tracks`,
+                        `/v1/catalog//${musicKitInstance.storefrontId}/albums/${albumId}/tracks`,
 
                         queryParameters
                     )

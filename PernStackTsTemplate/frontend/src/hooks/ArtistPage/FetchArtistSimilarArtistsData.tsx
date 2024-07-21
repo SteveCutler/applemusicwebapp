@@ -152,12 +152,12 @@ const ArtistSimilarArtists = ({ id }) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         darkMode,
         queueToggle,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
-        storefront: state.storefront,
+
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -217,7 +217,7 @@ const ArtistSimilarArtists = ({ id }) => {
                 } else {
                     try {
                         const similarArtists = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/artists/${id}/view/similar-artists`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/similar-artists`
                         )
 
                         const similarArtistsData: Array<Artist> =

@@ -177,10 +177,9 @@ const Album = () => {
         queueToggle,
         isPlaying,
         playlist,
-        storefront,
+
         setPlaylist,
     } = useStore(state => ({
-        storefront: state.storefront,
         setSearchTerm: state.setSearchTerm,
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
@@ -227,12 +226,12 @@ const Album = () => {
                     try {
                         const queryParameters = { l: 'en-us' }
                         const res = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/albums/${albumId}`,
+                            `/v1/catalog/${musicKitInstance.storefrontId}/albums/${albumId}`,
 
                             queryParameters
                         )
                         const artistRes = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/albums/${albumId}/artists`,
+                            `/v1/catalog/${musicKitInstance.storefrontId}/albums/${albumId}/artists`,
 
                             queryParameters
                         )

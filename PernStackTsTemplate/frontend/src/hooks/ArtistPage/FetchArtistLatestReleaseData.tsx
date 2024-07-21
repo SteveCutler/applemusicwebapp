@@ -151,12 +151,12 @@ const ArtistLatestRelease = ({ id }) => {
     const {
         musicKitInstance,
         authorizeMusicKit,
-        storefront,
+
         darkMode,
         queueToggle,
     } = useStore(state => ({
         musicKitInstance: state.musicKitInstance,
-        storefront: state.storefront,
+
         darkMode: state.darkMode,
         queueToggle: state.queueToggle,
         authorizeMusicKit: state.authorizeMusicKit,
@@ -198,7 +198,7 @@ const ArtistLatestRelease = ({ id }) => {
                 } else {
                     try {
                         const latestRelease = await musicKitInstance.api.music(
-                            `/v1/catalog/${storefront}/artists/${id}/view/latest-release`
+                            `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/latest-release`
                         )
                         console.log('latest release', latestRelease)
 
