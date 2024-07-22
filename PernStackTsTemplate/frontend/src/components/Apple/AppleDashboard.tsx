@@ -22,6 +22,7 @@ import toast from 'react-hot-toast'
 import CryptoJS from 'crypto-js'
 import GradientAnimation from '../Homepage/GradientAnimation'
 import SkeletonDropdownDisplay from './SkeletonDropdownDisplay'
+import SkeletonItem from '../Homepage/SkeletonItem'
 
 type AlbumType = {
     attributes: {
@@ -365,7 +366,7 @@ const AppleDashboard = () => {
         } else if (hours > 0) {
             return `${hours}h`
         } else {
-            return '<1h>'
+            return '< 1h'
         }
     }
 
@@ -543,7 +544,7 @@ const AppleDashboard = () => {
                     setLoadingRecentEps(false)
                 } catch (error) {
                     console.error(error)
-                    setLoadingRecentEps(false)
+                    setLoadingPodcasts(false)
                 }
             }
         }
@@ -569,7 +570,7 @@ const AppleDashboard = () => {
                 const data = await response.json()
 
                 setPodSubs(data)
-                setLoadingPodcasts(false)
+                // setLoadingPodcasts(false)
             } catch (error) {
                 console.error('Error subscribing to podcast:', error)
                 setLoadingPodcasts(false)
@@ -580,17 +581,17 @@ const AppleDashboard = () => {
         if (!podSubs) {
             getSubs()
         } else {
-            setLoadingPodcasts(false)
+            // setLoadingPodcasts(false)
         }
+
         if (!recentEps && podSubs) {
             getRecentEps()
         } else {
             setLoadingRecentEps(false)
         }
 
-        if (!podcastProgress) {
+        if (!podcastProgress && !podSubs) {
             fetchPodcastProgress()
-            setLoadingProgress(false)
         } else {
             setLoadingProgress(false)
         }
@@ -621,6 +622,7 @@ const AppleDashboard = () => {
             {loadingRecent ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             ) : (
+                !loadingRecent &&
                 recentlyAddedToLib.length >= 1 && (
                     <DropdownDisplay
                         object={recentlyAddedToLib.slice(0, 15)}
@@ -630,25 +632,34 @@ const AppleDashboard = () => {
                     />
                 )
             )}
-            {loadingPodcasts || loadingRecentEps || loadingProgress ? (
+
+            {loadingPodcasts ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : recentEps && podcastProgress && podSubs ? (
+            ) : !loadingPodcasts && recentEps && podSubs ? (
                 <DropdownDisplay
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
                 />
             ) : (
-                !loadingPodcasts &&
-                !loadingRecentEps &&
-                !loadingProgress &&
-                !podSubs &&
-                null
+                !loadingPodcasts && (!recentEps || !podSubs) && null
             )}
 
             {loadingRecommendations ? (
-                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : recommendations ? (
+                <div className=" flex w-full flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                    {Array.from({ length: sliceNumber * 2 }).map((_, index) => (
+                        <SkeletonItem
+                            key={index}
+                            width={` ${
+                                queueToggle
+                                    ? 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12'
+                                    : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-2/12'
+                            } `}
+                        />
+                    ))}
+                </div>
+            ) : // <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            recommendations ? (
                 recommendations.map((reco, index) => (
                     <RecommendationDisplay
                         key={index}

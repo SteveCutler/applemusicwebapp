@@ -35,6 +35,7 @@ add different display options for library (artist, album, song, genre?)
 -add account email verification? password changing mechanics
 -handle auth data
 -handle all the 'library albums' exceptions
+-added 'saved' podcasts?
 -auth issues:
     make sure token retrieval and saving is working as expected
     investigate why refresh is necessary after logging in

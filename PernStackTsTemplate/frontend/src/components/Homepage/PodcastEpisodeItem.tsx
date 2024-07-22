@@ -217,14 +217,14 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                 />
                 {podcast.released && (
                     <h3
-                        className={`truncate absolute bottom-3 right-3 px-1 py-1 bg-blue-400 font-semibold rounded-lg text-sm ${darkMode ? ' text-black' : ' text-white'}`}
+                        className={`truncate absolute bottom-1 right-1 p-1 bg-blue-400 font-semibold rounded-md text-xs ${darkMode ? ' text-black' : ' text-white'}`}
                     >
                         {podcast.released}
                     </h3>
                 )}
                 {progress !== 0 && (
                     <div
-                        className={` text-blue-400  w-fit absolute top-2 right-2 font-bold text-sm  flex m-0 p-0`}
+                        className={`${darkMode ? 'text-black' : 'text-white'}  bg-blue-400 p-1 w-fit absolute top-0 right-1 font-bold text-xs  flex m-0 rounded-b-lg`}
                     >
                         {progress < 99 ? (
                             <div className="drop-shadow-md">
