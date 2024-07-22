@@ -105,14 +105,14 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         }
     }
 
-    console.log(
-        'song',
-        song,
-        'queue',
-        musicKitInstance.queue.items,
-        'now playing',
-        musicKitInstance.nowPlayingItem
-    )
+    // console.log(
+    //     'song',
+    //     song,
+    //     'queue',
+    //     musicKitInstance.queue.items,
+    //     'now playing',
+    //     musicKitInstance.nowPlayingItem
+    // )
 
     // const makeSong = (songObject: any) => {
     //     return {

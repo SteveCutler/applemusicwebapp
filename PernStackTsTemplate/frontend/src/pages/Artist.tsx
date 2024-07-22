@@ -251,10 +251,32 @@ const Artist = () => {
     }
 
     const loadPlayer = async () => {
-        // if (topSongsData) {
-        //     setPlaylist(topSongsData, 0, true)
-        // }
-        // await retrieveAlbumTracks()
+        if (!musicKitInstance) {
+            await authorizeMusicKit()
+        }
+
+        if (musicKitInstance && artistData && musicKitInstance.nowPlayingItem) {
+            if (
+                musicKitInstance.nowPlayingItem.container.id ===
+                'ra.' + artistData.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                await musicKitInstance.setQueue({
+                    artist: artistData.id,
+                })
+                await musicKitInstance.play()
+            }
+        } else if (musicKitInstance && artistData) {
+            console.log('test')
+
+            await musicKitInstance.setQueue({
+                artist: artistData.id,
+            })
+            await musicKitInstance.play()
+        }
     }
 
     const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
@@ -295,7 +317,8 @@ const Artist = () => {
 
                                 {artistData && (
                                     <div
-                                        className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                                        title={'Artist radio'}
+                                        className=" absolute bottom-7 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                                         onClick={async e => {
                                             e.preventDefault()
                                             e.stopPropagation() // Prevents the link's default behavior
@@ -305,15 +328,16 @@ const Artist = () => {
                                             await loadPlayer()
                                         }}
                                     >
-                                        {/* {isPlaying &&
-                                        musicKitInstance?.nowPlayingItem &&
-                                        playlist === topSongs ? (
+                                        {musicKitInstance.playbackState == 2 &&
+                                        musicKitInstance.nowPlayingItem
+                                            .container.id ===
+                                            'ra.' + artistData.id ? (
                                             <FaRegCirclePause
                                                 style={styleButton}
                                             />
                                         ) : (
                                             <FaCirclePlay style={styleButton} />
-                                        )} */}
+                                        )}
                                     </div>
                                 )}
                             </div>

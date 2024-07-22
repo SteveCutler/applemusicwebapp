@@ -694,10 +694,9 @@ function Footer() {
                                         </div>
                                         <div>
                                             {musicKitInstance.queue.items &&
-                                                musicKitInstance.queue.items[
-                                                    musicKitInstance
-                                                        ?.nowPlayingItemIndex
-                                                ].attributes.albumName}
+                                                musicKitInstance.nowPlayingItem &&
+                                                musicKitInstance.nowPlayingItem
+                                                    .attributes.albumName}
                                         </div>
                                     </div>
                                     <div

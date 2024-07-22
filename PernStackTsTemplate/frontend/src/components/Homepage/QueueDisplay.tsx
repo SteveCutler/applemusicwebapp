@@ -44,7 +44,7 @@ const QueueDisplay = () => {
     //     }
 
     // }
-    console.log('current queue: ', musicKitInstance?.queue)
+    // console.log('current queue: ', musicKitInstance?.queue)
     const style = { fontSize: '1.8rem' }
 
     return (
