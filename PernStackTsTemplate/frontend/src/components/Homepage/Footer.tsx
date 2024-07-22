@@ -678,14 +678,14 @@ function Footer() {
                         )
                     )}
 
-                    <div className="flex flex-col  justify-center w-full  items-start text-xs font-normal">
+                    <div className="flex flex-col  me-2 justify-center  w-full  truncate items-start text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
                             <div className="flex items-center">
                                 <div
                                     onClick={goToAlbum}
-                                    className="font-semibold  truncate w-full flex-col flex-shrink flex justify-around"
+                                    className="font-semibold   w-full flex-col flex-shrink flex justify-around"
                                 >
-                                    <div className="hover:cursor-pointer hover:text-white">
+                                    <div className="hover:cursor-pointer  hover:text-white">
                                         <div>
                                             {
                                                 musicKitInstance?.nowPlayingItem
@@ -717,7 +717,7 @@ function Footer() {
                                         musicKitInstance?.nowPlayingItemIndex
                                     ] && (
                                         <div
-                                            className="hover:text-white ps-2 hover:active:scale-90"
+                                            className="hover:text-white ps-2  hover:active:scale-90"
                                             onClick={() => {
                                                 const object =
                                                     musicKitInstance?.queue
@@ -770,18 +770,20 @@ function Footer() {
                                     )}
                             </div>
                         ) : isPlayingPodcast ? (
-                            <div className="font-semibold  truncate w-full flex-col flex-shrink flex justify-around">
-                                <div
-                                    className="hover:text-white  hover:cursor-pointer truncate   h-fit"
-                                    onClick={goToPodcastEpisode}
-                                >
-                                    {podcastEpTitle}
-                                </div>
-                                <div
-                                    className="hover:text-white hover:cursor-pointer truncate  h-fit"
-                                    onClick={goToPodcast}
-                                >
-                                    {podcastArtist}
+                            <div className="flex items-center">
+                                <div className="font-semibold   w-full flex-col flex-shrink flex justify-around">
+                                    <div
+                                        className="hover:text-white  hover:cursor-pointer    h-fit"
+                                        onClick={goToPodcastEpisode}
+                                    >
+                                        {podcastEpTitle}
+                                    </div>
+                                    <div
+                                        className="hover:text-white hover:cursor-pointer   h-fit"
+                                        onClick={goToPodcast}
+                                    >
+                                        {podcastArtist}
+                                    </div>
                                 </div>
                             </div>
                         ) : (
@@ -792,8 +794,10 @@ function Footer() {
                 {/* {podcastDuration && isPlayingPodcast && (
                     <div>{podcastDuration}</div>
                 )} */}
-                <div className="flex flex-col  justify-center mx-auto items-center w-1/2 ">
-                    <div className="flex translate-x-4 translate-y-1 mx-auto w-1/4 justify-center ">
+                <div className="flex flex-col   justify-center  items-center w-1/2 ">
+                    <div
+                        className={`flex  ${isPlayingPodcast ? 'translate-x-5' : 'translate-x-2'} translate-y-1 mx-auto w-1/4 justify-center `}
+                    >
                         <button
                             className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}
                             onClick={e => {
@@ -952,9 +956,9 @@ function Footer() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="flex items-center justify-end mx-5">
-                <VolumeSlider />
+                <div className="flex items-center justify-end w-1/4 mx-5">
+                    <VolumeSlider />
+                </div>
             </div>
         </div>
     )
