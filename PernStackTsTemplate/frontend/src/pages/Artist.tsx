@@ -26,6 +26,8 @@ import ArtistTopSongs from '../hooks/ArtistPage/FetchArtistTopSongsData'
 import ArtistSimilarArtists from '../hooks/ArtistPage/FetchArtistSimilarArtistsData'
 import ArtistLatestRelease from '../hooks/ArtistPage/FetchArtistLatestReleaseData'
 import ArtistAppearsOnAlbums from '../hooks/ArtistPage/FetchArtistAppearsOnAlbumsData'
+import toast from 'react-hot-toast'
+import OptionsModal from '../components/Homepage/OptionsModal'
 
 interface Song {
     id: string
@@ -250,34 +252,61 @@ const Artist = () => {
             .replace('{h}', size.toString())
     }
 
-    const loadPlayer = async () => {
-        if (!musicKitInstance) {
-            await authorizeMusicKit()
-        }
+    const playTopSongs = async () => {
+        if (artistData) {
+            try {
+                if (id.startsWith('r')) {
+                    console.log(`${id} start with 'r'`)
+                    try {
+                        const topSongs = await musicKitInstance.api.music(
+                            `/v1/me/library/artists/${id}/view/top-songs`
+                        )
 
-        if (musicKitInstance && artistData && musicKitInstance.nowPlayingItem) {
-            if (
-                musicKitInstance.nowPlayingItem.container.id ===
-                'ra.' + artistData.id
-            ) {
-                musicKitInstance.playbackState == 2
-                    ? await musicKitInstance.pause()
-                    : await musicKitInstance.play()
-            } else {
-                await musicKitInstance.setQueue({
-                    artist: artistData.id,
-                })
-                await musicKitInstance.play()
+                        const topSongsData: Array<Song> =
+                            await topSongs.data.data
+                        if (topSongsData) {
+                            console.log('top songs', topSongsData)
+
+                            await musicKitInstance.setQueue({
+                                items: topSongsData,
+                                startPlaying: true,
+                            })
+                            await musicKitInstance.play()
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                        toast.error('Something went wrong..')
+                    }
+                } else {
+                    try {
+                        const topSongs = await musicKitInstance.api.music(
+                            `/v1/catalog/${musicKitInstance.storefrontId}/artists/${id}/view/top-songs`
+                        )
+
+                        const topSongsData: Array<Song> =
+                            await topSongs.data.data
+
+                        if (topSongsData) {
+                            console.log('top songs', topSongsData)
+
+                            await musicKitInstance.setQueue({
+                                items: topSongsData,
+                                startPlaying: true,
+                            })
+                            await musicKitInstance.play()
+                        }
+                    } catch (error: any) {
+                        console.error(error)
+                        toast.error('Something went wrong..')
+                    }
+                }
+            } catch (error: any) {
+                console.error(error)
             }
-        } else if (musicKitInstance && artistData) {
-            console.log('test')
-
-            await musicKitInstance.setQueue({
-                artist: artistData.id,
-            })
-            await musicKitInstance.play()
         }
     }
+
+    const styleSmall = { fontSize: '1.6rem', color: 'dodgerblue ' }
 
     const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
 
@@ -318,28 +347,48 @@ const Artist = () => {
                                 {artistData && (
                                     <div
                                         title={'Artist radio'}
-                                        className=" absolute bottom-7 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                                        className=" absolute bottom-6 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                                         onClick={async e => {
                                             e.preventDefault()
                                             e.stopPropagation() // Prevents the link's default behavior
                                             // await FetchAlbumData(albumId)
                                             // handlePlayPause()
 
-                                            await loadPlayer()
+                                            await playTopSongs()
                                         }}
                                     >
-                                        {musicKitInstance.playbackState == 2 &&
-                                        musicKitInstance.nowPlayingItem
-                                            .container.id ===
-                                            'ra.' + artistData.id ? (
-                                            <FaRegCirclePause
-                                                style={styleButton}
-                                            />
+                                        {' '}
+                                        {queueToggle ? (
+                                            <FaCirclePlay style={styleSmall} />
                                         ) : (
                                             <FaCirclePlay style={styleButton} />
                                         )}
                                     </div>
                                 )}
+                                <div
+                                    title={'Artist radio'}
+                                    className=" absolute bottom-5 right-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                                    onClick={async e => {
+                                        e.preventDefault()
+                                        e.stopPropagation() // Prevents the link's default behavior
+                                        // await FetchAlbumData(albumId)
+                                        // handlePlayPause()
+
+                                        await playTopSongs()
+                                    }}
+                                >
+                                    {queueToggle ? (
+                                        <OptionsModal
+                                            small={true}
+                                            object={artistData}
+                                        />
+                                    ) : (
+                                        <OptionsModal
+                                            big={true}
+                                            object={artistData}
+                                        />
+                                    )}
+                                </div>
                             </div>
 
                             <div className="flex-col w-full md:w-1/2">

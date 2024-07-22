@@ -538,6 +538,35 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         }
     }
 
+    const playArtistStation = async () => {
+        if (!musicKitInstance) {
+            await authorizeMusicKit()
+        }
+
+        if (musicKitInstance && object && musicKitInstance.nowPlayingItem) {
+            if (
+                musicKitInstance.nowPlayingItem.container.id ===
+                'ra.' + object.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                await musicKitInstance.setQueue({
+                    artist: object.id,
+                })
+                await musicKitInstance.play()
+            }
+        } else if (musicKitInstance && object) {
+            console.log('test')
+
+            await musicKitInstance.setQueue({
+                artist: object.id,
+            })
+            await musicKitInstance.play()
+        }
+    }
+
     const playNext = async (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         e.preventDefault()
         e.stopPropagation() // Prevents the click from propagating to the parent elements
@@ -649,7 +678,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             className=" justify-center items-center w-full"
                             onClick={async e => {
                                 addFavorite(e)
-                                addToLibrary(e)
+
                                 setIsOpen(!isOpen)
                             }}
                         >
@@ -685,21 +714,42 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             Play Next
                         </div>
                     </li> */}
-                    <li
-                        onClick={e => {
-                            addToLibrary(e)
-                            setIsOpen(!isOpen)
-                        }}
-                        className=" justify-center items-center "
-                    >
-                        <div
-                            className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                    {object.type !== 'artists' &&
+                        object.type !== 'library-artists' && (
+                            <li
+                                onClick={e => {
+                                    addToLibrary(e)
+                                    setIsOpen(!isOpen)
+                                }}
+                                className=" justify-center items-center "
+                            >
+                                <div
+                                    className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                                >
+                                    Add to Library
+                                </div>
+                            </li>
+                        )}
+                    {(object.type === 'artists' ||
+                        object.type === 'library-artists') && (
+                        <li
+                            onClick={e => {
+                                playArtistStation()
+                                setIsOpen(!isOpen)
+                            }}
+                            className=" justify-center items-center "
                         >
-                            Add to Library
-                        </div>
-                    </li>
+                            <div
+                                className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                            >
+                                {object.attributes.name} Radio
+                            </div>
+                        </li>
+                    )}
                     {object.type !== 'library-albums' &&
                         object.type !== 'albums' &&
+                        object.type !== 'artists' &&
+                        object.type !== 'library-artists' &&
                         object.type !== 'playlists' &&
                         object.type !== 'library-playlists' && (
                             <li
@@ -718,6 +768,8 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         )}
 
                     {object.type !== 'playlists' &&
+                        object.type !== 'artists' &&
+                        object.type !== 'library-artists' &&
                         object.type !== 'library-playlists' && (
                             <li className="relative justify-center items-center w-full">
                                 <div

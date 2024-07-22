@@ -188,7 +188,12 @@ const Song = () => {
                                 }}
                                 className=""
                             >
-                                <OptionsModal big={true} object={song} />
+                                {' '}
+                                {queueToggle ? (
+                                    <OptionsModal small={true} object={song} />
+                                ) : (
+                                    <OptionsModal big={true} object={song} />
+                                )}
                             </div>
                         </div>
                     </div>

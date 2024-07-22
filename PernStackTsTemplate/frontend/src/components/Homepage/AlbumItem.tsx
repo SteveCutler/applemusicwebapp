@@ -244,6 +244,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                         }}
                     >
                         {musicKitInstance.playbackState == 2 &&
+                        musicKitInstance.nowPlayingItem.container &&
                         musicKitInstance.nowPlayingItem.container.id ==
                             albumItem.id ? (
                             <FaRegCirclePause style={style} />

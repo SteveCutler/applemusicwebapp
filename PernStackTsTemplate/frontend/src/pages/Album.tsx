@@ -276,6 +276,7 @@ const Album = () => {
         if (musicKitInstance && albumData) {
             if (
                 musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.container &&
                 musicKitInstance.nowPlayingItem.container.id == albumData.id
             ) {
                 musicKitInstance.playbackState == 2
@@ -294,6 +295,7 @@ const Album = () => {
     }
 
     const styleButton = { fontSize: '3rem', color: 'dodgerblue ' }
+    const styleSmall = { fontSize: '1.6rem', color: 'dodgerblue ' }
 
     const style = { fontSize: '1.5em' }
     if (loading) {
@@ -369,7 +371,7 @@ const Album = () => {
                             />
                         )}
                         <div
-                            className=" absolute bottom-5 left-5 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            className=" absolute bottom-2 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {
                                 e.preventDefault()
                                 e.stopPropagation() // Prevents the link's default behavior
@@ -381,14 +383,21 @@ const Album = () => {
                         >
                             {' '}
                             {musicKitInstance.playbackState == 2 &&
+                            musicKitInstance.nowPlayingItem.container &&
                             musicKitInstance.nowPlayingItem.container.id ==
                                 albumData.id ? (
-                                <FaRegCirclePause style={styleButton} />
+                                queueToggle ? (
+                                    <FaRegCirclePause style={styleSmall} />
+                                ) : (
+                                    <FaRegCirclePause style={styleButton} />
+                                )
+                            ) : queueToggle ? (
+                                <FaCirclePlay style={styleSmall} />
                             ) : (
                                 <FaCirclePlay style={styleButton} />
                             )}
                         </div>
-                        <div className="absolute bottom-4 right-4">
+                        <div className="absolute bottom-1 right-2">
                             <div
                                 onClick={e => {
                                     e.preventDefault()
@@ -396,7 +405,17 @@ const Album = () => {
                                 }}
                                 className=""
                             >
-                                <OptionsModal big={true} object={albumData} />
+                                {queueToggle ? (
+                                    <OptionsModal
+                                        small={true}
+                                        object={albumData}
+                                    />
+                                ) : (
+                                    <OptionsModal
+                                        big={true}
+                                        object={albumData}
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>

@@ -239,6 +239,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         } else {
                             if (
                                 musicKitInstance.nowPlayingItem &&
+                                musicKitInstance.nowPlayingItem.container &&
                                 musicKitInstance.nowPlayingItem.container.id ===
                                     item.id
                             ) {
@@ -462,6 +463,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                     >
                         {musicKitInstance?.nowPlayingItem &&
                         musicKitInstance.playbackState == 2 &&
+                        musicKitInstance.nowPlayingItem.container &&
                         item.id ===
                             musicKitInstance?.nowPlayingItem.container.id ? (
                             <FaRegCirclePause style={style} />
@@ -621,6 +623,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         }}
                     >
                         {musicKitInstance?.playbackState == 2 &&
+                        musicKitInstance.nowPlayingItem.container &&
                         item.id ===
                             musicKitInstance?.nowPlayingItem.container.id ? (
                             <FaRegCirclePause style={style} />
