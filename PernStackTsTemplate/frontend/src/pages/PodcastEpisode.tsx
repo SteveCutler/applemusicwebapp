@@ -12,6 +12,7 @@ import { useStore } from '../store/store'
 import {
     FaCaretDown,
     FaCaretUp,
+    FaCirclePause,
     FaCirclePlay,
     FaRegCirclePause,
 } from 'react-icons/fa6'
@@ -204,9 +205,16 @@ const PodcastEpisode = () => {
         queueToggle,
         isPlaying,
         playlist,
+
         setPlaylist,
+        isPlayingPodcast,
+        epId,
+        podcastAudio,
     } = useStore(state => ({
         playPodcast: state.playPodcast,
+        isPlayingPodcast: state.isPlayingPodcast,
+        epId: state.epId,
+        podcastAudio: state.podcastAudio,
         podcastUrl: state.podcastUrl,
         setSearchTerm: state.setSearchTerm,
         darkMode: state.darkMode,
@@ -224,16 +232,20 @@ const PodcastEpisode = () => {
     const style = { fontSize: '1.5em' }
 
     const handlePlayPodcast = async () => {
-        if (podcastEpisode && podcastInfo) {
-            playPodcast(
-                podcastEpisode.enclosureUrl,
-                podcastEpisode.duration,
-                podcastEpisode.feedImage,
-                podcastEpisode.title,
-                podcastInfo.title,
-                podcastInfo.id,
-                podcastEpisode.id
-            )
+        if (isPlayingPodcast && epId === podcastEpisode.id) {
+            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+        } else {
+            if (podcastEpisode && podcastInfo) {
+                playPodcast(
+                    podcastEpisode.enclosureUrl,
+                    podcastEpisode.duration,
+                    podcastEpisode.feedImage,
+                    podcastEpisode.title,
+                    podcastInfo.title,
+                    podcastInfo.id,
+                    podcastEpisode.id
+                )
+            }
         }
     }
 
@@ -289,7 +301,15 @@ const PodcastEpisode = () => {
                             handlePlayPodcast()
                         }}
                     >
-                        <FaCirclePlay style={styleButtonBig} />
+                        {isPlayingPodcast &&
+                        podcastEpisode &&
+                        epId === podcastEpisode.id &&
+                        !podcastAudio.paused &&
+                        !podcastAudio.ended ? (
+                            <FaCirclePause style={styleButtonBig} />
+                        ) : (
+                            <FaCirclePlay style={styleButtonBig} />
+                        )}
                     </div>
                     {podcastEpisode && (
                         <div className="absolute bottom-4 right-4">
@@ -337,7 +357,17 @@ const PodcastEpisode = () => {
                                         className="hover:scale-110 active:scale-90 hover:cursor-pointer text-blue-600 hover:text-blue-400"
                                         onClick={handlePlayPodcast}
                                     >
-                                        <FaCirclePlay style={styleButton} />
+                                        {isPlayingPodcast &&
+                                        podcastEpisode &&
+                                        epId === podcastEpisode.id &&
+                                        !podcastAudio.paused &&
+                                        !podcastAudio.ended ? (
+                                            <FaCirclePause
+                                                style={styleButton}
+                                            />
+                                        ) : (
+                                            <FaCirclePlay style={styleButton} />
+                                        )}
                                     </div>
 
                                     <div>

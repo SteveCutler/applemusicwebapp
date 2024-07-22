@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
-import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
+import { FaCirclePause, FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import PodcastOptionsModal from './PodcastOptionsModal'
@@ -104,7 +104,13 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
         playlist,
         podcastProgress,
         musicKitInstance,
+        isPlayingPodcast,
+        epId,
+        podcastAudio,
     } = useStore(state => ({
+        isPlayingPodcast: state.isPlayingPodcast,
+        epId: state.epId,
+        podcastAudio: state.podcastAudio,
         playPodcast: state.playPodcast,
         playlistData: state.playlistData,
         darkMode: state.darkMode,
@@ -148,16 +154,21 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
         const showData = await res.json()
         const showTitle = showData.data.feed.title
         // console.log('podcast', podcast, 'podcast show tile', podcast.showTitle)
-        if (podcast && showTitle) {
-            playPodcast(
-                podcast.enclosureUrl,
-                podcast.duration,
-                podcast.feedImage,
-                podcast.title,
-                showTitle,
-                podcast.feedId,
-                podcast.id
-            )
+
+        if (isPlayingPodcast && epId === podcast.id) {
+            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+        } else {
+            if (podcast && showTitle) {
+                playPodcast(
+                    podcast.enclosureUrl,
+                    podcast.duration,
+                    podcast.feedImage,
+                    podcast.title,
+                    showTitle,
+                    podcast.feedId,
+                    podcast.id
+                )
+            }
         }
     }
 
@@ -238,7 +249,15 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                         // await loadPlayer()
                     }}
                 >
-                    <FaCirclePlay style={styleButton} />
+                    {isPlayingPodcast &&
+                    podcast &&
+                    epId === podcast.id &&
+                    !podcastAudio.paused &&
+                    !podcastAudio.ended ? (
+                        <FaCirclePause style={styleButton} />
+                    ) : (
+                        <FaCirclePlay style={styleButton} />
+                    )}
                 </div>
 
                 <div

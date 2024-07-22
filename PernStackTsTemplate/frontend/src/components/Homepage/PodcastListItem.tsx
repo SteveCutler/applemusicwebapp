@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react'
-import { FaCaretDown, FaCaretUp, FaCirclePlay } from 'react-icons/fa6'
+import {
+    FaCaretDown,
+    FaCaretUp,
+    FaCirclePause,
+    FaCirclePlay,
+} from 'react-icons/fa6'
 import { useStore } from '../../store/store'
 import parse from 'html-react-parser'
 import { BsFillPatchCheckFill } from 'react-icons/bs'
@@ -38,30 +43,44 @@ interface podcastEpisode {
 }
 
 const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
-    const { darkMode, queueToggle, playPodcast, podcastProgress } = useStore(
-        state => ({
-            queueToggle: state.queueToggle,
-            playPodcast: state.playPodcast,
-            darkMode: state.darkMode,
-            podcastProgress: state.podcastProgress,
-        })
-    )
+    const {
+        darkMode,
+        queueToggle,
+        playPodcast,
+        podcastProgress,
+        isPlayingPodcast,
+        epId,
+        podcastAudio,
+    } = useStore(state => ({
+        isPlayingPodcast: state.isPlayingPodcast,
+        epId: state.epId,
+        podcastAudio: state.podcastAudio,
+        queueToggle: state.queueToggle,
+        playPodcast: state.playPodcast,
+        darkMode: state.darkMode,
+        podcastProgress: state.podcastProgress,
+    }))
 
     const [expandDescription, setExpandDescription] = useState(false)
 
     const handlePlayPodcast = async () => {
-        if (podcast) {
-            playPodcast(
-                podcast.enclosureUrl,
-                podcast.duration,
-                podcast.feedImage,
-                podcast.title,
-                title,
-                id,
-                podcast.id
-            )
+        if (isPlayingPodcast && epId === podcast.id) {
+            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+        } else {
+            if (podcast) {
+                playPodcast(
+                    podcast.enclosureUrl,
+                    podcast.duration,
+                    podcast.feedImage,
+                    podcast.title,
+                    title,
+                    id,
+                    podcast.id
+                )
+            }
         }
     }
+
     const styleButton = { fontSize: '1.2rem', color: 'dodgerblue' }
 
     const style = { fontSize: '1.5em' }
@@ -113,7 +132,15 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                             className="hover:scale-110 active:scale-90 hover:cursor-pointer text-blue-600 hover:text-blue-400"
                             onClick={handlePlayPodcast}
                         >
-                            <FaCirclePlay style={styleButton} />
+                            {isPlayingPodcast &&
+                            podcast &&
+                            epId === podcast.id &&
+                            !podcastAudio.paused &&
+                            !podcastAudio.ended ? (
+                                <FaCirclePause style={styleButton} />
+                            ) : (
+                                <FaCirclePlay style={styleButton} />
+                            )}
                         </div>
                         <div className="flex items-center gap-2">
                             {formatTime(podcast.duration)}

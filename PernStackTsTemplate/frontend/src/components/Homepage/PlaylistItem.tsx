@@ -177,12 +177,24 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
 
     const playData = async () => {
         if (musicKitInstance) {
-            console.log('setting playlist and start position')
-            await musicKitInstance.setQueue({
-                playlist: playlistItem.id,
-                startWith: 0,
-                startPlaying: true,
-            })
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance?.nowPlayingItem.container &&
+                musicKitInstance?.nowPlayingItem.container.id ===
+                    playlistItem.id
+            ) {
+                if (musicKitInstance.playbackState == 2) {
+                    await musicKitInstance.pause()
+                } else {
+                    await musicKitInstance.play()
+                }
+            } else {
+                await musicKitInstance.setQueue({
+                    playlist: playlistItem.id,
+                    startWith: 0,
+                    startPlaying: true,
+                })
+            }
         }
     }
     const loadPlayer = async () => {
@@ -228,10 +240,14 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
 
-                        await loadPlayer()
+                        await playData()
                     }}
                 >
-                    {isPlaying && playlistData === playlist ? (
+                    {musicKitInstance.nowPlayingItem &&
+                    musicKitInstance?.nowPlayingItem.container &&
+                    musicKitInstance?.nowPlayingItem.container.id ===
+                        playlistItem.id &&
+                    musicKitInstance.playbackState == 2 ? (
                         <FaRegCirclePause style={style} />
                     ) : (
                         <FaCirclePlay style={style} />

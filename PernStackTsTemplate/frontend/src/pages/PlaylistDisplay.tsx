@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import defaultPlaylistArtwork from '../assets/images/defaultPlaylistArtwork.png'
 import { IoMdAddCircleOutline } from 'react-icons/io'
 import toast from 'react-hot-toast'
-import { FaCirclePlay } from 'react-icons/fa6'
+import { FaCirclePause, FaCirclePlay } from 'react-icons/fa6'
 import RecommendationDisplay from '../components/Apple/RecommendationDisplay'
 import { useMediaQuery } from 'react-responsive'
 import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
@@ -122,11 +122,21 @@ const PlaylistDisplay = () => {
     const navigate = useNavigate()
     const playPauseHandler = async (id: string) => {
         if (musicKitInstance) {
-            await musicKitInstance.setQueue({
-                playlist: id,
-                startWith: 0,
-                startPlaying: true,
-            })
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.container &&
+                musicKitInstance.nowPlayingItem.container.id == id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                await musicKitInstance.setQueue({
+                    playlist: id,
+                    startWith: 0,
+                    startPlaying: true,
+                })
+            }
         }
     }
 
@@ -255,7 +265,7 @@ const PlaylistDisplay = () => {
     const styleBlue = { color: 'dodgerblue', fontSize: '2.5rem' }
 
     return (
-        <>
+        <div className="flex flex-col w-full  justify-start items-center">
             {personalizedPlaylists ? (
                 <>
                     <div
@@ -273,7 +283,7 @@ const PlaylistDisplay = () => {
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             )}
             <button
-                className="btn btn-primary  mb-8 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
+                className="btn btn-primary  mb-3 mt-5 bg-blue-500 hover:bg-blue-600  flex justify-center  border-none text-white text-xl font-bold w-fit"
                 onClick={e => {
                     e.preventDefault()
                     navigate('/new-playlist')
@@ -286,7 +296,7 @@ const PlaylistDisplay = () => {
                 </div>
             </button>
             {libraryPlaylists ? (
-                <div className="w-full flex text-black items-center pb-20 justify-center flex-col">
+                <div className="w-full flex h-full text-black justify-start pb-20 items-center flex-col">
                     {libraryPlaylists.map((playlist, index) => (
                         <>
                             <Link
@@ -323,7 +333,16 @@ const PlaylistDisplay = () => {
                                         await playPauseHandler(playlist.id)
                                     }}
                                 >
-                                    <FaCirclePlay style={styleBlue} />
+                                    {musicKitInstance.nowPlayingItem &&
+                                    musicKitInstance.nowPlayingItem.container &&
+                                    musicKitInstance.playbackState == 2 &&
+                                    musicKitInstance.nowPlayingItem.container
+                                        .id == playlist.id ? (
+                                        <FaCirclePause style={styleBlue} />
+                                    ) : (
+                                        <FaCirclePlay style={styleBlue} />
+                                    )}
+
                                     {/* <Link
                                         to={`/playlist-edit/${playlist.id}`}
                                         state={{ playlist }}
@@ -350,7 +369,7 @@ const PlaylistDisplay = () => {
                     No playlists to display...
                 </div>
             )}
-        </>
+        </div>
     )
 }
 

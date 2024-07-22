@@ -545,8 +545,9 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
 
         if (musicKitInstance && object && musicKitInstance.nowPlayingItem) {
             if (
+                musicKitInstance?.nowPlayingItem.container &&
                 musicKitInstance.nowPlayingItem.container.id ===
-                'ra.' + object.id
+                    'ra.' + object.id
             ) {
                 musicKitInstance.playbackState == 2
                     ? await musicKitInstance.pause()

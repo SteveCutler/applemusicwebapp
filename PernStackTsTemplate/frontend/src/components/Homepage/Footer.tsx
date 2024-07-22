@@ -241,6 +241,7 @@ function Footer() {
     }
     const goToArtist = async () => {
         if (
+            musicKitInstance?.nowPlayingItem.container &&
             musicKitInstance?.nowPlayingItem.container.id &&
             musicKitInstance?.nowPlayingItem
         ) {
@@ -250,6 +251,7 @@ function Footer() {
             )
 
             if (
+                musicKitInstance?.nowPlayingItem.container &&
                 musicKitInstance?.nowPlayingItem.container.id &&
                 Number(musicKitInstance?.nowPlayingItem.container.id)
             ) {
@@ -281,20 +283,21 @@ function Footer() {
                             navigate(`/artist/${trackArtistData.id}`)
                         } else {
                             {
-                                musicKitInstance.nowPlayingItem.container.id.startsWith(
-                                    'r'
-                                ) &&
+                                musicKitInstance?.nowPlayingItem.container &&
+                                    musicKitInstance.nowPlayingItem.container.id.startsWith(
+                                        'r'
+                                    ) &&
                                     navigate(
                                         `/artist/${musicKitInstance.nowPlayingItem.container.id}`
                                     )
                             }
                         }
-                        console.log('track album data: ', trackAlbumData)
                     } catch (error: any) {
                         {
-                            musicKitInstance.nowPlayingItem.container.id.startsWith(
-                                'l'
-                            ) &&
+                            musicKitInstance?.nowPlayingItem.container &&
+                                musicKitInstance.nowPlayingItem.container.id.startsWith(
+                                    'l'
+                                ) &&
                                 navigate(
                                     `/artist/${musicKitInstance.nowPlayingItem.container.id}`
                                 )
@@ -314,6 +317,7 @@ function Footer() {
                         if (trackAlbumData) {
                             navigate(`/artist/${trackAlbumData.id}`)
                         } else if (
+                            musicKitInstance?.nowPlayingItem.container &&
                             musicKitInstance?.nowPlayingItem.container.id.startsWith(
                                 'r'
                             )

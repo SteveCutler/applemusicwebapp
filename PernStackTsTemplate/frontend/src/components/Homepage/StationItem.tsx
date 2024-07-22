@@ -83,11 +83,18 @@ const StationItem: React.FC<StationItemTypes> = ({
 
     const playRadioStation = async () => {
         if (musicKitInstance) {
-            console.log('container id: ', musicKitInstance?.nowPlayingItem)
-            console.log('stationItem.id: ', stationItem.id)
-
-            await musicKitInstance.setQueue({ station: stationItem.id })
-            musicKitInstance.play()
+            if (
+                musicKitInstance?.nowPlayingItem &&
+                musicKitInstance?.nowPlayingItem.container &&
+                musicKitInstance?.nowPlayingItem.container.id === stationItem.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                await musicKitInstance.setQueue({ station: stationItem.id })
+                musicKitInstance.play()
+            }
         }
     }
 
@@ -121,9 +128,11 @@ const StationItem: React.FC<StationItemTypes> = ({
                         await playRadioStation()
                     }}
                 >
-                    {isPlaying &&
-                    musicKitInstance?.nowPlayingItem &&
-                    musicKitInstance?.nowPlayingItem.id === stationItem.id ? (
+                    {musicKitInstance?.nowPlayingItem &&
+                    musicKitInstance?.nowPlayingItem.container &&
+                    musicKitInstance?.nowPlayingItem.container.id ===
+                        stationItem.id &&
+                    musicKitInstance.playbackState == 2 ? (
                         <FaRegCirclePause style={style} />
                     ) : (
                         <FaCirclePlay style={style} />

@@ -12,6 +12,7 @@ import { useStore } from '../store/store'
 import {
     FaCaretDown,
     FaCaretUp,
+    FaCirclePause,
     FaCirclePlay,
     FaRegCirclePause,
 } from 'react-icons/fa6'
@@ -103,14 +104,20 @@ const Podcast = () => {
         darkMode,
         authorizeMusicKit,
         queueToggle,
+        isPlayingPodcast,
         isPlaying,
         playlist,
         setPlaylist,
         progressLoaded,
         fetchPodcastProgress,
+        epId,
+        podcastAudio,
     } = useStore(state => ({
         playPodcast: state.playPodcast,
+        podcastAudio: state.podcastAudio,
+        epId: state.epId,
         progressLoaded: state.progressLoaded,
+        isPlayingPodcast: state.isPlayingPodcast,
         fetchPodcastProgress: state.fetchPodcastProgress,
         podcastUrl: state.podcastUrl,
         setSearchTerm: state.setSearchTerm,
@@ -296,16 +303,20 @@ const Podcast = () => {
     const style = { fontSize: '1.5em' }
 
     const handlePlayPodcast = async () => {
-        if (podcastEpisodes && podcastInfo) {
-            playPodcast(
-                podcastEpisodes[0].enclosureUrl,
-                podcastEpisodes[0].duration,
-                podcastEpisodes[0].feedImage,
-                podcastEpisodes[0].title,
-                podcastInfo.title,
-                podcastInfo.id,
-                podcastEpisodes[0].id
-            )
+        if (isPlayingPodcast && epId === podcastEpisodes[0].id) {
+            podcastAudio.paused ? podcastAudio.play() : podcastAudio.pause()
+        } else {
+            if (podcastEpisodes && podcastInfo) {
+                playPodcast(
+                    podcastEpisodes[0].enclosureUrl,
+                    podcastEpisodes[0].duration,
+                    podcastEpisodes[0].feedImage,
+                    podcastEpisodes[0].title,
+                    podcastInfo.title,
+                    podcastInfo.id,
+                    podcastEpisodes[0].id
+                )
+            }
         }
     }
 
@@ -356,7 +367,15 @@ const Podcast = () => {
                             handlePlayPodcast()
                         }}
                     >
-                        <FaCirclePlay style={styleButtonBig} />
+                        {isPlayingPodcast &&
+                        podcastEpisodes &&
+                        epId === podcastEpisodes[0].id &&
+                        !podcastAudio.paused &&
+                        !podcastAudio.ended ? (
+                            <FaCirclePause style={styleButtonBig} />
+                        ) : (
+                            <FaCirclePlay style={styleButtonBig} />
+                        )}
                     </div>
                     {podcastEpisodes && (
                         <div className="absolute bottom-4 right-4">
@@ -401,7 +420,17 @@ const Podcast = () => {
                                         className="hover:scale-110 active:scale-90 hover:cursor-pointer text-blue-600 hover:text-blue-400"
                                         onClick={handlePlayPodcast}
                                     >
-                                        <FaCirclePlay style={styleButton} />
+                                        {isPlayingPodcast &&
+                                        podcastEpisodes &&
+                                        epId === podcastEpisodes[0].id &&
+                                        !podcastAudio.paused &&
+                                        !podcastAudio.ended ? (
+                                            <FaCirclePause
+                                                style={styleButton}
+                                            />
+                                        ) : (
+                                            <FaCirclePlay style={styleButton} />
+                                        )}
                                     </div>
 
                                     <div>
@@ -505,14 +534,16 @@ const Podcast = () => {
                     )}
                     {visibleEpisodes &&
                         podcastInfo &&
-                        visibleEpisodes.map((episode, index) => (
-                            <PodcastListItem
-                                key={index}
-                                podcast={episode}
-                                title={podcastInfo.title}
-                                id={podcastInfo.id}
-                            />
-                        ))}
+                        visibleEpisodes
+                            .slice(1)
+                            .map((episode, index) => (
+                                <PodcastListItem
+                                    key={index}
+                                    podcast={episode}
+                                    title={podcastInfo.title}
+                                    id={podcastInfo.id}
+                                />
+                            ))}
                     <div ref={loadMoreRef} style={{ height: '1px' }} />
                 </div>
             )}

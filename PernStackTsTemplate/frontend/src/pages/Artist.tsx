@@ -271,6 +271,8 @@ const Artist = () => {
                                 items: topSongsData,
                                 startPlaying: true,
                             })
+                            musicKitInstance.playbackState == 2 &&
+                                (await musicKitInstance.stop())
                             await musicKitInstance.play()
                         }
                     } catch (error: any) {
@@ -293,6 +295,8 @@ const Artist = () => {
                                 items: topSongsData,
                                 startPlaying: true,
                             })
+                            musicKitInstance.playbackState == 2 &&
+                                (await musicKitInstance.stop())
                             await musicKitInstance.play()
                         }
                     } catch (error: any) {
