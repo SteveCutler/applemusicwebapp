@@ -76,16 +76,20 @@ const QueueDisplay = () => {
             </Link>
             <div className="flex-col m-2 pt-10 pb-5 w-full   px-1 font-semibold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                 <div className="border-b-2 border-slate-600 pb-3">
-                    {playlist &&
-                        musicKitInstance?.queue.items &&
-                        musicKitInstance?.nowPlayingItem && (
+                    {musicKitInstance.queue &&
+                        musicKitInstance?.queue.items && (
                             <>
                                 <h1 className="text-3xl pb-3 font-bold text-white">
                                     Now playing:
                                 </h1>
                                 <QueueTrackDisplay
                                     key={musicKitInstance?.nowPlayingItemIndex}
-                                    song={musicKitInstance?.nowPlayingItem}
+                                    song={
+                                        musicKitInstance?.queue.items[
+                                            musicKitInstance
+                                                ?.nowPlayingItemIndex
+                                        ]
+                                    }
                                     index={
                                         musicKitInstance?.nowPlayingItemIndex
                                     }
@@ -97,9 +101,7 @@ const QueueDisplay = () => {
                             </>
                         )}
                 </div>
-                {playlist &&
-                musicKitInstance?.queue.items &&
-                musicKitInstance?.nowPlayingItem ? (
+                {musicKitInstance.queue && musicKitInstance?.queue.items ? (
                     <div className="pt-3 ">
                         <h1 className="text-3xl pb-3  font-bold text-white">
                             Coming up:

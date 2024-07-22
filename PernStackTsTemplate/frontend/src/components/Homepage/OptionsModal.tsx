@@ -564,6 +564,39 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         // })
         // set({ playlist: currentQueue })
     }
+
+    const playStation = async (e: any) => {
+        e.preventDefault()
+        try {
+            const response = await fetch(
+                `https://api.music.apple.com/v1/catalog/${musicKitInstance.storefrontId}/${object.type}/${object.id}/station`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${
+                            import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                        }`,
+                        'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+
+            const data = await response.json()
+            console.log('data', data)
+            const stationId = data.data[0].id
+
+            // Set the queue to the station
+            await musicKitInstance.setQueue({
+                station: stationId,
+            })
+
+            // Start playing the queue
+            musicKitInstance.play()
+        } catch (error) {
+            console.error('Error creating station:', error)
+        }
+    }
+
     const handleClick = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
         e.preventDefault()
         e.stopPropagation() // Prevents the click from propagating to the parent elements
@@ -665,6 +698,24 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                             Add to Library
                         </div>
                     </li>
+                    {object.type !== 'library-albums' &&
+                        object.type !== 'albums' &&
+                        object.type !== 'playlists' &&
+                        object.type !== 'library-playlists' && (
+                            <li
+                                onClick={e => {
+                                    playStation(e)
+                                    setIsOpen(!isOpen)
+                                }}
+                                className=" justify-center items-center "
+                            >
+                                <div
+                                    className={`w-full flex justify-center ${darkMode ? 'text-dark' : 'text-white'} text-center`}
+                                >
+                                    {object.attributes.name} Station
+                                </div>
+                            </li>
+                        )}
 
                     {object.type !== 'playlists' &&
                         object.type !== 'library-playlists' && (

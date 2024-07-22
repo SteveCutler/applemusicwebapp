@@ -267,37 +267,40 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
         }
     }
     // console.log('song sending: ', makeSong(song))
-
-    return (
-        <div
-            onClick={handleClick}
-            className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
-        >
-            {song.attributes.artwork ? (
-                <img
-                    src={constructImageUrl(song.attributes.artwork?.url, 100)}
-                    style={{ width: '60px' }}
-                    className="pe-2 w-1/4"
-                />
-            ) : (
-                <img
-                    src={defaultPlaylistArtwork}
-                    width="50px"
-                    className="pe-2"
-                />
-            )}
+    if (song) {
+        return (
             <div
-                className="text-sm  flex-col overflow-hidden flex justify-center text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
-                title={`${song.attributes.name} by ${song.attributes.artistName}`}
+                onClick={handleClick}
+                className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
             >
-                <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-semibold">
-                    {song.attributes.name}
+                {song.attributes.artwork ? (
+                    <img
+                        src={constructImageUrl(
+                            song.attributes.artwork?.url,
+                            100
+                        )}
+                        style={{ width: '60px' }}
+                        className="pe-2 w-1/4"
+                    />
+                ) : (
+                    <img
+                        src={defaultPlaylistArtwork}
+                        width="50px"
+                        className="pe-2"
+                    />
+                )}
+                <div
+                    className="text-sm  flex-col overflow-hidden flex justify-center text-ellipsis whitespace-nowrap  truncate w-full mx-auto  "
+                    title={`${song.attributes.name} by ${song.attributes.artistName}`}
+                >
+                    <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-semibold">
+                        {song.attributes.name}
+                    </div>
+                    <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-normal">
+                        {song.attributes.artistName}
+                    </div>
                 </div>
-                <div className="overflow-hidden text-ellipsis whitespace-nowrap truncate font-normal">
-                    {song.attributes.artistName}
-                </div>
-            </div>
-            {/* <div className="transform scale-75  items-center flex  transition-transform duration-100 easy-ease">
+                {/* <div className="transform scale-75  items-center flex  transition-transform duration-100 easy-ease">
                 {musicKitInstance?.queue &&
                     musicKitInstance?.nowPlayingItem && (
                         <OptionsModal
@@ -309,26 +312,27 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                         />
                     )}
             </div> */}
-            <div
-                className="transform hover:scale-110 shadow-lg items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
-                onClick={async e => {
-                    e.preventDefault()
-                    e.stopPropagation() // Prevents the d's default behavior
-                    // await FetchAlbumData(albumId)
-                    // handlePlayPause()
+                <div
+                    className="transform hover:scale-110 shadow-lg items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
+                    onClick={async e => {
+                        e.preventDefault()
+                        e.stopPropagation() // Prevents the d's default behavior
+                        // await FetchAlbumData(albumId)
+                        // handlePlayPause()
 
-                    await playPauseHandler()
-                }}
-            >
-                {musicKitInstance.playbackState == 2 &&
-                song.id === musicKitInstance?.nowPlayingItem.id ? (
-                    <FaRegCirclePause style={style} />
-                ) : (
-                    <FaCirclePlay style={style} />
-                )}
+                        await playPauseHandler()
+                    }}
+                >
+                    {musicKitInstance.playbackState == 2 &&
+                    song.id === musicKitInstance?.nowPlayingItem.id ? (
+                        <FaRegCirclePause style={style} />
+                    ) : (
+                        <FaCirclePlay style={style} />
+                    )}
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default QueueTrackDisplay

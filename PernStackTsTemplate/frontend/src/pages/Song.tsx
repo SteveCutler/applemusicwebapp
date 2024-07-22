@@ -80,9 +80,9 @@ const Song = () => {
 
     const loadPlayer = async () => {
         // console.log('track data: ', song.relationships.tracks.data)
-        if (song) {
+        if (songId) {
             await musicKitInstance.setQueue({
-                song: song.id,
+                song: songId,
                 startWith: 0,
                 startPlaying: true,
             })
