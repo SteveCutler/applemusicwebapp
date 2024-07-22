@@ -650,7 +650,7 @@ function Footer() {
             style={{ maxHeight: '75px' }}
         >
             <div className="flex justify-between   items-center my-1 w-full">
-                <div className="flex gap-2 justify-start  w-1/4 items-center  ">
+                <div className="flex gap-2 justify-between  w-1/4   items-center  ">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
                         <img
                             src={albumArtUrl}
@@ -678,14 +678,14 @@ function Footer() {
                         )
                     )}
 
-                    <div className="flex flex-col  me-2 justify-center  w-full  truncate items-start text-xs font-normal">
+                    <div className="flex flex-col   justify-between  w-full  truncate  text-xs font-normal">
                         {musicKitInstance?.nowPlayingItem ? (
-                            <div className="flex items-center">
+                            <div className="flex w-full   items-center">
                                 <div
                                     onClick={goToAlbum}
-                                    className="font-semibold   w-full flex-col flex-shrink flex justify-around"
+                                    className="font-semibold   w-full flex-col truncate  flex  justify-between"
                                 >
-                                    <div className="hover:cursor-pointer  hover:text-white">
+                                    <div className="hover:cursor-pointer flex w-full truncate hover:text-white">
                                         <div>
                                             {
                                                 musicKitInstance?.nowPlayingItem
@@ -717,7 +717,7 @@ function Footer() {
                                         musicKitInstance?.nowPlayingItemIndex
                                     ] && (
                                         <div
-                                            className="hover:text-white ps-2  hover:active:scale-90"
+                                            className="hover:text-white ps-2 flex  hover:active:scale-90"
                                             onClick={() => {
                                                 const object =
                                                     musicKitInstance?.queue
@@ -770,8 +770,8 @@ function Footer() {
                                     )}
                             </div>
                         ) : isPlayingPodcast ? (
-                            <div className="flex items-center">
-                                <div className="font-semibold   w-full flex-col flex-shrink flex justify-around">
+                            <div className="flex justify-center items-center ">
+                                <div className="font-semibold   w-full flex-col flex-shrink flex justify-between">
                                     <div
                                         className="hover:text-white  hover:cursor-pointer    h-fit"
                                         onClick={goToPodcastEpisode}
@@ -794,9 +794,11 @@ function Footer() {
                 {/* {podcastDuration && isPlayingPodcast && (
                     <div>{podcastDuration}</div>
                 )} */}
-                <div className="flex flex-col   justify-center  items-center w-1/2 ">
+                <div
+                    className={`flex flex-col  ${isPlayingPodcast ? 'translate-x-5' : 'translate-x-0'} justify-center  items-center w-1/2 `}
+                >
                     <div
-                        className={`flex  ${isPlayingPodcast ? 'translate-x-5' : 'translate-x-2'} translate-y-1 mx-auto w-1/4 justify-center `}
+                        className={`flex  ${isPlayingPodcast ? 'translate-x-3' : 'translate-x-2'} translate-y-1 mx-auto w-1/4 justify-center `}
                     >
                         <button
                             className={`${shuffle && 'text-blue-600'} ${(isPlayingPodcast || !musicKitInstance?.nowPlayingItem) && 'hidden'} flex rounded-full mx-2 items-center justify-center active:scale-95`}

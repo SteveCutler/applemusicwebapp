@@ -299,6 +299,8 @@ const AppleDashboard = () => {
     const [moreMadeForYou, setMoreMadeForYou] = useState(false)
     const [loadingPodcasts, setLoadingPodcasts] = useState(true)
     const [loadingRecent, setLoadingRecent] = useState(true)
+    const [loadingRecentEps, setLoadingRecentEps] = useState(true)
+    const [loadingProgress, setLoadingProgress] = useState(true)
     const [loadingRecommendations, setLoadingRecommendations] = useState(true)
 
     const style = { fontSize: '1.5rem' }
@@ -538,8 +540,10 @@ const AppleDashboard = () => {
                     // console.log('sorted', sortedEps)
 
                     setRecentEps(sortedEps)
+                    setLoadingRecentEps(false)
                 } catch (error) {
                     console.error(error)
+                    setLoadingRecentEps(false)
                 }
             }
         }
@@ -565,25 +569,30 @@ const AppleDashboard = () => {
                 const data = await response.json()
 
                 setPodSubs(data)
+                setLoadingPodcasts(false)
             } catch (error) {
                 console.error('Error subscribing to podcast:', error)
-
+                setLoadingPodcasts(false)
                 toast.error('Error retrieving podcasts..')
             }
         }
 
         if (!podSubs) {
             getSubs()
+        } else {
+            setLoadingPodcasts(false)
         }
         if (!recentEps && podSubs) {
             getRecentEps()
         } else {
-            // setLoadingPodcasts(false)
+            setLoadingRecentEps(false)
         }
 
         if (!podcastProgress) {
             fetchPodcastProgress()
+            setLoadingProgress(false)
         } else {
+            setLoadingProgress(false)
         }
 
         if (podcastProgress && podSubs && recentEps) {
@@ -621,20 +630,22 @@ const AppleDashboard = () => {
                     />
                 )
             )}
-            {loadingPodcasts ? (
+            {loadingPodcasts || loadingRecentEps || loadingProgress ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : recentEps && podcastProgress && podSubs ? (
+                <DropdownDisplay
+                    podcast={true}
+                    object={recentEps}
+                    sliceNumber={sliceNumber}
+                />
             ) : (
                 !loadingPodcasts &&
-                recentEps &&
-                podcastProgress &&
-                podSubs && (
-                    <DropdownDisplay
-                        podcast={true}
-                        object={recentEps}
-                        sliceNumber={sliceNumber}
-                    />
-                )
+                !loadingRecentEps &&
+                !loadingProgress &&
+                !podSubs &&
+                null
             )}
+
             {loadingRecommendations ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             ) : recommendations ? (

@@ -128,7 +128,7 @@ const ImportPodcasts = () => {
 
     return (
         <div className="bg-blue-500 text-white w-96  border-2 border-white font-semibold p-7 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
-            Upload the OPML file:
+            Upload the OPML file here
             <form
                 className="flex flex-col justify-center mt-5 items-center w-full mx-auto gap-1"
                 onSubmit={e => {
