@@ -36,7 +36,7 @@ interface Song {
 
 const Song = () => {
     const location = useLocation()
-    const song: Song = location.state.song
+    const song: Song = location.state?.song
     // console.log('song received: ', song)
 
     if (!song) {

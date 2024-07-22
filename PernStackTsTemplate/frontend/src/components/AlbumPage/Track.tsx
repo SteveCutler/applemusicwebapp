@@ -65,7 +65,7 @@ const Track: React.FC<TrackPropTypes> = ({
         setCurrentSongIndex,
 
         switchTrack,
-
+        musicKitInstance,
         currentElapsedTime,
 
         currentSongDuration,
@@ -76,6 +76,7 @@ const Track: React.FC<TrackPropTypes> = ({
         setPlaylist,
     } = useStore(state => ({
         switchTrack: state.switchTrack,
+        musicKitInstance: state.musicKitInstance,
         darkMode: state.darkMode,
         currentElapsedTime: state.currentElapsedTime,
         pauseSong: state.pauseSong,
@@ -96,9 +97,21 @@ const Track: React.FC<TrackPropTypes> = ({
     }))
 
     const initializeMusic = () => {
-        if (albumTracks) {
-            // console.log('album tracks ', albumTracks)
-            setPlaylist(albumTracks, index, true)
+        if (musicKitInstance && albumTracks.length > 0) {
+            const queueItems = musicKitInstance.queue.items
+            const songExists = queueItems.some(track => track.id === song.id)
+
+            if (songExists) {
+                if (musicKitInstance.nowPlayingItem.id === song.id) {
+                    musicKitInstance.playbackState == 2
+                        ? musicKitInstance.pause()
+                        : musicKitInstance.play()
+                } else {
+                    musicKitInstance.changeToMediaAtIndex(index)
+                }
+            } else {
+                setPlaylist(albumTracks, index, true)
+            }
         }
     }
 
@@ -163,23 +176,23 @@ const Track: React.FC<TrackPropTypes> = ({
     }
 
     const playPauseHandler = async () => {
-        if (playlist !== albumTracks) {
-            // console.log('adding album to playlist')
-            await initializeMusic()
-            // await setCurrrentSongId(playlist[index].id)
-            // await play()
+        // if (playlist !== albumTracks) {
+        //     // console.log('adding album to playlist')
+        //     await initializeMusic()
+        //     // await setCurrrentSongId(playlist[index].id)
+        //     // await play()
 
-            return
-        }
+        //     return
+        // }
 
-        if (song.id === currentSongId) {
+        if (song.id === musicKitInstance.nowPlayingItem.id) {
             // console.log('songId is current song')
             if (isPlaying) {
                 // console.log('is playing: pausing')
-                await pause()
+                await musicKitInstance.pause()
             } else {
                 // console.log('isnt playing: playing')
-                await play()
+                await musicKitInstance.play()
                 // setCurrrentSongId()
             }
         } else {
@@ -213,7 +226,7 @@ const Track: React.FC<TrackPropTypes> = ({
                 },
             }}
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex border-x-2 w-full border-b-2 ${first && 'border-y-2 rounded-t-lg'}  ${last ? 'rounded-b-lg' : ''} ${darkMode ? 'text-slate-100 hover:text-slate-500 bg-black hover:bg-slate-900 border-slate-200' : 'text-slate-900 hover:text-slate-700 bg-slate-100 hover:bg-slate-300 border-black'}  select-none  ${isPlaying && song.id === currentSongId ? `` : ``}  p-1 font-normal justify-between items-center `}
+            className={`flex  w-full  ${first && ' rounded-t-lg'}  ${last ? 'rounded-b-lg' : ''} ${darkMode ? 'text-slate-100 hover:text-slate-500 bg-black hover:bg-slate-900 border-slate-200' : 'text-slate-900 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 border-black'}  select-none  ${isPlaying && song.id === currentSongId ? `` : ``}  p-1 font-normal justify-between items-center `}
         >
             <div
                 className={
@@ -254,8 +267,9 @@ const Track: React.FC<TrackPropTypes> = ({
                 }}
                 className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
             >
-                {isPlaying && song.id === currentSongId ? (
-                    <FaRegCirclePause style={style} />
+                {musicKitInstance.playbackState == 2 &&
+                song.id === musicKitInstance.nowPlayingItem.id ? (
+                    <FaRegCirclePause style={styleBlue} />
                 ) : (
                     <FaCirclePlay style={styleBlue} />
                 )}

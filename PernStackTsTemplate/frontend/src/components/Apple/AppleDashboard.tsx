@@ -538,9 +538,7 @@ const AppleDashboard = () => {
                     // console.log('sorted', sortedEps)
 
                     setRecentEps(sortedEps)
-                    setLoadingPodcasts(false)
                 } catch (error) {
-                    setLoadingPodcasts(false)
                     console.error(error)
                 }
             }
@@ -580,11 +578,16 @@ const AppleDashboard = () => {
         if (!recentEps && podSubs) {
             getRecentEps()
         } else {
-            setLoadingPodcasts(false)
+            // setLoadingPodcasts(false)
         }
 
         if (!podcastProgress) {
             fetchPodcastProgress()
+        } else {
+        }
+
+        if (podcastProgress && podSubs && recentEps) {
+            setLoadingPodcasts(false)
         }
     }, [podcastProgress, podSubs, recentEps])
 
@@ -608,24 +611,29 @@ const AppleDashboard = () => {
 
             {loadingRecent ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : !loadingRecent && recentlyAddedToLib.length >= 1 ? (
-                <DropdownDisplay
-                    object={recentlyAddedToLib.slice(0, 15)}
-                    sliceNumber={sliceNumber}
-                    noTitle={true}
-                    title={'Recently Added to Library'}
-                />
-            ) : null}
-            {!recentEps && loadingRecent ? (
-                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : recentEps ? (
-                <DropdownDisplay
-                    podcast={true}
-                    object={recentEps}
-                    sliceNumber={sliceNumber}
-                />
             ) : (
-                !recentEps && !loadingRecent && null
+                recentlyAddedToLib.length >= 1 && (
+                    <DropdownDisplay
+                        object={recentlyAddedToLib.slice(0, 15)}
+                        sliceNumber={sliceNumber}
+                        noTitle={true}
+                        title={'Recently Added to Library'}
+                    />
+                )
+            )}
+            {loadingPodcasts ? (
+                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+            ) : (
+                !loadingPodcasts &&
+                recentEps &&
+                podcastProgress &&
+                podSubs && (
+                    <DropdownDisplay
+                        podcast={true}
+                        object={recentEps}
+                        sliceNumber={sliceNumber}
+                    />
+                )
             )}
             {loadingRecommendations ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />

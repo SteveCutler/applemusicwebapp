@@ -21,7 +21,7 @@ itunes library api only works in desktop app context - nevermind.
 -fix sizing of single objects on search page
 -change endpoint for most recent podcasts to use the podcastapi recent episodes endpoint
 -figure out whats going on with musicKitInstance.storefrontId code generation - how to create and save it automatically?
-
+-add options modal option to make station for any album song or artist
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
 
 -redesign toast/figure out when is appropriate to display them

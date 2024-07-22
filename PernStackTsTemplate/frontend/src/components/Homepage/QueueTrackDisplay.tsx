@@ -62,58 +62,88 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
     }))
 
     const createSongObject = (item: any) => {
-        return {
-            id: item.id,
-            type: 'songs',
-            href: item.attributes.url,
-            attributes: {
-                name: item.attributes.name,
+        if (song.attributes.artwork) {
+            return {
                 id: item.id,
-                trackNumber: item.attributes.trackNumber,
-                artistName: item.attributes.artistName,
-                albumName: item.attributes.albumName,
-                durationInMillis: item.attributes.durationInMillis,
-                playParams: {
-                    catalogId: item.attributes.playParams.catalogId ?? item.id,
+                type: 'songs',
+                href: item.attributes.url,
+                attributes: {
+                    name: item.attributes.name,
+                    id: item.id,
+                    trackNumber: item.attributes.trackNumber,
+                    artistName: item.attributes.artistName,
+                    albumName: item.attributes.albumName,
+                    durationInMillis: item.attributes.durationInMillis,
+                    playParams: {
+                        catalogId:
+                            item.attributes.playParams.catalogId ?? item.id,
+                    },
+                    artwork: {
+                        bgColor: item.attributes.artwork.bgColor ?? '',
+                        url: item.attributes.artwork.url ?? '',
+                    },
                 },
-                artwork: {
-                    bgColor: item.attributes.artwork.bgColor ?? '',
-                    url: item.attributes.artwork.url ?? '',
+            }
+        } else {
+            return {
+                id: item.id,
+                type: 'songs',
+                href: item.attributes.url,
+                attributes: {
+                    name: item.attributes.name,
+                    id: item.id,
+                    trackNumber: item.attributes.trackNumber,
+                    artistName: item.attributes.artistName,
+                    albumName: item.attributes.albumName,
+                    durationInMillis: item.attributes.durationInMillis,
+                    playParams: {
+                        catalogId:
+                            item.attributes.playParams.catalogId ?? item.id,
+                    },
                 },
-            },
+            }
         }
     }
 
-    const makeSong = (songObject: any) => {
-        return {
-            id: songObject.id,
-            href: songObject.attributes.url,
-            type: 'songs',
-            attributes: {
-                id: songObject.id,
-                name: songObject.attributes.name,
-                trackNumber: songObject.attributes.trackNumber,
-                artistName: songObject.attributes.artistName,
-                albumName: songObject.attributes.albumName,
-                durationInMillis: songObject.attributes.durationInMillis,
+    console.log(
+        'song',
+        song,
+        'queue',
+        musicKitInstance.queue.items,
+        'now playing',
+        musicKitInstance.nowPlayingItem
+    )
 
-                artwork: {
-                    bgColor: songObject.attributes.artwork.bgColor,
-                    url: songObject.attributes.artwork.url,
-                },
-            },
-        }
-    }
+    // const makeSong = (songObject: any) => {
+    //     return {
+    //         id: songObject.id,
+    //         href: songObject.attributes.url,
+    //         type: 'songs',
+    //         attributes: {
+    //             id: songObject.id,
+    //             name: songObject.attributes.name,
+    //             trackNumber: songObject.attributes.trackNumber,
+    //             artistName: songObject.attributes.artistName,
+    //             albumName: songObject.attributes.albumName,
+    //             durationInMillis: songObject.attributes.durationInMillis,
 
-    const songObject = makeSong(song)
+    //             artwork: {
+    //                 bgColor: songObject.attributes.artwork.bgColor,
+    //                 url: songObject.attributes.artwork.url,
+    //             },
+    //         },
+    //     }
+    // }
+
+    // const songObject = makeSong(song)
     const playPauseHandler = async () => {
-        if (song.id === currentSongId) {
+        if (song.id === musicKitInstance.nowPlayingItem.id) {
             // console.log('songId is current song')
-            isPlaying
+            musicKitInstance.playbackState == 2
                 ? // console.log('is playing: pausing')
-                  await pause()
+                  await musicKitInstance.pause()
                 : // console.log('isnt playing: playing')
-                  play()
+                  await musicKitInstance.play()
 
             // setCurrrentSongId()
         } else {
@@ -191,6 +221,9 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     // return { data, trackAlbumData }
                     // setTrackAlbumData(trackAlbumData)
                 } catch (error: any) {
+                    // const songState = createSongObject(song)
+                    // console.log('song state', songState)
+                    navigate(`/album/${song.container.id}`)
                     console.error(error)
                 }
             } else {
@@ -204,7 +237,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     // )
 
                     const resAlbum = await musicKitInstance.api.music(
-                        `/v1/catalog/${musicKitInstance.musicKitInstance.storefrontIdId}/songs/${song.id}/albums`
+                        `/v1/catalog/${musicKitInstance.storefrontId}/songs/${song.id}/albums`
                     )
                     // const resArtist = await musicKitInstance.api.music(
                     //     `/v1/catalog/${musicKitInstance.storefrontId}/songs/${song.id}/artists`
@@ -223,9 +256,13 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     // setSongData(data)
                 } catch (error: any) {
                     console.error(error)
+                    navigate(`/album/${song.container.id}`)
+                    console.error(error)
                 }
             }
         } catch (error: any) {
+            navigate(`/album/${song.container.id}`)
+            console.error(error)
             console.error(error)
         }
     }
@@ -236,7 +273,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
             onClick={handleClick}
             className="  overflow-hidden text-ellipsis whitespace-nowrap flex m-1 truncate  mx-auto w-11/12  font-semibold hover:text-slate-200 text-slate-400 border-2 border-slate-300  px-1 py-1 rounded-lg hover:cursor-pointer"
         >
-            {song.attributes.artwork?.url ? (
+            {song.attributes.artwork ? (
                 <img
                     src={constructImageUrl(song.attributes.artwork?.url, 100)}
                     style={{ width: '60px' }}
@@ -273,7 +310,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     )}
             </div> */}
             <div
-                className="transform hover:scale-110 items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
+                className="transform hover:scale-110 shadow-lg items-center pe-1 flex active:scale-95 transition-transform duration-100 easy-ease"
                 onClick={async e => {
                     e.preventDefault()
                     e.stopPropagation() // Prevents the d's default behavior
@@ -283,7 +320,7 @@ const QueueTrackDisplay: React.FC<playlistProps> = ({
                     await playPauseHandler()
                 }}
             >
-                {isPlaying &&
+                {musicKitInstance.playbackState == 2 &&
                 song.id === musicKitInstance?.nowPlayingItem.id ? (
                     <FaRegCirclePause style={style} />
                 ) : (

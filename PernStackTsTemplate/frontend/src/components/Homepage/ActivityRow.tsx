@@ -144,12 +144,12 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
             case 'library-albums':
                 navigate(`/album/${id}`)
                 break
-            case 'station':
-            case 'library-station':
-                navigate(`/station/${id}`)
+            case 'stations':
+            case 'library-stations':
+                navigate(`/station/${id}/`)
                 break
             default:
-                console.log('default response')
+                console.log('default response. Type:', item.type)
                 break
         }
     }
@@ -169,60 +169,111 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                 case 'songs':
                 case 'library-songs':
                 case 'song':
-                    await musicKitInstance?.setQueue({
-                        song: item.id,
-                        startWith: 0,
-                        startPlaying: true,
-                    })
+                    if (musicKitInstance && item.id) {
+                        if (
+                            musicKitInstance.nowPlayingItem &&
+                            musicKitInstance.nowPlayingItem.id === item.id
+                        ) {
+                            musicKitInstance.playbackState == 2
+                                ? musicKitInstance.pause()
+                                : musicKitInstance.play()
+                        } else {
+                            await musicKitInstance?.setQueue({
+                                song: item.id,
+                                startWith: 0,
+                                startPlaying: true,
+                            })
+                        }
+                    }
 
                     break
                 case 'playlists':
                 case 'library-playlists':
-                    await musicKitInstance?.setQueue({
-                        playlist: item.id,
-                        startWith: 0,
-                        startPlaying: true,
-                    })
+                    if (musicKitInstance && item.id) {
+                        if (
+                            musicKitInstance.nowPlayingItem &&
+                            musicKitInstance.nowPlayingItem.container.id ===
+                                item.id
+                        ) {
+                            musicKitInstance.playbackState == 2
+                                ? musicKitInstance.pause()
+                                : musicKitInstance.play()
+                        } else {
+                            await musicKitInstance?.setQueue({
+                                playlist: item.id,
+                                startWith: 0,
+                                startPlaying: true,
+                            })
+                        }
+                    }
 
                     break
                 case 'albums':
                 case 'library-albums':
-                    if (musicKitInstance) {
+                    if (musicKitInstance && item.id) {
                         if (item.id.startsWith('l')) {
                             try {
                                 const res = await musicKitInstance?.api.music(
                                     `v1/me/library/albums/${item.id}/catalog`
                                 )
-
                                 const catalogId = await res.data.data[0].id
 
-                                await musicKitInstance.setQueue({
-                                    album: catalogId,
-                                    startWith: 0,
-                                    startPlaying: true,
-                                })
+                                if (
+                                    musicKitInstance.nowPlayingItem &&
+                                    musicKitInstance.nowPlayingItem.container
+                                        .id === catalogId
+                                ) {
+                                    musicKitInstance.playbackState == 2
+                                        ? musicKitInstance.pause()
+                                        : musicKitInstance.play()
+                                } else {
+                                    await musicKitInstance.setQueue({
+                                        album: catalogId,
+                                        startWith: 0,
+                                        startPlaying: true,
+                                    })
+                                }
                             } catch (error: any) {
                                 console.error(error)
                             }
                         } else {
-                            try {
-                                await musicKitInstance?.setQueue({
+                            if (
+                                musicKitInstance.nowPlayingItem &&
+                                musicKitInstance.nowPlayingItem.container.id ===
+                                    item.id
+                            ) {
+                                musicKitInstance.playbackState == 2
+                                    ? musicKitInstance.pause()
+                                    : musicKitInstance.play()
+                            } else {
+                                await musicKitInstance.setQueue({
                                     album: item.id,
                                     startWith: 0,
                                     startPlaying: true,
                                 })
-                            } catch (error: any) {
-                                console.error(error)
                             }
                         }
                     }
                     break
                 case 'stations':
                 case 'library-stations':
-                    if (musicKitInstance) {
-                        await musicKitInstance?.setQueue({ station: item.id })
-                        musicKitInstance.play()
+                    if (musicKitInstance && item.id) {
+                        if (
+                            musicKitInstance.nowPlayingItem &&
+                            musicKitInstance.nowPlayingItem.container.id ===
+                                item.id
+                        ) {
+                            musicKitInstance.playbackState == 2
+                                ? musicKitInstance.pause()
+                                : musicKitInstance.play()
+                        } else {
+                            await musicKitInstance?.setQueue({
+                                station: item.id,
+                            })
+                            musicKitInstance.play()
+                        }
                     }
+
                     break
                 default:
                     console.log('default response')
@@ -327,7 +378,7 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             playPauseHandler()
                         }}
                     >
-                        {musicKitInstance?.nowPlayingItem &&
+                        {musicKitInstance?.playbackState == 2 &&
                         item.id === musicKitInstance?.nowPlayingItem.id ? (
                             <FaRegCirclePause style={style} />
                         ) : (
@@ -410,7 +461,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         }}
                     >
                         {musicKitInstance?.nowPlayingItem &&
-                        item.id === musicKitInstance?.nowPlayingItem.id ? (
+                        musicKitInstance.playbackState == 2 &&
+                        item.id ===
+                            musicKitInstance?.nowPlayingItem.container.id ? (
                             <FaRegCirclePause style={style} />
                         ) : (
                             <FaCirclePlay style={styleBlue} />
@@ -488,7 +541,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                         className="transform hover:scale-110 items-center flex active:scale-95 transition-transform duration-100 easy-ease"
                     >
                         {musicKitInstance?.nowPlayingItem &&
-                        item.id === musicKitInstance?.nowPlayingItem.id ? (
+                        musicKitInstance.playbackState == 2 &&
+                        item.id ===
+                            musicKitInstance?.nowPlayingItem.container.id ? (
                             <FaRegCirclePause style={style} />
                         ) : (
                             <FaCirclePlay style={styleBlue} />
@@ -565,8 +620,9 @@ const ActivityRow: React.FC<ActivityProp> = ({ item }) => {
                             playPauseHandler()
                         }}
                     >
-                        {musicKitInstance?.nowPlayingItem &&
-                        item.id === musicKitInstance?.nowPlayingItem.id ? (
+                        {musicKitInstance?.playbackState == 2 &&
+                        item.id ===
+                            musicKitInstance?.nowPlayingItem.container.id ? (
                             <FaRegCirclePause style={style} />
                         ) : (
                             <FaCirclePlay style={styleBlue} />

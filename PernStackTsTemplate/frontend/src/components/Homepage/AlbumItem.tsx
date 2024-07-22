@@ -189,7 +189,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
 
     return (
         <div
-            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}  mb-4  rounded-3xl flex `}
             title={`${albumItem.attributes?.name} by ${albumItem.attributes?.artistName}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
