@@ -273,13 +273,22 @@ const Album = () => {
 
     const loadPlayer = async () => {
         // console.log('track data: ', albumData.relationships.tracks.data)
-        if (musicKitInstance) {
-            console.log('setting playlist and start position')
-            await musicKitInstance.setQueue({
-                album: albumData?.id,
-                startWith: 0,
-                startPlaying: true,
-            })
+        if (musicKitInstance && albumData) {
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.container.id == albumData.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                console.log('setting playlist and start position')
+                await musicKitInstance.setQueue({
+                    album: albumData?.id,
+                    startWith: 0,
+                    startPlaying: true,
+                })
+            }
         }
         // await retrieveAlbumTracks()
     }
@@ -370,7 +379,14 @@ const Album = () => {
                                 await loadPlayer()
                             }}
                         >
-                            <FaCirclePlay style={styleButton} />
+                            {' '}
+                            {musicKitInstance.playbackState == 2 &&
+                            musicKitInstance.nowPlayingItem.container.id ==
+                                albumData.id ? (
+                                <FaRegCirclePause style={styleButton} />
+                            ) : (
+                                <FaCirclePlay style={styleButton} />
+                            )}
                         </div>
                         <div className="absolute bottom-4 right-4">
                             <div

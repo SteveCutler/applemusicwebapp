@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
-import { FaCirclePlay } from 'react-icons/fa6'
+import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import OptionsModal from './OptionsModal'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 import axios from 'axios'
@@ -118,14 +118,35 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     }, [albumItem, lib])
 
     const playData = async () => {
-        if (musicKitInstance) {
-            await musicKitInstance.setQueue({
-                album: albumItem.id,
-                startWith: 0,
-                startPlaying: true,
-            })
+        // console.log('track data: ', albumData.relationships.tracks.data)
+        if (musicKitInstance && albumItem) {
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.container.id == albumItem.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                console.log('setting playlist and start position')
+                await musicKitInstance.setQueue({
+                    album: albumItem.id,
+                    startWith: 0,
+                    startPlaying: true,
+                })
+            }
         }
+        // await retrieveAlbumTracks()
     }
+    // const playData = async () => {
+    //     if (musicKitInstance) {
+    //         await musicKitInstance.setQueue({
+    //             album: albumItem.id,
+    //             startWith: 0,
+    //             startPlaying: true,
+    //         })
+    //     }
+    // }
 
     const handleNavigation = async (e: any) => {
         e.preventDefault()
@@ -222,7 +243,13 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                             playData()
                         }}
                     >
-                        <FaCirclePlay style={style} />
+                        {musicKitInstance.playbackState == 2 &&
+                        musicKitInstance.nowPlayingItem.container.id ==
+                            albumItem.id ? (
+                            <FaRegCirclePause style={style} />
+                        ) : (
+                            <FaCirclePlay style={style} />
+                        )}
                     </div>
                 </div>
             </div>

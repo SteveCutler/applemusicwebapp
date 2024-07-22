@@ -66,12 +66,22 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
     const [isHovered, setIsHovered] = useState(false)
 
     const playData = async () => {
-        if (playlist.includes(song)) {
-            {
-                isPlaying ? pause() : playSong()
+        if (musicKitInstance && song) {
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.id == song.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                console.log('setting playlist and start position')
+                await musicKitInstance.setQueue({
+                    song: song.id,
+
+                    startPlaying: true,
+                })
             }
-        } else {
-            setPlaylist([song], 0, true)
         }
         //musicKitInstance?.play(songId)
     }
@@ -151,7 +161,7 @@ const SongItem: React.FC<AlbumPropTypes> = ({ song, carousel, width }) => {
                                 await playData()
                             }}
                         >
-                            {isPlaying &&
+                            {musicKitInstance.playbackState == 2 &&
                             musicKitInstance?.nowPlayingItem &&
                             musicKitInstance?.nowPlayingItem.id === song.id ? (
                                 <FaRegCirclePause style={style} />
