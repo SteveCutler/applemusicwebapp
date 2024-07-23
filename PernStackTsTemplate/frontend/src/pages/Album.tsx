@@ -257,8 +257,27 @@ const Album = () => {
                 setLoading(false)
             }
         }
+        const fetchLibraryAlbumData = async () => {
+            try {
+                const res = await musicKitInstance.api.music(
+                    `/v1/me/library/albums/${albumId}`
+                )
 
-        fetchAlbumData()
+                const data: AlbumTypeObject[] = await res.data.data
+                console.log('album data:', data)
+                setAlbumData(data[0])
+                // setArtistId(artistId)
+            } catch (error) {
+                console.error('error', error)
+            } finally {
+                setLoading(false)
+            }
+        }
+        if (!albumId.startsWith('l')) {
+            fetchAlbumData()
+        } else {
+            fetchLibraryAlbumData()
+        }
     }, [albumId, musicKitInstance])
 
     const constructImageUrl = (url: string, size: number) => {
@@ -307,7 +326,135 @@ const Album = () => {
     }
 
     if (!albumData) {
-        return <div>No album data available</div>
+        return (
+            <div
+                className={`flex-col w-11/12 mx-auto ${darkMode ? 'text-slate-200' : 'text-slate-800'} h-full`}
+            >
+                <ScrollToTop />
+                {/* <Link to="/">
+                    <div className="sticky mb-10 mt-5 top-1 left-1">
+                        {' '}
+                        <MdArrowBackIosNew style={style} />
+                    </div>
+                </Link> */}
+                <div className="flex-col ">
+                    <h1 className="text-3xl w-1/2 font-bold select-none">
+                        {albumData.attributes?.name}
+                    </h1>
+                    {albumData.relationships?.artists?.data[0].id ? (
+                        <Link
+                            to={
+                                type === 'library-albums'
+                                    ? `/artist/${albumData.relationships.artists.data[0].id}`
+                                    : `/artist/${artistId}`
+                            }
+                            // onClick={
+                            //     type === 'library-albums' ? setTerm : undefined
+                            // }
+                            className={`text-2xl ${darkMode ? 'text-slate-300 hover:text-slate-500' : 'text-slate-700 hover:text-slate-500'}  select-none hover:cursor-pointer font-bold`}
+                        >
+                            {albumData.attributes?.artistName}
+                        </Link>
+                    ) : (
+                        <div
+                            className={`text-2xl ${darkMode ? 'text-slate-300' : 'text-slate-800'}  select-none font-bold`}
+                        >
+                            {albumData.attributes?.artistName}
+                        </div>
+                    )}
+                </div>
+                <div
+                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-10  justify-around  items-start`}
+                >
+                    <div
+                        className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
+                    >
+                        {albumData.attributes?.artwork?.url ? (
+                            <img
+                                className="w-full"
+                                src={constructImageUrl(
+                                    albumData.attributes.artwork.url,
+                                    1000
+                                )}
+                                alt=""
+                            />
+                        ) : (
+                            <img
+                                className="w-full"
+                                src={defaultPlaylistArtwork}
+                                alt=""
+                            />
+                        )}
+                        <div
+                            className=" absolute bottom-2 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                            onClick={async e => {
+                                e.preventDefault()
+                                e.stopPropagation() // Prevents the link's default behavior
+                                // await FetchAlbumData(albumId)
+                                // handlePlayPause()
+
+                                await loadPlayer()
+                            }}
+                        >
+                            {' '}
+                            {musicKitInstance.playbackState == 2 &&
+                            musicKitInstance.nowPlayingItem.container &&
+                            musicKitInstance.nowPlayingItem.container.id ==
+                                albumData.id ? (
+                                queueToggle ? (
+                                    <FaRegCirclePause style={styleSmall} />
+                                ) : (
+                                    <FaRegCirclePause style={styleButton} />
+                                )
+                            ) : queueToggle ? (
+                                <FaCirclePlay style={styleSmall} />
+                            ) : (
+                                <FaCirclePlay style={styleButton} />
+                            )}
+                        </div>
+                        <div className="absolute bottom-1 right-2">
+                            <div
+                                onClick={e => {
+                                    e.preventDefault()
+                                    e.stopPropagation() // Prevents the link's default behavior
+                                }}
+                                className=""
+                            >
+                                {queueToggle ? (
+                                    <OptionsModal
+                                        small={true}
+                                        object={albumData}
+                                    />
+                                ) : (
+                                    <OptionsModal
+                                        big={true}
+                                        object={albumData}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '}  overflow-y-auto  `}
+                    >
+                        {albumData && (
+                            <TrackDisplay
+                                albumTracks={
+                                    albumData?.relationships?.tracks.data
+                                }
+                            />
+                        )}
+                    </div>
+                    {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
+                </div>
+                {/* <FetchRecommendedAlbums albumId={albumData.id} /> */}
+                <FetchFeaturedAlbums artistId={artistId} type={type} />
+                <FetchRelatedAlbums albumId={albumData.id} />
+
+                <ArtistSimilarArtists id={artistId} />
+                <FetchAppearsOn albumId={albumData.id} />
+            </div>
+        )
     }
 
     if (albumData) {

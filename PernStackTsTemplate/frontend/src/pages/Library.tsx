@@ -201,6 +201,26 @@ const Library = () => {
         }
     }
 
+    const grabAlbums = async () => {
+        try {
+            const res = await fetch(
+                `https://api.music.apple.com/v1/me/library/albums`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${
+                            import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN
+                        }`,
+                        'Music-User-Token': appleMusicToken ?? '', // Add Music User Token here
+                        'Content-Type': 'application/json',
+                    },
+                }
+            )
+            const data = await res.json()
+            console.log('albums', data)
+        } catch (error) {
+            console.log('error')
+        }
+    }
     const getRatedAlbums = async () => {
         setLoading(true)
         try {
@@ -324,8 +344,17 @@ const Library = () => {
                 </div>
                 <div className="flex-col  justify-center w-full px-3 mx-0 ">
                     <div
-                        className={`flex w-full px-9 items-center py-5 ${darkMode ? 'text-white' : 'text-black'} font-semibold select-none justify-end gap-2`}
+                        className={`flex w-full px-9 items-center py-5 ${darkMode ? 'text-white' : 'text-black'} font-semibold select-none justify-end gap-1`}
                     >
+                        {/* <button
+                            onClick={e => {
+                                e.preventDefault()
+                                grabAlbums()
+                            }}
+                            className="btn btn-primary"
+                        >
+                            click
+                        </button> */}
                         <div>Sort by:</div>
                         <button
                             className={` border-2 border-white flex items-center ${sorted && sorted.includes('artist') ? 'bg-blue-400' : ''}  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full `}

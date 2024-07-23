@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
 import defaultPlaylistArtwork from '../../assets/images/defaultPlaylistArtwork.png'
 
@@ -205,10 +205,38 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
         //     await retrieveAlbumTracks()
     }
 
+    const navigate = useNavigate()
+    const handleNavigation = async (e: any) => {
+        e.preventDefault()
+        e.stopPropagation()
+        if (albumItem.id.startsWith('l')) {
+            try {
+                console.log('albumItemTest')
+                const resAlbum = await musicKitInstance?.api.music(
+                    `/v1/me/library/albums/${albumItem.id}/catalog`
+                )
+
+                const catAlbumId = await resAlbum.data.data[0].id
+
+                if (catAlbumId) {
+                    navigate(`/album/${catAlbumId}`)
+                } else {
+                    navigate(`/album/${albumItem.id}`)
+                }
+            } catch (error: any) {
+                navigate(`/album/${albumItem.id}`)
+
+                console.error(error)
+            }
+        } else {
+            navigate(`/album/${albumItem.id}`)
+        }
+    }
+
     return (
         <>
-            <Link
-                to={`/album/${albumItem.id}`}
+            <div
+                onClick={handleNavigation}
                 className={`flex border-b-2 w-full  text-xl mx-auto ${first && 'rounded-t-xl'}  ${last ? 'rounded-b-xl' : ''} text-slate-200 font-bold select-none hover:bg-slate-800 bg-black  p-2 justify-between items-center border-slate-700`}
 
                 // className="flex border-2 border-slate-400 hover:border-slate-300 hover:scale{1.01} hover:text-slate-200 my-3 rounded-lg px-3 items-center justify-between h-10"
@@ -242,7 +270,7 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                     className="transform hover:scale-110 pe-5 active:scale-95 transition-transform duration-100 easy-ease"
                     onClick={async e => {
                         e.preventDefault()
-                        e.stopPropagation() // Prevents the link's default behavior
+                        e.stopPropagation() // Prevents the div's default behavior
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
 
@@ -258,7 +286,7 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                         <FaCirclePlay style={styleBlue} />
                     )}
                 </div>
-            </Link>
+            </div>
         </>
     )
 }
