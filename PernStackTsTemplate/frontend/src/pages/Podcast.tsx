@@ -28,6 +28,7 @@ import PodcastListItem from '../components/Homepage/PodcastListItem'
 import CryptoJS from 'crypto-js'
 import parse from 'html-react-parser'
 import PodcastOptionsModal from '../components/Homepage/PodcastOptionsModal'
+import { BsFillPatchCheckFill } from 'react-icons/bs'
 
 // import { usePodcastPlayer } from '../components/Homepage/PodcastPlayer'
 
@@ -110,11 +111,13 @@ const Podcast = () => {
         setPlaylist,
         progressLoaded,
         fetchPodcastProgress,
+        podcastProgress,
         epId,
         podcastAudio,
     } = useStore(state => ({
         playPodcast: state.playPodcast,
         podcastAudio: state.podcastAudio,
+        podcastProgress: state.podcastProgress,
         epId: state.epId,
         progressLoaded: state.progressLoaded,
         isPlayingPodcast: state.isPlayingPodcast,
@@ -144,6 +147,7 @@ const Podcast = () => {
     const [episodeSearchResults, setEpisodeSearchResults] = useState<
         podcastEpisode[] | null
     >(null)
+    const [progress, setProgress] = useState<number | null>(0)
 
     const observer = useRef<IntersectionObserver | null>(null)
     const loadMoreRef = useRef<HTMLDivElement>(null)
@@ -243,7 +247,22 @@ const Podcast = () => {
         if (!progressLoaded) {
             fetchPodcastProgress()
         }
-    }, [id])
+
+        const getEpisodeProgress = (episodeId, listenedEpisodes) => {
+            const episode = listenedEpisodes.find(
+                episode => episode.episodeId === episodeId
+            )
+            return episode ? episode.progress : 0
+        }
+
+        if (podcastEpisodes) {
+            const progressPercent = getEpisodeProgress(
+                String(podcastEpisodes[0].id),
+                podcastProgress
+            )
+            setProgress(progressPercent)
+        }
+    }, [id, podcastEpisodes])
 
     useEffect(() => {
         if (observer.current) observer.current.disconnect()
@@ -434,9 +453,28 @@ const Podcast = () => {
                                         )}
                                     </div>
 
-                                    <div>
+                                    <div className="flex gap-2 items-center">
                                         {formatTime(
                                             podcastEpisodes[0].duration
+                                        )}
+                                        {progress !== 0 && (
+                                            <div
+                                                className={`${darkMode ? 'text-black' : 'text-white'}  bg-blue-400 p-1 w-fit font-bold text-xs  flex m-0 rounded-lg`}
+                                            >
+                                                {progress < 99 ? (
+                                                    <div className="drop-shadow-md">
+                                                        {String(progress)}%
+                                                    </div>
+                                                ) : (
+                                                    <div className="drop-shadow-md">
+                                                        {
+                                                            <BsFillPatchCheckFill
+                                                                style={style}
+                                                            />
+                                                        }
+                                                    </div>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
                                 </div>

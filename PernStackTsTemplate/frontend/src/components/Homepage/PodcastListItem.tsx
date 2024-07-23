@@ -110,13 +110,17 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
         )
         return episode ? episode.progress : 0
     }
+    const [progress, setProgress] = useState<number | null>(null)
 
-    const progressPercent = getEpisodeProgress(
-        String(podcast.id),
-        podcastProgress
-    )
+    useEffect(() => {
+        const progressPercent = getEpisodeProgress(
+            String(podcast.id),
+            podcastProgress
+        )
 
-    const progress = Number(progressPercent)
+        const progress = Number(progressPercent)
+        setProgress(progress)
+    }, [])
 
     return (
         <div
@@ -145,19 +149,25 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                         </div>
                         <div className="flex items-center gap-2">
                             <div>{formatTime(podcast.duration)}</div>
-                            <div className=" text-white bg-blue-500 w-fit p-1 rounded-md font-semibold text-sm  flex m-0 ">
-                                {progress < 99 ? (
-                                    <h1> {progress}%</h1>
-                                ) : (
-                                    <span>
-                                        {
-                                            <BsFillPatchCheckFill
-                                                style={styleSmall}
-                                            />
-                                        }
-                                    </span>
-                                )}
-                            </div>
+                            {progress !== 0 && (
+                                <div
+                                    className={`${darkMode ? 'text-black' : 'text-white'}  bg-blue-400 p-1 w-fit font-bold text-xs  flex m-0 rounded-lg`}
+                                >
+                                    {progress < 99 ? (
+                                        <div className="drop-shadow-md">
+                                            {String(progress)}%
+                                        </div>
+                                    ) : (
+                                        <div className="drop-shadow-md">
+                                            {
+                                                <BsFillPatchCheckFill
+                                                    style={style}
+                                                />
+                                            }
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div>{podcast.datePublishedPretty}</div>
