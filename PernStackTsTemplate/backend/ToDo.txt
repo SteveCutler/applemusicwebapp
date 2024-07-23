@@ -6,43 +6,32 @@ itunes library api only works in desktop app context - nevermind.
 
 -make all the areas scroll seperately
 -add autoplay feature to podcasts?
--add loading animations to EVERYTHING
+-add loading animations to EVERYTHING (album song artist playlist station)
 -when you log in you have to refresh for musickit to load
-
 -add to queue/play next feature in modal
 -add route to add private podcast rss feed to subscriptions
 -investigate if theres a way to add podcast recommendations
-
--add sorting functionality to library? - sort by albumName, artistName etc? list view?
 -add feature that transitions between night and dark mode gradually over time based on timezone
 -search page needs to be seriously optimized
--library page needs work especially rows. should I try to emulate old itunes display?
-    >sorting options for album title, artist name, genre, etc
 -fix sizing of single objects on search page
-
 -do more work on settings page: add dark mode settings, bitrate options, dark mode
-
 -redesign toast/figure out when is appropriate to display them
 -add drag and drop feature to playlist creation
 work on search page - design, search hints, etc
 **add search hints in a search page that dropdown as you type - select one and it sets that as the search term/executes searches
 ** sort playlists by most recently played
-add different display options for library (artist, album, song, genre?)
--perfect 'play to pause' symbol, play/pause handler fuctionality
--move music kit calls to backend?
 -redesign play/options buttons
 -add favourites functionality
 -add account email verification? password changing mechanics
 -handle auth data
--handle all the 'library albums' exceptions
--added 'saved' podcasts?
+-add 'saved' podcasts?
 -auth issues:
     make sure token retrieval and saving is working as expected
     investigate why refresh is necessary after logging in
     verify email?
 
 -do more work on settings page, its a mess
--revamp library page
+
 -add album details to track display in appropriate places
 loaders for album artist song station playlist pages - skeleton loaders
 

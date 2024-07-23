@@ -69,8 +69,8 @@ const Settings = () => {
                     Logout
                 </div>
             </div>
-            <h1 className="text-5xl w-11/12 -translate-y-10  mx-auto text-center font-bold italic">
-                Account Settings
+            <h1 className="text-4xl w-11/12 -translate-y-10  mx-auto text-center font-bold italic">
+                Account Options
             </h1>
             {/* <div>Dark mode</div> */}
             <div className="mb-4 gap-2 flex flex-col items-center justify-center ">

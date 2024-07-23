@@ -425,7 +425,7 @@ const Podcast = () => {
                                         !podcastAudio.paused &&
                                         !podcastAudio.ended ? (
                                             <FaCirclePause
-                                                style={styleButtonsSmall}
+                                                style={styleButtonSmall}
                                             />
                                         ) : (
                                             <FaCirclePlay

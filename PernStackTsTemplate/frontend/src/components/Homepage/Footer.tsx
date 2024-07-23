@@ -653,7 +653,7 @@ function Footer() {
             className="footer px-5 flex items-center overflow-hidden justify-between bg-gradient-to-b  from-gray-900 to-black"
             style={{ maxHeight: '75px' }}
         >
-            <div className="flex justify-between   items-center my-1 w-full">
+            <div className="flex justify-between gap-1  items-center my-1 w-full">
                 <div className="flex gap-2 justify-between  w-1/4   items-center  ">
                     {albumArtUrl && musicKitInstance?.nowPlayingItem ? (
                         <img
@@ -689,7 +689,7 @@ function Footer() {
                                     onClick={goToAlbum}
                                     className="font-semibold   w-full flex-col truncate  flex  justify-between"
                                 >
-                                    <div className="hover:cursor-pointer flex w-full truncate hover:text-white">
+                                    <div className="hover:cursor-pointer  flex flex-col w-full truncate hover:text-white">
                                         <div>
                                             {
                                                 musicKitInstance?.nowPlayingItem
@@ -766,7 +766,7 @@ function Footer() {
                                                 }
 
                                                 addFavorite(song)
-                                                addToLibrary(song)
+                                                // addToLibrary(song)
                                             }}
                                         >
                                             <PiHeartFill style={styleSmall} />
