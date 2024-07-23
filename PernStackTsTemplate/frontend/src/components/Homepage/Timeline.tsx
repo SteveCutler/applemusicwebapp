@@ -13,6 +13,7 @@ const Timeline = () => {
         seekPodcast,
         setCurrentElapsedTime,
         scrubTime,
+        podcastAudio,
         scrubPod,
         setScrubPod,
         setScrubTime,
@@ -20,6 +21,7 @@ const Timeline = () => {
         podcastDuration: state.podcastDuration,
         scrubPod: state.scrubPod,
         setScrubPod: state.setScrubPod,
+        podcastAudio: state.podcastAudio,
         seekPodcast: state.seekPodcast,
         currentTime: state.currentTime,
         isPlayingPodcast: state.isPlayingPodcast,
@@ -46,7 +48,8 @@ const Timeline = () => {
 
     const handleScrubEnd = (e: any) => {
         if (isPlayingPodcast && scrubPod) {
-            seekPodcast(scrubPod)
+            // seekPodcast(scrubPod)
+            podcastAudio.currentTime = scrubPod
             setScrubPod(null)
             // setScrubbing(false)
         } else if (musicKitInstance && scrubTime) {

@@ -97,8 +97,10 @@ const Settings = () => {
                             : 'Sync'}
                 </button>
             </div>
-            <div className="w-full flex justify-start items-center flex-col">
-                <div className="text-xl font-bold italic">Podcast Import</div>
+            <div className="w-full flex justify-start items-center mt-3 flex-col">
+                <div className="text-xl font-bold italic">
+                    Apple Podcast Import
+                </div>
                 <div className="w-full flex gap-2 justify-center items-center">
                     <div className="border-2 max-w-96 bg-blue-500 flex flex-col text-left justify-center text-white border-white rounded-lg p-5">
                         Use this shortcut to export an OPML file of your podcast

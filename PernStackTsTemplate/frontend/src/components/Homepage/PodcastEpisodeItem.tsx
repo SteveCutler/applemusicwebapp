@@ -174,6 +174,24 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
 
     // console.log('podcast ', podcast)
 
+    function formatTime(sec: number) {
+        // Calculate hours, minutes, and seconds
+        let hours = Math.floor(sec / 3600)
+        let minutes = Math.floor((sec % 3600) / 60)
+        let seconds = sec % 60
+
+        // Format hours, minutes, and seconds to be two digits if needed
+        hours = hours.toString()
+        minutes = minutes.toString()
+        seconds = seconds.toString().padStart(2, '0')
+
+        if (hours == 0) {
+            return `${minutes}m`
+        } else {
+            return `${hours}h${minutes}m`
+        }
+    }
+
     const handleNavigation = () => {
         navigate(`/podcast-episode/${podcast.id}`)
     }
@@ -272,11 +290,11 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
             </div>
             <div className="flex justify-start items-start">
                 <div className="flex-col flex items-start  justify-start overflow-hidden">
-                    <h2 className={`text-md  line-clamp-3 font-bold`}>
+                    <h2 className={`text-md  line-clamp-2 font-bold`}>
                         {podcast.title}
                     </h2>
 
-                    <div></div>
+                    <div>{formatTime(podcast.duration)}</div>
                 </div>
             </div>
         </div>

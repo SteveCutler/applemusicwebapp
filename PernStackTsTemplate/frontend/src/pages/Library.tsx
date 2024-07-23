@@ -4,13 +4,16 @@ import { GiLoveSong } from 'react-icons/gi'
 import AlbumList from '../components/LibraryPage/AlbumList'
 import { IoMdRefreshCircle } from 'react-icons/io'
 import { IoGridOutline, IoGrid } from 'react-icons/io5'
+import { FaList } from 'react-icons/fa'
 import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
 import { useMediaQuery } from 'react-responsive'
 import SkeletonItem from '../components/Homepage/SkeletonItem'
+import { HiMiniArrowSmallUp, HiMiniArrowSmallDown } from 'react-icons/hi2'
 
 const Library = () => {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
+    const [sorted, setSorted] = useState<string | null>('datedesc')
     const [page, setPage] = useState(1)
     const itemsPerPage = 20
 
@@ -86,8 +89,15 @@ const Library = () => {
                 }
             )
             const data = await res.json()
-            setAlbums(data.albums)
-            setLibrarySearchResults(data.albums)
+
+            const sortedAlbums = data.albums.sort(
+                (a, b) =>
+                    new Date(b.attributes.dateAdded).getTime() -
+                    new Date(a.attributes.dateAdded).getTime()
+            )
+            setAlbums(sortedAlbums)
+
+            setLibrarySearchResults(sortedAlbums)
             setLoading(false)
         } catch (error) {
             setError('Failed to fetch albums')
@@ -98,13 +108,13 @@ const Library = () => {
     const initialize = async () => {
         let musicKitLoaded = false
         if (!musicKitInstance) {
-            console.log('Initializing MusicKit...')
+            // console.log('Initializing MusicKit...')
             await authorizeMusicKit()
             musicKitLoaded = true
         }
 
         if (!appleMusicToken && musicKitInstance) {
-            console.log('fetching Apple token...')
+            // console.log('fetching Apple token...')
             await fetchAppleToken()
         }
     }
@@ -221,6 +231,8 @@ const Library = () => {
     }
 
     const style = { fontSize: '2.5rem' }
+    const styleSmall = { fontSize: '2rem' }
+    const arrowStyle = { fontSize: '1rem' }
 
     const loadMoreAlbums = useCallback(() => {
         setPage(prevPage => {
@@ -289,6 +301,16 @@ const Library = () => {
                     </form>
                     <div className="flex w-full justify-end pe-3 items-center  gap-1">
                         <span
+                            className={`flex justify-right hover:cursor-pointer active:scale-95 m-1 p-1 gap-1 rounded-lg ${darkMode ? 'text-slate-200 hover:text-slate-400' : 'text-slate-900 hover:text-slate-700'}`}
+                            onClick={toggleGrid}
+                        >
+                            {gridDisplay ? (
+                                <FaList style={styleSmall} />
+                            ) : (
+                                <IoGridOutline style={style} />
+                            )}
+                        </span>
+                        {/* <span
                             className={`flex justify-right hover:cursor-pointer text-slate-900 hover:text-slate-100 m-1 p-1 gap-1 rounded-lg ${gridDisplay ? 'bg-slate-black' : 'bg-slate-400'}`}
                             onClick={toggleGrid}
                         >
@@ -297,10 +319,207 @@ const Library = () => {
                             ) : (
                                 <IoGridOutline style={style} />
                             )}
-                        </span>
+                        </span> */}
                     </div>
                 </div>
-                <div className="flex-col pt-10 justify-center w-full px-3 mx-0 ">
+                <div className="flex-col  justify-center w-full px-3 mx-0 ">
+                    <div
+                        className={`flex w-11/12 py-5 ${darkMode ? 'text-white' : 'text-black'} font-semibold select-none justify-end gap-2`}
+                    >
+                        <div>Sort by:</div>
+                        <button
+                            className={` border-2 border-white flex items-center ${sorted && sorted.includes('artist') ? 'bg-blue-400' : ''}  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full `}
+                            onClick={e => {
+                                e.preventDefault()
+
+                                if (
+                                    sorted == null ||
+                                    !sorted.includes('artist')
+                                ) {
+                                    setSorted('artistdesc')
+
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.artistName.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.artistName.toUpperCase()
+                                        if (nameA < nameB) {
+                                            return -1
+                                        }
+                                        if (nameA > nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'artistdesc') {
+                                    setSorted('artistasc')
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.artistName.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.artistName.toUpperCase()
+                                        if (nameA > nameB) {
+                                            return -1
+                                        }
+                                        if (nameA < nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'artistasc') {
+                                    setSorted('artistdesc')
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.artistName.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.artistName.toUpperCase()
+                                        if (nameA < nameB) {
+                                            return -1
+                                        }
+                                        if (nameA > nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                }
+                            }}
+                        >
+                            Artist{' '}
+                            {sorted == 'artistasc' && (
+                                <HiMiniArrowSmallUp style={arrowStyle} />
+                            )}{' '}
+                            {sorted == 'artistdesc' && (
+                                <HiMiniArrowSmallDown style={arrowStyle} />
+                            )}
+                        </button>
+                        <button
+                            className={` border-2 border-white  ${sorted && sorted.includes('albums') ? 'bg-blue-400' : ''}  text-sm active:scale-95 text-white font-bold flex items-center p-1 px-2 rounded-full `}
+                            onClick={e => {
+                                e.preventDefault()
+
+                                if (
+                                    sorted == null ||
+                                    !sorted.includes('albums')
+                                ) {
+                                    setSorted('albumsdesc')
+                                    console.log('albums desc')
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.name.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.name.toUpperCase()
+                                        if (nameA < nameB) {
+                                            return -1
+                                        }
+                                        if (nameA > nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'albumsdesc') {
+                                    setSorted('albumsasc')
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.name.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.name.toUpperCase()
+                                        if (nameA > nameB) {
+                                            return -1
+                                        }
+                                        if (nameA < nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'albumsasc') {
+                                    setSorted('albumsdesc')
+                                    const sortedAlbums = albums.sort((a, b) => {
+                                        const nameA =
+                                            a.attributes.name.toUpperCase() // Ignore upper and lowercase
+                                        const nameB =
+                                            b.attributes.name.toUpperCase()
+                                        if (nameA < nameB) {
+                                            return -1
+                                        }
+                                        if (nameA > nameB) {
+                                            return 1
+                                        }
+                                        return 0
+                                    })
+                                    setAlbums(sortedAlbums)
+                                }
+                            }}
+                        >
+                            Album{' '}
+                            {sorted == 'albumsasc' && (
+                                <HiMiniArrowSmallUp style={arrowStyle} />
+                            )}{' '}
+                            {sorted == 'albumsdesc' && (
+                                <HiMiniArrowSmallDown style={arrowStyle} />
+                            )}
+                        </button>
+                        <button
+                            className={` border-2 border-white flex items-center ${sorted && sorted.includes('date') ? 'bg-blue-400' : ''}  text-sm active:scale-95 text-white font-bold p-1 px-2 rounded-full `}
+                            onClick={e => {
+                                e.preventDefault()
+
+                                if (
+                                    sorted == null ||
+                                    !sorted.includes('date')
+                                ) {
+                                    setSorted('datedesc')
+
+                                    const sortedAlbums = albums.sort(
+                                        (a, b) =>
+                                            new Date(
+                                                b.attributes.dateAdded
+                                            ).getTime() -
+                                            new Date(
+                                                a.attributes.dateAdded
+                                            ).getTime()
+                                    )
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'datedesc') {
+                                    setSorted('dateasc')
+                                    const sortedAlbums = albums.sort(
+                                        (a, b) =>
+                                            new Date(
+                                                a.attributes.dateAdded
+                                            ).getTime() -
+                                            new Date(
+                                                b.attributes.dateAdded
+                                            ).getTime()
+                                    )
+                                    setAlbums(sortedAlbums)
+                                } else if (sorted == 'dateasc') {
+                                    setSorted('datedesc')
+                                    const sortedAlbums = albums.sort(
+                                        (a, b) =>
+                                            new Date(
+                                                b.attributes.dateAdded
+                                            ).getTime() -
+                                            new Date(
+                                                a.attributes.dateAdded
+                                            ).getTime()
+                                    )
+                                    setAlbums(sortedAlbums)
+                                }
+                            }}
+                        >
+                            Date Added{' '}
+                            {sorted == 'dateasc' && (
+                                <HiMiniArrowSmallUp style={arrowStyle} />
+                            )}{' '}
+                            {sorted == 'datedesc' && (
+                                <HiMiniArrowSmallDown style={arrowStyle} />
+                            )}
+                        </button>
+                    </div>
                     {librarySearchResults ? (
                         <AlbumList
                             albums={librarySearchResults.slice(

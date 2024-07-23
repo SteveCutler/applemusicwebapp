@@ -226,7 +226,7 @@ const Track: React.FC<TrackPropTypes> = ({
                 },
             }}
             //className={`flex border-2  rounded-lg my-2 px-3 justify-between items-center border-slate-300`}
-            className={`flex  w-full  ${first && ' rounded-t-lg'}  ${last ? 'rounded-b-lg' : ''} ${darkMode ? 'text-slate-100 hover:text-slate-500 bg-black hover:bg-slate-900 border-slate-200' : 'text-slate-900 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 border-black'}  select-none  ${isPlaying && song.id === currentSongId ? `` : ``}  p-1 font-normal justify-between items-center `}
+            className={`flex  w-full  ${first && ' rounded-t-lg pt-2'}  ${last ? 'rounded-b-lg pb-2' : ''} ${darkMode ? 'text-slate-100 hover:text-slate-500 bg-black hover:bg-slate-900 border-slate-200' : 'text-slate-900 hover:text-slate-700 bg-slate-200 hover:bg-slate-300 border-black'}  select-none  ${isPlaying && song.id === currentSongId ? `` : ``}  py-1 px-2 font-normal justify-between items-center `}
         >
             <div
                 className={

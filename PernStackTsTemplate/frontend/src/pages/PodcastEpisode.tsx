@@ -226,7 +226,8 @@ const PodcastEpisode = () => {
         setPlaylist: state.setPlaylist,
     }))
 
-    const styleButton = { fontSize: '1.5rem', color: 'dodgerblue' }
+    const styleButton = { fontSize: '2.1rem', color: 'dodgerblue' }
+    const styleButtonSmall = { fontSize: '1.2rem', color: 'dodgerblue' }
     const styleButtonBig = { fontSize: '3rem', color: 'dodgerblue' }
 
     const style = { fontSize: '1.5em' }
@@ -306,9 +307,9 @@ const PodcastEpisode = () => {
                         epId === podcastEpisode.id &&
                         !podcastAudio.paused &&
                         !podcastAudio.ended ? (
-                            <FaCirclePause style={styleButtonBig} />
+                            <FaCirclePause style={styleButton} />
                         ) : (
-                            <FaCirclePlay style={styleButtonBig} />
+                            <FaCirclePlay style={styleButton} />
                         )}
                     </div>
                     {podcastEpisode && (
@@ -322,7 +323,6 @@ const PodcastEpisode = () => {
                             >
                                 {id && (
                                     <PodcastOptionsModal
-                                        big={true}
                                         id={podcastEpisode.feedId.toString()}
                                     />
                                 )}
@@ -335,7 +335,7 @@ const PodcastEpisode = () => {
                     {podcastInfo?.author}
                 </div> */}
                 {/* <div>{podcastInfo?.country}</div> */}
-                {podcastEpisode && !queueToggle && (
+                {podcastEpisode && (
                     <div
                         className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '} ${darkMode ? 'text-white bg-slate-700' : 'text-black bg-slate-300'} flex-col   rounded-lg p-3 `}
                     >
@@ -363,10 +363,12 @@ const PodcastEpisode = () => {
                                         !podcastAudio.paused &&
                                         !podcastAudio.ended ? (
                                             <FaCirclePause
-                                                style={styleButton}
+                                                style={styleButtonSmall}
                                             />
                                         ) : (
-                                            <FaCirclePlay style={styleButton} />
+                                            <FaCirclePlay
+                                                style={styleButtonSmall}
+                                            />
                                         )}
                                     </div>
 

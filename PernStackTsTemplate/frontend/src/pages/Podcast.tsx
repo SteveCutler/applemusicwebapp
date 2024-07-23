@@ -297,7 +297,8 @@ const Podcast = () => {
         episodeSearchResults,
     ])
 
-    const styleButton = { fontSize: '1.5rem', color: 'dodgerblue' }
+    const styleButton = { fontSize: '2.1rem', color: 'dodgerblue' }
+    const styleButtonSmall = { fontSize: '1.2rem', color: 'dodgerblue' }
     const styleButtonBig = { fontSize: '3rem', color: 'dodgerblue' }
 
     const style = { fontSize: '1.5em' }
@@ -340,7 +341,7 @@ const Podcast = () => {
                 className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex pb-3 justify-around  items-start`}
             >
                 <div
-                    className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
+                    className={`relative ${queueToggle ? ' w-2/3' : 'lg:w-1/2 w-full'} h-fit `}
                 >
                     {podcastEpisodes && podcastEpisodes[0]?.feedImage ? (
                         <img
@@ -356,7 +357,7 @@ const Podcast = () => {
                         />
                     )}
                     <div
-                        className=" absolute bottom-5 left-5 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
+                        className=" absolute bottom-3 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                         onClick={async e => {
                             e.preventDefault()
                             e.stopPropagation() // Prevents the link's default behavior
@@ -372,13 +373,13 @@ const Podcast = () => {
                         epId === podcastEpisodes[0].id &&
                         !podcastAudio.paused &&
                         !podcastAudio.ended ? (
-                            <FaCirclePause style={styleButtonBig} />
+                            <FaCirclePause style={styleButton} />
                         ) : (
-                            <FaCirclePlay style={styleButtonBig} />
+                            <FaCirclePlay style={styleButton} />
                         )}
                     </div>
                     {podcastEpisodes && (
-                        <div className="absolute bottom-4 right-4">
+                        <div className="absolute bottom-2 right-2">
                             <div
                                 onClick={e => {
                                     e.preventDefault()
@@ -386,9 +387,7 @@ const Podcast = () => {
                                 }}
                                 className=""
                             >
-                                {id && (
-                                    <PodcastOptionsModal big={true} id={id} />
-                                )}
+                                {id && <PodcastOptionsModal id={id} />}
                             </div>
                         </div>
                     )}
@@ -426,10 +425,12 @@ const Podcast = () => {
                                         !podcastAudio.paused &&
                                         !podcastAudio.ended ? (
                                             <FaCirclePause
-                                                style={styleButton}
+                                                style={styleButtonsSmall}
                                             />
                                         ) : (
-                                            <FaCirclePlay style={styleButton} />
+                                            <FaCirclePlay
+                                                style={styleButtonSmall}
+                                            />
                                         )}
                                     </div>
 
@@ -535,7 +536,7 @@ const Podcast = () => {
                     {visibleEpisodes &&
                         podcastInfo &&
                         visibleEpisodes
-                            .slice(1)
+                            .slice(queueToggle ? 0 : 1)
                             .map((episode, index) => (
                                 <PodcastListItem
                                     key={index}

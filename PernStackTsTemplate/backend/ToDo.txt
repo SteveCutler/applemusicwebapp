@@ -42,7 +42,9 @@ add different display options for library (artist, album, song, genre?)
     verify email?
 
 -do more work on settings page, its a mess
-
+-revamp library page
+-add album details to track display in appropriate places
+loaders for album artist song station playlist pages - skeleton loaders
 
 
 

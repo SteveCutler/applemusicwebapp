@@ -84,6 +84,7 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
     const styleButton = { fontSize: '1.2rem', color: 'dodgerblue' }
 
     const style = { fontSize: '1.5em' }
+    const styleSmall = { fontSize: '1em' }
 
     function formatTime(sec: number) {
         // Calculate hours, minutes, and seconds
@@ -143,22 +144,20 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                             )}
                         </div>
                         <div className="flex items-center gap-2">
-                            {formatTime(podcast.duration)}
-                            {progress !== 0 && (
-                                <div className=" text-blue-500 w-fit p-1 font-semibold text-md  flex m-0 p-0">
-                                    {progress < 99 ? (
-                                        <span> {String(progress)}%</span>
-                                    ) : (
-                                        <span>
-                                            {
-                                                <BsFillPatchCheckFill
-                                                    style={style}
-                                                />
-                                            }
-                                        </span>
-                                    )}
-                                </div>
-                            )}
+                            <div>{formatTime(podcast.duration)}</div>
+                            <div className=" text-white bg-blue-500 w-fit p-1 rounded-md font-semibold text-sm  flex m-0 ">
+                                {progress < 99 ? (
+                                    <h1> {progress}%</h1>
+                                ) : (
+                                    <span>
+                                        {
+                                            <BsFillPatchCheckFill
+                                                style={styleSmall}
+                                            />
+                                        }
+                                    </span>
+                                )}
+                            </div>
                         </div>
                     </div>
                     <div>{podcast.datePublishedPretty}</div>

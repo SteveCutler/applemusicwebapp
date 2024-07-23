@@ -716,7 +716,8 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
                         </div>
                     </li> */}
                     {object.type !== 'artists' &&
-                        object.type !== 'library-artists' && (
+                        object.type !== 'library-artists' &&
+                        object.type !== 'library-albums' && (
                             <li
                                 onClick={e => {
                                     addToLibrary(e)
