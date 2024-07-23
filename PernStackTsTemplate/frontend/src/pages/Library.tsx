@@ -324,7 +324,7 @@ const Library = () => {
                 </div>
                 <div className="flex-col  justify-center w-full px-3 mx-0 ">
                     <div
-                        className={`flex w-11/12 py-5 ${darkMode ? 'text-white' : 'text-black'} font-semibold select-none justify-end gap-2`}
+                        className={`flex w-full px-9 items-center py-5 ${darkMode ? 'text-white' : 'text-black'} font-semibold select-none justify-end gap-2`}
                     >
                         <div>Sort by:</div>
                         <button

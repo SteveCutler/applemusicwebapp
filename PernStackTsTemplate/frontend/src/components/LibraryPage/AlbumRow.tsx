@@ -170,7 +170,7 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
             setLoading(false)
         }
     }
-    const styleBlue = { color: 'dodgerblue', fontSize: '3rem' }
+    const styleBlue = { color: 'dodgerblue', fontSize: '2rem' }
 
     useEffect(() => {
         if (trackData?.length > 0 && !loading) {
@@ -179,13 +179,30 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
     }, [loading])
 
     const playData = async () => {
-        console.log('album data: ', albumData)
-        setPlaylist(trackData, 0, true)
+        if (musicKitInstance) {
+            if (
+                musicKitInstance.nowPlayingItem &&
+                musicKitInstance.nowPlayingItem.container &&
+                musicKitInstance.nowPlayingItem.container.id == albumItem.id
+            ) {
+                musicKitInstance.playbackState == 2
+                    ? await musicKitInstance.pause()
+                    : await musicKitInstance.play()
+            } else {
+                await musicKitInstance.setQueue({
+                    album: albumItem.id,
+                    startPlaying: true,
+                })
+                await musicKitInstance.play()
+            }
+        }
+        //     console.log('album data: ', albumData)
+        //     setPlaylist(trackData, 0, true)
 
-        setTrackData([])
-    }
-    const loadPlayer = async () => {
-        await retrieveAlbumTracks()
+        //     setTrackData([])
+        // }
+        // const loadPlayer = async () => {
+        //     await retrieveAlbumTracks()
     }
 
     return (
@@ -203,12 +220,12 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                                 albumItem.attributes.artwork?.url,
                                 100
                             )}
-                            style={{ width: '75px' }}
+                            style={{ width: '60px' }}
                         />
                     ) : (
                         <img
                             src={defaultPlaylistArtwork}
-                            style={{ width: '75px' }}
+                            style={{ width: '60px' }}
                         />
                     )}
                     <div className="flex-flex-col justify-center">
@@ -229,11 +246,17 @@ const AlbumRow: React.FC<AlbumProps> = ({ albumItem, first, last }) => {
                         // await FetchAlbumData(albumId)
                         // handlePlayPause()
 
-                        await loadPlayer()
-                        console.log(musicKitInstance)
+                        await playData()
                     }}
                 >
-                    <FaCirclePlay style={styleBlue} />
+                    {musicKitInstance.playbackState == 2 &&
+                    musicKitInstance.nowPlayingItem.container &&
+                    musicKitInstance.nowPlayingItem.container.id ==
+                        albumItem.id ? (
+                        <FaRegCirclePause style={styleBlue} />
+                    ) : (
+                        <FaCirclePlay style={styleBlue} />
+                    )}
                 </div>
             </Link>
         </>
