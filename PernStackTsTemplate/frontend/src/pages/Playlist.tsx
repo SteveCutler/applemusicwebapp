@@ -66,8 +66,9 @@ const Playlist = () => {
     const { playlistData, playlistTrackData, loading, error } =
         useFetchPlaylistData(playlistId)
 
-    const { musicKitInstance, darkMode } = useStore(state => ({
+    const { musicKitInstance, darkMode, queueToggle } = useStore(state => ({
         darkMode: state.darkMode,
+        queueToggle: state.queueToggle,
         musicKitInstance: state.musicKitInstance,
     }))
 
@@ -125,12 +126,16 @@ const Playlist = () => {
                     </div>
                 </Link> */}
                 <div className="flex-col">
-                    <h1 className="text-3xl font-bold">
+                    <h1 className="text-3xl w-full font-bold">
                         {playlistData.attributes.name}
                     </h1>
                 </div>
-                <div className="flex w-full justify-between gap-4 py-3  ">
-                    <div className=" relative h-fit w-1/2">
+                <div
+                    className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'} flex w-full justify-between gap-4 py-3  `}
+                >
+                    <div
+                        className={` relative  ${queueToggle ? ' w-2/3' : 'lg:w-1/2 w-full'} h-fit `}
+                    >
                         {loadingImage ? (
                             // <div className="w-full h-full flex items-center justify-center">
                             <img
@@ -168,7 +173,9 @@ const Playlist = () => {
                             <FaCirclePlay style={styleButton} />
                         </div>
                     </div>
-                    <div className="w-1/2">
+                    <div
+                        className={`${queueToggle ? ' w-full mx-auto' : 'lg:w-1/2 w-full '}`}
+                    >
                         <TrackDisplay albumTracks={playlistTrackData} />
                     </div>
                     {/* MAKE TRACK GETTER, ETC. DESIGN PAGE LAYOUT */}
