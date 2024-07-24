@@ -318,7 +318,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                 ))}
                         </div>
                     ) : (
-                        <div className=" flex flex-wrap px-2 justify-center  mx-auto gap-x-1">
+                        <div className=" flex flex-wrap px-2 justify-center w-full mx-auto gap-x-1">
                             {object
                                 // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)

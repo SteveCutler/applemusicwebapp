@@ -114,6 +114,7 @@ const Artist = () => {
     const [artistData, setArtistData] = useState<Artist | null>(null)
     const [artistDataLoading, setArtistDataLoading] = useState(false)
     const [artistDataError, setArtistDataError] = useState<string | null>(null)
+    const [loadingImage, setLoadingImage] = useState(true)
 
     useEffect(() => {
         const fetchArtistData = async () => {
@@ -333,18 +334,36 @@ const Artist = () => {
                         </div>
                         <div className="md:flex-row  gap-4 flex flex-col justify-around  items-start">
                             <div className="flex-col flex  w-full md:w-1/2 relative ">
+                                {loadingImage ? (
+                                    // <div className="w-full h-full flex items-center justify-center">
+                                    <img
+                                        src={defaultPlaylistArtwork}
+                                        className="pb-5 w-full animate-pulse"
+                                    />
+                                ) : // </div>
+                                null}
                                 {artistData.attributes.artwork ? (
                                     <img
                                         className="pb-5 w-full"
-                                        src={constructImageUrl(
-                                            artistData.attributes.artwork.url,
-                                            700
-                                        )}
+                                        src={
+                                            constructImageUrl(
+                                                artistData.attributes.artwork
+                                                    .url,
+                                                1000
+                                            ) || defaultPlaylistArtwork
+                                        }
+                                        alt=""
+                                        onLoad={() => setLoadingImage(false)}
+                                        style={{
+                                            display: loadingImage
+                                                ? 'none'
+                                                : 'block',
+                                        }}
                                     />
                                 ) : (
                                     <img
-                                        className="pb-5 w-full"
                                         src={defaultPlaylistArtwork}
+                                        className="pb-5 w-full"
                                     />
                                 )}
 

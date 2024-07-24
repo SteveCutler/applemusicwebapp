@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react'
 import { useStore } from '../store/store'
 import { FaCirclePlay, FaRegCirclePause } from 'react-icons/fa6'
 import ScrollToTop from '../components/Homepage/ScrollToTop'
+import defaultPlaylistArtwork from '../../src/assets/images/defaultPlaylistArtwork.png'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -63,6 +64,7 @@ const Station = () => {
     const { stationId, type } = useParams<{ stationId: string; type: string }>()
     console.log(type)
     const { stationData, loading, error } = FetchStationData(stationId)
+    const [loadingImage, setLoadingImage] = useState(true)
     const {
         setSearchTerm,
         musicKitInstance,
@@ -137,13 +139,30 @@ const Station = () => {
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
                     <div className="relative">
+                        {loadingImage ? (
+                            // <div className="w-full h-full flex items-center justify-center">
+                            <img
+                                src={defaultPlaylistArtwork}
+                                className=" w-full animate-pulse"
+                            />
+                        ) : // </div>
+                        null}
+
                         <img
+                            className="w-full"
                             src={constructImageUrl(
-                                stationData.attributes.artwork.url,
-                                500
+                                stationData.attributes.artwork?.url ??
+                                    defaultPlaylistArtwork,
+                                1000
                             )}
                             alt=""
+                            onLoad={() => setLoadingImage(false)}
+                            style={{
+                                maxWidth: '500px',
+                                display: loadingImage ? 'none' : 'block',
+                            }}
                         />
+
                         <div
                             className=" absolute bottom-10 right-10 hover:cursor-pointer transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {

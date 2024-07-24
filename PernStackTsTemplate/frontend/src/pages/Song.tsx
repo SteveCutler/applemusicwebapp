@@ -44,6 +44,7 @@ const Song = () => {
         return <div>Song not found</div>
     }
 
+    const [loadingImage, setLoadingImage] = useState(true)
     // console.log('song object: ', song)
     const { songId, type } = useParams<{ songId: string; type: string }>()
     // console.log(type)
@@ -154,18 +155,36 @@ const Song = () => {
                     className={`${queueToggle ? ' flex-col' : 'lg:flex-row flex-col'}   gap-4 flex  justify-around  items-start`}
                 >
                     <div className="relative w-1/2">
-                        {song.attributes.artwork?.url ? (
+                        {loadingImage ? (
+                            // <div className="w-full h-full flex items-center justify-center">
                             <img
-                                src={constructImageUrl(
-                                    song.attributes.artwork.url,
-                                    500
-                                )}
+                                src={defaultPlaylistArtwork}
+                                className=" w-full animate-pulse"
+                            />
+                        ) : // </div>
+                        null}
+                        {song.attributes.artwork ? (
+                            <img
+                                className=" w-full"
+                                src={
+                                    constructImageUrl(
+                                        song.attributes.artwork.url,
+                                        1000
+                                    ) || defaultPlaylistArtwork
+                                }
                                 alt=""
-                                className="w-full"
+                                onLoad={() => setLoadingImage(false)}
+                                style={{
+                                    display: loadingImage ? 'none' : 'block',
+                                }}
                             />
                         ) : (
-                            <img src={defaultPlaylistArtwork} />
+                            <img
+                                src={defaultPlaylistArtwork}
+                                className=" w-full"
+                            />
                         )}
+
                         <div
                             className=" absolute bottom-5 left-4 hover:cursor-pointer transform   flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {

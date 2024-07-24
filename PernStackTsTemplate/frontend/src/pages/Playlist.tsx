@@ -7,6 +7,7 @@ import defaultPlaylistArtwork from '../../src/assets/images/defaultPlaylistArtwo
 import ScrollToTop from '../components/Homepage/ScrollToTop'
 import { useStore } from '../store/store'
 import { FaCirclePlay } from 'react-icons/fa6'
+import { useState } from 'react'
 
 type AlbumType = {
     attributes: AttributeObject
@@ -70,6 +71,7 @@ const Playlist = () => {
         musicKitInstance: state.musicKitInstance,
     }))
 
+    const [loadingImage, setLoadingImage] = useState(true)
     // console.log(playlistData)
     // console.log(playlistTrackData)
 
@@ -129,6 +131,15 @@ const Playlist = () => {
                 </div>
                 <div className="flex w-full justify-between gap-4 py-3  ">
                     <div className=" relative h-fit w-1/2">
+                        {loadingImage ? (
+                            // <div className="w-full h-full flex items-center justify-center">
+                            <img
+                                src={defaultPlaylistArtwork}
+                                className=" w-full animate-pulse"
+                            />
+                        ) : // </div>
+                        null}
+
                         <img
                             className="w-full"
                             src={constructImageUrl(
@@ -137,7 +148,12 @@ const Playlist = () => {
                                 1000
                             )}
                             alt=""
+                            onLoad={() => setLoadingImage(false)}
+                            style={{
+                                display: loadingImage ? 'none' : 'block',
+                            }}
                         />
+
                         <div
                             className=" absolute bottom-10 right-10 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {

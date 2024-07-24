@@ -375,9 +375,18 @@ const Album = () => {
                     <div
                         className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                     >
+                        <img
+                            src={defaultPlaylistArtwork}
+                            className="w-full animate-pulse"
+                            style={{ width: '500px' }}
+                        />
                         {loadingImage ? (
                             // <div className="w-full h-full flex items-center justify-center">
-                            <img src={defaultPlaylistArtwork} />
+                            <img
+                                src={defaultPlaylistArtwork}
+                                className="w-full animate-pulse"
+                                style={{ width: '500px' }}
+                            />
                         ) : // </div>
                         null}
                         {albumData.attributes?.artwork?.url ? (
@@ -391,10 +400,15 @@ const Album = () => {
                                 }
                                 alt=""
                                 onLoad={() => setLoadingImage(false)}
-                                style={{ display: loading ? 'none' : 'block' }}
+                                style={{
+                                    display: loadingImage ? 'none' : 'block',
+                                }}
                             />
                         ) : (
-                            <img src={defaultPlaylistArtwork} />
+                            <img
+                                src={defaultPlaylistArtwork}
+                                className="w-full"
+                            />
                         )}
 
                         <div
@@ -513,20 +527,34 @@ const Album = () => {
                     <div
                         className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                     >
+                        {loadingImage ? (
+                            <div>
+                                <img
+                                    src={defaultPlaylistArtwork}
+                                    className="w-full h-full animate-pulse"
+                                />
+                            </div>
+                        ) : // </div>
+                        null}
                         {albumData.attributes?.artwork?.url ? (
                             <img
                                 className="w-full"
-                                src={constructImageUrl(
-                                    albumData.attributes.artwork.url,
-                                    1000
-                                )}
+                                src={
+                                    constructImageUrl(
+                                        albumData.attributes.artwork.url,
+                                        1000
+                                    ) || defaultPlaylistArtwork
+                                }
                                 alt=""
+                                onLoad={() => setLoadingImage(false)}
+                                style={{
+                                    display: loadingImage ? 'none' : 'block',
+                                }}
                             />
                         ) : (
                             <img
-                                className="w-full"
                                 src={defaultPlaylistArtwork}
-                                alt=""
+                                className="w-full"
                             />
                         )}
                         <div
