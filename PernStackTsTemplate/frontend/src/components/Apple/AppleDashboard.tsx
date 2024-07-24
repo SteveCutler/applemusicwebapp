@@ -23,6 +23,7 @@ import CryptoJS from 'crypto-js'
 import GradientAnimation from '../Homepage/GradientAnimation'
 import SkeletonDropdownDisplay from './SkeletonDropdownDisplay'
 import SkeletonItem from '../Homepage/SkeletonItem'
+import RecentlyAddedToLib from './RecentlyAddedToLib'
 
 type AlbumType = {
     attributes: {
@@ -370,61 +371,57 @@ const AppleDashboard = () => {
         }
     }
 
-    useEffect(() => {
-        const recent: RecentlyAddedItem[] = []
+    // useEffect(() => {
+    //     const recent: RecentlyAddedItem[] = []
 
-        const fetchRecentlyAddedToLib = async (url: string) => {
-            if (musicKitInstance) {
-                try {
-                    // console.log(music)
+    //     const fetchRecentlyAddedToLib = async (url: string) => {
+    //         if (musicKitInstance) {
+    //             try {
+    //                 // console.log(music)
 
-                    const queryParameters = {
-                        l: 'en-us',
-                        limit: 10,
-                        headers: {
-                            Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
-                            'Music-User-Token': appleMusicToken,
-                        },
-                    }
-                    const res = await musicKitInstance.api.music(
-                        url,
-                        queryParameters
-                    )
+    //                 const queryParameters = {
+    //                     l: 'en-us',
+    //                     limit: 10,
+    //                     headers: {
+    //                         Authorization: `Bearer ${import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN}`,
+    //                         'Music-User-Token': appleMusicToken,
+    //                     },
+    //                 }
+    //                 const res = await musicKitInstance.api.music(
+    //                     url,
+    //                     queryParameters
+    //                 )
 
-                    // if (res.status !== 200) {
+    //                 // if (res.status !== 200) {
 
-                    // }
+    //                 // }
 
-                    const data: RecentlyAddedItem[] = await res.data.data
-                    recent.push(...data)
-                    console.log('recent', recent)
+    //                 const data: RecentlyAddedItem[] = await res.data.data
+    //                 recent.push(...data)
+    //                 // console.log('recent', recent)
 
-                    if (res.data.next && recent.length <= 20) {
-                        await fetchRecentlyAddedToLib(res.data.next)
-                    } else {
-                        setRecentlyAddedToLib(recent)
-                        setLoadingRecent(false)
-                    }
-                } catch (error: any) {
-                    console.error(error)
-                    setLoadingRecent(false)
-                }
-            }
-        }
+    //                 if (res.data.next && recent.length <= 20) {
+    //                     await fetchRecentlyAddedToLib(res.data.next)
+    //                 } else {
+    //                     setRecentlyAddedToLib(recent)
+    //                     setLoadingRecent(false)
+    //                 }
+    //             } catch (error: any) {
+    //                 console.error(error)
+    //                 setLoadingRecent(false)
+    //             }
+    //         }
+    //     }
 
-        if (!musicKitInstance || !appleMusicToken) {
-            authorizeMusicKit()
-        }
-        if (
-            musicKitInstance &&
-            appleMusicToken &&
-            recentlyAddedToLib.length < 1
-        ) {
-            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
-        } else {
-            setLoadingRecent(false)
-        }
-    }, [musicKitInstance, appleMusicToken, isAuthorized, recentlyAddedToLib, ,])
+    //     if (!musicKitInstance || !appleMusicToken) {
+    //         authorizeMusicKit()
+    //     }
+    //     if (musicKitInstance && appleMusicToken && !recentlyAddedToLib) {
+    //         fetchRecentlyAddedToLib('/v1/me/library/recently-added')
+    //     } else {
+    //         setLoadingRecent(false)
+    //     }
+    // }, [musicKitInstance, appleMusicToken, isAuthorized, recentlyAddedToLib, ,])
 
     useEffect(() => {
         const fetchRecommendations = async () => {
@@ -440,7 +437,7 @@ const AppleDashboard = () => {
                     )
 
                     const data = await res.data.data
-                    console.log('loading recommendations: ', data)
+                    // console.log('loading recommendations: ', data)
 
                     setPersonalizedPlaylists(data[0])
 
@@ -483,7 +480,7 @@ const AppleDashboard = () => {
         const getRecentEps = async () => {
             if (podSubs) {
                 const ids = podSubs.map(pod => pod.id).join()
-                console.log('ids', ids)
+                // console.log('ids', ids)
                 // const id = podSubs[0].id.toString()
                 // console.log('id', id.toString())
 
@@ -619,7 +616,7 @@ const AppleDashboard = () => {
             )} */}
             {/* <SkeletonDropdownDisplay sliceNumber={sliceNumber} /> */}
 
-            {loadingRecent ? (
+            {/* {loadingRecent ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             ) : (
                 !loadingRecent &&
@@ -631,8 +628,8 @@ const AppleDashboard = () => {
                         title={'Recently Added to Library'}
                     />
                 )
-            )}
-
+            )} */}
+            <RecentlyAddedToLib />
             {loadingPodcasts ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             ) : !loadingPodcasts && recentEps && podSubs ? (

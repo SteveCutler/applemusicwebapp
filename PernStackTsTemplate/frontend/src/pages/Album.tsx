@@ -190,6 +190,8 @@ const Album = () => {
         setPlaylist: state.setPlaylist,
     }))
 
+    const [loadingImage, setLoadingImage] = useState(true)
+
     useEffect(() => {
         const fetchAlbumData = async () => {
             if (!musicKitInstance) {
@@ -236,11 +238,14 @@ const Album = () => {
                             queryParameters
                         )
 
+                        console.log('album res', res)
+                        console.log('artist res', artistRes)
+
                         const artistId = await artistRes.data.data[0].id
 
                         const data: AlbumTypeObject = await res.data.data[0]
 
-                        console.log('album data: ', data)
+                        // console.log('album data: ', data)
 
                         setAlbumData(data)
                         setArtistId(artistId)
@@ -276,6 +281,7 @@ const Album = () => {
         if (!albumId.startsWith('l')) {
             fetchAlbumData()
         } else {
+            console.log('fetching library album data')
             fetchLibraryAlbumData()
         }
     }, [albumId, musicKitInstance])
@@ -369,22 +375,28 @@ const Album = () => {
                     <div
                         className={`relative ${queueToggle ? ' w-1/2' : 'lg:w-1/2 w-full'} h-fit `}
                     >
+                        {loadingImage ? (
+                            // <div className="w-full h-full flex items-center justify-center">
+                            <img src={defaultPlaylistArtwork} />
+                        ) : // </div>
+                        null}
                         {albumData.attributes?.artwork?.url ? (
                             <img
                                 className="w-full"
-                                src={constructImageUrl(
-                                    albumData.attributes.artwork.url,
-                                    1000
-                                )}
+                                src={
+                                    constructImageUrl(
+                                        albumData.attributes.artwork.url,
+                                        1000
+                                    ) || defaultPlaylistArtwork
+                                }
                                 alt=""
+                                onLoad={() => setLoadingImage(false)}
+                                style={{ display: loading ? 'none' : 'block' }}
                             />
                         ) : (
-                            <img
-                                className="w-full"
-                                src={defaultPlaylistArtwork}
-                                alt=""
-                            />
+                            <img src={defaultPlaylistArtwork} />
                         )}
+
                         <div
                             className=" absolute bottom-2 left-2 hover:cursor-pointer transform    hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease"
                             onClick={async e => {

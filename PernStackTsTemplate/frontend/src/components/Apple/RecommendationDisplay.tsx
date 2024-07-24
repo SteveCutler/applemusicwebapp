@@ -141,7 +141,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                             const data =
                                 await res.data.data[0].attributes.artwork.url
 
-                            console.log('data2: ', data)
+                            // console.log('data2: ', data)
 
                             {
                                 data && setMoreLikeAlbumImage(data)
@@ -157,7 +157,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
         }
 
         if (!moreLikeAlbumImage && reco && reco.attributes.title.contentIds) {
-            console.log('running image retrieval')
+            // console.log('running image retrieval')
             retrieveMoreLikeImage()
         }
     }, [reco])
@@ -174,7 +174,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                     <div className="px-5">
                         <img src={constructImageUrl(moreLikeAlbumImage, 75)} />
                     </div>
-                    <h2 className="text-xl   font-bold">
+                    <h2 className="text-xl italic  font-bold">
                         {reco.attributes.title.stringForDisplay}
                     </h2>
                 </div>
@@ -182,7 +182,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                 !noTitle &&
                 reco && (
                     <div
-                        className={`text-lg font-bold w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
+                        className={`text-lg font-bold italic w-11/12 border-b-2 pb-2 mb-4 flex mx-auto ${darkMode ? 'text-white border-white' : 'text-black border-black'}`}
                     >
                         <h2 className=" px-5 text-xl font-bold">
                             {reco.attributes.title.stringForDisplay}

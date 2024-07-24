@@ -242,7 +242,7 @@ const PodcastEpisodeItem: React.FC<podcastProp> = ({
                 )}
                 {progress !== 0 && (
                     <div
-                        className={`${darkMode ? 'text-black' : 'text-white'}  bg-blue-400 p-1 w-fit absolute top-0 right-1 font-bold text-xs  flex m-0 rounded-b-lg`}
+                        className={`text-white bg-blue-400 p-1 w-fit absolute top-0 right-1 font-bold text-xs  flex m-0 rounded-b-lg`}
                     >
                         {progress < 99 ? (
                             <div className="drop-shadow-md">

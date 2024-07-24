@@ -2,6 +2,7 @@ import { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { useStore } from '../../store/store'
+import AppleDashboard from '../../components/Apple/AppleDashboard'
 
 const useLogin = () => {
     const [loading, setLoading] = useState(false)
@@ -60,7 +61,9 @@ const useLogin = () => {
             authorizeMusicKit()
             setAuthorized(true)
             toast.success('Logged in successfully')
-
+            if (!appleMusicToken) {
+                navigate('/signup/')
+            }
             // navigate('/dashboard')
         } catch (error) {
             toast.error('Failed to log in')

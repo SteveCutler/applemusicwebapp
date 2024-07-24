@@ -81,7 +81,12 @@ const SidebarActivity: React.FC<ActivityProp> = ({ type }) => {
             }
         }
 
-        if (musicKitInstance && backendToken && appleMusicToken) {
+        if (
+            musicKitInstance &&
+            backendToken &&
+            appleMusicToken &&
+            !recentActivity
+        ) {
             fetchRecentActivity()
         }
         //

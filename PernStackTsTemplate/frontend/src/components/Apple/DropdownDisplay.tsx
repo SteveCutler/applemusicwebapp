@@ -304,7 +304,7 @@ const DropdownDisplay: React.FC<recoProps> = ({
                                 ))}
                         </div>
                     ) : podcast ? (
-                        <div className=" flex flex-wrap px-2 justify-center gap-y-10 mx-auto gap-1">
+                        <div className=" flex flex-wrap px-2 w-full justify-center gap-y-10 mx-auto gap-1">
                             {object
                                 // .slice(0, 15)
                                 .slice(0, expand ? object.length : sliceNumber)

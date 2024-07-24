@@ -4,13 +4,19 @@ import useMusicKit from './LoadMusickit'
 import { useStore } from '../../store/store'
 
 const FetchRecentlyPlayed = () => {
-    const { musicKitInstance, recentlyPlayed, setRecentlyPlayed } = useStore(
-        state => ({
-            musicKitInstance: state.musicKitInstance,
-            recentlyPlayed: state.recentlyPlayed,
-            setRecentlyPlayed: state.setRecentlyPlayed,
-        })
-    )
+    const {
+        musicKitInstance,
+        recentlyPlayed,
+        backendToken,
+        appleMusicToken,
+        setRecentlyPlayed,
+    } = useStore(state => ({
+        backendToken: state.backendToken,
+        appleMusicToken: state.appleMusicToken,
+        musicKitInstance: state.musicKitInstance,
+        recentlyPlayed: state.recentlyPlayed,
+        setRecentlyPlayed: state.setRecentlyPlayed,
+    }))
 
     // const [recentlyPlayed, setRecentlyPlayed] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(true)
@@ -42,7 +48,12 @@ const FetchRecentlyPlayed = () => {
             }
         }
 
-        if (musicKitInstance) {
+        if (
+            musicKitInstance &&
+            backendToken &&
+            appleMusicToken &&
+            !recentlyPlayed
+        ) {
             fetchRecentlyPlayed()
         }
     }, [musicKitInstance])

@@ -138,6 +138,7 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         if (!musicKitInstance) {
             return
         }
+
         if (
             object.id.startsWith('l') ||
             object.id.startsWith('i') ||
@@ -145,23 +146,51 @@ const OptionsModal: React.FC<OptionsProps> = ({ object, small, big }) => {
         ) {
             toast.error(`${name} is already in your library!`)
             return
-        }
-        try {
-            const params = { [object.type]: [object.id] }
-            const queryParameters = { ids: params }
-            const { response } = await musicKitInstance.api.music(
-                '/v1/me/library',
-                queryParameters,
-                { fetchOptions: { method: 'POST' } }
-            )
+        } else {
+            try {
+                const params = { [object.type]: [object.id] }
+                const queryParameters = { ids: params }
 
-            if ((await response.status) === 202) {
-                toast.success(`${name} added to library!`)
-                return
+                const response = await musicKitInstance.api.music(
+                    '/v1/me/library',
+                    queryParameters,
+                    { fetchOptions: { method: 'POST' } }
+                )
+
+                if (object.type === 'albums') {
+                    const res = await fetch(
+                        `https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/add-to-library`,
+                        {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                userId,
+                                album: object, // Ensure you are sending 'album' instead of 'object'
+                            }),
+                            credentials: 'include',
+                        }
+                    )
+
+                    console.log('res', res)
+
+                    const data = await res.json()
+                    if (res.ok) {
+                        console.log('data', data)
+                        toast.success(`${name} added to library!`)
+                    } else {
+                        toast.error(
+                            `Failed to save ${name} to the library in the backend.`
+                        )
+                    }
+                } else {
+                    toast.success(`${name} added to library!`)
+                }
+            } catch (error) {
+                console.error('Error:', error)
+                toast.error(`Error adding ${name} to library...`)
             }
-        } catch (error) {
-            toast.error(`Error adding ${name} to library...`)
-            return
         }
     }
 

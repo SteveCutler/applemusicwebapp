@@ -136,6 +136,11 @@ export const fetchAndSaveAlbums = async (
     let responseSent = false
 
     const fetchAlbums = async (url: string) => {
+        console.log(
+            `Bearer ${process.env.REACT_APP_MUSICKIT_DEVELOPER_TOKEN}`,
+            'Music-User-Token',
+            appleMusicToken
+        )
         try {
             const res = await axios.get(url, {
                 headers: {
@@ -217,6 +222,56 @@ export const fetchAndSaveAlbums = async (
             res.status(500).json({
                 error: 'Failed to save albums',
             })
+        }
+    }
+}
+
+export const addToLibrary = async (req: Request, res: Response) => {
+    const { userId, album } = req.body
+    console.log('userId', userId, 'album', album)
+
+    const existingAlbum = await prisma.album.findUnique({
+        where: {
+            albumId: album.id,
+            userId,
+        },
+        select: {
+            albumId: true,
+        },
+    })
+    if (existingAlbum) {
+        return res.status(400).json({
+            message: 'Album already in library',
+        })
+    } else {
+        const newAlbum = {
+            artistName: album.attributes.artistName ?? '',
+            artworkUrl: album.attributes.artwork?.url ?? '',
+            dateAdded: new Date().toISOString(),
+            genreNames: album.attributes.genreNames ?? '',
+            name: album.attributes.name ?? '',
+            releaseDate: album.attributes.releasedDate,
+            trackCount: album.attributes.trackCount,
+            albumId: album.id,
+            type: album.type,
+            userId: userId,
+        }
+
+        try {
+            await prisma.album.create({
+                data: newAlbum,
+            })
+
+            res.status(200).json({
+                message: 'Album saved successfully!',
+            })
+        } catch (error) {
+            console.error('Error saving album:', error)
+            if (!res.headersSent) {
+                res.status(500).json({
+                    error: 'Failed to save album',
+                })
+            }
         }
     }
 }

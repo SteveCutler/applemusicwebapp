@@ -149,6 +149,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
     // }
 
     const handleNavigation = async (e: any) => {
+        console.log('album item', albumItem)
         e.preventDefault()
         e.stopPropagation()
         if (lib || albumItem.id.startsWith('l')) {
@@ -157,20 +158,17 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 const resAlbum = await musicKitInstance?.api.music(
                     `/v1/me/library/albums/${albumItem.id}/catalog`
                 )
-
+                console.log('res album', resAlbum)
                 const catAlbumId = await resAlbum.data.data[0].id
 
                 if (catAlbumId) {
                     navigate(`/album/${catAlbumId}`)
                 } else {
-                    {
-                        navigate(`/album/${albumItem.id}`)
-                    }
-                }
-            } catch (error: any) {
-                {
                     navigate(`/album/${albumItem.id}`)
                 }
+            } catch (error: any) {
+                navigate(`/album/${albumItem.id}`)
+
                 console.error(error)
             }
         } else {

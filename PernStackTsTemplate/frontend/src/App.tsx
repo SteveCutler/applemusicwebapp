@@ -37,11 +37,13 @@ function App() {
         appleMusicToken,
         setBackendToken,
         isAuthorized,
+        authorizeMusicKit,
         musicKitInstance,
         queueToggle,
     } = useStore(state => ({
         isAuthorized: state.isAuthorized,
         darkMode: state.darkMode,
+        authorizeMusicKit: state.authorizeMusicKit,
         backendToken: state.backendToken,
         isPlayingPodcast: state.isPlayingPodcast,
         setAppleMusicToken: state.setAppleMusicToken,
@@ -70,7 +72,10 @@ function App() {
                 setBackendToken(authToken)
             } catch (error) {}
         }
-    }, [appleMusicToken, backendToken])
+        if (!musicKitInstance) {
+            authorizeMusicKit()
+        }
+    }, [appleMusicToken, backendToken, musicKitInstance, authorizeMusicKit])
 
     // if (isCheckingAuth) {
     //     return <div>Loading...</div>
@@ -88,12 +93,12 @@ function App() {
             }`}
         >
             <div className="flex flex-grow ">
-                {backendToken && appleMusicToken && (
+                {backendToken && appleMusicToken && musicKitInstance && (
                     <div className="sidebar  w-6/12 sm:w-4/12 md:w-3/12 2xl:w-2/12 overflow-y-auto h-1/2 ">
                         <Sidebar />
                     </div>
                 )}
-                {backendToken && appleMusicToken && (
+                {backendToken && appleMusicToken && musicKitInstance && (
                     <div className="">
                         <Header />
                     </div>
@@ -105,7 +110,9 @@ function App() {
                         <Route
                             path="/"
                             element={
-                                backendToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Home />
                                 ) : (
                                     <Navigate to="/login" />
@@ -115,7 +122,9 @@ function App() {
                         <Route
                             path="/signup"
                             element={
-                                backendToken && !appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <SignUp />
                                 ) : (
                                     <Navigate to="/" />
@@ -125,7 +134,9 @@ function App() {
                         <Route
                             path="/search/"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Search />
                                 ) : (
                                     <Login />
@@ -135,7 +146,9 @@ function App() {
                         <Route
                             path="/new-playlist/"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <NewPlaylist />
                                 ) : (
                                     <Login />
@@ -145,7 +158,9 @@ function App() {
                         <Route
                             path="/artist/:id"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Artist />
                                 ) : (
                                     <Login />
@@ -155,7 +170,9 @@ function App() {
                         <Route
                             path="/login"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Navigate to="/" />
                                 ) : (
                                     <Login />
@@ -165,7 +182,9 @@ function App() {
                         <Route
                             path="/library"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Library />
                                 ) : (
                                     <Login />
@@ -175,7 +194,9 @@ function App() {
                         <Route
                             path="/settings"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Settings />
                                 ) : (
                                     <Login />
@@ -185,7 +206,9 @@ function App() {
                         <Route
                             path="/podcasts"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Podcasts />
                                 ) : (
                                     <Login />
@@ -195,7 +218,9 @@ function App() {
                         <Route
                             path="/podcast/:id"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Podcast />
                                 ) : (
                                     <Login />
@@ -205,7 +230,9 @@ function App() {
                         <Route
                             path="/podcast-episode/:id"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <PodcastEpisode />
                                 ) : (
                                     <Login />
@@ -215,7 +242,9 @@ function App() {
                         <Route
                             path="/playlist-display"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <PlaylistDisplay />
                                 ) : (
                                     <Login />
@@ -225,7 +254,9 @@ function App() {
                         <Route
                             path="/favourites"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Favourites />
                                 ) : (
                                     <Login />
@@ -236,7 +267,9 @@ function App() {
                         <Route
                             path="/album/:albumId/:type?"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Album />
                                 ) : (
                                     <Login />
@@ -246,7 +279,9 @@ function App() {
                         <Route
                             path="/station/:stationId/:type?"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Station />
                                 ) : (
                                     <Login />
@@ -258,7 +293,9 @@ function App() {
                         <Route
                             path="/playlist/:playlistId"
                             element={
-                                backendToken && appleMusicToken ? (
+                                backendToken &&
+                                appleMusicToken &&
+                                musicKitInstance ? (
                                     <Playlist />
                                 ) : (
                                     <Login />

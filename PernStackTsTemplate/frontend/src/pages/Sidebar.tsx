@@ -257,20 +257,22 @@ const Sidebar = () => {
                 }
             }
         }
-
-        if (musicKitInstance && recentlyAddedToLib.length < 1) {
-            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
-        }
-        if (!musicKitInstance) {
+        if (!musicKitInstance && backendToken) {
             authorizeMusicKit()
         }
         if (!appleMusicToken && musicKitInstance) {
             fetchAppleToken()
         }
-        // if (!albums && appleMusicToken) {
-        //     fetchLibrary()
-        // }
-    }, [appleMusicToken, musicKitInstance, isAuthorized])
+
+        if (
+            musicKitInstance &&
+            backendToken &&
+            appleMusicToken &&
+            recentlyAddedToLib.length < 1
+        ) {
+            fetchRecentlyAddedToLib('/v1/me/library/recently-added')
+        }
+    }, [appleMusicToken, musicKitInstance, backendToken, isAuthorized])
 
     const [viewType, setViewType] = useState('history')
     const styleButton = { fontSize: '1.8rem' }

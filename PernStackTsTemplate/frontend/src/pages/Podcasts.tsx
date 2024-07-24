@@ -328,9 +328,7 @@ const Podcasts = () => {
             setLoadingRecent(false)
         }
         if (!progressLoaded) {
-            setLoadingProgress
             fetchPodcastProgress()
-            setLoadingProgress(false)
         } else {
             setLoadingProgress(false)
         }
@@ -342,7 +340,7 @@ const Podcasts = () => {
     }
 
     return (
-        <div className={`flex flex-col`}>
+        <div className={`flex w-full flex-col`}>
             <form className="m-3 p-3 w-full" action="">
                 <input
                     type="text"
@@ -377,7 +375,7 @@ const Podcasts = () => {
             )}
             {podSubs && podSubs.length == 0 && (
                 <>
-                    <div className="text-3xl font-bold text-black pb-7">
+                    <div className="text-3xl font-bold text-center w-full flex justify-center text-black pb-7">
                         You're not subscribed to any podcasts yet!
                     </div>
                     <div className="bg-blue-500 text-white text-md font-semibold p-5 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
@@ -410,7 +408,7 @@ const Podcasts = () => {
             {loadingSubs ? (
                 <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
             ) : !loadingSubs && podSubs.length >= 1 ? (
-                <div className="flex flex-wrap justify-center w-fit gap-1 ">
+                <div className="flex flex-wrap justify-center w-full gap-1 ">
                     <DropdownDisplay
                         object={podSubs}
                         podcastShow={true}
@@ -420,26 +418,30 @@ const Podcasts = () => {
 
                         // shrink={searchFilters.length < 2}
                     />
-                    {/* {podSubs &&
-                    podSubs.map((sub, index) => (
-                        <PodcastItem
-                            key={index}
-                            podcast={sub}
-                            sub={true}
-                            width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 2xl:w-2/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
-                        />
-                    ))} */}
                 </div>
-            ) : null}
-            {loadingRecent || loadingSubs || loadingProgress || !recentEps ? (
-                <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
-            ) : !loadingRecent && !loadingSubs && !loadingProgress ? (
+            ) : (
+                !loadingSubs && podSubs.length < 1 && null
+            )}
+            {loadingRecent || loadingSubs || loadingProgress ? (
+                <>
+                    <SkeletonDropdownDisplay sliceNumber={sliceNumber} />
+                </>
+            ) : !loadingRecent &&
+              !loadingSubs &&
+              !loadingProgress &&
+              recentEps ? (
                 <DropdownDisplay
                     podcast={true}
                     object={recentEps}
                     sliceNumber={sliceNumber}
                 />
-            ) : null}
+            ) : (
+                !loadingRecent &&
+                !loadingSubs &&
+                !loadingProgress &&
+                !recentEps &&
+                null
+            )}
         </div>
     )
 }
