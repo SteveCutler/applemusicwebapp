@@ -8,6 +8,7 @@ import {
 import { useStore } from '../../store/store'
 import parse from 'html-react-parser'
 import { BsFillPatchCheckFill } from 'react-icons/bs'
+import { useNavigate } from 'react-router-dom'
 
 interface listItemProp {
     podcast: podcastEpisode
@@ -112,6 +113,7 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
     }
     const [progress, setProgress] = useState<number | null>(null)
 
+    const navigate = useNavigate()
     useEffect(() => {
         const progressPercent = getEpisodeProgress(
             String(podcast.id),
@@ -121,12 +123,16 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
         const progress = Number(progressPercent)
         setProgress(progress)
     }, [])
+    const handleNavigation = () => {
+        navigate(`/podcast-episode/${podcast.id}`)
+    }
 
     return (
         <div
+            onClick={handleNavigation}
             className={`flex flex-col gap-2  select-none ${darkMode ? 'text-white bg-slate-700' : 'text-black bg-slate-300'} rounded-lg p-3 my-2 w-full`}
         >
-            <div className="flex items-end px-3 pb-3 gap-2  ">
+            <div className="flex hover:cursor-pointer hover:text-slate-500 w-fit items-end px-3 pb-3 gap-2  ">
                 <img src={podcast.feedImage} style={{ height: '70px' }} />
                 <div className="flex flex-col w-10/12">
                     <div className="font-semibold truncate">
@@ -135,7 +141,11 @@ const PodcastListItem: React.FC<listItemProp> = ({ podcast, title, id }) => {
                     <div className="flex items-center gap-2">
                         <div
                             className="hover:scale-110 active:scale-90 hover:cursor-pointer text-blue-600 hover:text-blue-400"
-                            onClick={handlePlayPodcast}
+                            onClick={e => {
+                                e.preventDefault()
+                                e.stopPropagation()
+                                handlePlayPodcast()
+                            }}
                         >
                             {isPlayingPodcast &&
                             podcast &&
