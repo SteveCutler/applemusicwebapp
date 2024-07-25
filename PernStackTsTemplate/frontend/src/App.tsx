@@ -88,7 +88,7 @@ function App() {
                 !backendToken
                     ? 'bg-gradient-to-b from-indigo-900 to-black'
                     : darkMode
-                      ? 'bg-gradient-to-b from-indigo-900 to-black'
+                      ? 'bg-gradient-to-b from-indigo-950 to-black'
                       : 'bg-gradient-to-b from-blue-300 to-orange-900'
             }`}
         >

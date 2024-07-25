@@ -9,6 +9,8 @@ import { MdArrowBackIosNew } from 'react-icons/md'
 import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from '../store/store'
+import { IoGridOutline, IoGrid } from 'react-icons/io5'
+import { FaList } from 'react-icons/fa'
 import {
     FaCaretDown,
     FaCaretUp,
@@ -29,6 +31,7 @@ import CryptoJS from 'crypto-js'
 import parse from 'html-react-parser'
 import PodcastOptionsModal from '../components/Homepage/PodcastOptionsModal'
 import { BsFillPatchCheckFill } from 'react-icons/bs'
+import PodcastEpisodeItem from '../components/Homepage/PodcastEpisodeItem'
 
 // import { usePodcastPlayer } from '../components/Homepage/PodcastPlayer'
 
@@ -140,6 +143,7 @@ const Podcast = () => {
     const [visibleEpisodes, setVisibleEpisodes] = useState<
         Array<podcastEpisode>
     >([])
+    const [gridDisplay, setGridDisplay] = useState(true)
     const [page, setPage] = useState(1)
     const [episodeSearchTerm, setEpisodeSearchTerm] = useState<string | null>(
         null
@@ -316,6 +320,7 @@ const Podcast = () => {
         episodeSearchResults,
     ])
 
+    const styleGrid = { fontSize: '2.1rem' }
     const styleButton = { fontSize: '2.1rem', color: 'dodgerblue' }
     const styleButtonSmall = { fontSize: '1.2rem', color: 'dodgerblue' }
     const styleButtonBig = { fontSize: '3rem', color: 'dodgerblue' }
@@ -510,79 +515,83 @@ const Podcast = () => {
                     </div>
                 )}
             </div>
+            <div className="flex w-11/12 justify-between items-center">
+                <form className="p-3 w-full" action="">
+                    <input
+                        type="text"
+                        value={episodeSearchTerm}
+                        onChange={e => setEpisodeSearchTerm(e.target.value)}
+                        placeholder="Filter episodes..."
+                        className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
+                    />
+                </form>
+
+                <div
+                    onClick={e => setGridDisplay(!gridDisplay)}
+                    className={`w-fit ${darkMode ? 'bg-slate-300 text-black hover:bg-slate-400' : 'bg-slate-800 text-slate-200 hover:bg-slate-600'}  active:scale-95 m-2 p-1 rounded-md flex items-center gap-1`}
+                >
+                    {' '}
+                    {gridDisplay ? (
+                        <IoGridOutline style={styleGrid} />
+                    ) : (
+                        <FaList style={styleGrid} />
+                    )}
+                </div>
+            </div>
 
             {episodeSearchTerm && !episodeSearchResults ? (
                 <div>
-                    {visibleEpisodes && (
-                        <form className="p-3 w-full" action="">
-                            <input
-                                type="text"
-                                value={episodeSearchTerm}
-                                onChange={e =>
-                                    setEpisodeSearchTerm(e.target.value)
-                                }
-                                placeholder="Filter episodes..."
-                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
-                            />
-                        </form>
-                    )}
                     <div className="text-2xl font-bold">
                         No results for search term
                     </div>
                 </div>
             ) : episodeSearchTerm && episodeSearchResults ? (
-                <div className="flex-col flex w-11/12">
-                    {visibleEpisodes && (
-                        <form className="p-3 w-full" action="">
-                            <input
-                                type="text"
-                                value={episodeSearchTerm}
-                                onChange={e =>
-                                    setEpisodeSearchTerm(e.target.value)
-                                }
-                                placeholder="Filter episodes..."
-                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
-                            />
-                        </form>
-                    )}
+                <div
+                    className={`${gridDisplay ? 'flex-row flex-wrap gap-2 gap-y-5' : 'flex-col'}  flex w-11/12`}
+                >
                     {episodeSearchTerm &&
                         podcastInfo &&
-                        episodeSearchResults.map((episode, index) => (
-                            <PodcastListItem
-                                key={index}
-                                podcast={episode}
-                                title={podcastInfo.title}
-                                id={podcastInfo.id}
-                            />
-                        ))}
-                </div>
-            ) : (
-                <div className="flex-col flex w-11/12">
-                    {visibleEpisodes && (
-                        <form className="p-3 w-full" action="">
-                            <input
-                                type="text"
-                                value={episodeSearchTerm}
-                                onChange={e =>
-                                    setEpisodeSearchTerm(e.target.value)
-                                }
-                                placeholder="Filter episodes..."
-                                className={`border rounded-full px-4 py-2 ${queueToggle ? 'w-2/3' : 'w-1/3'} text-slate-600 bg-white`}
-                            />
-                        </form>
-                    )}
-                    {visibleEpisodes &&
-                        podcastInfo &&
-                        visibleEpisodes
-                            .slice(queueToggle ? 0 : 1)
-                            .map((episode, index) => (
+                        episodeSearchResults.map((episode, index) =>
+                            gridDisplay ? (
+                                <PodcastEpisodeItem
+                                    key={index}
+                                    podcast={episode}
+                                    width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                                />
+                            ) : (
                                 <PodcastListItem
                                     key={index}
                                     podcast={episode}
                                     title={podcastInfo.title}
                                     id={podcastInfo.id}
                                 />
-                            ))}
+                            )
+                        )}
+                </div>
+            ) : (
+                <div
+                    className={`${gridDisplay ? 'flex-row flex-wrap gap-2 gap-y-5' : 'flex-col'}  flex w-11/12`}
+                >
+                    {visibleEpisodes &&
+                        podcastInfo &&
+                        visibleEpisodes
+                            .slice(queueToggle ? 0 : 1)
+                            .map((episode, index) =>
+                                gridDisplay ? (
+                                    <PodcastEpisodeItem
+                                        key={index}
+                                        podcast={episode}
+                                        width={` ${queueToggle ? 'w-full md:w-5/12 lg:w-3/12 xl:w-3/12' : 'w-full md:w-5/12 lg:w-3/12 xl:w-2/12 2xl:w-1/12 '} `}
+                                    />
+                                ) : (
+                                    <PodcastListItem
+                                        key={index}
+                                        podcast={episode}
+                                        title={podcastInfo.title}
+                                        id={podcastInfo.id}
+                                    />
+                                )
+                            )}
                     <div ref={loadMoreRef} style={{ height: '1px' }} />
                 </div>
             )}

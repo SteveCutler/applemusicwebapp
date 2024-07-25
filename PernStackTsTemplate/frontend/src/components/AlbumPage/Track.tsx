@@ -143,7 +143,12 @@ const Track: React.FC<TrackPropTypes> = ({
 
     const timeLeft = () => {
         if (currentSongDuration == null || currentElapsedTime == null) {
-            return trackDuration
+            if (String(trackDuration).startsWith('0')) {
+                const time = String(trackDuration).substring(1)
+                return time
+            } else {
+                String(trackDuration)
+            }
         }
         if (
             typeof currentSongDuration !== 'number' ||
@@ -170,7 +175,16 @@ const Track: React.FC<TrackPropTypes> = ({
         }
         if (isPlaying && song.id === currentSongId) {
             const safeElapsedTime = Math.max(currentElapsedTime, 0)
-            return convertToDuration(currentSongDuration - safeElapsedTime)
+            let timeLeft = convertToDuration(
+                currentSongDuration - safeElapsedTime
+            )
+
+            // Remove leading zero if present
+            if (timeLeft.startsWith('0')) {
+                timeLeft = timeLeft.substring(1)
+            }
+
+            return timeLeft
         }
         return trackDuration
     }
