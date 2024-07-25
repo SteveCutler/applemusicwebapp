@@ -248,7 +248,7 @@ const RecommendationDisplay: React.FC<recoProps> = ({
                                     e.preventDefault()
                                     setExpand(!expand)
                                 }}
-                                className=" hidden  rounded-b-lg  w-4/12 mx-auto md:flex justify-center items-center flex-col mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600"
+                                className={` hidden  rounded-b-lg ${queueToggle ? 'w-10/12 lg:w-8/12' : 'w-10/12  lg:w-4/12'} mx-auto md:flex justify-center items-center flex-col mb-10 mt-3 bg-blue-500 hover:bg-blue-400 active:bg-blue-600`}
                             >
                                 {expand ? (
                                     <div className="mx-auto flex-col justify-center py-2 items-center flex text-slate-300 font-bold text-sm">

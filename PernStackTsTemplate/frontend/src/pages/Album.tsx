@@ -344,7 +344,7 @@ const Album = () => {
                     </div>
                 </Link> */}
                 <div className="flex-col ">
-                    <h1 className={`text-3xl  w-full font-bold select-none`}>
+                    <h1 className={`text-3xl  w-full   font-bold select-none`}>
                         {albumData.attributes?.name}
                     </h1>
                     {albumData.relationships?.artists?.data[0].id ? (

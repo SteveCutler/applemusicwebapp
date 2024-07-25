@@ -2,48 +2,50 @@
 Investigate the itunes library api provides a lot better datapoints for library images, playcounts, last play date etc, all this can be used to create recommendations from library (first I could just cycle through recommending albums or songs that have been played a lot by user, could also recommend things that have a lot of plays but the latest play date is not for a while, a 'Jump back in' recommmendation)
 itunes library api only works in desktop app context - nevermind.
 
--OPTIMIZE - are there profiling tools for this?
+-OPTIMIZE - are there profiling tools for this? too many refreshes and api calls/errors
+-create settings object on user that stores all the currently saved settings (light/dark mode), grid vs list albums, grid vs list podcasts
+-create function that slowly trnasitions from night to day mode - user set time zone when sign up
+add podcast episode dropdown to podcast page
+add loaders to all the items  - change loader image
 
 -make all the areas scroll seperately
 -add autoplay feature to podcasts?
--add loading animations to EVERYTHING (album song artist playlist station)
+
 -when you log in you have to refresh for musickit to load
 -add to queue/play next feature in modal
 -add route to add private podcast rss feed to subscriptions
 -investigate if theres a way to add podcast recommendations
 -add feature that transitions between night and dark mode gradually over time based on timezone
--search page needs to be seriously optimized
--fix sizing of single objects on search page
--do more work on settings page: add dark mode settings, bitrate options, dark mode
+
+-do more work on settings page: add dark mode settings, bitrate options - what else?
+    >-add account email verification? password changing mechanics
+
 -redesign toast/figure out when is appropriate to display them
--add drag and drop feature to playlist creation
-work on search page - design, search hints, etc
+-add drag and drop feature to allow re-ordering tracks during playlist creation
+
 **add search hints in a search page that dropdown as you type - select one and it sets that as the search term/executes searches
 ** sort playlists by most recently played
 -redesign play/options buttons
 -add favourites functionality
--add account email verification? password changing mechanics
--handle auth data
--add 'saved' podcasts?
--auth issues:
-    make sure token retrieval and saving is working as expected
-    investigate why refresh is necessary after logging in
-    verify email?
+-test with Lucy's apple account using a free trial of apple music
 
--do more work on settings page, its a mess
 
--add album details to track display in appropriate places
-loaders for album artist song station playlist pages - skeleton loaders
+-add 'save episode' podcasts feature to options modal and saved podcasts dropdown to podcasts page?
+-make some kind of loader for checking for auth when the page is loaded so the sign in form doesn't come up first
+
+
+-add album details to track display in appropriate places (playlist)
+
 
 
 
 add feature for users to follow artist - checks if they have anything new and displays on homepage
-pull more historical data and do something interesting with that.
+
+create podcast and watch apps that will allow us to pull itunes info - provide recommendations based on previous data
+    pull more historical data and do something interesting with that.
 investigate adding friends?
 -create stack concept - pair up to 10 albums together to make a stack - maybe use the 3d js library to animate the stacks
-add default image for artist, song playlist etc
-** create playlist, add to playlist etc.
-** add functionality to playlist play buttons on homepage (if type === playlists or something)
+
 -recommendations based on heavy rotation albums
 -wayback playback: pick a time in history and highlight your top albums of the time
 -in general get the historical plays information and do some interesting things with it
