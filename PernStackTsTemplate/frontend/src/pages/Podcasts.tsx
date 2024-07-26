@@ -10,6 +10,7 @@ import DropdownDisplay from '../components/Apple/DropdownDisplay'
 import { useMediaQuery } from 'react-responsive'
 import ImportPodcasts from '../components/Homepage/ImportPodcasts'
 import SkeletonDropdownDisplay from '../components/Apple/SkeletonDropdownDisplay'
+import { FaArrowAltCircleRight } from 'react-icons/fa'
 
 type podcastInfo = {
     artwork: string
@@ -339,6 +340,8 @@ const Podcasts = () => {
         setSearching(true)
     }
 
+    const style = { fontSize: '2rem', color: 'lightgreen' }
+
     return (
         <div className={`flex w-full flex-col`}>
             <form className="m-3 p-3 w-full" action="">
@@ -375,33 +378,38 @@ const Podcasts = () => {
             )}
             {podSubs && podSubs.length == 0 && (
                 <>
-                    <div className="text-3xl font-bold text-center w-full flex justify-center text-black pb-7">
+                    <div className="text-3xl font-bold text-center w-full flex justify-center mt-5 italic text-white pb-7">
                         You're not subscribed to any podcasts yet!
                     </div>
-                    <div className="bg-blue-500 text-white text-md font-semibold p-5 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
-                        <div>
+                    <div className=" text-white text-md  font-semibold p-5 rounded-lg flex flex-col justify-center m-3 text-center mx-auto gap-3 items-center">
+                        <div className="mb-5 text-2xl">
                             Use the search function to find and subscribe to
                             podcasts{' '}
                         </div>
-                        <div>- or -</div>
-                        <div className="max-w-96">
-                            Follow the directions below to Import a list of your
-                            podcast subscriptions from apple podcasts:
+                        <div className="text-lg">- or -</div>
+                        <div className="w-full flex justify-start items-center mt-3 flex-col">
+                            <div className="w-full flex gap-2 justify-center items-center">
+                                <div className="border-2 max-w-96 bg-blue-500 flex flex-col text-left justify-center text-white border-white rounded-lg p-5">
+                                    Use this shortcut to export an OPML file of
+                                    your podcast subscriptions from Apple
+                                    Podcasts
+                                    <a
+                                        href="https://www.icloud.com/shortcuts/44009520675540d7945263e088f6e915"
+                                        target="_blank" // Optional: Opens the link in a new tab
+                                        rel="noopener noreferrer" // Optional: Adds security for external links
+                                        className="block bg-white text-center hover:text-blue-600  active:scale-95 text-blue-400 p-1 mt-3 text-md rounded-full" // Replace with your button styles
+                                    >
+                                        Podcast Export Tool
+                                    </a>
+                                </div>
+                                <div className="max-w-96 flex items-center justify-center">
+                                    <FaArrowAltCircleRight style={style} />
+                                </div>
+                                <div className="flex justify-start w-fit">
+                                    <ImportPodcasts />
+                                </div>
+                            </div>
                         </div>
-                        <div className="border-2 max-w-96 border-white rounded-lg p-5">
-                            Use this tool to export a list of your podcast
-                            subscriptions and upload it below
-                            <a
-                                href="https://www.icloud.com/shortcuts/44009520675540d7945263e088f6e915"
-                                target="_blank" // Optional: Opens the link in a new tab
-                                rel="noopener noreferrer" // Optional: Adds security for external links
-                                className="block bg-white hover:text-blue-600  active:scale-95 text-blue-400 p-1 mt-3 text-md rounded-full" // Replace with your button styles
-                            >
-                                Podcast Export Tool
-                            </a>
-                        </div>
-
-                        <ImportPodcasts />
                     </div>
                 </>
             )}

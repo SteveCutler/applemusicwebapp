@@ -10,8 +10,10 @@ const AuthorizeButton = () => {
         musicKitInstance,
         backendToken,
         setAppleMusicToken,
+        setAuthorized,
     } = useStore(state => ({
         authorizeMusicKit: state.authorizeMusicKit,
+        setAuthorized: state.setAuthorized,
         backendToken: state.backendToken,
         setAppleMusicToken: state.setAppleMusicToken,
         musicKitInstance: state.musicKitInstance,
@@ -23,6 +25,10 @@ const AuthorizeButton = () => {
         if (token && backendToken) {
             saveToken(token, backendToken)
             setAppleMusicToken(token)
+            localStorage.setItem('musicUserToken', token)
+            localStorage.setItem('music.w5y3b689nm.media-user-token', token)
+            await authorizeMusicKit()
+            setAuthorized(true)
             navigate('/')
         } else {
             toast.error('There was an issue logging in to apple account..')

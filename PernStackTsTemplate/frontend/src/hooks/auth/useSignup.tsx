@@ -57,6 +57,7 @@ const useSignup = () => {
 
             // await authorizeBackend()
             await authorizeMusicKit()
+
             // setAuthorized(true)
             toast.success('New account created!')
             navigate('/signup')

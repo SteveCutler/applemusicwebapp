@@ -3,10 +3,23 @@ const prisma = new PrismaClient();
 import bcryptjs from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 import { v4 as uuidv4 } from 'uuid';
+import { validationResult } from 'express-validator';
 console.log('EMAIL:', process.env.EMAIL);
 console.log('EMAIL_PASSWORD:', process.env.EMAIL_PASSWORD);
 //EMAIL VERIFICASTION FUNCTIONS
+const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+};
+const validatePassword = (password) => {
+    const hasMinLength = password.length >= 8;
+    return hasMinLength;
+};
 export const signup = async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
     try {
         const { password, confirmPassword, email } = req.body;
         if (!password || !confirmPassword || !email) {
@@ -14,6 +27,14 @@ export const signup = async (req, res) => {
         }
         if (password !== confirmPassword) {
             return res.status(400).json({ error: "Passwords don't match" });
+        }
+        if (!validateEmail(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+        if (!validatePassword(password)) {
+            return res.status(400).json({
+                error: 'Password must be at least 8 characters long',
+            });
         }
         const user = await prisma.user.findUnique({ where: { email } });
         if (user) {
