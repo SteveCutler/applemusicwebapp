@@ -235,7 +235,7 @@ const AlbumItem: React.FC<AlbumPropTypes> = ({
                 </div>
                 <div className="absolute bottom-1 left-1">
                     <div
-                        className={`transform p-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
+                        className={`transform p-1 flex cursor-pointer *:justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
                         onClick={e => {
                             e.stopPropagation()
                             playData()

@@ -424,6 +424,23 @@ const AppleDashboard = () => {
     // }, [musicKitInstance, appleMusicToken, isAuthorized, recentlyAddedToLib, ,])
 
     useEffect(() => {
+        const initialize = async () => {
+            if (!musicKitInstance) {
+                await authorizeMusicKit()
+            }
+            // Other initialization code if needed
+        }
+
+        initialize()
+    }, [
+        authorizeMusicKit,
+        musicKitInstance,
+        appleMusicToken,
+        backendToken,
+        isAuthorized,
+    ])
+
+    useEffect(() => {
         const fetchRecommendations = async () => {
             if (musicKitInstance) {
                 try {

@@ -1530,7 +1530,7 @@ export const useStore = create<Store>((set, get) => ({
             console.log('MusicKit script loaded')
         } else {
             console.log('musickit instance already exists')
-            await initializeMusicKit()
+            initializeMusicKit()
         }
     },
 

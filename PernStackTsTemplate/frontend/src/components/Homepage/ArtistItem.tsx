@@ -129,7 +129,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
 
     return (
         <Link
-            className={`${carousel && 'carousel-item'} select-none  flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
+            className={`${carousel && 'carousel-item'} select-none cursor-default flex-col ${width ? width : queueToggle ? 'w-3/12' : ' w-2/12'}  ${darkMode ? 'text-slate-300' : 'text-slate-800'}    rounded-3xl flex `}
             to={`/artist/${artist.id}`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -153,7 +153,7 @@ const ArtistItem: React.FC<AlbumPropTypes> = ({ artist, carousel, width }) => {
                         />
                     )}
                     <div
-                        className={`absolute bottom-1 left-1 transform   ${isHovered ? 'block' : 'hidden'} flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease`}
+                        className={`absolute bottom-1 left-1 transform cursor-pointer  ${isHovered ? 'block' : 'hidden'} flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease`}
                         onClick={async e => {
                             e.preventDefault()
                             e.stopPropagation() // Prevents the link's default behavior

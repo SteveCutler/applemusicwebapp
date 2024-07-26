@@ -48,8 +48,8 @@ const useSignup = () => {
             const data = await res.json()
 
             if (!res.ok) {
-                toast.error('Failed to log in')
-                navigate('/signup')
+                toast.error(data.error)
+                navigate('/login')
                 return
             }
             localStorage.setItem('backendToken', data.id)
@@ -57,7 +57,7 @@ const useSignup = () => {
 
             // await authorizeBackend()
             await authorizeMusicKit()
-            setAuthorized(true)
+            // setAuthorized(true)
             toast.success('New account created!')
             navigate('/signup')
 

@@ -461,9 +461,13 @@ const Sidebar = () => {
                         </div>
                     </div>
                     {/* <SidebarSongHistory /> */}
-                    <SidebarPlaylists />
-                    <SidebarFavouriteSongs />
-                    <SidebarActivity type={viewType} />
+                    {musicKitInstance && (
+                        <>
+                            <SidebarPlaylists />
+                            <SidebarFavouriteSongs />
+                            <SidebarActivity type={viewType} />
+                        </>
+                    )}
                 </div>
                 {/* <div className="flex-col mx-5 bg-black p-1 rounded-lg w-full border-b-2 py-5 border-slate-600    font-bold text-slate-200 text-2xl items-center mx-auto justify-start text-center">
                     <p className=" flex items-center justify-center  w-4/5 mx-auto pb-2 gap-2">

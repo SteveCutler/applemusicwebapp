@@ -22,6 +22,9 @@ model User {
   password        String
   appleMusicToken String?
   tokenExpiryDate DateTime?
+  verified Boolean @default(false)
+  verificationToken String?      // Add this field to store the email verification token
+  settings          Json?  
   ratings         Rating[]
   albums          Album[]
   songs           Song[]

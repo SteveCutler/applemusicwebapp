@@ -233,7 +233,7 @@ const PlaylistItem: React.FC<AlbumPropTypes> = ({
                 )}
 
                 <div
-                    className={`transform p-1 absolute bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
+                    className={`transform p-1 absolute cursor-pointer bottom-1 left-1 flex justify-right hover:scale-110 active:scale-95 transition-transform duration-100 easy-ease ${isHovered ? 'block' : 'hidden'}`}
                     onClick={async e => {
                         e.preventDefault()
                         e.stopPropagation() // Prevents the link's default behavior

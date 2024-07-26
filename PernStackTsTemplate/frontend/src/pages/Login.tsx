@@ -42,7 +42,7 @@ const Login = () => {
 
     if (signUp) {
         return (
-            <div className="flex flex-col absolute top-40  h-full  min-w-96 mx-auto">
+            <div className="flex flex-col absolute top-40  h-fit  min-w-96 mx-auto">
                 {/* <img
                 src={MusLogo}
                 width="200"
@@ -54,7 +54,7 @@ const Login = () => {
                     className="flex image-select-none  mx-auto justify-center"
                     draggable="false"
                 />
-                <div className="w-full rounded-lg   px-6  ">
+                <div className="w-full rounded-lg  h-fit px-6  ">
                     <div className="text-white text-lg select-none font-semibold italic flex justify-center w-full">
                         APPLE MUSIC + PODCASTS
                     </div>
@@ -154,7 +154,7 @@ const Login = () => {
         )
     } else {
         return (
-            <div className="flex absolute top-40 flex-col h-full  min-w-96 mx-auto">
+            <div className="flex flex-col absolute top-40  h-fit   min-w-96 mx-auto">
                 <img
                     src={MusLogo}
                     width="150"

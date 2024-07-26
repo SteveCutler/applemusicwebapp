@@ -5,13 +5,15 @@ itunes library api only works in desktop app context - nevermind.
 -OPTIMIZE - are there profiling tools for this? too many refreshes and api calls/errors
 -create settings object on user that stores all the currently saved settings (light/dark mode), grid vs list albums, grid vs list podcasts
 -create function that slowly trnasitions from night to day mode - user set time zone when sign up
-add podcast episode dropdown to podcast page
 add loaders to all the items  - change loader image
 
 -make all the areas scroll seperately
 -add autoplay feature to podcasts?
 
--when you log in you have to refresh for musickit to load
+-ADD VIDEO FUNCTIONALITY TO PODCASTS
+-add play on shuffle option for album/playlist
+-add functionality for inspecting album cover
+
 -add to queue/play next feature in modal
 -add route to add private podcast rss feed to subscriptions
 -investigate if theres a way to add podcast recommendations

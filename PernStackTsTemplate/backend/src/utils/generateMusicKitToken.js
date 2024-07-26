@@ -10,6 +10,7 @@ const payload = {
     exp: Math.floor(Date.now() / 1000) + 180 * 24 * 60 * 60, // The expiration time, 6 months from now
     origin: [
         'https://musfrontend.vercel.app',
+        'https://www.musmus.app',
         'http://localhost:5173',
         'https://mus-backend-b262ef3b1b65.herokuapp.com',
     ], // List of allowed origins

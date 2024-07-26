@@ -4,6 +4,7 @@ import { IoArrowBackCircle, IoArrowForwardCircle } from 'react-icons/io5'
 import { useNavigate, useLocation, useNavigationType } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { useStore } from '../../store/store'
+
 function Header() {
     const [canGoBack, setCanGoBack] = useState(false)
     const [canGoForward, setCanGoForward] = useState(false)

@@ -11,6 +11,7 @@ app.use(cookieParser());
 app.use(express.json()); // for parsing application/json
 const allowedOrigins = [
     'http://localhost:5173',
+    'https://www.musmus.app',
     'https://mus-b2sxm6mp2-steve-cutlers-projects.vercel.app',
     'https://musfrontend.vercel.app',
     'https://mus-backend-b262ef3b1b65.herokuapp.com',

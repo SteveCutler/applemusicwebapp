@@ -39,32 +39,22 @@ const useLogin = () => {
 
             const data = await res.json()
 
-            console.log('data', data)
             if (!res.ok) {
                 toast.error('Failed to log in')
                 navigate('/login')
                 return
             }
 
-            // localStorage.setItem('jwt', data.token)
-
-            // set cookie = data.jwt
-
-            // document.cookie = `jwt=${data};`
-            // console.log('jwt', data.jwt)
-
             localStorage.setItem('backendToken', data.id)
             setBackendToken(data.id)
-            console.log('fetching apple token')
-            fetchAppleToken()
 
-            authorizeMusicKit()
+            // Ensure MusicKit authorization happens only after backend token is set
+            await fetchAppleToken()
+            await authorizeMusicKit()
+
             setAuthorized(true)
             toast.success('Logged in successfully')
-            if (!appleMusicToken) {
-                navigate('/signup/')
-            }
-            // navigate('/dashboard')
+            navigate('/')
         } catch (error) {
             toast.error('Failed to log in')
             navigate('/login')
