@@ -3,6 +3,7 @@ import { useStore } from '../../store/store'
 import saveToken from '../Apple/saveToken'
 import toast from 'react-hot-toast'
 import { FaApple } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
 const AuthorizeButton = () => {
     const {
         authorizeMusicKit,
@@ -16,11 +17,13 @@ const AuthorizeButton = () => {
         musicKitInstance: state.musicKitInstance,
     }))
 
+    const navigate = useNavigate()
     const handleAuthorization = async () => {
         const token = await musicKitInstance?.authorize()
         if (token && backendToken) {
             saveToken(token, backendToken)
             setAppleMusicToken(token)
+            navigate('/')
         } else {
             toast.error('There was an issue logging in to apple account..')
         }

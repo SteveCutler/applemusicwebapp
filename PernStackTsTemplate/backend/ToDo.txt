@@ -19,6 +19,8 @@ add loaders to all the items  - change loader image
 -investigate if theres a way to add podcast recommendations
 -add feature that transitions between night and dark mode gradually over time based on timezone
 
+-re-add email verification to make sure email is a valid one for signup
+
 -do more work on settings page: add dark mode settings, bitrate options - what else?
     >-add account email verification? password changing mechanics
 

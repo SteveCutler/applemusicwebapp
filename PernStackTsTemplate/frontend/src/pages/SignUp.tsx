@@ -41,14 +41,13 @@ const SignUp = () => {
                 <div className="text-5xl select-none text-white italic mb-10">
                     WELCOME TO MÜS
                 </div>
-                <div className="text-md text-white pb-2 font-semibold select-none ">
-                    Log in to Apple Music to continue:
-                </div>
+                <div className="text-md text-white pb-2 font-semibold select-none "></div>
                 <div className="flex gap-1 text-center mx-auto text-md flex-col">
                     <div>
                         {!appleMusicToken ? <AuthorizeButton /> : 'done!'}
                     </div>
                 </div>
+
                 {/* <div className="mt-10 ">
                 <div>Optional:</div>
                 Import your podcast subscriptions from apple podcasts
