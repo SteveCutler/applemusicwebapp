@@ -54,7 +54,11 @@ const useLogin = () => {
 
             setAuthorized(true)
             toast.success('Logged in successfully')
-            navigate('/')
+            if (appleMusicToken) {
+                navigate('/')
+            } else {
+                navigate('/signup')
+            }
         } catch (error) {
             toast.error('Failed to log in')
             navigate('/login')
