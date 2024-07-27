@@ -321,7 +321,7 @@ const AppleDashboard = () => {
     // console.log('more like recommendations: ', moreLikeRecommendations)
 
     const shuffle = (array: Array<RecommendationType>) => {
-        console.log('array', array)
+        // console.log('array', array)
         const newArray = array.sort(() => Math.random() - 0.5)
         return newArray
     }

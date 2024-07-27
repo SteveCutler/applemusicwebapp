@@ -44,7 +44,7 @@ const SidebarFavouriteSongs = () => {
 
     useEffect(() => {
         const fetchFavouriteSongs = async () => {
-            console.log('test')
+            // console.log('test')
             try {
                 const res = await fetch(
                     'https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/get-ratings',
@@ -62,10 +62,10 @@ const SidebarFavouriteSongs = () => {
                 )
 
                 // const data = await res
-                console.log('fav songs: ', res)
+                // console.log('fav songs: ', res)
                 if (res.status === 200) {
                     const data = await res.json()
-                    console.log('fav songs data: ', data.data.slice(0, 15))
+                    // console.log('fav songs data: ', data.data.slice(0, 15))
 
                     const sortedFavs = data.data.sort((a: Song, b: Song) => {
                         const dateA: Date = a.attributes.ratedAt
@@ -77,10 +77,10 @@ const SidebarFavouriteSongs = () => {
                         return dateB.getTime() - dateA.getTime() // For ascending order
                         // return dateB.getTime() - dateA.getTime(); // For descending order
                     })
-                    console.log('sorted favs', sortedFavs)
+                    // console.log('sorted favs', sortedFavs)
 
                     setFavouriteSongs(sortedFavs)
-                    console.log('success')
+                    // console.log('success')
                 }
             } catch (error) {
                 console.error(error)

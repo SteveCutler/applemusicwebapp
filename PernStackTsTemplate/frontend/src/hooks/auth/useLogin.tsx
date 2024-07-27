@@ -12,9 +12,11 @@ const useLogin = () => {
         setBackendToken,
         backendToken,
         appleMusicToken,
+        musicKitInstance,
         fetchAppleToken,
     } = useStore(state => ({
         authorizeMusicKit: state.authorizeMusicKit,
+        musicKitInstance: state.musicKitInstance,
         appleMusicToken: state.appleMusicToken,
         backendToken: state.backendToken,
         fetchAppleToken: state.fetchAppleToken,
@@ -54,11 +56,8 @@ const useLogin = () => {
 
             setAuthorized(true)
             toast.success('Logged in successfully')
-            if (appleMusicToken) {
-                navigate('/')
-            } else {
-                navigate('/signup')
-            }
+
+            navigate('/')
         } catch (error) {
             toast.error('Failed to log in')
             navigate('/login')

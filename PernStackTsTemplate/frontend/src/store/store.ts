@@ -710,7 +710,7 @@ export const useStore = create<Store>((set, get) => ({
                 }
             )
             const data = await response.json()
-            console.log('podcast Progress', data)
+            // console.log('podcast Progress', data)
             set({ progressLoaded: true, podcastProgress: data })
         } catch (error: any) {
             console.error('error retrievein podcast progress: ', error)
@@ -946,9 +946,9 @@ export const useStore = create<Store>((set, get) => ({
                 const response = await fetch(
                     `https://mus-backend-b262ef3b1b65.herokuapp.com/api/apple/resolve-url?url=${encodeURIComponent(initialUrl)}`
                 )
-                console.log('response', response)
+                // console.log('response', response)
                 const data = await response.json()
-                console.log('finalUrlData', data)
+                // console.log('finalUrlData', data)
                 return data.finalUrl
             } catch (error) {
                 console.error('Failed to fetch final URL:', error)
@@ -968,14 +968,14 @@ export const useStore = create<Store>((set, get) => ({
         podcastAudio.addEventListener('loadedmetadata', () => {
             const { podcastProgress } = get()
 
-            console.log('podcast progress', podcastProgress)
+            // console.log('podcast progress', podcastProgress)
 
             const progressPercent = getEpisodeProgress(
                 String(epId),
                 podcastProgress
             )
             const progress = Number(time) * Number(progressPercent) * 0.01
-            console.log('progress', progress)
+            // console.log('progress', progress)
 
             Number(progressPercent) < 100
                 ? (podcastAudio.currentTime = progress)
@@ -1085,10 +1085,10 @@ export const useStore = create<Store>((set, get) => ({
             const { id } = data
 
             set({ backendToken: id, isAuthorized: true })
-            console.log('succesfully authorized user')
+            // console.log('succesfully authorized user')
         } catch (error) {
             console.log(error)
-            console.log('error in authorize backend')
+            // console.log('error in authorize backend')
         }
     },
 
@@ -1237,8 +1237,8 @@ export const useStore = create<Store>((set, get) => ({
     setCurrentSongIndex: async (currentSongIndex: number) => {
         const { musicKitInstance, playlist } = get()
         if (musicKitInstance && playlist) {
-            console.log('changing start position to index: ', currentSongIndex)
-            console.log('playlist: ', playlist)
+            // console.log('changing start position to index: ', currentSongIndex)
+            // console.log('playlist: ', playlist)
             await musicKitInstance.setQueue({
                 startWith: currentSongIndex,
             })
@@ -1297,7 +1297,7 @@ export const useStore = create<Store>((set, get) => ({
 
         if (!appleMusicToken && backendToken) {
             try {
-                console.log('getting music token from backend')
+                // console.log('getting music token from backend')
                 // let cookieArr = document.cookie
                 // console.log('cookie', cookieArr)
                 const res = await fetch(
@@ -1313,19 +1313,19 @@ export const useStore = create<Store>((set, get) => ({
                         credentials: 'include', // Include credentials in the request
                     }
                 )
-                console.log('music token retrieval: ', res)
+                // console.log('music token retrieval: ', res)
 
                 const { appleMusicToken, tokenExpiryDate } = await res.json()
 
                 if (appleMusicToken === null || tokenExpiryDate === null) {
-                    console.log('Apple music token doesnt exist')
+                    // console.log('Apple music token doesnt exist')
                     return
                 }
 
                 const now = new Date()
 
                 if (now < new Date(tokenExpiryDate)) {
-                    console.log('setting apple music token: ', appleMusicToken)
+                    // console.log('setting apple music token: ', appleMusicToken)
 
                     set({ appleMusicToken: appleMusicToken })
                     localStorage.setItem('musicUserToken', appleMusicToken)
@@ -1340,7 +1340,7 @@ export const useStore = create<Store>((set, get) => ({
                     generateAppleToken()
                 }
             } catch (error) {
-                console.error('Error fetching token:', error)
+                // console.error('Error fetching token:', error)
                 toast.error('Error fetching apple auth')
             }
         }
@@ -1349,7 +1349,7 @@ export const useStore = create<Store>((set, get) => ({
     generateAppleToken: async () => {
         const { backendToken, appleMusicToken } = get()
         try {
-            console.log('generating token')
+            // console.log('generating token')
             const music = await (window as any).MusicKit.configure({
                 developerToken: import.meta.env.VITE_MUSICKIT_DEVELOPER_TOKEN,
                 app: {
@@ -1377,7 +1377,7 @@ export const useStore = create<Store>((set, get) => ({
             podcastAudio,
             stopPodcast,
         } = get()
-        console.log('initializing with music token: ', appleMusicToken)
+        // console.log('initializing with music token: ', appleMusicToken)
 
         const initializeMusicKit = async () => {
             if (!appleMusicToken) {
@@ -1394,7 +1394,7 @@ export const useStore = create<Store>((set, get) => ({
             })
 
             if (music) {
-                console.log('adding event listeners...')
+                // console.log('adding event listeners...')
 
                 const updateState = async () => {
                     const { playbackState, nowPlayingItem } = music
@@ -1477,9 +1477,9 @@ export const useStore = create<Store>((set, get) => ({
                             stopPodcast()
                         }
 
-                        console.log(
-                            `Changed the playback state from ${oldState} to ${state}`
-                        )
+                        // console.log(
+                        //     `Changed the playback state from ${oldState} to ${state}`
+                        // )
                         updateState()
                     }
                 )
@@ -1504,7 +1504,7 @@ export const useStore = create<Store>((set, get) => ({
                 })
 
                 set({ musicKitInstance: music })
-                console.log('MusicKit instance: ', music)
+                // console.log('MusicKit instance: ', music)
 
                 // if (appleMusicToken) {
                 //     music.setMusicUserToken(appleMusicToken)
@@ -1522,14 +1522,14 @@ export const useStore = create<Store>((set, get) => ({
                 'https://js-cdn.music.apple.com/musickit/v3/musickit.js'
             script.onload = async () => {
                 document.addEventListener('musickitloaded', async () => {
-                    console.log('creating musickit')
+                    // console.log('creating musickit')
                     await initializeMusicKit()
                 })
             }
             document.body.appendChild(script)
-            console.log('MusicKit script loaded')
+            // console.log('MusicKit script loaded')
         } else {
-            console.log('musickit instance already exists')
+            // console.log('musickit instance already exists')
             initializeMusicKit()
         }
     },
@@ -1541,7 +1541,7 @@ export const useStore = create<Store>((set, get) => ({
         index: number,
         startPlaying: boolean
     ) => {
-        console.log('set playlist')
+        // console.log('set playlist')
         const { musicKitInstance, playlist } = get()
 
         if (musicKitInstance) {
@@ -1551,7 +1551,7 @@ export const useStore = create<Store>((set, get) => ({
                 songIds.push(song.id)
             })
 
-            console.log('setting playlist and start position')
+            // console.log('setting playlist and start position')
             await musicKitInstance.setQueue({
                 songs: songIds,
                 startWith: index,
@@ -1566,11 +1566,11 @@ export const useStore = create<Store>((set, get) => ({
 
     playSong: async () => {
         const { musicKitInstance, playlist } = get()
-        console.log('attempting to play song')
-        console.log('musicKitIns: ', musicKitInstance, ' playlist: ', playlist)
+        // console.log('attempting to play song')
+        // console.log('musicKitIns: ', musicKitInstance, ' playlist: ', playlist)
 
         if (musicKitInstance && playlist) {
-            console.log('playing song')
+            // console.log('playing song')
             // musicKitInstance.setQueue({
             //     items: playlist.map(song => ({ id: song.id, type: song.type })),
             //     startPosition: 1,
@@ -1597,7 +1597,7 @@ export const useStore = create<Store>((set, get) => ({
                 await musicKitInstance.changeToMediaAtIndex(trackNumber)
                 const currentSongDuration =
                     musicKitInstance.nowPlayingItem?.attributes.durationInMillis
-                console.log(`Changed to track at index: ${trackNumber}`)
+                // console.log(`Changed to track at index: ${trackNumber}`)
                 const track = playlist[trackNumber]
                 set({
                     // currentSongDuration,
@@ -1608,7 +1608,7 @@ export const useStore = create<Store>((set, get) => ({
                 // Play the new track
 
                 // await musicKitInstance.play()
-                console.log('Playing new track')
+                // console.log('Playing new track')
             } catch (error) {
                 console.error('Error switching tracks:', error)
             }
@@ -1636,7 +1636,7 @@ export const useStore = create<Store>((set, get) => ({
                     repeat === 0 &&
                     shuffle === false
                 ) {
-                    console.log('currently on last song - stopping player')
+                    // console.log('currently on last song - stopping player')
                     await musicKitInstance.stop()
                     set({
                         isPlaying: false,
@@ -1650,7 +1650,7 @@ export const useStore = create<Store>((set, get) => ({
                         musicKitInstance.nowPlayingItem?.attributes
                             .durationInMillis
 
-                    console.log(`skipping to next track`)
+                    // console.log(`skipping to next track`)
                     // Play the new track
                     set({
                         // currentSongDuration,
@@ -1658,7 +1658,7 @@ export const useStore = create<Store>((set, get) => ({
                         //currentSongId: musicKitInstance.nowPlayingItem.id,
                     })
                     // await musicKitInstance.play()
-                    console.log('Playing new track')
+                    // console.log('Playing new track')
                 }
             } catch (error) {
                 console.error('Error switching tracks:', error)
@@ -1672,7 +1672,7 @@ export const useStore = create<Store>((set, get) => ({
             try {
                 // Change to the new track
                 await musicKitInstance.skipToPreviousItem()
-                console.log(`skipping to previous track`)
+                // console.log(`skipping to previous track`)
                 const currentSongDuration =
                     musicKitInstance.nowPlayingItem?.attributes.durationInMillis
 
@@ -1683,7 +1683,7 @@ export const useStore = create<Store>((set, get) => ({
                     // currentSongId: musicKitInstance.nowPlayingItem.id,
                 })
                 // await musicKitInstance.play()
-                console.log('Playing new track')
+                // console.log('Playing new track')
             } catch (error) {
                 console.error('Error switching tracks:', error)
             }
